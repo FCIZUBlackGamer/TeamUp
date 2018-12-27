@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_go_map"
+        android:icon="@drawable/ic_route"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_saved_project"
+        android:icon="@drawable/ic_linked_projects"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_favourite_projects"
+        android:icon="@drawable/ic_star_empty"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_edit_profile"
+        android:title="" />
+
+
+</menu>
