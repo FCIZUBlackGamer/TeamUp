@@ -3,11 +3,17 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="progress">#ffa652</color>
 
     <color name="textColorBlue">#3083C9</color>
     <color name="textColorWhite">#f5f6fa</color>
+    <color name="textColorGray">#8D8D8D</color>
+    <color name="textColorBlack">#000000</color>
+
     <color name="buttonColorGreen">#88B337</color>
+    <color name="buttonColorBlue">#3083C9</color>
+
     <color name="backgroundGreen">#10AC84</color>
     <color name="backgroundDarkGreen">#079992</color>
 </resources>
