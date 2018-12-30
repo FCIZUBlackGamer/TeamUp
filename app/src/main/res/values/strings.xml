@@ -13,4 +13,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <string name="saw_intro_preference_key" translatable="false">saw_introduction</string>
+    <string name="shared_preferences_name" translatable="false">preference</string>
+
 </resources>
