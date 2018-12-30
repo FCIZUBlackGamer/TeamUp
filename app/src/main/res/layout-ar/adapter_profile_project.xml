@@ -31,7 +31,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="13dp"
-                android:gravity="right"
                 android:layout_toLeftOf="@id/user_image"
                 android:orientation="vertical">
 
@@ -50,64 +49,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="right">
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:orientation="vertical">
-
-                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_dd"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:maxLength="6"
-                            android:id="@+id/num_contributer"
-                            android:text="150"
-                            android:textSize="15sp" />
-
-                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_like"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:maxLength="6"
-                            android:id="@+id/num_likes"
-                            android:text="150"
-                            android:textSize="15sp" />
-                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:layout_weight="3"
-                        android:gravity="right"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
-                            <RatingBar
-                                android:id="@+id/person_rate"
-                                style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/progress"
-                                android:rating="5"
-                                android:stepSize="1" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -119,13 +73,24 @@
                                 android:text="مصر - الشرقيه - الزقازيق"
                                 android:textSize="10sp" />
 
-
+                            <RatingBar
+                                android:id="@+id/person_rate"
+                                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginStart="3dp"
+                                android:isIndicator="true"
+                                android:numStars="5"
+                                android:progressTint="@color/progress"
+                                android:rating="5"
+                                android:stepSize="1" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="right"
                             android:orientation="horizontal">
 
                             <TextView
@@ -149,48 +114,40 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:orientation="vertical">
+
+                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_dd"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:maxLength="6"
+                            android:text="150"
+                            android:id="@+id/num_contributer"
+                            android:textSize="15sp" />
+
+                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_like"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:maxLength="6"
+                            android:id="@+id/num_likes"
+                            android:text="150"
+                            android:textSize="15sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/exten"
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/lin">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="المشاركة"
-                    android:id="@+id/share"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/ic_share"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/make_offer"
-                    android:text="ارسال عرض"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/ic_chat"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="الإعجاب"
-                    android:id="@+id/like"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/ic_favorite_border_black_24dp"/>
             </LinearLayout>
 
         </RelativeLayout>
