@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,11 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import teamup.rivile.com.teamup.Department.FragmentHome;
+import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
+
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     NavigationView navigationView;
     BottomNavigationView navigation;
+    FragmentManager fragmentManager;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -29,18 +35,30 @@ public class DrawerActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     navigationView.setCheckedItem(R.id.nav_home);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, new FragmentHome()).addToBackStack("Home")
+                            .commit();
                     return true;
                 case R.id.navigation_go_map:
                     navigationView.setCheckedItem(R.id.nav_go_map);
                     return true;
                 case R.id.navigation_saved_project:
                     navigationView.setCheckedItem(R.id.nav_saved_project);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                            .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                            .commit();
                     return true;
                 case R.id.navigation_profile:
                     navigationView.setCheckedItem(R.id.nav_profile);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Profile")
+                            .commit();
                     return true;
             }
             return false;
@@ -118,14 +136,26 @@ public class DrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             navigation.setSelectedItemId(R.id.navigation_home);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentHome()).addToBackStack("Home")
+                    .commit();
         } else if (id == R.id.nav_go_map) {
             navigation.setSelectedItemId(R.id.navigation_go_map);
         } else if (id == R.id.nav_saved_project) {
             navigation.setSelectedItemId(R.id.navigation_saved_project);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                    .commit();
         } else if (id == R.id.nav_favourite_projects) {
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                    .commit();
         } else if (id == R.id.nav_profile) {
             navigation.setSelectedItemId(R.id.navigation_profile);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Profile")
+                    .commit();
         } else if (id == R.id.nav_sign) {
 
         }
