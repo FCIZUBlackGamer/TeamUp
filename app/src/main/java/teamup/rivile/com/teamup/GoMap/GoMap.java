@@ -35,10 +35,10 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
 //    int fabState = 0;
     //    View help;
 //    AlertDialog dialog2;
-    LinearLayout cardView;
-
-
-    RelativeLayout now;
+//    LinearLayout cardView;
+//
+//
+//    RelativeLayout now;
 
     Integer[] imageArray = { R.drawable.ic_menu_manage, R.drawable.ic_location,
             R.drawable.ic_menu_camera, R.drawable.ic_menu_gallery };

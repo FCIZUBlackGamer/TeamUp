@@ -305,19 +305,19 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:checked="true"
                     android:text="Male"
-                    android:textColor="@color/textColorGray"
-                    android:layout_marginEnd="16dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/textColorGray" />
 
                 <RadioButton
-                    android:textColor="@color/textColorGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="Female"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/textColorGray" />
             </RadioGroup>
 
             <TextView
