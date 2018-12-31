@@ -102,23 +102,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="الإسم الشخصي"
+                android:text="Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_edit_name"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_name"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/civ_user_image" />
 
             <ImageView
                 android:id="@+id/iv_edit_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit_gray"
                 app:layout_constraintBottom_toBottomOf="@+id/textView13"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView13" />
 
             <EditText
@@ -146,23 +146,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="العنوان"
+                android:text="Address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_edit_address"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_address"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_name" />
 
             <ImageView
                 android:id="@+id/iv_edit_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit_gray"
                 app:layout_constraintBottom_toBottomOf="@+id/textView14"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView14" />
 
             <EditText
@@ -189,23 +189,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="تاريخ الميلاد"
+                android:text="Birth Date"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_edit_birth_date"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_birth_date"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_address" />
 
             <ImageView
                 android:id="@+id/iv_edit_birth_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit_gray"
                 app:layout_constraintBottom_toBottomOf="@+id/textView15"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView15" />
 
             <TextView
@@ -232,23 +232,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="المسمي الوظيفي"
+                android:text="Job"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_edit_job"
+                app:layout_constraintEnd_toStartOf="@+id/iv_edit_job"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_birth_date" />
 
             <ImageView
                 android:id="@+id/iv_edit_job"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit_gray"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_login"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_login" />
 
             <EditText
@@ -273,11 +273,11 @@
                 android:id="@+id/textView17"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start"
-                android:text="الجنس"
+                android:text="Gender"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -306,13 +306,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="ذكر"
+                    android:text="Male"
+                    android:layout_marginEnd="16dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="انثي"
+                    android:layout_marginStart="16dp"
+                    android:text="Female"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
             </RadioGroup>
 
@@ -322,23 +324,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="البريد الإلكتروني"
+                android:text="Email"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_email"
+                app:layout_constraintEnd_toStartOf="@+id/iv_email"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rb_gender" />
 
             <ImageView
                 android:id="@+id/iv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_edit_gray"
                 app:layout_constraintBottom_toBottomOf="@+id/textView18"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView18" />
 
             <EditText
@@ -368,7 +370,7 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_corner_button_blue"
-                android:text="الحفظ"
+                android:text="Save"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/textColorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
