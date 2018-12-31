@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="back_marker">#88111111</color>
     <color name="progress">#ffa652</color>
 
     <color name="textColorBlue">#3083C9</color>

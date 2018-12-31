@@ -1,9 +1,7 @@
 package teamup.rivile.com.teamup;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 public class TextViewWithArabicDigits extends android.support.v7.widget.AppCompatTextView {
     public TextViewWithArabicDigits(Context context) {
