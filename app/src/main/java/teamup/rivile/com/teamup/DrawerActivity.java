@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import teamup.rivile.com.teamup.Department.FragmentHome;
+import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 
@@ -72,6 +73,7 @@ public class DrawerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fragmentManager = getSupportFragmentManager();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +143,9 @@ public class DrawerActivity extends AppCompatActivity
                     .commit();
         } else if (id == R.id.nav_go_map) {
             navigation.setSelectedItemId(R.id.navigation_go_map);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new GoMap()).addToBackStack("Home")
+                    .commit();
         } else if (id == R.id.nav_saved_project) {
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()

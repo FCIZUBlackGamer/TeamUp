@@ -1,21 +1,29 @@
 package teamup.rivile.com.teamup.GoMap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -26,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import teamup.rivile.com.teamup.R;
 
-public class GoMap extends FragmentActivity implements OnMapReadyCallback {
+public class GoMap extends Fragment implements OnMapReadyCallback, MovableView.Helper {
 
     private GoogleMap mMap;
 
@@ -43,22 +51,82 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
     Integer[] imageArray = { R.drawable.ic_menu_manage, R.drawable.ic_location,
             R.drawable.ic_menu_camera, R.drawable.ic_menu_gallery };
     String[] textArray = { "clouds", "mark", "techcrunch", "times" };
+    View view;
+    MapView mapView;
+    Spinner spinner;
+    SpinnerAdapter adapter;
+    MovableView movableView;
+    private RecyclerView mRecyclerView;
+    private ConstraintLayout mFloatingContentLayout;
 
+    private FilterAdapter mAdapter;
+    FloatingActionButton filterFAB;
+    FloatingActionButton filterCircleImageView;
+    SupportMapFragment mapFragment;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_go_map);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_go_map, container, false);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
-        SpinnerAdapter adapter = new SpinnerAdapter(this, R.layout.spinner_value_layout, textArray, imageArray);
-        spinner.setAdapter(adapter);
+        movableView = view.findViewById(R.id.mv_floating_view);
+        mFloatingContentLayout = view.findViewById(R.id.cl_floating_content);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        filterFAB = view.findViewById(R.id.movableFloatingActionButton);
+        filterCircleImageView = view.findViewById(R.id.civ_filter);
+        spinner = (Spinner) view.findViewById(R.id.spinner);
+
+        return view;
     }
 
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onStart() {
+        super.onStart();
+       // mapView.getMapAsync(this);
+        movableView.setHelper(this);
+        adapter = new SpinnerAdapter(getActivity(), R.layout.spinner_value_layout, textArray, imageArray);
+        spinner.setAdapter(adapter);
+
+        filterFAB.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                movableView.callOnTouch(v, event);
+                return false;
+            }
+        });
+
+        filterCircleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFloatingContentLayout.setVisibility(View.GONE);
+
+                Drawable filterDrawable = filterCircleImageView.getDrawable();
+                Drawable filterFABDrawable = filterFAB.getDrawable();
+
+                filterFAB.setImageDrawable(filterDrawable);
+                filterCircleImageView.setImageDrawable(filterFABDrawable);
+
+                //TODO: swap Data in the database
+            }
+        });
+    }
+
+    @Override
+    public void onFloatingActionButtonClick() {
+        boolean isMovableViewVisible = mFloatingContentLayout.getVisibility() == View.VISIBLE;
+        mFloatingContentLayout.setVisibility(isMovableViewVisible ? View.GONE : View.VISIBLE);
+    }
 
     /**
      * Manipulates the map once available.
@@ -82,7 +150,7 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
         final MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(sydney);
         mMap.clear();
-        markerOptions.icon(bitmapDescriptorFromVector(this, R.drawable.ic_location));
+        markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_location));
         mMap.addMarker(markerOptions);
 
         LatLng s = new LatLng(-64, 101);
@@ -92,7 +160,7 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
         MarkerOptions m = new MarkerOptions();
         m.position(sydney);
         mMap.clear();
-        m.icon(bitmapDescriptorFromVector(this, R.drawable.ic_location));
+        m.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_location));
         mMap.addMarker(m);
 //        markerOptions.getPosition();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(sydney.latitude, sydney.longitude), 14f));
@@ -102,7 +170,7 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
-                final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 intro = inflater.inflate(R.layout.marker_view, null);
 
@@ -111,7 +179,7 @@ public class GoMap extends FragmentActivity implements OnMapReadyCallback {
 
             @Override
             public View getInfoContents(Marker marker) {
-                final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 intro = inflater.inflate(R.layout.marker_view, null);
 
