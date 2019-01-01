@@ -14,6 +14,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 
 
@@ -57,6 +58,7 @@ public class FragmentHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((DrawerActivity) getActivity()).Show("Home");
 
 //        if (catId != -1){
 //            loadEmployees(catId);

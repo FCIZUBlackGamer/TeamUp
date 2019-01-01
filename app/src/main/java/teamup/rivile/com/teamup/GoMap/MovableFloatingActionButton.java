@@ -1,7 +1,6 @@
 package teamup.rivile.com.teamup.GoMap;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -14,9 +13,9 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     private float downRawX, downRawY;
     private float dX, dY;
 
-    private boolean mExpand = false;
+    // private boolean mExpand = false;
 
-    private Helper mHelper;
+    // private Helper mHelper;
 
     public MovableFloatingActionButton(Context context) {
         super(context);
@@ -37,9 +36,9 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
         setOnTouchListener(this);
     }
 
-    public void setHelper(Helper helper) {
-        mHelper = helper;
-    }
+//    public void setHelper(Helper helper) {
+//        mHelper = helper;
+//    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -84,24 +83,17 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
             float upDY = upRawY - downRawY;
 
             if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
-                if (mExpand) {
-                    mHelper.callFloatingActionButtonOnClick();
-                    mExpand = false;
-                }
-            } // A drag
-            return true; // Consumed
-        } else {
-            return super.onTouchEvent(motionEvent);
+                return performClick();
+            } else {
+                return super.onTouchEvent(motionEvent);
+            }
         }
-    }
 
-    public void callOnTouch(View view, MotionEvent motionEvent) {
-        mExpand = true;
-        onTouch(view, motionEvent);
-    }
-
-    public interface Helper {
-        void callFloatingActionButtonOnClick();
+//    public void callOnTouch(View view, MotionEvent motionEvent) {
+//        mExpand = true;
+//        onTouch(view, motionEvent);
+//    }
+        return true;
     }
 
 }

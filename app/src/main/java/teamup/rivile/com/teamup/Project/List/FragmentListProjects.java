@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 
 
@@ -38,7 +39,7 @@ public class FragmentListProjects extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        ((DrawerActivity) getActivity()).Show("ListProjects");
 
         adapter = new AdapterProject(getActivity(), projectList);
         recyclerView.setAdapter(adapter);

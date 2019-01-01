@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,8 @@ public class DrawerActivity extends AppCompatActivity
     NavigationView navigationView;
     BottomNavigationView navigation;
     FragmentManager fragmentManager;
+    static SearchView searchView;
+    static String Whome = "Home";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -42,23 +46,26 @@ public class DrawerActivity extends AppCompatActivity
                     return true;
                 case R.id.navigation_go_map:
                     navigationView.setCheckedItem(R.id.nav_go_map);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, new GoMap()).addToBackStack("Home")
+                            .commit();
                     return true;
                 case R.id.navigation_saved_project:
                     navigationView.setCheckedItem(R.id.nav_saved_project);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_profile:
                     navigationView.setCheckedItem(R.id.nav_profile);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Profile")
+                            .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Home")
                             .commit();
                     return true;
             }
@@ -71,6 +78,8 @@ public class DrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        searchView = findViewById(R.id.search);
+
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
@@ -83,6 +92,23 @@ public class DrawerActivity extends AppCompatActivity
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (Whome.equals("Home")){/** Means Current fragment is home*/
+
+                }else if (Whome.equals("ListProjects")){/** Means Current fragment is ListProjects*/
+
+                }
+
+                return false;
+            }
+        });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -106,6 +132,15 @@ public class DrawerActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    public static void Hide(){
+        searchView.setVisibility(View.GONE);
+    }
+
+    public static void Show(String whome){
+        searchView.setVisibility(View.VISIBLE);
+        Whome = whome;
     }
 
     @Override
@@ -149,17 +184,17 @@ public class DrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_saved_project) {
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_favourite_projects) {
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("ListProject")
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_profile) {
             navigation.setSelectedItemId(R.id.navigation_profile);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Profile")
+                    .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_sign) {
 
