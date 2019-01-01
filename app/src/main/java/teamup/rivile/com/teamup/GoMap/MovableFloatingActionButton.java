@@ -2,30 +2,33 @@ package teamup.rivile.com.teamup.GoMap;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class MovableView extends ConstraintLayout implements View.OnTouchListener {
+public class MovableFloatingActionButton extends FloatingActionButton implements View.OnTouchListener {
 
     private final static float CLICK_DRAG_TOLERANCE = 10; // Often, there will be a slight, unintentional, drag when the user taps the FAB, so we need to account for this.
 
     private float downRawX, downRawY;
     private float dX, dY;
 
+    private boolean mExpand = false;
+
     private Helper mHelper;
 
-    public MovableView(Context context) {
+    public MovableFloatingActionButton(Context context) {
         super(context);
         init();
     }
 
-    public MovableView(Context context, AttributeSet attrs) {
+    public MovableFloatingActionButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MovableView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MovableFloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -34,7 +37,7 @@ public class MovableView extends ConstraintLayout implements View.OnTouchListene
         setOnTouchListener(this);
     }
 
-    public void setHelper(Helper helper){
+    public void setHelper(Helper helper) {
         mHelper = helper;
     }
 
@@ -51,7 +54,6 @@ public class MovableView extends ConstraintLayout implements View.OnTouchListene
             return true; // Consumed
 
         } else if (action == MotionEvent.ACTION_MOVE) {
-
             int viewWidth = view.getWidth();
             int viewHeight = view.getHeight();
 
@@ -72,11 +74,9 @@ public class MovableView extends ConstraintLayout implements View.OnTouchListene
                     .y(newY)
                     .setDuration(0)
                     .start();
-
             return true; // Consumed
 
         } else if (action == MotionEvent.ACTION_UP) {
-
             float upRawX = motionEvent.getRawX();
             float upRawY = motionEvent.getRawY();
 
@@ -84,22 +84,24 @@ public class MovableView extends ConstraintLayout implements View.OnTouchListene
             float upDY = upRawY - downRawY;
 
             if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) { // A click
-                mHelper.onFloatingActionButtonClick();
-                return performClick();
-            } else { // A drag
-                return true; // Consumed
-            }
-
+                if (mExpand) {
+                    mHelper.callFloatingActionButtonOnClick();
+                    mExpand = false;
+                }
+            } // A drag
+            return true; // Consumed
         } else {
             return super.onTouchEvent(motionEvent);
         }
     }
 
     public void callOnTouch(View view, MotionEvent motionEvent) {
+        mExpand = true;
         onTouch(view, motionEvent);
     }
 
-    public interface Helper{
-        void onFloatingActionButtonClick();
+    public interface Helper {
+        void callFloatingActionButtonOnClick();
     }
+
 }

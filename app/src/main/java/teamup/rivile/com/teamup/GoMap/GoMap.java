@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import teamup.rivile.com.teamup.R;
 
-public class GoMap extends Fragment implements OnMapReadyCallback, MovableView.Helper {
+public class GoMap extends Fragment implements OnMapReadyCallback, MovableFloatingActionButton.Helper {
 
     private GoogleMap mMap;
 
@@ -48,16 +48,14 @@ public class GoMap extends Fragment implements OnMapReadyCallback, MovableView.H
 //
 //    RelativeLayout now;
 
-    Integer[] imageArray = { R.drawable.ic_menu_manage, R.drawable.ic_location,
-            R.drawable.ic_menu_camera, R.drawable.ic_menu_gallery };
-    String[] textArray = { "clouds", "mark", "techcrunch", "times" };
+    Integer[] imageArray = {R.drawable.ic_menu_manage, R.drawable.ic_location,
+            R.drawable.ic_menu_camera, R.drawable.ic_menu_gallery};
+    String[] textArray = {"clouds", "mark", "techcrunch", "times"};
     View view;
     MapView mapView;
     Spinner spinner;
     SpinnerAdapter adapter;
-    MovableView movableView;
-    private RecyclerView mRecyclerView;
-    private ConstraintLayout mFloatingContentLayout;
+    MovableFloatingActionButton movableFloatingActionButton;
 
     private FilterAdapter mAdapter;
     FloatingActionButton filterFAB;
@@ -75,12 +73,8 @@ public class GoMap extends Fragment implements OnMapReadyCallback, MovableView.H
         mapFragment.getMapAsync(this);
 
 
-        movableView = view.findViewById(R.id.mv_floating_view);
-        mFloatingContentLayout = view.findViewById(R.id.cl_floating_content);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
+        movableFloatingActionButton = view.findViewById(R.id.mv_floating_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
         filterFAB = view.findViewById(R.id.movableFloatingActionButton);
         filterCircleImageView = view.findViewById(R.id.civ_filter);
         spinner = (Spinner) view.findViewById(R.id.spinner);
@@ -93,39 +87,33 @@ public class GoMap extends Fragment implements OnMapReadyCallback, MovableView.H
     @Override
     public void onStart() {
         super.onStart();
-       // mapView.getMapAsync(this);
-        movableView.setHelper(this);
+        // mapView.getMapAsync(this);
         adapter = new SpinnerAdapter(getActivity(), R.layout.spinner_value_layout, textArray, imageArray);
         spinner.setAdapter(adapter);
 
+
+        movableFloatingActionButton.setHelper(this);
         filterFAB.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                movableView.callOnTouch(v, event);
+                movableFloatingActionButton.callOnTouch(movableFloatingActionButton, event);
                 return false;
-            }
-        });
-
-        filterCircleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFloatingContentLayout.setVisibility(View.GONE);
-
-                Drawable filterDrawable = filterCircleImageView.getDrawable();
-                Drawable filterFABDrawable = filterFAB.getDrawable();
-
-                filterFAB.setImageDrawable(filterDrawable);
-                filterCircleImageView.setImageDrawable(filterFABDrawable);
-
-                //TODO: swap Data in the database
             }
         });
     }
 
     @Override
-    public void onFloatingActionButtonClick() {
-        boolean isMovableViewVisible = mFloatingContentLayout.getVisibility() == View.VISIBLE;
-        mFloatingContentLayout.setVisibility(isMovableViewVisible ? View.GONE : View.VISIBLE);
+    public void callFloatingActionButtonOnClick() {
+        //TODO: show alert dialogue with content from here
+
+        //TODO: remember to swap floating action button drawable with one in the alert dialogue
+//        Drawable filterDrawable = filterCircleImageView.getDrawable();
+//        Drawable filterFABDrawable = filterFAB.getDrawable();
+//
+//        filterFAB.setImageDrawable(filterDrawable);
+//        filterCircleImageView.setImageDrawable(filterFABDrawable);
+
+        //TODO: swap Data in the database
     }
 
     /**
