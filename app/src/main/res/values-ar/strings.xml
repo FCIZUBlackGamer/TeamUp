@@ -16,5 +16,7 @@
     <string name="saw_intro_preference_key" translatable="false">saw_introduction</string>
     <string name="shared_preferences_name" translatable="false">preference</string>
     <string name="title_activity_go_map">Map</string>
+    <string name="log_in">"تسجيل الدخول"</string>
+    <string name="already_have_an_account">"لديك حساب بالفعل ؟"</string>
 
 </resources>
