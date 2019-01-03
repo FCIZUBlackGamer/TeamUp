@@ -19,4 +19,23 @@
     <string name="log_in">"تسجيل الدخول"</string>
     <string name="already_have_an_account">"لديك حساب بالفعل ؟"</string>
 
+    <string name="join_us_now">إشترك معنا الآن</string>
+    <string name="join_us_now_1">سجل حساب الآن وابدأ بالإستثمار</string>
+    <string name="join_us_now_2">الآمن والمضمون من خلال منصتنا</string>
+    <string name="full_name">الإسم كاملا</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="user_name">إسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+    <string name="sign_up">التسجيل</string>
+    <string name="edit_personal_data">تعديل البيانات الشخصية</string>
+    <string name="name">الإسم</string>
+    <string name="address">العنوان</string>
+    <string name="birth_date">تاريخ الميلاد</string>
+    <string name="job_title">المسمي الوظيفي</string>
+    <string name="gender">الجنس</string>
+    <string name="male">ذكر</string>
+    <string name="female">انثي</string>
+    <string name="email_address">البريد الإلكتروني</string>
+    <string name="save">الحفظ</string>
+
 </resources>

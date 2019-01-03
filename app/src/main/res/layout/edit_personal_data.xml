@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="8dp"
-    android:layoutDirection="rtl">
+    android:layoutDirection="rtl"
+    app:cardCornerRadius="8dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:gravity="start"
-                android:text="تعديل البيانات الشخصية"
+                android:text="@string/edit_personal_data"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorWhite"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
@@ -75,10 +75,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                tools:src="@drawable/ic_dd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                tools:src="@drawable/ic_dd" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/civ_edit"
@@ -103,7 +103,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="الإسم"
+                android:text="@string/name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_name"
@@ -147,7 +147,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="العنوان"
+                android:text="@string/address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_address"
@@ -190,7 +190,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="تاريخ الميلاد"
+                android:text="@string/birth_date"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_birth_date"
@@ -217,7 +217,6 @@
                 android:background="@android:color/transparent"
                 android:enabled="false"
                 android:gravity="center"
-                android:inputType="date"
                 android:maxLines="1"
                 android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -233,7 +232,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="المسمي الوظيفي"
+                android:text="@string/job_title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toStartOf="@+id/iv_edit_job"
@@ -276,7 +275,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="start"
-                android:text="الجنس"
+                android:text="@string/gender"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -306,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:checked="true"
-                    android:text="ذكر"
+                    android:text="@string/male"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/textColorGray" />
 
@@ -314,7 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="انثي"
+                    android:text="@string/female"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/textColorGray" />
             </RadioGroup>
@@ -327,7 +326,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="start"
-                android:text="البريد الإلكتروني"
+                android:text="@string/email_address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/textColorGray"
                 app:layout_constraintEnd_toStartOf="@+id/iv_email"
@@ -371,14 +370,13 @@
                 android:layout_marginEnd="64dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_corner_button_blue"
-                android:text="الحفظ"
+                android:text="@string/save"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/textColorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_email" />
-
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </android.support.v7.widget.CardView>
