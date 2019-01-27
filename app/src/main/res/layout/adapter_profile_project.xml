@@ -60,7 +60,7 @@
                         android:gravity="left"
                         android:orientation="vertical">
 
-                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
+                        <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -72,7 +72,7 @@
                             android:text="150"
                             android:textSize="15sp" />
 
-                        <teamup.rivile.com.teamup.TextViewWithArabicDigits
+                        <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"

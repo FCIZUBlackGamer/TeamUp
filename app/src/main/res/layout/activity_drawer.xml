@@ -22,4 +22,11 @@
         app:headerLayout="@layout/nav_header_drawer"
         app:menu="@menu/activity_drawer_drawer" />
 
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_vie"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_gravity="end|center_vertical"
+        app:headerLayout="@layout/floating_content" />
+
 </android.support.v4.widget.DrawerLayout>

@@ -1,40 +1,87 @@
-<resources>
-    <string name="app_name">Team Up</string>
-    <string name="title_activity_drawer">DrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">مؤمن شاهين</string>
-    <string name="nav_header_subtitle">مشترك فى 6 مشاريع</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">Team Up</string>
+    <string name="title_activity_drawer" translatable="false">DrawerActivity</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">مؤمن شاهين</string>
+    <string name="nav_header_subtitle" translatable="false">مشترك فى 6 مشاريع</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+    <string name="action_settings" translatable="false">Settings</string>
 
-    <string name="title_activity_bottom">BottomActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_bottom" translatable="false">BottomActivity</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
 
     <string name="saw_intro_preference_key" translatable="false">saw_introduction</string>
     <string name="shared_preferences_name" translatable="false">preference</string>
-    <string name="title_activity_go_map">Map</string>
-    <string name="log_in">"تسجيل الدخول"</string>
-    <string name="already_have_an_account">"لديك حساب بالفعل ؟"</string>
-    <string name="join_us_now">إشترك معنا الآن</string>
-    <string name="join_us_now_1">سجل حساب الآن وابدأ بالإستثمار</string>
-    <string name="join_us_now_2">الآمن والمضمون من خلال منصتنا</string>
-    <string name="full_name">الإسم كاملا</string>
-    <string name="email">البريد الإلكتروني</string>
-    <string name="user_name">إسم المستخدم</string>
-    <string name="password">كلمة المرور</string>
-    <string name="sign_up">التسجيل</string>
-    <string name="edit_personal_data">تعديل البيانات الشخصية</string>
-    <string name="name">الإسم</string>
-    <string name="address">العنوان</string>
-    <string name="birth_date">تاريخ الميلاد</string>
-    <string name="job_title">المسمي الوظيفي</string>
-    <string name="gender">الجنس</string>
-    <string name="male">ذكر</string>
-    <string name="female">انثي</string>
-    <string name="email_address">البريد الإلكتروني</string>
-    <string name="save">الحفظ</string>
+    <string name="title_activity_go_map" tools:ignore="MissingTranslation">Map</string>
+    <string name="log_in" translatable="false">"تسجيل الدخول"</string>
+    <string name="already_have_an_account" translatable="false">"لديك حساب بالفعل ؟"</string>
+    <string name="join_us_now" translatable="false">إشترك معنا الآن</string>
+    <string name="join_us_now_1" translatable="false">سجل حساب الآن وابدأ بالإستثمار</string>
+    <string name="join_us_now_2" translatable="false">الآمن والمضمون من خلال منصتنا</string>
+    <string name="full_name" translatable="false">الإسم كاملا</string>
+    <string name="email" translatable="false">البريد الإلكتروني</string>
+    <string name="user_name" translatable="false">إسم المستخدم</string>
+    <string name="password" translatable="false">كلمة المرور</string>
+    <string name="sign_up" translatable="false">التسجيل</string>
+    <string name="edit_personal_data" translatable="false">تعديل البيانات الشخصية</string>
+    <string name="name" translatable="false">الإسم</string>
+    <string name="address" translatable="false">العنوان</string>
+    <string name="birth_date" translatable="false">تاريخ الميلاد</string>
+    <string name="job_title" translatable="false">المسمي الوظيفي</string>
+    <string name="gender" translatable="false">الجنس</string>
+    <string name="male" translatable="false">ذكر</string>
+    <string name="female" translatable="false">انثي</string>
+    <string name="email_address" translatable="false">البريد الإلكتروني</string>
+    <string name="save" translatable="false">الحفظ</string>
 
+    <string name="pressHere" translatable="false">أضغط هنا لتعديل اسم المشروع</string>
+    <string name="projectDesc" translatable="false">ادخل هنا وصف لمحتوى المشروع ...</string>
+    <string name="money" translatable="false">الربح</string>
+    <string name="moneyType" translatable="false">طبيعه الربح</string>
+    <string name="day" translatable="false">يومى</string>
+    <string name="month" translatable="false">شهرى</string>
+    <string name="year" translatable="false">سنوى</string>
+    <string name="moneyDetail" translatable="false">تفاصيل نوع المكسب</string>
+    <string name="anotherKind" translatable="false">نوع اخر</string>
+    <string name="moneyExpected" translatable="false">كمية الربح المتوقعه</string>
+    <string name="contributors" translatable="false">المشتركين</string>
+    <string name="both" translatable="false">النوعين</string>
+    <string name="numContributors" translatable="false">عدد المساهمين فى المشروع</string>
+    <string name="educationLevelContributors" translatable="false">المستوى التعليمى للمشتركين</string>
+    <string name="basicLevel" translatable="false"> اساسى</string>
+    <string name="midLevel" translatable="false"> متوسط</string>
+    <string name="highLevel" translatable="false"> عالى</string>
+    <string name="projectRequirement" translatable="false"> متطلبات المشروع </string>
+    <string name="proBlabla" translatable="false">  عشان مشروعك ينجح لازم توضح كل المتطلبات واللوازم لبناء مشروع ناجح </string>
+
+    <string name="place" translatable="false"> المكان </string>
+    <string name="neddplace" translatable="false"> هل يحتاج المشروع لمكان؟ </string>
+    <string name="yes" translatable="false"> نعم </string>
+    <string name="no" translatable="false"> لا يحتاج </string>
+    <string name="placename" translatable="false"> أسم المكان </string>
+    <string name="placeDetail" translatable="false"> تفاصيل المكان </string>
+    <string name="placeKind" translatable="false"> نوع المكان </string>
+    <string name="needMoney" translatable="false"> هل يحتاج المشروع لرأس مال؟ </string>
+    <string name="moneyAmount" translatable="false"> كمية رأس المال المطلوبة لبناء المشروع </string>
+    <string name="experince" translatable="false"> الخبرة </string>
+    <string name="needEx" translatable="false"> هل يحتاج المشروع الى خبره؟ </string>
+    <string name="numEx" translatable="false"> عدد سنين الخبره المطلوبة </string>
+    <string name="exField" translatable="false"> مجالات الخبرة </string>
+    <string name="proAttachment" translatable="false"> ملحقات المشروع </string>
+    <string name="proBla" translatable="false"> نجاح المشروع على أخر خطوة من خطوات سلالم النجاح أرفع ملحقات مشروعك أو تصميماتك المبدأية </string>
+    <string name="attachment" translatable="false"> الملحقات </string>
+    <string name="proCapital" translatable="false"> أماكن عرض المشروع </string>
+    <string name="egypt" translatable="false"> جمهورية مصر العربية </string>
+    <string name="dep" translatable="false"> القسم </string>
+    <string name="tags" translatable="false"> الكلمات الدلالية </string>
+    <string name="go" translatable="false"> انطلق </string>
+    <string name="owned" translatable="false"> ملك </string>
+    <string name="rent" translatable="false"> ايجار </string>
+    <string name="placeStatus" translatable="false"> حالة المكان </string>
+    <string name="avail" translatable="false"> متوفر </string>
+    <string name="notAvail" translatable="false"> غير متوفر </string>
+    <string name="exDep" translatable="false"> اقسام الخبره </string>
 </resources>

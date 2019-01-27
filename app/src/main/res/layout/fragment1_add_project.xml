@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:rsb="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#fff">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_image"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_dashboard_black_24dp" />
+
+                    <LinearLayout
+                        android:id="@+id/lin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="13dp"
+                        android:layout_toLeftOf="@id/user_image"
+                        android:gravity="right"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/project_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/medium"
+                            android:maxLines="2"
+                            android:text="@string/pressHere"
+                            android:textColor="#03A9F4"
+                            android:textDirection="rtl"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_corner_edit_text"
+                    android:fontFamily="@font/medium"
+                    android:gravity="right"
+                    android:hint="@string/projectDesc"
+                    android:lines="4"
+                    android:padding="10dp" />
+
+                <RelativeLayout
+                    android:id="@+id/money"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_centerVertical="true"
+                        android:background="#FF00DBFF"
+                        android:gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#fff"
+                        android:fontFamily="@font/medium"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="@string/money"
+                        android:textAlignment="center"
+                        android:textSize="22sp" />
+
+                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="#fff"
+                        android:foregroundGravity="center"
+                        android:src="@drawable/ic_arrow_up"
+                        android:textAlignment="center"
+                        app:backgroundTint="@color/backgroundBlue"
+                        app:borderWidth="2dp"
+                        app:fabCustomSize="@dimen/design_fab_image_size"
+                        app:maxImageSize="24dp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/moneyType"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="10dp" />
+
+                <RadioGroup
+                    android:id="@+id/moneyGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/day"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/day" />
+
+                    <RadioButton
+                        android:id="@+id/month"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/month" />
+
+                    <RadioButton
+                        android:id="@+id/year"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/year" />
+
+                    <RadioButton
+                        android:id="@+id/other"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/anotherKind" />
+                </RadioGroup>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_corner_edit_text"
+                    android:fontFamily="@font/medium"
+                    android:gravity="right"
+                    android:hint="@string/moneyDetail"
+                    android:lines="1"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/moneyExpected"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="10dp" />
+
+
+                <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                    android:id="@+id/moneySeekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    rsb:absoluteMaxValue="100"
+                    rsb:absoluteMinValue="0" />
+
+                <LinearLayout
+                    android:id="@+id/moneySection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/availGroupMoney"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/notAvail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/notAvail" />
+
+                            <RadioButton
+                                android:id="@+id/avail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/avail" />
+
+                        </RadioGroup>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/needMoney"
+                            android:textColor="#000"
+                            android:fontFamily="@font/medium"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/moneyAmount"
+                        android:textColor="#000"
+                        android:textSize="20sp"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"/>
+
+
+                    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                        android:id="@+id/moneyRequiredSeekbar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        rsb:absoluteMaxValue="100"
+                        rsb:absoluteMinValue="0" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/experienceSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/contributors"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_centerVertical="true"
+                            android:background="#FF00DBFF"
+                            android:gravity="center_vertical" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="20dp"
+                            android:background="#fff"
+                            android:fontFamily="@font/medium"
+                            android:gravity="center"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:text="@string/contributors"
+                            android:textAlignment="center"
+                            android:textSize="22sp" />
+
+                        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:backgroundTint="#fff"
+                            android:foregroundGravity="center"
+                            android:src="@drawable/ic_arrow_up"
+                            android:textAlignment="center"
+                            app:backgroundTint="@color/backgroundBlue"
+                            app:borderWidth="2dp"
+                            app:fabCustomSize="@dimen/design_fab_image_size"
+                            app:maxImageSize="24dp" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/gender"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <RadioGroup
+                        android:id="@+id/genderGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <RadioButton
+                            android:id="@+id/both"
+                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end|center_vertical"
+                            android:text="@string/both" />
+
+                        <RadioButton
+                            android:id="@+id/male"
+                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end|center_vertical"
+                            android:text="@string/male" />
+
+                        <RadioButton
+                            android:id="@+id/female"
+                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end|center_vertical"
+                            android:text="@string/female" />
+
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/numContributors"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                        android:id="@+id/contributorSeekbar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        rsb:absoluteMaxValue="100"
+                        rsb:absoluteMinValue="0" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/educationLevelContributors"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <com.badoualy.stepperindicator.StepperIndicator
+                        android:id="@+id/educationLevel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        app:stpi_circleColor="@color/colorPrimary"
+                        app:stpi_circleStrokeWidth="2dp"
+                        app:stpi_indicatorColor="@color/colorPrimary"
+                        app:stpi_lineDoneColor="@color/colorPrimaryDark"
+                        app:stpi_stepCount="4" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:text="@string/basicLevel"
+                            android:textColor="#000"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:text="@string/midLevel"
+                            android:textColor="#000"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:text="@string/highLevel"
+                            android:textColor="#000"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</ScrollView>

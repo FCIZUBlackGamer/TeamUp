@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:rsb="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="30dp"
+                    android:src="@drawable/ic_thinking"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center"
+                    android:text="@string/projectRequirement"
+                    android:textSize="24sp"
+                    android:fontFamily="@font/medium"
+                    android:textColor="@color/colorPrimary"
+                    android:padding="10dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/proBlabla"
+                    android:fontFamily="@font/medium"
+                    android:lines="2"
+                    android:textSize="18sp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="50dp"
+                    android:textAlignment="center"/>
+
+                <RelativeLayout
+                    android:id="@+id/money"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:background="#FF00DBFF" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#fff"
+                        android:gravity="center"
+                        android:fontFamily="@font/medium"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="@string/place"
+                        android:textAlignment="center"
+                        android:textSize="22sp" />
+
+                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="10dp"
+                        android:textAlignment="center"
+                        android:foregroundGravity="center"
+                        android:layout_centerVertical="true"
+                        android:backgroundTint="#fff"
+                        app:maxImageSize="24dp"
+                        app:fabCustomSize="@dimen/design_fab_image_size"
+                        android:src="@drawable/ic_arrow_up"
+                        app:backgroundTint="@color/backgroundBlue"
+                        app:borderWidth="2dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/moneySection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/placeGroup"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/no"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/no" />
+
+                            <RadioButton
+                                android:id="@+id/yes"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/yes" />
+
+                        </RadioGroup>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/neddplace"
+                            android:textColor="#000"
+                            android:fontFamily="@font/medium"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="match_parent">
+
+
+                        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/map"
+                            xmlns:map="http://schemas.android.com/apk/res-auto"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            tools:context=".Chart.FinishChart" />
+
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/rounded_corner_edit_text"
+                        android:gravity="right"
+                        android:hint="@string/placeDetail"
+                        android:fontFamily="@font/medium"
+                        android:lines="3"
+                        android:padding="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/placeKindGroup"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rent"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/rent" />
+
+                            <RadioButton
+                                android:id="@+id/owned"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/owned" />
+
+                        </RadioGroup>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/placeKind"
+                            android:textColor="#000"
+                            android:fontFamily="@font/medium"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/placeStateGroup"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/notAvail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/notAvail" />
+
+                            <RadioButton
+                                android:id="@+id/avail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/avail" />
+
+                        </RadioGroup>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/placeStatus"
+                            android:textColor="#000"
+                            android:fontFamily="@font/medium"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/experienceSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/contributors"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            android:background="#FF00DBFF" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginEnd="20dp"
+                            android:background="#fff"
+                            android:gravity="center"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:text="@string/experince"
+                            android:textAlignment="center"
+                            android:fontFamily="@font/medium"
+                            android:textSize="22sp" />
+
+                        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="10dp"
+                            android:textAlignment="center"
+                            android:foregroundGravity="center"
+                            android:layout_centerVertical="true"
+                            android:backgroundTint="#fff"
+                            app:maxImageSize="24dp"
+                            app:fabCustomSize="@dimen/design_fab_image_size"
+                            android:src="@drawable/ic_arrow_up"
+                            app:backgroundTint="@color/backgroundBlue"
+                            app:borderWidth="2dp" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/moneyGroup"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/n"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/no" />
+
+                            <RadioButton
+                                android:id="@+id/y"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:fontFamily="@font/medium"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/yes" />
+
+                        </RadioGroup>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="@string/needEx"
+                            android:textColor="#000"
+                            android:fontFamily="@font/medium"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/exDep"
+                        android:textColor="#000"
+                        android:fontFamily="@font/medium"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/rounded_corner_edit_text"
+                        android:gravity="right"
+                        android:hint="@string/exDep"
+                        android:fontFamily="@font/medium"
+                        android:lines="3"
+                        android:padding="10dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/exRec">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/numEx"
+                        android:fontFamily="@font/medium"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                        android:id="@+id/exRequiredSeekbar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        rsb:absoluteMaxValue="100"
+                        rsb:absoluteMinValue="0" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</ScrollView>

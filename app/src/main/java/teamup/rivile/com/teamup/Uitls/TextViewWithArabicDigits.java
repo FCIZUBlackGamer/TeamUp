@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup;
+package teamup.rivile.com.teamup.Uitls;
 
 import android.content.Context;
 import android.util.AttributeSet;

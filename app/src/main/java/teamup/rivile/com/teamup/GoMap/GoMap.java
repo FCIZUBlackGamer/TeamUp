@@ -1,12 +1,9 @@
 package teamup.rivile.com.teamup.GoMap;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -15,17 +12,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -42,28 +37,15 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     View intro, help;
-    //    MovableFloatingActionButton floatingActionButton;
-//    int fabState = 0;
-    //    View help;
-//    AlertDialog dialog2;
-//    LinearLayout cardView;
-//
-//
-//    RelativeLayout now;
 
-    Integer[] imageArray = {R.drawable.ic_menu_manage, R.drawable.ic_location,
+    int[] imageArray = {R.drawable.ic_menu_manage, R.drawable.ic_location,
             R.drawable.ic_menu_camera, R.drawable.ic_menu_gallery};
-    String[] textArray = {"clouds", "mark", "techcrunch", "times"};
+
     View view;
-//    MapView mapView;
     Spinner spinner;
-    SpinnerAdapter adapter;
     MovableFloatingActionButton movableFloatingActionButton;
     FloatingActionButton civ_filter;
 
-    //    private FilterAdapter mAdapter;
-//    FloatingActionButton filterFAB;
-//    FloatingActionButton filterCircleImageView;
     SupportMapFragment mapFragment;
     LayoutInflater inflater;
     Drawable filterDrawable, filterFABDrawable;
@@ -80,14 +62,11 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-
         movableFloatingActionButton = view.findViewById(R.id.movableFloatingActionButton);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        filterFAB = view.findViewById(R.id.movableFloatingActionButton);
-//        filterCircleImageView = view.findViewById(R.id.civ_filter);
+
         spinner = (Spinner) view.findViewById(R.id.spinner);
 
+        ((DrawerActivity) getActivity()).initNav();
         return view;
     }
 
@@ -98,94 +77,30 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
         super.onStart();
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).Hide();
-        adapter = new SpinnerAdapter(getActivity(), R.layout.spinner_value_layout, textArray, imageArray);
-        spinner.setAdapter(adapter);
-        inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        CustomAdapter mCustomAdapter = new CustomAdapter(getActivity(), imageArray);
+        mCustomAdapter.setDropDownViewResource(R.layout.custom_spinner_row);
 
-        help = inflater.inflate(R.layout.floating_content, null);
+        spinner.setAdapter(mCustomAdapter);
 
-        civ_filter = help.findViewById(R.id.fab_filter);
-        filterDrawable = civ_filter.getDrawable();
-        filterFABDrawable = movableFloatingActionButton.getDrawable();
-
-
-//        movableFloatingActionButton.setHelper(this);
         movableFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-                RecyclerView locs = help.findViewById(R.id.recyclerView);
-                iv_cancel = help.findViewById(R.id.iv_cancel);
-                RecyclerView.Adapter adapter; //Todo: get list of locations from Api and pass to 'locs'
+//                if (movableFloatingActionButton.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()) {
+//                    movableFloatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_marker));
+//                    Toast.makeText(getActivity(), "changed1", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    movableFloatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_projects));
+//                    Toast.makeText(getActivity(), "changed2", Toast.LENGTH_SHORT).show();
+//                }
+                ((DrawerActivity) getActivity()).opOrCl();
+                ((DrawerActivity) getActivity()).Nav();
+                ((DrawerActivity) getActivity()).actionNav();
 
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setView(help)
-                .setCancelable(false);
-
-                final AlertDialog dialog2 = builder.create();
-                dialog2.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                dialog2.show();
-
-                civ_filter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        movableFloatingActionButton.setImageDrawable(filterDrawable);
-                        civ_filter.setImageDrawable(filterFABDrawable);
-
-                         filterDrawable = civ_filter.getDrawable();
-                         filterFABDrawable = movableFloatingActionButton.getDrawable();
-
-                        //Todo: Reload recycle view data
-                        if (help!= null){
-                            ViewGroup parent = (ViewGroup) help.getParent();
-                            if (parent != null) {
-                                parent.removeAllViews();
-                            }
-                        }
-                        dialog2.dismiss();
-
-                    }
-                });
-
-                iv_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (help!= null){
-                            ViewGroup parent = (ViewGroup) help.getParent();
-                            if (parent != null) {
-                                parent.removeAllViews();
-                            }
-                        }
-                        dialog2.dismiss();
-                    }
-                });
             }
         });
-//        filterFAB.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                movableFloatingActionButton.callOnTouch(movableFloatingActionButton, event);
-//                return false;
-//            }
-//        });
-    }
 
-//    @Override
-//    public void callFloatingActionButtonOnClick() {
-//
-//
-//
-////        Drawable filterDrawable = filterCircleImageView.getDrawable();
-////        Drawable filterFABDrawable = filterFAB.getDrawable();
-////
-////        filterFAB.setImageDrawable(filterDrawable);
-////        filterCircleImageView.setImageDrawable(filterFABDrawable);
-//
-//
-//    }
+    }
 
     /**
      * Manipulates the map once available.
