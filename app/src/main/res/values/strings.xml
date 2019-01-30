@@ -97,4 +97,6 @@
     <string name="phone" translatable="false"> الهاتف </string>
     <string name="from" translatable="false"> من </string>
     <string name="to" translatable="false"> إلى </string>
+    <string name="min_val_error" translatable="false">"لا يمكن ان تقل القيمة عن "</string>
+    <string name="max_error_val" translatable="false">"لا يمكن ان تزيد القيمة عن "</string>
 </resources>
