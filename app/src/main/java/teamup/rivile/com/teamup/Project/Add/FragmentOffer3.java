@@ -3,6 +3,7 @@ package teamup.rivile.com.teamup.Project.Add;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -37,8 +39,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
+import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOffer3 extends Fragment {
     private static final int PICKFILE_REQUEST_CODE = 10;
@@ -55,11 +60,18 @@ public class FragmentOffer3 extends Fragment {
 
     ImageView doc, image, preview;
     RecyclerView recFiles, recImages;
+    RecyclerView.Adapter imagesAdapter, filesAdapter;
     GridView recCapitals, recDep;
     CheckBox egypt;
     EditText tagsInput;
     Button go;
     private ArrayList<Uri> imagesArrayUri, fileArrayUri;
+    List<FilesModel> filesModels;
+
+    View Camera_view;
+    ImageView close, minimize, cam, gal;
+    FloatingActionButton appear;
+    int close_type;
 
     @Nullable
     @Override
@@ -89,12 +101,27 @@ public class FragmentOffer3 extends Fragment {
         go = view.findViewById(R.id.go);
         imagesArrayUri = new ArrayList<>();
         fileArrayUri = new ArrayList<>();
+        filesModels = new ArrayList<>();
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, new ImagesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(FilesModel item) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), item.getFileUri());
+                    preview.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        recImages.setAdapter(imagesAdapter);
 
         doc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +137,48 @@ public class FragmentOffer3 extends Fragment {
             @Override
             public void onClick(View v) {
                 /** Choose Either Camera Or Gallery */
+                final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                Camera_view = inflater.inflate(R.layout.camera_view, null);
+
+                close = Camera_view.findViewById(R.id.close);
+                minimize = Camera_view.findViewById(R.id.minimize);
+                cam = Camera_view.findViewById(R.id.cam);
+                gal = Camera_view.findViewById(R.id.gal);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(false)
+                        .setView(Camera_view);
+
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                gal.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    @Override
+                    public void onClick(View v) {
+                        openGalary();
+                        dialog.dismiss();
+                    }
+                });
+
+                cam.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openCamera();
+                        dialog.dismiss();
+                    }
+                });
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        close_type = 0;
+                        dialog.dismiss();
+
+                    }
+                });
+
 
             }
         });
@@ -172,16 +241,22 @@ public class FragmentOffer3 extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void openGalary() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);// ACTION_VIEW
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
+
+        } else {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);// ACTION_VIEW
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        }
     }
 
     private void openCamera() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_DENIED) {
+                == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
 
         } else {
@@ -201,24 +276,37 @@ public class FragmentOffer3 extends Fragment {
 
             }else if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK){
                 ClipData mClipData = data.getClipData();
-                for (int i = 0; i < mClipData.getItemCount(); i++) {
-                    ClipData.Item item = mClipData.getItemAt(i);
-                    Uri uri = item.getUri();
+                if ( mClipData == null ) {
+                    Uri uri = data.getData();
                     imagesArrayUri.add(uri);
-                    // !! You may need to resize the image if it's too large
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(imagesArrayUri.size()-1));
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(imagesArrayUri.size() - 1));
                         preview.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    for (int i = 0; i < mClipData.getItemCount(); i++) {
+                        ClipData.Item item = mClipData.getItemAt(i);
+                        Uri uri = item.getUri();
+                        imagesArrayUri.add(uri);
+                        // !! You may need to resize the image if it's too large
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(imagesArrayUri.size() - 1));
+                            preview.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
+                    }
                 }
             }else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK){
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                 /** Save Image to Local Folder and get Uri and add it to (imagesArrayUri) */
                 preview.setImageBitmap(bitmap);
+
             }
+            imagesAdapter.notifyDataSetChanged();
         }
 
     }

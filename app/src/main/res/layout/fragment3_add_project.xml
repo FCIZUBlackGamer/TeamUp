@@ -106,14 +106,14 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:id="@+id/doc"
-                        android:src="@drawable/ic_stairs" />
+                        android:src="@drawable/ic_filter" />
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:id="@+id/image"
-                        android:src="@drawable/ic_stairs" />
+                        android:src="@drawable/ic_menu_camera" />
 
 
                 </LinearLayout>
@@ -194,12 +194,16 @@
                     app:buttonTint="@color/backgroundDarkGreen"
                     android:text="@string/egypt" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/recCapitals">
-
-                    </android.support.v7.widget.RecyclerView>
+                <GridView
+                    android:id="@+id/recCapitals"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnWidth="180dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="spacingWidthUniform"
+                    android:verticalSpacing="24dp" />
 
 
                 </LinearLayout>
@@ -253,12 +257,16 @@
                 android:orientation="vertical">
 
 
-                <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/recDep">
-
-                    </android.support.v7.widget.RecyclerView>
+                <GridView
+                    android:id="@+id/recDep"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnWidth="180dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="spacingWidthUniform"
+                    android:verticalSpacing="24dp" />
 
                 </LinearLayout>
 
@@ -323,12 +331,17 @@
                         android:lines="3"
                         android:padding="10dp" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tagsRec">
 
-                    </android.support.v7.widget.RecyclerView>
+                <GridView
+                    android:id="@+id/tagsRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnWidth="180dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="spacingWidthUniform"
+                    android:verticalSpacing="24dp" />
 
                     <Button
                         android:layout_width="wrap_content"

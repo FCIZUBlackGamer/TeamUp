@@ -28,6 +28,7 @@ import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentOffer1;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 
@@ -42,6 +43,7 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar;
     static DrawerLayout drawer;
 
+    FloatingActionButton fab;
     MovableFloatingActionButton movableFloatingActionButton;
     FloatingActionButton civ_filter;
 
@@ -107,18 +109,8 @@ public class DrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addOffer);
+        fab = (FloatingActionButton) findViewById(R.id.addOffer);
 
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /** Half Pizza Animation */
-                Hide();
-                fab.setVisibility(View.GONE);
-                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentOffer1()).commit();
-            }
-        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -150,6 +142,21 @@ public class DrawerActivity extends AppCompatActivity
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.nav_home);
         navigationView.setCheckedItem(R.id.navigation_home);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /** Half Pizza Animation */
+                Hide();
+                fab.setVisibility(View.GONE);
+                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome()).commit();
+            }
+        });
     }
 
     @Override
