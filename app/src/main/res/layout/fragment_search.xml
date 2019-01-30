@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:rsb="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_filter" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/advancedSearch"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:lines="2"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingBottom="10dp"
+                android:text="@string/searchBla"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:gravity="right"
+                android:hint="@string/proName"
+                app:queryHint="@string/proName"
+                android:autofillHints="@string/proName"
+                app:defaultQueryHint="@string/proName"
+                android:lines="1">
+
+            </android.support.v7.widget.SearchView>
+
+
+            <RelativeLayout
+                android:id="@+id/education"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/edLevel"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
+
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/edSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/educationLevelContributors"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+
+                <com.badoualy.stepperindicator.StepperIndicator
+                    android:id="@+id/educationLevel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:stpi_circleColor="@color/colorPrimary"
+                    app:stpi_circleStrokeWidth="2dp"
+                    app:stpi_indicatorColor="@color/colorPrimary"
+                    app:stpi_lineDoneColor="@color/colorPrimaryDark"
+                    app:stpi_stepCount="4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/basicLevel"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/midLevel"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/highLevel"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/money"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/money"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
+
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/moneySection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/medium"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/proCost"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+
+
+                <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                    android:id="@+id/moneySeekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    rsb:absoluteMaxValue="100"
+                    rsb:absoluteMinValue="0" />
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/contributors"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
+
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/genderSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/gender"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+
+                <RadioGroup
+                    android:id="@+id/genderGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <RadioButton
+                        android:id="@+id/both"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/both" />
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/male" />
+
+                    <RadioButton
+                        android:id="@+id/female"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/female" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/numContributors"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+
+                <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                    android:id="@+id/contributorSeekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    rsb:absoluteMaxValue="100"
+                    rsb:absoluteMinValue="0" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/experienceSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/contributors"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_centerVertical="true"
+                        android:background="#FF00DBFF"
+                        android:gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#fff"
+                        android:fontFamily="@font/medium"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="@string/exField"
+                        android:textAlignment="center"
+                        android:textSize="22sp" />
+
+                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="#fff"
+                        android:foregroundGravity="center"
+                        android:src="@drawable/ic_arrow_up"
+                        android:textAlignment="center"
+                        app:backgroundTint="@color/backgroundBlue"
+                        app:borderWidth="2dp"
+                        app:fabCustomSize="@dimen/design_fab_image_size"
+                        app:maxImageSize="24dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/exSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/medium"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/averageAge"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+
+                    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                        android:id="@+id/ageSeekbar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        rsb:absoluteMaxValue="100"
+                        rsb:absoluteMinValue="0" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/DepSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/dep"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_centerVertical="true"
+                        android:background="#FF00DBFF"
+                        android:gravity="center_vertical" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#fff"
+                        android:fontFamily="@font/medium"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="@string/dep"
+                        android:textAlignment="center"
+                        android:textSize="22sp" />
+
+                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:backgroundTint="#fff"
+                        android:foregroundGravity="center"
+                        android:src="@drawable/ic_arrow_up"
+                        android:textAlignment="center"
+                        app:backgroundTint="@color/backgroundBlue"
+                        app:borderWidth="2dp"
+                        app:fabCustomSize="@dimen/design_fab_image_size"
+                        app:maxImageSize="24dp" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recDep">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="#fff"
+                android:fontFamily="@font/medium"
+                android:text="@string/search"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

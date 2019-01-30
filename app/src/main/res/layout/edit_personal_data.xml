@@ -305,6 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:checked="true"
+                    style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                     android:text="@string/male"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/textColorGray" />
@@ -314,6 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/female"
+                    style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/textColorGray" />
             </RadioGroup>

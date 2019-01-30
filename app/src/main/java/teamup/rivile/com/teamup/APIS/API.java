@@ -1,13 +1,13 @@
 package teamup.rivile.com.teamup.APIS;
 
 public class API {
-    final private static String BASE_URL = "";
+    final private static String BASE_URL = "http://192.168.0.102/";
     final public static String REGISTER_URL = BASE_URL + "";
     final public static String LOGIN_URL = BASE_URL + "";
     final public static String HOME_URL = BASE_URL + "";
     final public static String GENERAL_MAP_URL = BASE_URL + "";
     final public static String PROFILE_URL = BASE_URL + "";
-    final public static String ADD_OFFER_URL = BASE_URL + "";
+    final public static String ADD_OFFER_URL = BASE_URL + "/Offer/Add";
     final public static String EDIT_OFFER_URL = BASE_URL + "";
     final public static String DELETE_OFFER_URL = BASE_URL + "";
     final public static String JOIN_OFFER_URL = BASE_URL + "";
@@ -23,5 +23,5 @@ public class API {
     final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "";
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "";
     final public static String REPORT_URL = BASE_URL + "";
-    final public static String _URL = BASE_URL + "";
+    final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 }

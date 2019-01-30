@@ -8,10 +8,12 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="الرئيسية" />
+        
         <item
             android:id="@+id/nav_go_map"
             android:icon="@drawable/ic_route"
             android:title="جو ماب" />
+
         <item
             android:id="@+id/nav_saved_project"
             android:icon="@drawable/ic_linked_projects"

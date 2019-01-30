@@ -12,7 +12,8 @@
     <item
         android:id="@+id/navigation_saved_project"
         android:icon="@drawable/ic_linked_projects"
-        android:title="" />
+        android:title=""
+        android:visible="false"/>
     <item
         android:id="@+id/navigation_favourite_projects"
         android:icon="@drawable/ic_star_empty"

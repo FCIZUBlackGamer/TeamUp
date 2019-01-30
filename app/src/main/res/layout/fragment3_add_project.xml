@@ -5,23 +5,16 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:rsb="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:padding="5dp">
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -60,7 +53,7 @@
                     android:textSize="18sp" />
 
                 <RelativeLayout
-                    android:id="@+id/money"
+                    android:id="@+id/attachment"
                     android:layout_width="match_parent"
                     android:layout_height="30dp">
 
@@ -102,7 +95,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/moneySection"
+                    android:id="@+id/attachmentSection"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:orientation="horizontal"
@@ -112,12 +105,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:id="@+id/doc"
                         android:src="@drawable/ic_stairs" />
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:id="@+id/image"
                         android:src="@drawable/ic_stairs" />
 
 
@@ -141,61 +136,63 @@
 
                 </android.support.v7.widget.RecyclerView>
 
-                <LinearLayout
-                    android:id="@+id/CapSection"
+            <RelativeLayout
+                android:id="@+id/cap"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/proCapital"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
-                    <RelativeLayout
-                        android:id="@+id/contributors"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp">
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:layout_centerVertical="true"
-                            android:background="#FF00DBFF"
-                            android:gravity="center_vertical" />
+            <LinearLayout
+                android:id="@+id/CapSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="20dp"
-                            android:background="#fff"
-                            android:fontFamily="@font/medium"
-                            android:gravity="center"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:text="@string/proCapital"
-                            android:textAlignment="center"
-                            android:textSize="22sp" />
-
-                        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="10dp"
-                            android:backgroundTint="#fff"
-                            android:foregroundGravity="center"
-                            android:src="@drawable/ic_arrow_up"
-                            android:textAlignment="center"
-                            app:backgroundTint="@color/backgroundBlue"
-                            app:borderWidth="2dp"
-                            app:fabCustomSize="@dimen/design_fab_image_size"
-                            app:maxImageSize="24dp" />
-                    </RelativeLayout>
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/egypt"
-                        android:layout_margin="5dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="center"/>
+                <CheckBox
+                    android:id="@+id/egypt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    app:buttonTint="@color/backgroundDarkGreen"
+                    android:text="@string/egypt" />
 
                     <android.support.v7.widget.RecyclerView
                         android:layout_width="match_parent"
@@ -207,55 +204,56 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/DepSection"
+            <RelativeLayout
+                android:id="@+id/dep"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/dep"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
-                    <RelativeLayout
-                        android:id="@+id/dep"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp">
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:layout_centerVertical="true"
-                            android:background="#FF00DBFF"
-                            android:gravity="center_vertical" />
+            <LinearLayout
+                android:id="@+id/DepSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="20dp"
-                            android:background="#fff"
-                            android:fontFamily="@font/medium"
-                            android:gravity="center"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:text="@string/dep"
-                            android:textAlignment="center"
-                            android:textSize="22sp" />
 
-                        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="10dp"
-                            android:backgroundTint="#fff"
-                            android:foregroundGravity="center"
-                            android:src="@drawable/ic_arrow_up"
-                            android:textAlignment="center"
-                            app:backgroundTint="@color/backgroundBlue"
-                            app:borderWidth="2dp"
-                            app:fabCustomSize="@dimen/design_fab_image_size"
-                            app:maxImageSize="24dp" />
-                    </RelativeLayout>
-
-                    <android.support.v7.widget.RecyclerView
+                <android.support.v7.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/recDep">
@@ -264,61 +262,63 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/tagSection"
+            <RelativeLayout
+                android:id="@+id/tags"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/tags"
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
-                    <RelativeLayout
-                        android:id="@+id/tags"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp">
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:gravity="center_vertical"
-                            android:layout_centerVertical="true"
-                            android:background="#FF00DBFF" />
+            <LinearLayout
+                android:id="@+id/tagSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="20dp"
-                            android:background="#fff"
-                            android:gravity="center"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:text="@string/tags"
-                            android:textAlignment="center"
-                            android:fontFamily="@font/medium"
-                            android:textSize="22sp" />
 
-                        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginStart="10dp"
-                            android:textAlignment="center"
-                            android:foregroundGravity="center"
-                            android:layout_centerVertical="true"
-                            android:backgroundTint="#fff"
-                            app:maxImageSize="24dp"
-                            app:fabCustomSize="@dimen/design_fab_image_size"
-                            android:src="@drawable/ic_arrow_up"
-                            app:backgroundTint="@color/backgroundBlue"
-                            app:borderWidth="2dp" />
-                    </RelativeLayout>
-
-                    <EditText
+                <EditText
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
                         android:layout_margin="8dp"
                         android:background="@drawable/rounded_corner_edit_text"
                         android:gravity="right"
+                    android:id="@+id/tagsInput"
                         android:fontFamily="@font/medium"
                         android:lines="3"
                         android:padding="10dp" />
@@ -337,13 +337,13 @@
                         android:layout_gravity="center"
                         android:background="@color/colorPrimaryDark"
                         android:textColor="#fff"
+                        android:id="@+id/go"
                         android:fontFamily="@font/medium"
                         android:text="@string/go"/>
 
                 </LinearLayout>
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
     </RelativeLayout>
 </ScrollView>
 

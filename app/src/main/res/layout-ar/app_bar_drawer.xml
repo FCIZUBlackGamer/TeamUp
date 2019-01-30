@@ -23,12 +23,13 @@
     <include layout="@layout/content_drawer" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:visibility="gone"
+        android:id="@+id/addOffer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|center"
+        android:backgroundTint="@color/buttonColorGreen"
+        app:backgroundTint="@color/backgroundDarkGreen"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
 </android.support.design.widget.CoordinatorLayout>

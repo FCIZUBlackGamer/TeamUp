@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/transparent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,12 +68,14 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:text="Mo'men Shaheen"
+                        android:fontFamily="@font/medium"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/job_title"
                         android:layout_width="match_parent"
+                        android:fontFamily="@font/medium"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:gravity="center_horizontal"
@@ -81,6 +84,7 @@
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="wrap_content"
+                        android:fontFamily="@font/medium"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:drawableRight="@drawable/ic_placeholder"
@@ -89,33 +93,14 @@
                         android:text="مصر - الشرقيه - الزقازيق"
                         android:textSize="10sp" />
 
-                    <RatingBar
-                        android:id="@+id/person_rate"
-                        style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:isIndicator="true"
-                        android:numStars="5"
-                        android:progressTint="@color/progress"
-                        android:rating="5"
-                        android:scaleX="1.5"
-                        android:scaleY="1.5"
-                        android:stepSize="1" />
-
-                    <TextView
-                        android:id="@+id/bio"
+                    <android.support.v4.view.ViewPager
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_horizontal"
-                        android:maxWidth="10dp"
-                        android:paddingStart="28dp"
-                        android:paddingEnd="28dp"
-                        android:paddingBottom="15dp"
-                        android:text="برمجيات فى شركة ريفيل" />
+                        android:id="@+id/pager"
+                        tools:context="teamup.rivile.com.teamup.Profile">
+
+
+                    </android.support.v4.view.ViewPager>
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -143,6 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="المشاريع المشارك فيها"
+                        android:fontFamily="@font/medium"
                         android:textDirection="rtl"
                         android:textSize="18sp" />
 
@@ -150,11 +136,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="("
+                        android:fontFamily="@font/medium"
                         android:textDirection="rtl"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/num_projects"
+                        android:fontFamily="@font/medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5"

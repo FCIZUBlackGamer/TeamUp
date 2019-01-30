@@ -28,6 +28,7 @@ import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.Project.Add.FragmentOffer1;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 
 public class DrawerActivity extends AppCompatActivity
@@ -106,12 +107,16 @@ public class DrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addOffer);
+
+        fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /** Half Pizza Animation */
+                Hide();
+                fab.setVisibility(View.GONE);
+                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentOffer1()).commit();
             }
         });
 

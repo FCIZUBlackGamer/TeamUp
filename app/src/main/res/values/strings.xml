@@ -84,4 +84,17 @@
     <string name="avail" translatable="false"> متوفر </string>
     <string name="notAvail" translatable="false"> غير متوفر </string>
     <string name="exDep" translatable="false"> اقسام الخبره </string>
+    <string name="advancedSearch" translatable="false"> البحث المتقدم للمشروعات </string>
+    <string name="searchBla" translatable="false"> قم بتصنيف وعرض المشاريع الأن حسب احتياجاتك بكل سهولة ويسر من خلال الأدوات المتقدمة </string>
+    <string name="proName" translatable="false"> أسم المشروع </string>
+    <string name="averageAge" translatable="false"> متوسط اعمار المشتركين </string>
+    <string name="proCost" translatable="false"> تكلفه المشروع </string>
+    <string name="proNumCont" translatable="false"> عدد المساهمين فى المشروع </string>
+    <string name="proNumEx" translatable="false"> مدى الخبرة المطلوبة للمشاريع </string>
+    <string name="edLevel" translatable="false"> المستوى التعليمى </string>
+    <string name="search" translatable="false"> بحث </string>
+    <string name="dateOfBirth" translatable="false"> تاريخ الميلاد </string>
+    <string name="phone" translatable="false"> الهاتف </string>
+    <string name="from" translatable="false"> من </string>
+    <string name="to" translatable="false"> إلى </string>
 </resources>

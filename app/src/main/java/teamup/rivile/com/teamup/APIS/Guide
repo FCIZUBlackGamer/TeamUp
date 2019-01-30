@@ -1,0 +1,73 @@
+Offer {
+    ProfitType {
+        Day: 0
+        Month: 1
+        Year: 2
+        Other: 3
+    }
+
+    GenderContributor{
+        Male: 0
+        Female: 1
+        Both: 2
+    }
+
+    EducationContributorLevel{
+        Basic: 0
+        Mid: 1
+        High: 2
+    }
+
+    Status{
+        Pended: 0
+        Approved: 1
+        Reject: 2
+    }
+
+}
+
+JoinOffer{
+    Status{
+        Offer Owner: 0
+        Request on Offer: 1
+    }
+}
+
+Attachment{
+    Type{
+        Image: 0
+        File: 1
+    }
+}
+
+Certification{
+    Type{
+        Image: 0
+        File: 1
+    }
+}
+
+User{
+    Status{
+
+        Verified: 1
+    }
+
+}
+
+RequirmentModel{
+    NeedPlace, NeedMoney, NeedExperience{
+        No: 0
+        Yes: 1
+    }
+
+    NeedPlaceType{
+        Rent: 0
+        Owned: 1
+    }
+
+    NeedPlaceStatus{
+        Not Available: 0
+        Available: 1
+    }
+}

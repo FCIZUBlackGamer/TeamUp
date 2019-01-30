@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RatingBar
+        android:id="@+id/person_rate"
+        style="@style/Base.Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:progressTint="@color/progress"
+        android:rating="5"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:stepSize="1" />
+
+    <TextView
+        android:id="@+id/bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:maxWidth="10dp"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:fontFamily="@font/medium"
+        android:paddingBottom="15dp"
+        android:text="برمجيات فى شركة ريفيل" />
+
+</LinearLayout>
