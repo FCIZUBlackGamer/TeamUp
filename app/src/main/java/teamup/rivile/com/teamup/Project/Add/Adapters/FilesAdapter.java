@@ -53,6 +53,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
             public void onClick(View v) {
                 if (fileUri != null){
                     filesModels.remove(position);
+                    notifyDataSetChanged();
                 }
             }
         });

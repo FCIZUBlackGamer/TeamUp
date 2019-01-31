@@ -52,6 +52,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
             }catch (Exception e){
                 Log.e("Ex", e.getMessage());
             }
+        }else {
+            Log.e("Ex", "EMpty");
         }
 
     }

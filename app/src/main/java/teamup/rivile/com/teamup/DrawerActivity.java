@@ -110,6 +110,7 @@ public class DrawerActivity extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
         fab = (FloatingActionButton) findViewById(R.id.addOffer);
+        fab.setVisibility(View.VISIBLE);
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -147,14 +148,13 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /** Half Pizza Animation */
                 Hide();
                 fab.setVisibility(View.GONE);
-                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome()).commit();
+                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome().setFab(fab)).commit();
             }
         });
     }
