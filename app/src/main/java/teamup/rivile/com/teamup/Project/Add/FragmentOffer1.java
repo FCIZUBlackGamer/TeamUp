@@ -15,11 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
+import teamup.rivile.com.teamup.Project.Add.Adapters.MaxTextWatcher;
+import teamup.rivile.com.teamup.Project.Add.Adapters.MinTextWatcher;
 import teamup.rivile.com.teamup.R;
 
 public class FragmentOffer1 extends Fragment {
@@ -42,6 +43,12 @@ public class FragmentOffer1 extends Fragment {
     FloatingActionButton arrowContributors, arrowMoney;
     EditText moneyOutFrom, moneyOutTo, moneyInFrom, moneyInTo, conFrom, conTo;
 
+    private int minMoneyOut = 0,
+            maxMoneyOut = 100000,
+            minMoneyIn = 0,
+            maxMoneyIn = 100000,
+            minContributor = 0,
+            maxContributor = 15;
 
 
     @Nullable
@@ -72,12 +79,17 @@ public class FragmentOffer1 extends Fragment {
         high = view.findViewById(R.id.high);
         arrowMoney = view.findViewById(R.id.arrowMoney);
         arrowContributors = view.findViewById(R.id.arrowContributors);
+
         moneyOutFrom = view.findViewById(R.id.moneyOutFrom);
         moneyOutTo = view.findViewById(R.id.moneyOutTo);
+
         moneyInFrom = view.findViewById(R.id.moneyInFrom);
         moneyInTo = view.findViewById(R.id.moneyInTo);
+
         conFrom = view.findViewById(R.id.conFrom);
         conTo = view.findViewById(R.id.conTo);
+
+
         return view;
     }
 
@@ -85,34 +97,11 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
-        moneySeekbar.setRangeValues(0, 1000004);
-        moneyRequiredSeekbar.setRangeValues(0, 100000);
-        contributorSeekbar.setRangeValues(0, 15);
+        setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar);
+        setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
+        setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
 
-        moneySeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                moneyOutFrom.setText(minValue.toString());
-                moneyOutTo.setText(maxValue.toString());
-            }
-        });
-
-        moneyRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                moneyInFrom.setText(minValue.toString());
-                moneyInTo.setText(maxValue.toString());
-            }
-        });
-
-        contributorSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                conFrom.setText(minValue.toString());
-                conTo.setText(maxValue.toString());
-            }
-        });
-
+        setUpProjectMoneyAvailabilityViewsVisibility();
 
         money.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +163,72 @@ public class FragmentOffer1 extends Fragment {
             @Override
             public void onClick(View v) {
                 educationLevel.setCurrentStep(4);
+            }
+        });
+    }
+
+    private void setUpSeekBarViews(
+            final int minVal,
+            final int maxVal,
+            final EditText fromEditText,
+            final EditText toEditText,
+            RangeSeekBar seekBar) {
+        final MinTextWatcher minTextWatcher = new MinTextWatcher(fromEditText, minVal, seekBar);
+        fromEditText.addTextChangedListener(minTextWatcher);
+
+        final MaxTextWatcher maxTextWatcher = new MaxTextWatcher(toEditText, maxVal, seekBar);
+        toEditText.addTextChangedListener(maxTextWatcher);
+
+        seekBar.setRangeValues(minVal, maxVal);
+        seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                fromEditText.removeTextChangedListener(minTextWatcher);
+                fromEditText.setText(minValue.toString());
+                fromEditText.addTextChangedListener(minTextWatcher);
+
+                toEditText.removeTextChangedListener(maxTextWatcher);
+                toEditText.setText(maxValue.toString());
+                toEditText.addTextChangedListener(maxTextWatcher);
+            }
+        });
+
+//        fromEditText.setText(String.valueOf(minVal));
+        fromEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (fromEditText.getText().toString().isEmpty())
+                    fromEditText.setText(String.valueOf(minVal));
+                if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
+                    fromEditText.setText(toEditText.getText().toString());
+            }
+        });
+
+//        toEditText.setText(String.valueOf(maxVal));
+        toEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (toEditText.getText().toString().isEmpty())
+                    toEditText.setText(String.valueOf(maxVal));
+                if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
+                    toEditText.setText(fromEditText.getText().toString());
+            }
+        });
+    }
+
+    private void setUpProjectMoneyAvailabilityViewsVisibility() {
+        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.avail) {
+                    moneyRequiredSeekbar.setEnabled(true);
+                    moneyInFrom.setEnabled(true);
+                    moneyInTo.setEnabled(true);
+                } else if (checkedId == R.id.notAvail) {
+                    moneyRequiredSeekbar.setEnabled(false);
+                    moneyInFrom.setEnabled(false);
+                    moneyInTo.setEnabled(false);
+                }
             }
         });
     }

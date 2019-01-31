@@ -17,100 +17,100 @@
             android:background="#fff"
             android:orientation="vertical">
 
-                <RelativeLayout
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_dashboard_black_24dp" />
+
+                <LinearLayout
+                    android:id="@+id/lin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/user_image"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_dashboard_black_24dp" />
-
-                    <LinearLayout
-                        android:id="@+id/lin"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="13dp"
-                        android:layout_toLeftOf="@id/user_image"
-                        android:gravity="right"
-                        android:orientation="vertical">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/project_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/medium"
-                            android:background="#fff"
-                            android:maxLines="2"
-                            android:hint="@string/pressHere"
-                            android:textColorHint="@color/colorPrimary"
-                            android:textColor="@color/colorPrimary"
-                            android:textDirection="rtl"
-                            android:textSize="22sp" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-                <EditText
-                    android:id="@+id/proDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/rounded_corner_edit_text"
-                    android:fontFamily="@font/medium"
+                    android:layout_marginRight="13dp"
+                    android:layout_toLeftOf="@id/user_image"
                     android:gravity="right"
-                    android:hint="@string/projectDesc"
-                    android:lines="4"
-                    android:padding="10dp" />
+                    android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/money"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_centerVertical="true"
-                        android:background="#FF00DBFF"
-                        android:gravity="center_vertical" />
-
-                    <TextView
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/project_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginEnd="20dp"
                         android:background="#fff"
                         android:fontFamily="@font/medium"
-                        android:layout_gravity="top"
-                        android:gravity="top"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:text="@string/money"
-                        android:textAlignment="center"
-                        android:textSize="18sp" />
+                        android:hint="@string/pressHere"
+                        android:maxLines="2"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
+                        android:textDirection="rtl"
+                        android:textSize="22sp" />
 
-                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:backgroundTint="#fff"
-                        android:id="@+id/arrowMoney"
-                        android:foregroundGravity="center"
-                        android:src="@drawable/ic_arrow_up"
-                        android:textAlignment="center"
-                        app:backgroundTint="@color/backgroundBlue"
-                        app:borderWidth="2dp"
-                        app:fabCustomSize="@dimen/design_fab_image_size"
-                        app:maxImageSize="24dp" />
-                </RelativeLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/proDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:gravity="right"
+                android:hint="@string/projectDesc"
+                android:lines="4"
+                android:padding="10dp" />
+
+            <RelativeLayout
+                android:id="@+id/money"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="top"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
+                    android:fontFamily="@font/medium"
+                    android:gravity="top"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/money"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/arrowMoney"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/moneySection"
@@ -121,14 +121,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:fontFamily="@font/medium"
+                    android:gravity="top"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:text="@string/moneyType"
                     android:textColor="#000"
-                    android:textSize="18sp"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:paddingEnd="10dp"
-                    android:paddingStart="10dp" />
+                    android:textSize="18sp" />
 
                 <RadioGroup
                     android:id="@+id/moneyGroup"
@@ -142,10 +142,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:buttonTint="@color/backgroundDarkGreen"
                         android:fontFamily="@font/medium"
                         android:gravity="end|center_vertical"
-                        android:text="@string/day" />
+                        android:text="@string/day"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
                     <RadioButton
                         android:id="@+id/month"
@@ -153,10 +153,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:buttonTint="@color/backgroundDarkGreen"
                         android:fontFamily="@font/medium"
                         android:gravity="end|center_vertical"
-                        android:text="@string/month" />
+                        android:text="@string/month"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
                     <RadioButton
                         android:id="@+id/year"
@@ -164,10 +164,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:buttonTint="@color/backgroundDarkGreen"
                         android:fontFamily="@font/medium"
                         android:gravity="end|center_vertical"
-                        android:text="@string/year" />
+                        android:text="@string/year"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
                     <RadioButton
                         android:id="@+id/other"
@@ -176,19 +176,19 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
-                        app:buttonTint="@color/backgroundDarkGreen"
                         android:fontFamily="@font/medium"
                         android:gravity="end|center_vertical"
-                        android:text="@string/anotherKind" />
+                        android:text="@string/anotherKind"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
                 </RadioGroup>
 
                 <EditText
+                    android:id="@+id/moneyDesc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:layout_margin="8dp"
-                    android:id="@+id/moneyDesc"
                     android:background="@drawable/rounded_corner_edit_text"
                     android:fontFamily="@font/medium"
                     android:gravity="right"
@@ -200,11 +200,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/medium"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:text="@string/moneyExpected"
                     android:textColor="#000"
-                    android:textSize="18sp"
-                    android:paddingEnd="10dp"
-                    android:paddingStart="10dp" />
+                    android:textSize="18sp" />
 
 
                 <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
@@ -220,15 +220,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/moneyOutFrom"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/moneyOutFrom"
-                        android:paddingEnd="10dp"
                         android:inputType="number"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:paddingEnd="10dp"
+                        android:text="0" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -238,21 +239,23 @@
                         android:paddingEnd="10dp"
                         android:text="@string/from"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/moneyOutTo"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/moneyOutTo"
-                        android:paddingEnd="10dp"
                         android:inputType="number"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:paddingEnd="10dp"
+                        android:text="100000" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -262,7 +265,7 @@
                         android:paddingEnd="10dp"
                         android:text="@string/to"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
 
@@ -275,8 +278,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
                         android:fontFamily="@font/medium"
                         android:gravity="start"
                         android:text="@string/needMoney"
@@ -296,10 +299,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
-                            app:buttonTint="@color/backgroundDarkGreen"
                             android:fontFamily="@font/medium"
                             android:gravity="end|center_vertical"
-                            android:text="@string/notAvail" />
+                            android:text="@string/notAvail"
+                            app:buttonTint="@color/backgroundDarkGreen" />
 
                         <RadioButton
                             android:id="@+id/avail"
@@ -308,10 +311,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:checked="true"
-                            app:buttonTint="@color/backgroundDarkGreen"
                             android:fontFamily="@font/medium"
                             android:gravity="end|center_vertical"
-                            android:text="@string/avail" />
+                            android:text="@string/avail"
+                            app:buttonTint="@color/backgroundDarkGreen" />
 
                     </RadioGroup>
                 </LinearLayout>
@@ -324,7 +327,7 @@
                     android:paddingEnd="10dp"
                     android:text="@string/moneyAmount"
                     android:textColor="#000"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
 
                 <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
@@ -341,15 +344,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/moneyInFrom"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/moneyInFrom"
-                        android:paddingEnd="10dp"
                         android:inputType="number"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:paddingEnd="10dp"
+                        android:text="0" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -359,21 +363,23 @@
                         android:paddingEnd="10dp"
                         android:text="@string/from"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/moneyInTo"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/moneyInTo"
-                        android:paddingEnd="10dp"
                         android:inputType="number"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:paddingEnd="10dp"
+                        android:text="100000" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -383,7 +389,7 @@
                         android:paddingEnd="10dp"
                         android:text="@string/to"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -404,10 +410,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_gravity="top"
                     android:layout_marginEnd="20dp"
                     android:background="#fff"
                     android:fontFamily="@font/medium"
-                    android:layout_gravity="top"
                     android:gravity="top"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
@@ -416,6 +422,7 @@
                     android:textSize="18sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/arrowContributors"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentTop="true"
@@ -425,7 +432,6 @@
                     android:foregroundGravity="center"
                     android:src="@drawable/ic_arrow_up"
                     android:textAlignment="center"
-                    android:id="@+id/arrowContributors"
                     app:backgroundTint="@color/backgroundBlue"
                     app:borderWidth="2dp"
                     app:fabCustomSize="@dimen/design_fab_image_size"
@@ -433,97 +439,98 @@
             </RelativeLayout>
 
             <LinearLayout
-                    android:id="@+id/contributorsSection"
+                android:id="@+id/contributorsSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="top"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:gravity="top"
+                    android:text="@string/gender"
+                    android:textColor="#000"
+                    android:textSize="18sp" />
 
+                <RadioGroup
+                    android:id="@+id/genderGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <RadioButton
+                        android:id="@+id/both"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:layout_gravity="top"
-                        android:gravity="top"
+                        android:layout_weight="1"
+                        android:checked="true"
                         android:fontFamily="@font/medium"
-                        android:text="@string/gender"
-                        android:textColor="#000"
-                        android:textSize="18sp" />
+                        android:gravity="end|center_vertical"
+                        android:text="@string/both"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
-                    <RadioGroup
-                        android:id="@+id/genderGroup"
-                        android:layout_width="match_parent"
+                    <RadioButton
+                        android:id="@+id/male"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
-
-                        <RadioButton
-                            android:id="@+id/both"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:buttonTint="@color/backgroundDarkGreen"
-                            android:checked="true"
-                            android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/both" />
-
-                        <RadioButton
-                            android:id="@+id/male"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:buttonTint="@color/backgroundDarkGreen"
-                            android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/male" />
-
-                        <RadioButton
-                            android:id="@+id/female"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:buttonTint="@color/backgroundDarkGreen"
-                            android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/female" />
-
-                    </RadioGroup>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
                         android:fontFamily="@font/medium"
-                        android:text="@string/numContributors"
-                        android:textColor="#000"
-                        android:textSize="18sp" />
+                        android:gravity="end|center_vertical"
+                        android:text="@string/male"
+                        app:buttonTint="@color/backgroundDarkGreen" />
 
-                    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
-                        android:id="@+id/contributorSeekbar"
-                        android:layout_width="fill_parent"
+                    <RadioButton
+                        android:id="@+id/female"
+                        style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        rsb:absoluteMaxValue="100"
-                        rsb:absoluteMinValue="0" />
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/female"
+                        app:buttonTint="@color/backgroundDarkGreen" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/numContributors"
+                    android:textColor="#000"
+                    android:textSize="18sp" />
+
+                <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+                    android:id="@+id/contributorSeekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    rsb:absoluteMaxValue="100"
+                    rsb:absoluteMinValue="0" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/conFrom"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/conFrom"
                         android:inputType="number"
                         android:paddingEnd="10dp"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:text="0" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -533,21 +540,23 @@
                         android:paddingEnd="10dp"
                         android:text="@string/from"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <EditText
+                        android:id="@+id/conTo"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:id="@+id/conTo"
                         android:inputType="number"
                         android:paddingEnd="10dp"
-                        android:layout_height="wrap_content"
-                        android:text="0"/>
+                        android:text="15" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -557,18 +566,18 @@
                         android:paddingEnd="10dp"
                         android:text="@string/to"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:fontFamily="@font/medium"
-                        android:text="@string/educationLevelContributors"
-                        android:textColor="#000"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/educationLevelContributors"
+                    android:textColor="#000"
+                    android:textSize="18sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -598,36 +607,36 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:id="@+id/noLev"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:id="@+id/basic"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
 
                         <TextView
+                            android:id="@+id/mid"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:id="@+id/mid"
-                            android:fontFamily="@font/medium"
-                            android:background="@android:color/transparent" />
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/medium" />
 
                         <TextView
+                            android:id="@+id/high"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:id="@+id/high"
-                            android:fontFamily="@font/medium"
-                            android:background="@android:color/transparent" />
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/medium" />
 
 
                     </LinearLayout>
@@ -637,44 +646,44 @@
 
 
                 <LinearLayout
-                        android:layout_width="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/basicLevel"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/medium"
-                            android:text="@string/basicLevel"
-                            android:textColor="#000"
-                            android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/midLevel"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/medium"
-                            android:text="@string/midLevel"
-                            android:textColor="#000"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/medium"
-                            android:text="@string/highLevel"
-                            android:textColor="#000"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/highLevel"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 </ScrollView>
