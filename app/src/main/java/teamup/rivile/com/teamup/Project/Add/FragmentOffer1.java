@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
+import teamup.rivile.com.teamup.Project.Add.Adapters.MaxTextWatcher;
+import teamup.rivile.com.teamup.Project.Add.Adapters.MinTextWatcher;
 import teamup.rivile.com.teamup.R;
 
 public class FragmentOffer1 extends Fragment {
@@ -225,109 +227,5 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-    }
-
-    private class MinTextWatcher implements TextWatcher {
-
-        private EditText mEditText;
-        private RangeSeekBar mRangeSeekBar;
-
-        private int mMinVal;
-
-        private final String MIN_ERROR_MESSAGE;
-
-        MinTextWatcher(EditText editText, int minVal, RangeSeekBar rangeSeekBar) {
-            this.mEditText = editText;
-
-            this.mMinVal = minVal;
-            this.mRangeSeekBar = rangeSeekBar;
-
-            MIN_ERROR_MESSAGE = getString(R.string.min_val_error) + String.valueOf(mMinVal) + ".";
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String val = s.toString();
-            if (val.isEmpty()) val = String.valueOf(mMinVal);
-
-            if (Integer.valueOf(val) >= mMinVal) {
-                mRangeSeekBar.setSelectedMinValue(Integer.valueOf(val));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            String val = s.toString();
-            if (val.isEmpty()) val = String.valueOf(mMinVal);
-
-            if (Integer.valueOf(val) < mMinVal) {
-                Toast.makeText(getContext(), MIN_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
-                mRangeSeekBar.setSelectedMinValue(mMinVal);
-                changeTextToMin();
-            }
-        }
-
-        private void changeTextToMin() {
-            mEditText.removeTextChangedListener(this);
-            mEditText.setText(String.valueOf(mMinVal));
-            mEditText.addTextChangedListener(this);
-        }
-    }
-
-    private class MaxTextWatcher implements TextWatcher {
-
-        private EditText mEditText;
-        private RangeSeekBar mRangeSeekBar;
-
-        private int mMaxVal;
-
-        private final String MAX_ERROR_MESSAGE;
-
-        MaxTextWatcher(EditText editText, int maxVal, RangeSeekBar rangeSeekBar) {
-            this.mEditText = editText;
-            this.mRangeSeekBar = rangeSeekBar;
-
-            this.mMaxVal = maxVal;
-
-            MAX_ERROR_MESSAGE = getString(R.string.max_error_val) + String.valueOf(mMaxVal) + ".";
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String val = s.toString();
-            if (val.isEmpty()) val = String.valueOf(mMaxVal);
-
-            if (Integer.valueOf(val) <= mMaxVal) {
-                mRangeSeekBar.setSelectedMaxValue(Integer.valueOf(val));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            String val = s.toString();
-            if (val.isEmpty()) val = String.valueOf(mMaxVal);
-
-            if (Integer.valueOf(val) > mMaxVal) {
-                Toast.makeText(getContext(), MAX_ERROR_MESSAGE, Toast.LENGTH_SHORT).show();
-                mRangeSeekBar.setSelectedMaxValue(mMaxVal);
-                changeTextToMax();
-            }
-        }
-
-        private void changeTextToMax() {
-            mEditText.removeTextChangedListener(this);
-            mEditText.setText(String.valueOf(mMaxVal));
-            mEditText.addTextChangedListener(this);
-        }
     }
 }
