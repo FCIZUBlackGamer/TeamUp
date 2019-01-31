@@ -76,7 +76,7 @@
                         android:paddingRight="20dp"
                         android:text="@string/attachment"
                         android:textAlignment="center"
-                        android:textSize="22sp" />
+                        android:textSize="18sp" />
 
                     <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="30dp"
@@ -124,12 +124,32 @@
                     android:id="@+id/recFiles">
 
                 </android.support.v7.widget.RecyclerView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/view"
+                android:visibility="gone">
+
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
                     android:id="@+id/preview"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
                     android:src="@drawable/ic_stairs" />
-                <android.support.v7.widget.RecyclerView
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:id="@+id/delete"/>
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/recImages">
@@ -160,7 +180,7 @@
                     android:paddingRight="20dp"
                     android:text="@string/proCapital"
                     android:textAlignment="center"
-                    android:textSize="22sp" />
+                    android:textSize="18sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="30dp"
@@ -232,7 +252,7 @@
                     android:paddingRight="20dp"
                     android:text="@string/dep"
                     android:textAlignment="center"
-                    android:textSize="22sp" />
+                    android:textSize="18sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="30dp"
@@ -294,7 +314,7 @@
                     android:paddingRight="20dp"
                     android:text="@string/tags"
                     android:textAlignment="center"
-                    android:textSize="22sp" />
+                    android:textSize="18sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="30dp"

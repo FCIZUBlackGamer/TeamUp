@@ -1,14 +1,15 @@
 package teamup.rivile.com.teamup.Project.Add;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,15 @@ import teamup.rivile.com.teamup.R;
 
 public class FragmentAddHome extends Fragment {
 
+    static FloatingActionButton fab;
+    public static FragmentAddHome setFab(FloatingActionButton view){
+        fab = view;
+        return new FragmentAddHome();
+    }
     View view;
     //FragmentManager fragmentManager;
     ViewPager viewPager = null;
+    FragmentPagerAdapter pagerAdapter;
     //FragmentTransaction d;
 
     @Nullable
@@ -31,13 +38,16 @@ public class FragmentAddHome extends Fragment {
         return view;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onStart() {
         super.onStart();
 
         //d = fragmentManager.beginTransaction();
 
-            viewPager.setAdapter(new pager(getChildFragmentManager()));
+        fab.setVisibility(View.GONE);
+        pagerAdapter = new pager(getChildFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
 
 
     }
@@ -58,7 +68,7 @@ public class FragmentAddHome extends Fragment {
                 fragment = new FragmentOffer2();
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3();
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter);
                 //d.commitNow();
             }
 
@@ -69,6 +79,13 @@ public class FragmentAddHome extends Fragment {
         public int getCount() {
             return 3;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+            viewPager.setCurrentItem(2);
 
     }
 }
