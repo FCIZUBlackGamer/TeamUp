@@ -99,4 +99,12 @@
     <string name="to" translatable="false"> إلى </string>
     <string name="min_val_error" translatable="false">"لا يمكن ان تقل القيمة عن "</string>
     <string name="max_error_val" translatable="false">"لا يمكن ان تزيد القيمة عن "</string>
+    <string name="minExperienceNeededKey">minExperienceNeededKey</string>
+    <string name="maxExperienceNeededKey">maxExperienceNeededKey</string>
+    <string name="minMoneyOutKey">minMoneyOutKey</string>
+    <string name="maxMoneyOutKey">maxMoneyOutKey</string>
+    <string name="minMoneyInKey">minMoneyInKey</string>
+    <string name="maxMoneyInKey">maxMoneyInKey</string>
+    <string name="minContributorKey">minContributorKey</string>
+    <string name="maxContributorKey">maxContributorKey</string>
 </resources>

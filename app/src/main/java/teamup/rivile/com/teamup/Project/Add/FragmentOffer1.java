@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
@@ -45,6 +42,13 @@ public class FragmentOffer1 extends Fragment {
 
     FloatingActionButton arrowContributors, arrowMoney;
     EditText moneyOutFrom, moneyOutTo, moneyInFrom, moneyInTo, conFrom, conTo;
+
+    private int minMoneyOut = 0,
+            maxMoneyOut = 100000,
+            minMoneyIn = 0,
+            maxMoneyIn = 100000,
+            minContributor = 0,
+            maxContributor = 15;
 
 
     @Nullable
@@ -93,9 +97,9 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
-        setUpSeekBarViews(0, 100000, moneyOutFrom, moneyOutTo, moneySeekbar);
-        setUpSeekBarViews(0, 100000, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
-        setUpSeekBarViews(0, 15, conFrom, conTo, contributorSeekbar);
+        setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar);
+        setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
+        setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
 
         setUpProjectMoneyAvailabilityViewsVisibility();
 
@@ -189,7 +193,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        fromEditText.setText(String.valueOf(minVal));
+//        fromEditText.setText(String.valueOf(minVal));
         fromEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -200,7 +204,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        toEditText.setText(String.valueOf(maxVal));
+//        toEditText.setText(String.valueOf(maxVal));
         toEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

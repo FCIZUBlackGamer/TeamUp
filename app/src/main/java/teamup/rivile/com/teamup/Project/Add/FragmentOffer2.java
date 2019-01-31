@@ -37,6 +37,8 @@ public class FragmentOffer2 extends Fragment {
 
     View map;
 
+    private int minExperienceNeeded = 0, maxExperienceNeeded = 15;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class FragmentOffer2 extends Fragment {
 
         setUpProjectPlaceNeedViewsVisibility();
         setUpProjectExperienceNeedViewsVisibility();
-        setUpSeekBarViews(0, 15, experienceFrom, experienceTo, exRequiredSeekbar);
+        setUpSeekBarViews(minExperienceNeeded, maxExperienceNeeded, experienceFrom, experienceTo, exRequiredSeekbar);
 
         place.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +133,7 @@ public class FragmentOffer2 extends Fragment {
             }
         });
 
-        fromEditText.setText(String.valueOf(minVal));
+//        fromEditText.setText(String.valueOf(minVal));
         fromEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -142,7 +144,7 @@ public class FragmentOffer2 extends Fragment {
             }
         });
 
-        toEditText.setText(String.valueOf(maxVal));
+//        toEditText.setText(String.valueOf(maxVal));
         toEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
