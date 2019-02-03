@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.APIS.upload;
+package teamup.rivile.com.teamup.APIS.WebServiceConnection;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

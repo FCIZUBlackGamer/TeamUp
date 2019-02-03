@@ -1,6 +1,8 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-public class RequirmentModel {
+import java.io.Serializable;
+
+public class RequirmentModel implements Serializable {
     public int Id ;
     public boolean NeedPlaceStatus ;
     public boolean NeedPlaceType ;

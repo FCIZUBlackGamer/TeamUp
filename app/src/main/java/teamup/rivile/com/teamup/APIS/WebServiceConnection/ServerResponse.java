@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.APIS.upload;
+package teamup.rivile.com.teamup.APIS.WebServiceConnection;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +11,7 @@ public class ServerResponse {
     String getMessage() {
         return message;
     }
-    boolean getSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 }

@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class FragmentAddHome extends Fragment {
 
@@ -28,6 +30,9 @@ public class FragmentAddHome extends Fragment {
     ViewPager viewPager = null;
     FragmentPagerAdapter pagerAdapter;
     //FragmentTransaction d;
+
+    private Offers offer = null;
+    private RequirmentModel requirmentModel = null;
 
     @Nullable
     @Override
@@ -62,13 +67,13 @@ public class FragmentAddHome extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentOffer1();
+                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, offer, requirmentModel);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2();
+                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, offer, requirmentModel);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter);
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, offer, requirmentModel);
                 //d.commitNow();
             }
 
@@ -81,11 +86,4 @@ public class FragmentAddHome extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-            viewPager.setCurrentItem(2);
-
-    }
 }

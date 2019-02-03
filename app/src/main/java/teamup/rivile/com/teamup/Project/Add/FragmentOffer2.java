@@ -1,24 +1,33 @@
 package teamup.rivile.com.teamup.Project.Add;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 import teamup.rivile.com.teamup.Project.Add.Adapters.MaxTextWatcher;
 import teamup.rivile.com.teamup.Project.Add.Adapters.MinTextWatcher;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class FragmentOffer2 extends Fragment {
     View view;
@@ -31,13 +40,26 @@ public class FragmentOffer2 extends Fragment {
 
     RadioGroup placeGroup, placeKindGroup, placeStateGroup, exGroup;
     RadioButton avail, notAvail, owned, rent;
-    EditText placeDesc, exDesc, experienceFrom, experienceTo;
+    EditText placeDesc, exDesc, exDep, experienceFrom, experienceTo;
     RecyclerView exRec;
     RangeSeekBar exRequiredSeekbar;
 
     View map;
 
     private int minExperienceNeeded = 0, maxExperienceNeeded = 15;
+    static ViewPager pager;
+    static FragmentPagerAdapter pagerAdapter;
+
+    static Offers offer = null;
+    static RequirmentModel requirmentModel = null;
+
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
+        offer = offe;
+        requirmentModel = model;
+        pager = viewPager;
+        pagerAdapter = pagerAdapte;
+        return new FragmentOffer2();
+    }
 
     @Nullable
     @Override
@@ -67,14 +89,110 @@ public class FragmentOffer2 extends Fragment {
         exRequiredSeekbar = view.findViewById(R.id.exRequiredSeekbar);
 
         exRec = view.findViewById(R.id.exRec);
+        exDep = view.findViewById(R.id.exDep);
         map = view.findViewById(R.id.map);
+
 
         return view;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onStart() {
         super.onStart();
+        if (!pageValidate()) {
+            Toast.makeText(getActivity(),"برجاء ملئ البيانات الضرورية", Toast.LENGTH_SHORT).show();
+            pager.setCurrentItem(0);
+            pagerAdapter.notifyDataSetChanged();
+        }
+
+        placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.yes) {
+                    requirmentModel.setNeedPlace(true);
+                } else if (checkedId == R.id.no) {
+                    requirmentModel.setNeedPlace(false);
+                }
+            }
+        });
+
+        placeKindGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rent) {
+                    requirmentModel.setNeedPlaceType(true);
+                } else if (checkedId == R.id.owned) {
+                    requirmentModel.setNeedPlaceType(false);
+                }
+            }
+        });
+
+        placeStateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.avail) {
+                    requirmentModel.setNeedPlaceType(true);
+                } else if (checkedId == R.id.notAvail) {
+                    requirmentModel.setNeedPlaceType(false);
+                }
+            }
+        });
+
+        exGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.y) {
+                    requirmentModel.setNeedExperience(true);
+                } else if (checkedId == R.id.n) {
+                    requirmentModel.setNeedExperience(false);
+                }
+            }
+        });
+
+        exRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                requirmentModel.setExperienceFrom((int) minValue);
+                requirmentModel.setExperienceTo((int) maxValue);
+            }
+        });
+
+        placeDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        event != null &&
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    if (event == null || !event.isShiftPressed()) {
+                        // the user is done typing.
+                        requirmentModel.setPlaceDescriptions(placeDesc.getText().toString());
+                        return true; // consume.
+                    }
+                }
+                return false;
+            }
+        });
+
+        exDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        actionId == EditorInfo.IME_ACTION_DONE ||
+                        event != null &&
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    if (event == null || !event.isShiftPressed()) {
+                        // the user is done typing.
+                        requirmentModel.setExperienceDescriptions(exDesc.getText().toString());
+                        return true; // consume.
+                    }
+                }
+                return false;
+            }
+        });
 
         setUpProjectPlaceNeedViewsVisibility();
         setUpProjectExperienceNeedViewsVisibility();
@@ -105,6 +223,20 @@ public class FragmentOffer2 extends Fragment {
                 }
             }
         });
+
+
+    }
+
+    private boolean pageValidate() {
+        boolean res = true;
+        if (offer.getName().isEmpty()) {
+            res = false;
+            return res;
+        } else if (offer.getDescription().isEmpty()) {
+            res = false;
+            return res;
+        }
+        return res;
     }
 
     private void setUpSeekBarViews(

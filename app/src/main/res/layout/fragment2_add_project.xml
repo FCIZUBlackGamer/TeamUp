@@ -180,6 +180,58 @@
                         android:lines="3"
                         android:padding="10dp" />
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioGroup
+                            android:id="@+id/placeStateGroup"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/notAvail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/notAvail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                            <RadioButton
+                                android:id="@+id/avail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/avail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                        </RadioGroup>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/medium"
+                            android:gravity="center"
+                            android:text="@string/placeStatus"
+                            android:textColor="#000"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -228,55 +280,6 @@
                             android:textSize="16sp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioGroup
-                            android:id="@+id/placeStateGroup"
-                            android:layout_width="0dp"
-                            android:layout_weight="2"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/notAvail"
-                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                                android:layout_width="0dp"
-                                android:layout_marginBottom="8dp"
-                                android:fontFamily="@font/medium"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                app:buttonTint="@color/backgroundDarkGreen"
-                                android:gravity="end|center_vertical"
-                                android:text="@string/notAvail" />
-
-                            <RadioButton
-                                android:id="@+id/avail"
-                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                                android:layout_width="0dp"
-                                android:fontFamily="@font/medium"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:checked="true"
-                                app:buttonTint="@color/backgroundDarkGreen"
-                                android:gravity="end|center_vertical"
-                                android:text="@string/avail" />
-
-                        </RadioGroup>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="@string/placeStatus"
-                            android:textColor="#000"
-                            android:fontFamily="@font/medium"
-                            android:textSize="16sp" />
-                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -397,7 +400,7 @@
                         android:layout_margin="8dp"
                         android:background="@drawable/rounded_corner_edit_text"
                         android:gravity="right"
-                        android:id="@+id/exDesc"
+                        android:id="@+id/exDep"
                         android:hint="@string/exDep"
                         android:fontFamily="@font/medium"
                         android:lines="3"
@@ -480,6 +483,19 @@
                             android:textColor="#000"
                             android:textSize="18sp" />
                     </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/exDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/rounded_corner_edit_text"
+                        android:fontFamily="@font/medium"
+                        android:gravity="right"
+                        android:hint="@string/exDes"
+                        android:lines="3"
+                        android:padding="10dp" />
                 </LinearLayout>
             </LinearLayout>
     </RelativeLayout>

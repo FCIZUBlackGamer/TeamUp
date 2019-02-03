@@ -48,14 +48,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.ServerResponse;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOffer3 extends Fragment {
@@ -89,14 +98,21 @@ public class FragmentOffer3 extends Fragment {
     int close_type;
     RelativeLayout viewPreview;
 
-    static ViewPager pager;
-    static FragmentPagerAdapter pagerAdapter;
+
     FilesModel currentFileModel;
 
-    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte) {
+    static ViewPager pager;
+    static FragmentPagerAdapter pagerAdapter;
+
+    static Offers offer = null;
+    static RequirmentModel requirmentModel = null;
+
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
+        offer = offe;
+        requirmentModel = model;
         pager = viewPager;
         pagerAdapter = pagerAdapte;
-        return new FragmentOffer3();
+        return new FragmentOffer2();
     }
 
     @Nullable
@@ -214,7 +230,14 @@ public class FragmentOffer3 extends Fragment {
                 /* Open Storage Files*/
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
+
+                //Limit selection to images an pdf files only
+                intent.setType("application/pdf|text/plain");
+                String[] mimeTypes = {"application/pdf","|text/plain"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+
+                //local storage only
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 startActivityForResult(intent, PICKFILE_REQUEST_CODE);
             }
@@ -267,6 +290,20 @@ public class FragmentOffer3 extends Fragment {
                 });
 
 
+            }
+        });
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (filesModels.size() > 0){
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
+                }
             }
         });
 
@@ -597,4 +634,37 @@ public class FragmentOffer3 extends Fragment {
         }
     }
 
+    private void uploadFile(Uri uri) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        File file = new File(uri.getPath());
+        AppConfig appConfig = new AppConfig(API.HOME_URL);
+
+        // Parsing any Media type file
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename);
+        call.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+                ServerResponse serverResponse = response.body();
+                if (serverResponse != null) {
+                    if (serverResponse.getSuccess()) {
+                        //textView.setText(serverResponse.getMessage());
+                    } else {
+                        //textView.setText(serverResponse.getMessage());
+                    }
+                } else {
+                    //textView.setText(serverResponse.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                //textView.setText(t.getMessage());
+            }
+        });
+    }
 }

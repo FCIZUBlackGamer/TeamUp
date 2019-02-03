@@ -1,6 +1,8 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-public class Offers {
+import java.io.Serializable;
+
+public class Offers implements Serializable {
     public int Id ;
     public String Name ;
     public String Description ;

@@ -609,7 +609,7 @@
                         <TextView
                             android:id="@+id/noLev"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
@@ -617,7 +617,7 @@
                         <TextView
                             android:id="@+id/basic"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
@@ -625,7 +625,7 @@
                         <TextView
                             android:id="@+id/mid"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
@@ -633,7 +633,7 @@
                         <TextView
                             android:id="@+id/high"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/medium" />
