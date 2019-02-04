@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Offers implements Serializable {
     public int Id ;
@@ -18,8 +19,36 @@ public class Offers implements Serializable {
     public int GenderContributor ;
     public int EducationContributorLevel ;
     public int UserId ;
+    public int NumLiks ;
+    public int NumJoinOffer ;
+    public List<UserModel> Users ;
+
 
     public Offers() {
+    }
+
+    public void setNumJoinOffer(int numJoinOffer) {
+        NumJoinOffer = numJoinOffer;
+    }
+
+    public void setNumLiks(int numLiks) {
+        NumLiks = numLiks;
+    }
+
+    public void setUsers(List<UserModel> users) {
+        Users = users;
+    }
+
+    public int getNumJoinOffer() {
+        return NumJoinOffer;
+    }
+
+    public int getNumLiks() {
+        return NumLiks;
+    }
+
+    public List<UserModel> getUsers() {
+        return Users;
     }
 
     public void setCategoryId(int categoryId) {

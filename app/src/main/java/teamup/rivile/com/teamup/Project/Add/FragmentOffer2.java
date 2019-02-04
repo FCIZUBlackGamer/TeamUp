@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +26,11 @@ import android.widget.Toast;
 
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
-import teamup.rivile.com.teamup.Project.Add.Adapters.MaxTextWatcher;
-import teamup.rivile.com.teamup.Project.Add.Adapters.MinTextWatcher;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
+import teamup.rivile.com.teamup.Uitls.MaxTextWatcher;
+import teamup.rivile.com.teamup.Uitls.MinTextWatcher;
 
 public class FragmentOffer2 extends Fragment {
     View view;
@@ -50,12 +53,8 @@ public class FragmentOffer2 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
-    static Offers offer = null;
-    static RequirmentModel requirmentModel = null;
 
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
-        offer = offe;
-        requirmentModel = model;
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
         return new FragmentOffer2();
@@ -100,19 +99,14 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (!pageValidate()) {
-            Toast.makeText(getActivity(),"برجاء ملئ البيانات الضرورية", Toast.LENGTH_SHORT).show();
-            pager.setCurrentItem(0);
-            pagerAdapter.notifyDataSetChanged();
-        }
 
         placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.yes) {
-                    requirmentModel.setNeedPlace(true);
+                    RequirmentModel.setNeedPlace(true);
                 } else if (checkedId == R.id.no) {
-                    requirmentModel.setNeedPlace(false);
+                    RequirmentModel.setNeedPlace(false);
                 }
             }
         });
@@ -121,9 +115,9 @@ public class FragmentOffer2 extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rent) {
-                    requirmentModel.setNeedPlaceType(true);
+                    RequirmentModel.setNeedPlaceType(true);
                 } else if (checkedId == R.id.owned) {
-                    requirmentModel.setNeedPlaceType(false);
+                    RequirmentModel.setNeedPlaceType(false);
                 }
             }
         });
@@ -132,9 +126,9 @@ public class FragmentOffer2 extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.avail) {
-                    requirmentModel.setNeedPlaceType(true);
+                    RequirmentModel.setNeedPlaceType(true);
                 } else if (checkedId == R.id.notAvail) {
-                    requirmentModel.setNeedPlaceType(false);
+                    RequirmentModel.setNeedPlaceType(false);
                 }
             }
         });
@@ -143,9 +137,9 @@ public class FragmentOffer2 extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.y) {
-                    requirmentModel.setNeedExperience(true);
+                    RequirmentModel.setNeedExperience(true);
                 } else if (checkedId == R.id.n) {
-                    requirmentModel.setNeedExperience(false);
+                    RequirmentModel.setNeedExperience(false);
                 }
             }
         });
@@ -153,26 +147,35 @@ public class FragmentOffer2 extends Fragment {
         exRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                requirmentModel.setExperienceFrom((int) minValue);
-                requirmentModel.setExperienceTo((int) maxValue);
+                RequirmentModel.setExperienceFrom((int) minValue);
+                RequirmentModel.setExperienceTo((int) maxValue);
             }
         });
 
-        placeDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        placeDesc.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        requirmentModel.setPlaceDescriptions(placeDesc.getText().toString());
-                        return true; // consume.
-                    }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!validate()) {
+                    pager.setCurrentItem(0);
+                    pagerAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("ttt", teamup.rivile.com.teamup.Project.Add.StaticShit.Offers.getDescription());
+                    RequirmentModel.setPlaceDescriptions(placeDesc.getText().toString());
+
+                    Log.e("r", RequirmentModel.getPlaceDescriptions());
+                    Toast.makeText(getActivity(), "dgjvhds", Toast.LENGTH_SHORT).show();
                 }
-                return false;
+
             }
         });
 
@@ -186,7 +189,7 @@ public class FragmentOffer2 extends Fragment {
                                 event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     if (event == null || !event.isShiftPressed()) {
                         // the user is done typing.
-                        requirmentModel.setExperienceDescriptions(exDesc.getText().toString());
+                        RequirmentModel.setExperienceDescriptions(exDesc.getText().toString());
                         return true; // consume.
                     }
                 }
@@ -227,15 +230,12 @@ public class FragmentOffer2 extends Fragment {
 
     }
 
-    private boolean pageValidate() {
+    private boolean validate() {
         boolean res = true;
-        if (offer.getName().isEmpty()) {
+        if (Offers.getDescription() == null || Offers.getDescription().isEmpty() || Offers.getName() == null || Offers.getName().isEmpty()) {
             res = false;
-            return res;
-        } else if (offer.getDescription().isEmpty()) {
-            res = false;
-            return res;
         }
+        Log.e("res", String.valueOf(res));
         return res;
     }
 

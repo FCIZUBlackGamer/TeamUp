@@ -340,16 +340,16 @@
 
 
                 <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/rounded_corner_edit_text"
-                        android:gravity="right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_corner_edit_text"
+                    android:gravity="right"
                     android:id="@+id/tagsInput"
-                        android:fontFamily="@font/medium"
-                        android:lines="3"
-                        android:padding="10dp" />
+                    android:fontFamily="@font/medium"
+                    android:lines="3"
+                    android:padding="10dp" />
 
 
                 <GridView

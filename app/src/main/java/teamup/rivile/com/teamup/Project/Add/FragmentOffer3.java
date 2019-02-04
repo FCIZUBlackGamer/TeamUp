@@ -62,9 +62,9 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ServerResponse;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOffer3 extends Fragment {
@@ -104,15 +104,10 @@ public class FragmentOffer3 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
-    static Offers offer = null;
-    static RequirmentModel requirmentModel = null;
-
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
-        offer = offe;
-        requirmentModel = model;
+    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
-        return new FragmentOffer2();
+        return new FragmentOffer3();
     }
 
     @Nullable
@@ -436,7 +431,6 @@ public class FragmentOffer3 extends Fragment {
                 cameraIntent.putExtra("PageNo", 2);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
-
 
         }
 

@@ -13,14 +13,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vholder> {
 
     Context context;
-    List<String> deals;
+    List<UserModel> deals;
 
 
-    public ContributerImages(Context context, List<String> talabats) {
+    public ContributerImages(Context context, List<UserModel> talabats) {
         this.context = context;
         this.deals = talabats;
     }
@@ -35,13 +36,16 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
-        try {
-            if (!deals.get(position).isEmpty()) {
-                Picasso.get().load(deals.get(position)).into(holder.image);
-            }
-        } catch (Exception e) {
+        for (int i = 0; i < deals.size(); i++) {
+            try {
+                if (!deals.get(position).getImage().isEmpty()) {
+                    Picasso.get().load(deals.get(position).getImage()).into(holder.image);
+                }
+            } catch (Exception e) {
 
+            }
         }
+
 
 
     }

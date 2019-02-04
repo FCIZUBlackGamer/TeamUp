@@ -18,15 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Project.List.Project;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
 
 public class FragmentProfileHome extends Fragment {
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
-    List<Project> projectList;
+    List<Offers> projectList;
     View view;
     TextView num;
     FragmentManager fragmentManager;

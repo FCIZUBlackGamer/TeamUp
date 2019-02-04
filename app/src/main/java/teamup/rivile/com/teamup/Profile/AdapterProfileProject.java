@@ -21,16 +21,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
 import teamup.rivile.com.teamup.Project.List.Project;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
 public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfileProject.Vholder> {
 
     Context context;
-    List<Project> projects;
+    List<Offers> offersList;
     FragmentManager fragmentManager;
 
-    public AdapterProfileProject(Context context, List<Project> talabats) {
+    public AdapterProfileProject(Context context, List<Offers> offersList) {
         this.context = context;
-        this.projects = talabats;
+        this.offersList = offersList;
     }
 
     @NonNull
@@ -44,21 +45,19 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
-        holder.project_name.setText(projects.get(position).getProjectName());
-        holder.location.setText(projects.get(position).getLocation());
-        holder.num_likes.setText(projects.get(position).getNumLikes()+"");
-        holder.num_contributer.setText(projects.get(position).getNumContributers()+"");
+        holder.project_name.setText(offersList.get(position).getName());
+        holder.num_likes.setText(offersList.get(position).getNumLiks()+"");
+        holder.num_contributer.setText(offersList.get(position).getNumContributorTo()+"");
 
-        holder.adapter = new ContributerImages(context, projects.get(position).getContributersImages());
-        holder.recyclerView.setAdapter(holder.adapter);
-        try {
-            if (!projects.get(position).getUserImage().isEmpty()) {
-                Picasso.get().load(projects.get(position).getUserImage()).into(holder.image);
+        for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
+            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()){
+                holder.location.setText(offersList.get(position).getUsers().get(i).getAddress());
             }
-        } catch (Exception e) {
-
         }
-        holder.ratingBar.setRating(projects.get(position).getUserRate());
+
+        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
+        holder.recyclerView.setAdapter(holder.adapter);
+        //Todo: Load userImage From internal database
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +72,12 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
     @Override
     public int getItemCount() {
-        return projects.size();
+        return offersList.size();
     }
 
     public class Vholder extends RecyclerView.ViewHolder {
         TextView project_name, location;
         TextView num_likes, num_contributer;
-        RatingBar ratingBar;
         CircleImageView image;
         LinearLayout linearLayout;
         RecyclerView recyclerView;
@@ -89,7 +87,6 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
             location = itemView.findViewById(R.id.location);
-            ratingBar = itemView.findViewById(R.id.person_rate);
             image = itemView.findViewById(R.id.user_image);
             linearLayout = itemView.findViewById(R.id.lin);
             num_contributer = itemView.findViewById(R.id.num_contributer);
