@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -70,12 +68,10 @@ public class FragmentOffer2 extends Fragment {
     static FragmentPagerAdapter pagerAdapter;
 
 
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
-        offer = offe;
-        requirmentModel = model;
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, ArrayList<ExperienceTypeModel> loadedExperienceTypes) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
-        mLoadedExperienceTypes = (ArrayList<ExperienceTypeModel>) loadedExperienceTypes;
+        mLoadedExperienceTypes = loadedExperienceTypes;
         return new FragmentOffer2();
     }
 
@@ -119,11 +115,6 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (!pageValidate()) {
-            Toast.makeText(getActivity(),"برجاء ملئ البيانات الضرورية", Toast.LENGTH_SHORT).show();
-            pager.setCurrentItem(0);
-            pagerAdapter.notifyDataSetChanged();
-        }
 
         placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

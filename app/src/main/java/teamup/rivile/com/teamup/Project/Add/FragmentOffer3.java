@@ -71,8 +71,6 @@ import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOffer3 extends Fragment {
@@ -121,12 +119,7 @@ public class FragmentOffer3 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
-    static Offers offer = null;
-    static RequirmentModel requirmentModel = null;
-
-    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model, List<ExperienceTypeModel> tagsArrayList) {
-        offer = offe;
-        requirmentModel = model;
+    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, List<ExperienceTypeModel> tagsArrayList) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
         mLoadedTags = (ArrayList<ExperienceTypeModel>) tagsArrayList;
@@ -151,9 +144,9 @@ public class FragmentOffer3 extends Fragment {
 
         doc = view.findViewById(R.id.doc);
         image = view.findViewById(R.id.image);
+        viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
         delete = view.findViewById(R.id.delete);
-        viewPreview = view.findViewById(R.id.view);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);

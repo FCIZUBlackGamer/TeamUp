@@ -126,11 +126,13 @@
             </android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/preview"
                     android:layout_width="320dp"
                     android:layout_height="320dp"
                     android:layout_centerHorizontal="true"
@@ -141,6 +143,7 @@
                     android:src="@drawable/ic_stairs" />
 
                 <ImageView
+                    android:id="@+id/delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@android:drawable/ic_menu_close_clear_cancel" />

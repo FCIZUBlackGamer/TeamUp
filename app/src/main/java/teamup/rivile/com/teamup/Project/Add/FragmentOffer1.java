@@ -174,23 +174,23 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
-            }
-        });
+//        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+//                        actionId == EditorInfo.IME_ACTION_DONE ||
+//                        event != null &&
+//                                event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                    if (event == null || !event.isShiftPressed()) {
+//                        // the user is done typing.
+//                        RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
+//                        return true; // consume.
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
         moneySeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
@@ -257,13 +257,13 @@ public class FragmentOffer1 extends Fragment {
         setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
         setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
 
-        if(educationLevel.getCurrentStep()!=0) offer.setEducationContributorLevel(educationLevel.getCurrentStep());
+        if(educationLevel.getCurrentStep()!=0) Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
         educationLevel.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
             @Override
             public void onStepClicked(int step) {
                 step++;
                 educationLevel.setCurrentStep(step);
-                offer.setEducationContributorLevel(step);
+                Offers.setEducationContributorLevel(step);
             }
         });
 
@@ -364,66 +364,5 @@ public class FragmentOffer1 extends Fragment {
                     toEditText.setText(fromEditText.getText().toString());
             }
         });
-    }
-
-    private void setUpDataSaving() {
-        //All SeekBar data saving are handled in setUpSeekBarViews()
-
-        proDetail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    offer.setDescription(proDetail.getText().toString());
-            }
-        });
-
-        int currentMoneyCheckedId = moneyGroup.getCheckedRadioButtonId();
-        int currentProfitType = currentMoneyCheckedId == R.id.day ? 0 :
-                currentMoneyCheckedId == R.id.month ? 1 :
-                        currentMoneyCheckedId == R.id.year ? 2 : 3;
-        offer.setProfitType(currentProfitType);
-        moneyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int profitType = checkedId == R.id.day ? 0 :
-                        checkedId == R.id.month ? 1 :
-                                checkedId == R.id.year ? 2 : 3;
-                offer.setProfitType(profitType);
-            }
-        });
-
-        requirmentModel.setNeedMoney(availGroupMoney.getCheckedRadioButtonId() == R.id.avail);
-        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                requirmentModel.setNeedMoney(checkedId == R.id.avail);
-                if (checkedId == R.id.avail) {
-                    moneyRequiredSeekbar.setEnabled(true);
-                    moneyInFrom.setEnabled(true);
-                    moneyInTo.setEnabled(true);
-                } else if (checkedId == R.id.notAvail) {
-                    moneyRequiredSeekbar.setEnabled(false);
-                    moneyInFrom.setEnabled(false);
-                    moneyInTo.setEnabled(false);
-                }
-            }
-        });
-
-
-        int currentGenderCheckedId = genderGroup.getCheckedRadioButtonId();
-        int currentGender = currentGenderCheckedId == R.id.male ? 0 :
-                currentGenderCheckedId == R.id.female ? 1 : 2;
-        offer.setGenderContributor(currentGender);
-        offer.setGenderContributor(genderGroup.getCheckedRadioButtonId());
-        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int gender = checkedId == R.id.male ? 0 :
-                        checkedId == R.id.female ? 1 : 2;
-                offer.setGenderContributor(gender);
-            }
-        });
-
-
     }
 }
