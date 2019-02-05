@@ -1,7 +1,10 @@
 package teamup.rivile.com.teamup.APIS;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class API {
-    final private static String BASE_URL = " http://www.teamupapi.rivile.com/";
+    final public static String BASE_URL = " http://www.teamupapi.rivile.com/";
     final private static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
     final public static String REGISTER_URL = BASE_URL + "";
@@ -25,4 +28,13 @@ public class API {
     final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "";
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "";
     final public static String REPORT_URL = BASE_URL + "";
+
+    public final static String PARAM_NAME_TOKEN = "token";
+
+    public static Map getLoadDepartmentsUrlParams(){
+        Map<String, String> params = new HashMap<>();
+        params.put("token", URL_TOKEN);
+
+        return params;
+    }
 }

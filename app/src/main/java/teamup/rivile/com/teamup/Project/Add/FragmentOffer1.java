@@ -41,16 +41,15 @@ public class FragmentOffer1 extends Fragment {
 
 
     TextInputEditText project_name;
-    EditText proDetail, moneyDesc;
+    EditText proDetail/*, moneyDesc*/;
     RadioGroup moneyGroup, availGroupMoney, genderGroup;
     RangeSeekBar moneySeekbar, moneyRequiredSeekbar, contributorSeekbar;
     StepperIndicator educationLevel;
-    TextView noLev, basic, mid, high;
 
     FloatingActionButton arrowContributors, arrowMoney;
     EditText moneyOutFrom, moneyOutTo, moneyInFrom, moneyInTo, conFrom, conTo;
 
-    private int minMoneyOut = 0,
+    private final int minMoneyOut = 0,
             maxMoneyOut = 100000,
             minMoneyIn = 0,
             maxMoneyIn = 100000,
@@ -86,7 +85,7 @@ public class FragmentOffer1 extends Fragment {
 
         project_name = view.findViewById(R.id.project_name);
         proDetail = view.findViewById(R.id.proDetail);
-        moneyDesc = view.findViewById(R.id.moneyDesc);
+//        moneyDesc = view.findViewById(R.id.moneyDesc);
         moneyGroup = view.findViewById(R.id.moneyGroup);
         genderGroup = view.findViewById(R.id.genderGroup);
         availGroupMoney = view.findViewById(R.id.availGroupMoney);
@@ -94,10 +93,6 @@ public class FragmentOffer1 extends Fragment {
         moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
         contributorSeekbar = view.findViewById(R.id.contributorSeekbar);
         educationLevel = view.findViewById(R.id.educationLevel);
-        noLev = view.findViewById(R.id.noLev);
-        basic = view.findViewById(R.id.basic);
-        mid = view.findViewById(R.id.mid);
-        high = view.findViewById(R.id.high);
         arrowMoney = view.findViewById(R.id.arrowMoney);
         arrowContributors = view.findViewById(R.id.arrowContributors);
 
@@ -124,7 +119,6 @@ public class FragmentOffer1 extends Fragment {
         if (requirmentModel == null) {
             requirmentModel = new RequirmentModel();
         }
-
         proDetail.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -143,41 +137,24 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        project_name.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        offer.setName(project_name.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
-            }
-        });
-
-        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        requirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
-            }
-        });
+//
+//       moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+//                        actionId == EditorInfo.IME_ACTION_DONE ||
+//                        event != null &&
+//                                event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                    if (event == null || !event.isShiftPressed()) {
+//                        // the user is done typing.
+//                        requirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
+//                        return true; // consume.
+//                    }
+//                }
+//                return false;
+//            }
+//            });
 
         moneySeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
@@ -225,8 +202,6 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-
-
         moneyRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
@@ -242,37 +217,19 @@ public class FragmentOffer1 extends Fragment {
                 offer.setNumContributorTo((int) maxValue);
             }
         });
-
-        noLev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(0);
-            }
-        });
-        basic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(1);
-            }
-        });
-        mid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(2);
-            }
-        });
-        high.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(3);
-            }
-        });
-
         setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar);
         setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
         setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
 
-        setUpProjectMoneyAvailabilityViewsVisibility();
+        if(educationLevel.getCurrentStep()!=0) offer.setEducationContributorLevel(educationLevel.getCurrentStep());
+        educationLevel.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
+            @Override
+            public void onStepClicked(int step) {
+                step++;
+                educationLevel.setCurrentStep(step);
+                offer.setEducationContributorLevel(step);
+            }
+        });
 
         money.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,37 +268,6 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-
-        noLev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(1);
-            }
-        });
-        basic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(2);
-            }
-        });
-        mid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(3);
-            }
-        });
-        high.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(4);
-            }
-        });
-
-
-    }
-
-    private void changeEducationLevel(int level) {
-        offer.setEducationContributorLevel(level);
     }
 
     private void setUpSeekBarViews(
@@ -349,7 +275,7 @@ public class FragmentOffer1 extends Fragment {
             final int maxVal,
             final EditText fromEditText,
             final EditText toEditText,
-            RangeSeekBar seekBar) {
+            final RangeSeekBar seekBar) {
         final MinTextWatcher minTextWatcher = new MinTextWatcher(fromEditText, minVal, seekBar);
         fromEditText.addTextChangedListener(minTextWatcher);
 
@@ -367,6 +293,17 @@ public class FragmentOffer1 extends Fragment {
                 toEditText.removeTextChangedListener(maxTextWatcher);
                 toEditText.setText(maxValue.toString());
                 toEditText.addTextChangedListener(maxTextWatcher);
+
+//                if (seekBarOrder == 1) {
+//                    offer.setProfitFrom(minVal);
+//                    offer.setProfitTo(maxVal);
+//                } else if (seekBarOrder == 2) {
+//                    requirmentModel.setMoneyFrom(minVal);
+//                    requirmentModel.setMoneyTo(maxVal);
+//                } else if (seekBarOrder == 3) {
+//                    offer.setNumContributorFrom(minVal);
+//                    offer.setNumContributorTo(maxVal);
+//                }
             }
         });
 
@@ -393,10 +330,37 @@ public class FragmentOffer1 extends Fragment {
         });
     }
 
-    private void setUpProjectMoneyAvailabilityViewsVisibility() {
+    private void setUpDataSaving() {
+        //All SeekBar data saving are handled in setUpSeekBarViews()
+
+        proDetail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    offer.setDescription(proDetail.getText().toString());
+            }
+        });
+
+        int currentMoneyCheckedId = moneyGroup.getCheckedRadioButtonId();
+        int currentProfitType = currentMoneyCheckedId == R.id.day ? 0 :
+                currentMoneyCheckedId == R.id.month ? 1 :
+                        currentMoneyCheckedId == R.id.year ? 2 : 3;
+        offer.setProfitType(currentProfitType);
+        moneyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int profitType = checkedId == R.id.day ? 0 :
+                        checkedId == R.id.month ? 1 :
+                                checkedId == R.id.year ? 2 : 3;
+                offer.setProfitType(profitType);
+            }
+        });
+
+        requirmentModel.setNeedMoney(availGroupMoney.getCheckedRadioButtonId() == R.id.avail);
         availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                requirmentModel.setNeedMoney(checkedId == R.id.avail);
                 if (checkedId == R.id.avail) {
                     moneyRequiredSeekbar.setEnabled(true);
                     moneyInFrom.setEnabled(true);
@@ -408,5 +372,22 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
+
+
+        int currentGenderCheckedId = genderGroup.getCheckedRadioButtonId();
+        int currentGender = currentGenderCheckedId == R.id.male ? 0 :
+                currentGenderCheckedId == R.id.female ? 1 : 2;
+        offer.setGenderContributor(currentGender);
+        offer.setGenderContributor(genderGroup.getCheckedRadioButtonId());
+        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int gender = checkedId == R.id.male ? 0 :
+                        checkedId == R.id.female ? 1 : 2;
+                offer.setGenderContributor(gender);
+            }
+        });
+
+
     }
 }

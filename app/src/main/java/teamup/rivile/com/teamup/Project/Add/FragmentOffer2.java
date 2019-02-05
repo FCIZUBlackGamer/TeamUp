@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +26,22 @@ import android.widget.Toast;
 
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
+import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.MaxTextWatcher;
 import teamup.rivile.com.teamup.Project.Add.Adapters.MinTextWatcher;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class FragmentOffer2 extends Fragment {
+    private final char SPACE = ' ';
+    private final char NEW_LINE = '\n';
+
     View view;
     RelativeLayout place, experience;
     LinearLayout placeSection, experienceSection;
@@ -41,10 +53,14 @@ public class FragmentOffer2 extends Fragment {
     RadioGroup placeGroup, placeKindGroup, placeStateGroup, exGroup;
     RadioButton avail, notAvail, owned, rent;
     EditText placeDesc, exDesc, exDep, experienceFrom, experienceTo;
-    RecyclerView exRec;
+    RecyclerView exRec, exRecUserAdd;
     RangeSeekBar exRequiredSeekbar;
 
     View map;
+
+    ChipsAdapter mExRecUserAdapter;
+    LoadedChipsAdapter mExRecLoadedAdapter;
+    static ArrayList<ExperienceTypeModel> mLoadedExperienceTypes = new ArrayList<>();
 
     private int minExperienceNeeded = 0, maxExperienceNeeded = 15;
     static ViewPager pager;
@@ -53,11 +69,12 @@ public class FragmentOffer2 extends Fragment {
     static Offers offer = null;
     static RequirmentModel requirmentModel = null;
 
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model) {
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, Offers offe, RequirmentModel model, List<ExperienceTypeModel> loadedExperienceTypes) {
         offer = offe;
         requirmentModel = model;
         pager = viewPager;
         pagerAdapter = pagerAdapte;
+        mLoadedExperienceTypes = (ArrayList<ExperienceTypeModel>) loadedExperienceTypes;
         return new FragmentOffer2();
     }
 
@@ -92,6 +109,7 @@ public class FragmentOffer2 extends Fragment {
         exDep = view.findViewById(R.id.exDep);
         map = view.findViewById(R.id.map);
 
+        exRecUserAdd = view.findViewById(R.id.exRecUserAdd);
 
         return view;
     }
@@ -101,7 +119,7 @@ public class FragmentOffer2 extends Fragment {
     public void onStart() {
         super.onStart();
         if (!pageValidate()) {
-            Toast.makeText(getActivity(),"برجاء ملئ البيانات الضرورية", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "برجاء ملئ البيانات الضرورية", Toast.LENGTH_SHORT).show();
             pager.setCurrentItem(0);
             pagerAdapter.notifyDataSetChanged();
         }
@@ -225,6 +243,80 @@ public class FragmentOffer2 extends Fragment {
         });
 
 
+        setUpExpDepViews();
+    }
+
+    private void setUpExpDepViews() {
+        //TODO: load data from the network
+
+        exRec.setLayoutManager(new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.HORIZONTAL));
+
+        //TODO: change adapter data here or use mTagsRecLoadedAdapter.swapData(<Pass yor Data List>);
+        mExRecLoadedAdapter = new LoadedChipsAdapter(null, mExRecUserAdapter);
+        exRec.setAdapter(mExRecLoadedAdapter);
+        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
+
+        //TODO: Same data loading as mTagsRecLoadedAdapter
+        exRecUserAdd.setLayoutManager(new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.HORIZONTAL));
+        mExRecUserAdapter = new ChipsAdapter(null, mExRecLoadedAdapter);
+        exRecUserAdd.setAdapter(mExRecUserAdapter);
+
+        exDep.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                boolean addText = false;
+                if (!text.isEmpty()) {
+                    for (int i = text.length() - 1; i >= 0; --i) {
+                        if (text.charAt(i) != SPACE && text.charAt(i) != NEW_LINE)
+                            addText = true;
+                    }
+
+                    addText = addText && (text.charAt(text.length() - 1) == SPACE ||
+                            text.charAt(text.length() - 1) == NEW_LINE);
+
+                    if (addText) {
+                        //if user added this before
+                        List<ExperienceTypeModel> userAddedExperienceTypes =
+                                mExRecUserAdapter.getSelectedTypeModels();
+                        for (int i = userAddedExperienceTypes.size() - 1; i >= 0; --i) {
+                            if (userAddedExperienceTypes.get(i).getName().equals(text)) {
+                                return;
+                            }
+                        }
+
+                        //else if user typed something exists int loaded list
+                        for (int i = mLoadedExperienceTypes.size() - 1; i >= 0; --i) {
+                            ExperienceTypeModel typeModel = mLoadedExperienceTypes.get(i);
+                            if (typeModel.getName().equals(text)) {
+                                mExRecLoadedAdapter.removeTypeModel(typeModel);
+                                mExRecUserAdapter.addTypeModel(typeModel);
+                                return;
+                            }
+                        }
+
+                        //else
+                        ExperienceTypeModel typeModel = new ExperienceTypeModel();
+                        typeModel.setId(0);
+                        typeModel.setName(text);
+                        mExRecUserAdapter.addTypeModel(typeModel);
+
+                        //clear EditText
+                        exDep.setText("");
+                    }
+                }
+            }
+        });
     }
 
     private boolean pageValidate() {

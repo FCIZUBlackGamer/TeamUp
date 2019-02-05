@@ -16,125 +16,125 @@
             android:background="#fff"
             android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="30dp"
-                    android:src="@drawable/ic_stairs" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_stairs" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/proAttachment"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:lines="2"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingBottom="10dp"
+                android:text="@string/proBla"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/attachment"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/proAttachment"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="24sp" />
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:background="#FF00DBFF"
+                    android:gravity="center_vertical" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="#fff"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
-                    android:lines="2"
-                    android:paddingLeft="50dp"
-                    android:paddingRight="50dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/proBla"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@string/attachment"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
-                <RelativeLayout
-                    android:id="@+id/attachment"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp">
+                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="#fff"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_up"
+                    android:textAlignment="center"
+                    app:backgroundTint="@color/backgroundBlue"
+                    app:borderWidth="2dp"
+                    app:fabCustomSize="@dimen/design_fab_image_size"
+                    app:maxImageSize="24dp" />
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_centerVertical="true"
-                        android:background="#FF00DBFF"
-                        android:gravity="center_vertical" />
+            <LinearLayout
+                android:id="@+id/attachmentSection"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:padding="15dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginEnd="20dp"
-                        android:background="#fff"
-                        android:fontFamily="@font/medium"
-                        android:gravity="center"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:text="@string/attachment"
-                        android:textAlignment="center"
-                        android:textSize="18sp" />
+                <ImageView
+                    android:id="@+id/doc"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_filter" />
 
-                    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:backgroundTint="#fff"
-                        android:foregroundGravity="center"
-                        android:src="@drawable/ic_arrow_up"
-                        android:textAlignment="center"
-                        app:backgroundTint="@color/backgroundBlue"
-                        app:borderWidth="2dp"
-                        app:fabCustomSize="@dimen/design_fab_image_size"
-                        app:maxImageSize="24dp" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/attachmentSection"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal"
-                    android:padding="15dp">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:id="@+id/doc"
-                        android:src="@drawable/ic_filter" />
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:id="@+id/image"
-                        android:src="@drawable/ic_menu_camera" />
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_menu_camera" />
 
 
-                </LinearLayout>
+            </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/recFiles">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recFiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/view"
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/preview"
                     android:layout_width="320dp"
                     android:layout_height="320dp"
-                    android:id="@+id/preview"
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
@@ -143,18 +143,18 @@
                     android:src="@drawable/ic_stairs" />
 
                 <ImageView
+                    android:id="@+id/delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel"
-                    android:id="@+id/delete"/>
+                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/recImages">
+                android:id="@+id/recImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
 
             <RelativeLayout
                 android:id="@+id/cap"
@@ -211,8 +211,8 @@
                     android:layout_margin="5dp"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
-                    app:buttonTint="@color/backgroundDarkGreen"
-                    android:text="@string/egypt" />
+                    android:text="@string/egypt"
+                    app:buttonTint="@color/backgroundDarkGreen" />
 
                 <GridView
                     android:id="@+id/recCapitals"
@@ -226,7 +226,7 @@
                     android:verticalSpacing="24dp" />
 
 
-                </LinearLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/dep"
@@ -288,7 +288,7 @@
                     android:stretchMode="spacingWidthUniform"
                     android:verticalSpacing="24dp" />
 
-                </LinearLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/tags"
@@ -340,42 +340,50 @@
 
 
                 <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:layout_margin="8dp"
-                        android:background="@drawable/rounded_corner_edit_text"
-                        android:gravity="right"
                     android:id="@+id/tagsInput"
-                        android:fontFamily="@font/medium"
-                        android:lines="3"
-                        android:padding="10dp" />
-
-
-                <GridView
-                    android:id="@+id/tagsRec"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:columnWidth="180dp"
-                    android:gravity="center"
-                    android:horizontalSpacing="10dp"
-                    android:numColumns="auto_fit"
-                    android:stretchMode="spacingWidthUniform"
-                    android:verticalSpacing="24dp" />
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/rounded_corner_edit_text"
+                    android:fontFamily="@font/medium"
+                    android:gravity="right"
+                    android:lines="3"
+                    android:padding="10dp" />
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_gravity="center"
-                        android:background="@color/colorPrimaryDark"
-                        android:textColor="#fff"
-                        android:id="@+id/go"
-                        android:fontFamily="@font/medium"
-                        android:text="@string/go"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tagsRecUserLoad"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/rounded_corner_edit_text"
+                    android:padding="8dp" />
 
-                </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tagsRec"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/rounded_corner_edit_text" />
+
+                <Button
+                    android:id="@+id/go"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:fontFamily="@font/medium"
+                    android:text="@string/go"
+                    android:textColor="#fff" />
+
             </LinearLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 </ScrollView>
