@@ -30,6 +30,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,14 +63,20 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ServerResponse;
+import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
+import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOffer3 extends Fragment {
+    private final char SPACE = ' ';
+    private final char NEW_LINE = '\n';
+
     private static final int PICKFILE_REQUEST_CODE = 10;
     static final int PICK_IMAGE_REQUEST = 1;
     static final int CAMERA_REQUEST = 1888;
@@ -101,12 +110,19 @@ public class FragmentOffer3 extends Fragment {
 
     FilesModel currentFileModel;
 
+    ChipsAdapter mTagsRecUserAdapter;
+    LoadedChipsAdapter mTagsRecLoadedAdapter;
+
+    static ArrayList<ExperienceTypeModel> mLoadedTags = new ArrayList<>();
+    RecyclerView tagsRecUserLoad, tagsRec;
+
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
-    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte) {
+    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, List<ExperienceTypeModel> tagsArrayList) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
+        mLoadedTags = (ArrayList<ExperienceTypeModel>) tagsArrayList;
         return new FragmentOffer3();
     }
 
@@ -128,9 +144,9 @@ public class FragmentOffer3 extends Fragment {
 
         doc = view.findViewById(R.id.doc);
         image = view.findViewById(R.id.image);
+        viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
         delete = view.findViewById(R.id.delete);
-        viewPreview = view.findViewById(R.id.view);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);
@@ -151,6 +167,8 @@ public class FragmentOffer3 extends Fragment {
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recFiles.setLayoutManager(layoutManager1);
 
+        tagsRecUserLoad = view.findViewById(R.id.tagsRecUserLoad);
+        tagsRec = view.findViewById(R.id.tagsRec);
 
         return view;
     }
@@ -177,7 +195,7 @@ public class FragmentOffer3 extends Fragment {
             @Override
             public void onItemClick(FilesModel item) {
                 try {
-                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+getFileName(item.getFileUri()));
+                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + getFileName(item.getFileUri()));
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.fromFile(file), "text/plain");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -228,7 +246,7 @@ public class FragmentOffer3 extends Fragment {
 
                 //Limit selection to images an pdf files only
                 intent.setType("application/pdf|text/plain");
-                String[] mimeTypes = {"application/pdf","|text/plain"};
+                String[] mimeTypes = {"application/pdf", "|text/plain"};
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
                 //local storage only
@@ -244,12 +262,12 @@ public class FragmentOffer3 extends Fragment {
                 /** Choose Either Camera Or Gallery */
                 final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                Camera_view = inflater.inflate(R.layout.camera_view, null);
-
-                close = Camera_view.findViewById(R.id.close);
-                minimize = Camera_view.findViewById(R.id.minimize);
-                cam = Camera_view.findViewById(R.id.cam);
-                gal = Camera_view.findViewById(R.id.gal);
+//                Camera_view = inflater.inflate(R.layout.camera_view, null);
+//
+//                close = Camera_view.findViewById(R.id.close);
+//                minimize = Camera_view.findViewById(R.id.minimize);
+//                cam = Camera_view.findViewById(R.id.cam);
+//                gal = Camera_view.findViewById(R.id.gal);
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setCancelable(false)
@@ -291,7 +309,7 @@ public class FragmentOffer3 extends Fragment {
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (filesModels.size() > 0){
+                if (filesModels.size() > 0) {
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -356,6 +374,78 @@ public class FragmentOffer3 extends Fragment {
         });
         /*endregion*/
 
+        setUpExpDepViews();
+    }
+
+    private void setUpExpDepViews() {
+
+        tagsRec.setLayoutManager(new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.HORIZONTAL));
+
+        mTagsRecLoadedAdapter = new LoadedChipsAdapter(null, mTagsRecUserAdapter);
+        tagsRec.setAdapter(mTagsRecLoadedAdapter);
+        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
+
+        tagsRecUserLoad.setLayoutManager(new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.HORIZONTAL));
+        mTagsRecUserAdapter = new ChipsAdapter(null, mTagsRecLoadedAdapter);
+        tagsRecUserLoad.setAdapter(mTagsRecUserAdapter);
+        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
+
+        tagsInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                boolean addText = false;
+                if (!text.isEmpty()) {
+                    for (int i = text.length() - 1; i >= 0; --i) {
+                        if (text.charAt(i) != SPACE && text.charAt(i) != NEW_LINE)
+                            addText = true;
+                    }
+
+                    addText = addText && (text.charAt(text.length() - 1) == SPACE ||
+                            text.charAt(text.length() - 1) == NEW_LINE);
+
+                    if (addText) {
+                        //if user added this before
+                        List<ExperienceTypeModel> userAddedExperienceTypes =
+                                mTagsRecUserAdapter.getSelectedTypeModels();
+                        for (int i = userAddedExperienceTypes.size() - 1; i >= 0; --i) {
+                            if (userAddedExperienceTypes.get(i).getName().equals(text)) {
+                                return;
+                            }
+                        }
+
+                        //else if user typed something exists int loaded list
+                        for (int i = mLoadedTags.size() - 1; i >= 0; --i) {
+                            ExperienceTypeModel typeModel = mLoadedTags.get(i);
+                            if (typeModel.getName().equals(text)) {
+                                mTagsRecLoadedAdapter.removeTypeModel(typeModel);
+                                mTagsRecUserAdapter.addTypeModel(typeModel);
+                                return;
+                            }
+                        }
+
+                        //else
+                        ExperienceTypeModel typeModel = new ExperienceTypeModel();
+                        typeModel.setId(0);
+                        typeModel.setName(text);
+                        mTagsRecUserAdapter.addTypeModel(typeModel);
+
+                        //clear EditText
+                        tagsInput.setText("");
+                    }
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -453,7 +543,7 @@ public class FragmentOffer3 extends Fragment {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null){
+        if (data != null) {
             viewPreview.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -642,7 +732,7 @@ public class FragmentOffer3 extends Fragment {
         Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename);
         call.enqueue(new Callback<ServerResponse>() {
             @Override
-            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+            public void onResponse(@NonNull Call<ServerResponse> call, @NonNull retrofit2.Response<ServerResponse> response) {
                 ServerResponse serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getSuccess()) {
@@ -656,7 +746,7 @@ public class FragmentOffer3 extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ServerResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<ServerResponse> call, @NonNull Throwable t) {
                 //textView.setText(t.getMessage());
             }
         });

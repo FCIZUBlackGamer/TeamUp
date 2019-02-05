@@ -44,16 +44,15 @@ public class FragmentOffer1 extends Fragment {
 
 
     TextInputEditText project_name;
-    EditText proDetail, moneyDesc;
+    EditText proDetail/*, moneyDesc*/;
     RadioGroup moneyGroup, availGroupMoney, genderGroup;
     RangeSeekBar moneySeekbar, moneyRequiredSeekbar, contributorSeekbar;
     StepperIndicator educationLevel;
-    TextView noLev, basic, mid, high;
 
     FloatingActionButton arrowContributors, arrowMoney;
     EditText moneyOutFrom, moneyOutTo, moneyInFrom, moneyInTo, conFrom, conTo;
 
-    private int minMoneyOut = 0,
+    private final int minMoneyOut = 0,
             maxMoneyOut = 100000,
             minMoneyIn = 0,
             maxMoneyIn = 100000,
@@ -85,7 +84,7 @@ public class FragmentOffer1 extends Fragment {
 
         project_name = view.findViewById(R.id.project_name);
         proDetail = view.findViewById(R.id.proDetail);
-        moneyDesc = view.findViewById(R.id.moneyDesc);
+//        moneyDesc = view.findViewById(R.id.moneyDesc);
         moneyGroup = view.findViewById(R.id.moneyGroup);
         genderGroup = view.findViewById(R.id.genderGroup);
         availGroupMoney = view.findViewById(R.id.availGroupMoney);
@@ -93,10 +92,6 @@ public class FragmentOffer1 extends Fragment {
         moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
         contributorSeekbar = view.findViewById(R.id.contributorSeekbar);
         educationLevel = view.findViewById(R.id.educationLevel);
-        noLev = view.findViewById(R.id.noLev);
-        basic = view.findViewById(R.id.basic);
-        mid = view.findViewById(R.id.mid);
-        high = view.findViewById(R.id.high);
         arrowMoney = view.findViewById(R.id.arrowMoney);
         arrowContributors = view.findViewById(R.id.arrowContributors);
 
@@ -124,6 +119,7 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
+
         proDetail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -142,6 +138,24 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
+//
+//       moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+//                        actionId == EditorInfo.IME_ACTION_DONE ||
+//                        event != null &&
+//                                event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                    if (event == null || !event.isShiftPressed()) {
+//                        // the user is done typing.
+//                        requirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
+//                        return true; // consume.
+//                    }
+//                }
+//                return false;
+//            }
+//            });
         project_name.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -160,23 +174,23 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
-            }
-        });
+//        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+//                        actionId == EditorInfo.IME_ACTION_DONE ||
+//                        event != null &&
+//                                event.getAction() == KeyEvent.ACTION_DOWN &&
+//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+//                    if (event == null || !event.isShiftPressed()) {
+//                        // the user is done typing.
+//                        RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
+//                        return true; // consume.
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
         moneySeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
@@ -224,8 +238,6 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-
-
         moneyRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
@@ -241,37 +253,19 @@ public class FragmentOffer1 extends Fragment {
                 Offers.setNumContributorTo((int) maxValue);
             }
         });
-
-        noLev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(0);
-            }
-        });
-        basic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(1);
-            }
-        });
-        mid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(2);
-            }
-        });
-        high.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeEducationLevel(3);
-            }
-        });
-
         setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar);
         setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
         setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
 
-        setUpProjectMoneyAvailabilityViewsVisibility();
+        if(educationLevel.getCurrentStep()!=0) Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
+        educationLevel.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
+            @Override
+            public void onStepClicked(int step) {
+                step++;
+                educationLevel.setCurrentStep(step);
+                Offers.setEducationContributorLevel(step);
+            }
+        });
 
         money.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,37 +304,6 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-
-        noLev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(1);
-            }
-        });
-        basic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(2);
-            }
-        });
-        mid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(3);
-            }
-        });
-        high.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                educationLevel.setCurrentStep(4);
-            }
-        });
-
-
-    }
-
-    private void changeEducationLevel(int level) {
-        Offers.setEducationContributorLevel(level);
     }
 
     private void setUpSeekBarViews(
@@ -348,7 +311,7 @@ public class FragmentOffer1 extends Fragment {
             final int maxVal,
             final EditText fromEditText,
             final EditText toEditText,
-            RangeSeekBar seekBar) {
+            final RangeSeekBar seekBar) {
         final MinTextWatcher minTextWatcher = new MinTextWatcher(fromEditText, minVal, seekBar);
         fromEditText.addTextChangedListener(minTextWatcher);
 
@@ -366,6 +329,17 @@ public class FragmentOffer1 extends Fragment {
                 toEditText.removeTextChangedListener(maxTextWatcher);
                 toEditText.setText(maxValue.toString());
                 toEditText.addTextChangedListener(maxTextWatcher);
+
+//                if (seekBarOrder == 1) {
+//                    offer.setProfitFrom(minVal);
+//                    offer.setProfitTo(maxVal);
+//                } else if (seekBarOrder == 2) {
+//                    requirmentModel.setMoneyFrom(minVal);
+//                    requirmentModel.setMoneyTo(maxVal);
+//                } else if (seekBarOrder == 3) {
+//                    offer.setNumContributorFrom(minVal);
+//                    offer.setNumContributorTo(maxVal);
+//                }
             }
         });
 
@@ -388,23 +362,6 @@ public class FragmentOffer1 extends Fragment {
                     toEditText.setText(String.valueOf(maxVal));
                 if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
                     toEditText.setText(fromEditText.getText().toString());
-            }
-        });
-    }
-
-    private void setUpProjectMoneyAvailabilityViewsVisibility() {
-        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.avail) {
-                    moneyRequiredSeekbar.setEnabled(true);
-                    moneyInFrom.setEnabled(true);
-                    moneyInTo.setEnabled(true);
-                } else if (checkedId == R.id.notAvail) {
-                    moneyRequiredSeekbar.setEnabled(false);
-                    moneyInFrom.setEnabled(false);
-                    moneyInTo.setEnabled(false);
-                }
             }
         });
     }
