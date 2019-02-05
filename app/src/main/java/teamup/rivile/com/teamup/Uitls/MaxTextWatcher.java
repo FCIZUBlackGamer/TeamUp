@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.Project.Add.Adapters;
+package teamup.rivile.com.teamup.Uitls;
 
 import android.content.Context;
 import android.text.Editable;

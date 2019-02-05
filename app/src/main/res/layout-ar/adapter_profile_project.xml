@@ -64,28 +64,15 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:drawableRight="@drawable/ic_placeholder"
-                                android:gravity="center"
+                                android:gravity="center_vertical"
                                 android:maxLength="50"
                                 android:id="@+id/location"
                                 android:text="مصر - الشرقيه - الزقازيق"
                                 android:textSize="10sp" />
 
-                            <RatingBar
-                                android:id="@+id/person_rate"
-                                style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginStart="3dp"
-                                android:isIndicator="true"
-                                android:numStars="5"
-                                android:progressTint="@color/progress"
-                                android:rating="5"
-                                android:stepSize="1" />
                         </LinearLayout>
 
                         <LinearLayout

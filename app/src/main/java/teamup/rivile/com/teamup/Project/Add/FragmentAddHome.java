@@ -52,8 +52,8 @@ public class FragmentAddHome extends Fragment {
     FragmentPagerAdapter pagerAdapter;
     //FragmentTransaction d;
 
-    private static Offers offer = null;
-    private static RequirmentModel requirmentModel = null;
+    private Offers offer = null;
+    private RequirmentModel requirmentModel = null;
 
     @Nullable
     @Override
@@ -88,13 +88,13 @@ public class FragmentAddHome extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, offer, requirmentModel);
+                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, offer, requirmentModel, mExperienceTypesArrayList);
+                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesArrayList);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, offer, requirmentModel, mTagsArrayList);
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mTagsArrayList);
                 //d.commitNow();
             }
 

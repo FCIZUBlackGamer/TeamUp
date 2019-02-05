@@ -67,6 +67,8 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
@@ -526,7 +528,6 @@ public class FragmentOffer3 extends Fragment {
                 cameraIntent.putExtra("PageNo", 2);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
-
 
         }
 
