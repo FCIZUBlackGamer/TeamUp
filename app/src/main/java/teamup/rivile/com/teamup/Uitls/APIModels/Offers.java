@@ -22,9 +22,45 @@ public class Offers implements Serializable {
     public int NumLiks ;
     public int NumJoinOffer ;
     public List<UserModel> Users ;
+    public String Address ;
+    public int Status ;
+    public List<RequirmentModel> Requirments ;
+    public List<CapitalModel> Capitals ;
 
 
     public Offers() {
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public void setCapitals(List<CapitalModel> capitals) {
+        Capitals = capitals;
+    }
+
+    public void setRequirments(List<RequirmentModel> requirments) {
+        Requirments = requirments;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public List<CapitalModel> getCapitals() {
+        return Capitals;
+    }
+
+    public List<RequirmentModel> getRequirments() {
+        return Requirments;
     }
 
     public void setNumJoinOffer(int numJoinOffer) {
