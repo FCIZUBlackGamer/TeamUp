@@ -13,16 +13,13 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
@@ -85,13 +82,49 @@ public class FragmentOffer1 extends Fragment {
         project_name = view.findViewById(R.id.project_name);
         proDetail = view.findViewById(R.id.proDetail);
 //        moneyDesc = view.findViewById(R.id.moneyDesc);
+
         moneyGroup = view.findViewById(R.id.moneyGroup);
+        int checkedId = moneyGroup.getCheckedRadioButtonId();
+        if (checkedId == R.id.day) {
+            Offers.setProfitType(0);
+        } else if (checkedId == R.id.month) {
+            Offers.setProfitType(1);
+        } else if (checkedId == R.id.year) {
+            Offers.setProfitType(2);
+        } else if (checkedId == R.id.other) {
+            Offers.setProfitType(3);
+        }
+
         genderGroup = view.findViewById(R.id.genderGroup);
+        checkedId = genderGroup.getCheckedRadioButtonId();
+        if (checkedId == R.id.male) {
+            Offers.setGenderContributor(0);
+        } else if (checkedId == R.id.female) {
+            Offers.setGenderContributor(1);
+        } else if (checkedId == R.id.both) {
+            Offers.setGenderContributor(2);
+        }
+
         availGroupMoney = view.findViewById(R.id.availGroupMoney);
+        checkedId = availGroupMoney.getCheckedRadioButtonId();
+        RequirmentModel.setNeedMoney(checkedId == R.id.avail);
+
         moneySeekbar = view.findViewById(R.id.moneySeekbar);
+        Offers.setProfitFrom(minMoneyOut);
+        Offers.setProfitTo(maxMoneyOut);
+
         moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
+        RequirmentModel.setMoneyFrom(minMoneyIn);
+        RequirmentModel.setMoneyTo(maxMoneyIn);
+
         contributorSeekbar = view.findViewById(R.id.contributorSeekbar);
+        Offers.setNumContributorFrom(minContributor);
+        Offers.setNumContributorTo(maxContributor);
+
         educationLevel = view.findViewById(R.id.educationLevel);
+        educationLevel.setCurrentStep(0);
+        Offers.setEducationContributorLevel(0);
+
         arrowMoney = view.findViewById(R.id.arrowMoney);
         arrowContributors = view.findViewById(R.id.arrowContributors);
 
@@ -156,21 +189,20 @@ public class FragmentOffer1 extends Fragment {
 //                return false;
 //            }
 //            });
-        project_name.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        project_name.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        Offers.setName(project_name.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Offers.setName(s.toString());
             }
         });
 
@@ -191,15 +223,6 @@ public class FragmentOffer1 extends Fragment {
 //                return false;
 //            }
 //        });
-
-        moneySeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                Offers.setProfitFrom((int) minValue);
-                Offers.setProfitTo((int) maxValue);
-            }
-        });
-
         moneyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -215,16 +238,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.notAvail) {
-                    RequirmentModel.setNeedMoney(false);
-                } else if (checkedId == R.id.avail) {
-                    RequirmentModel.setNeedMoney(true);
-                }
-            }
-        });
+        setUpProjectMoneyAvailabilityViewsVisibility();
 
         genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -238,30 +252,16 @@ public class FragmentOffer1 extends Fragment {
                 }
             }
         });
-        moneyRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                RequirmentModel.setMoneyFrom((int) minValue);
-                RequirmentModel.setMoneyTo((int) maxValue);
-            }
-        });
 
-        contributorSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                Offers.setNumContributorFrom((int) minValue);
-                Offers.setNumContributorTo((int) maxValue);
-            }
-        });
-        setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar);
-        setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar);
-        setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar);
+        setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar, 1);
+        setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar, 2);
+        setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar, 3);
 
-        if(educationLevel.getCurrentStep()!=0) Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
+        if (educationLevel.getCurrentStep() != 0)
+            Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
         educationLevel.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
             @Override
             public void onStepClicked(int step) {
-                step++;
                 educationLevel.setCurrentStep(step);
                 Offers.setEducationContributorLevel(step);
             }
@@ -311,7 +311,8 @@ public class FragmentOffer1 extends Fragment {
             final int maxVal,
             final EditText fromEditText,
             final EditText toEditText,
-            final RangeSeekBar seekBar) {
+            final RangeSeekBar seekBar,
+            final int seekBarOrder) {
         final MinTextWatcher minTextWatcher = new MinTextWatcher(fromEditText, minVal, seekBar);
         fromEditText.addTextChangedListener(minTextWatcher);
 
@@ -330,16 +331,16 @@ public class FragmentOffer1 extends Fragment {
                 toEditText.setText(maxValue.toString());
                 toEditText.addTextChangedListener(maxTextWatcher);
 
-//                if (seekBarOrder == 1) {
-//                    offer.setProfitFrom(minVal);
-//                    offer.setProfitTo(maxVal);
-//                } else if (seekBarOrder == 2) {
-//                    requirmentModel.setMoneyFrom(minVal);
-//                    requirmentModel.setMoneyTo(maxVal);
-//                } else if (seekBarOrder == 3) {
-//                    offer.setNumContributorFrom(minVal);
-//                    offer.setNumContributorTo(maxVal);
-//                }
+                if (seekBarOrder == 1) {
+                    Offers.setProfitFrom(minVal);
+                    Offers.setProfitTo(maxVal);
+                } else if (seekBarOrder == 2) {
+                    RequirmentModel.setMoneyFrom(minVal);
+                    RequirmentModel.setMoneyTo(maxVal);
+                } else if (seekBarOrder == 3) {
+                    Offers.setNumContributorFrom(minVal);
+                    Offers.setNumContributorTo(maxVal);
+                }
             }
         });
 
@@ -365,4 +366,27 @@ public class FragmentOffer1 extends Fragment {
             }
         });
     }
+
+
+    private void setUpProjectMoneyAvailabilityViewsVisibility() {
+        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.avail) {
+                    moneyRequiredSeekbar.setEnabled(true);
+                    moneyInFrom.setEnabled(true);
+                    moneyInTo.setEnabled(true);
+
+                    RequirmentModel.setNeedMoney(true);
+                } else if (checkedId == R.id.notAvail) {
+                    moneyRequiredSeekbar.setEnabled(false);
+                    moneyInFrom.setEnabled(false);
+                    moneyInTo.setEnabled(false);
+
+                    RequirmentModel.setNeedMoney(false);
+                }
+            }
+        });
+    }
+
 }

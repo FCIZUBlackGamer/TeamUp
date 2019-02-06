@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class API {
-    final public static String BASE_URL = " http://www.teamupapi.rivile.com/";
+    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
     final public static String REGISTER_URL = BASE_URL + "";

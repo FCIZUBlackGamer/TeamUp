@@ -21,8 +21,8 @@ public interface ApiConfig {
     Call<ServerResponse> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name);
 
     @FormUrlEncoded
-    @POST(API.LOAD_DEPARTMENTS_URL)
-    Call<String> getAllDepratments();
+    @POST(API.LOAD_ListOfCapTagCat_URL)
+    Call<String> getCapTagCat(@Field(API.PARAM_NAME_TOKEN) String token);
 
     Call<List<Offers>> getOffers(@Field("token") String token);
 

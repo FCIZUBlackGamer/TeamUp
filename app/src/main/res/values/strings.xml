@@ -108,4 +108,9 @@
     <string name="maxMoneyInKey">maxMoneyInKey</string>
     <string name="minContributorKey">minContributorKey</string>
     <string name="maxContributorKey">maxContributorKey</string>
+    <string name="name_required">إسم المشروع مطلوب</string>
+    <string name="details_required">تفاصيل المشروع مطلوبة</string>
+    <string name="location_required">تحديد الموقع مطلوب</string>
+    <string name="dept_error">إختيار القسم مطلوب</string>
+    <string name="cap_required">إختر محافظة واحدة علي الأقل</string>
 </resources>

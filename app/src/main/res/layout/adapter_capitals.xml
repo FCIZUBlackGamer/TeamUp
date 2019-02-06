@@ -21,7 +21,4 @@
         app:layout_constraintTop_toTopOf="parent"
         android:fontFamily="@font/medium"
         />
-
-
-
 </android.support.constraint.ConstraintLayout>

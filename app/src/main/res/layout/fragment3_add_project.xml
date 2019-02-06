@@ -214,17 +214,10 @@
                     android:text="@string/egypt"
                     app:buttonTint="@color/backgroundDarkGreen" />
 
-                <GridView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/recCapitals"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnWidth="180dp"
-                    android:gravity="center"
-                    android:horizontalSpacing="10dp"
-                    android:numColumns="auto_fit"
-                    android:stretchMode="spacingWidthUniform"
-                    android:verticalSpacing="24dp" />
-
+                    android:layout_height="200dp" />
 
             </LinearLayout>
 
@@ -275,18 +268,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-
-                <GridView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/recDep"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnWidth="180dp"
-                    android:gravity="center"
-                    android:horizontalSpacing="10dp"
-                    android:numColumns="auto_fit"
-                    android:stretchMode="spacingWidthUniform"
-                    android:verticalSpacing="24dp" />
+                    android:layout_height="200dp" />
 
             </LinearLayout>
 

@@ -24,7 +24,15 @@ public class Offers implements Serializable {
     public static int NumLiks ;
     public static int NumJoinOffer ;
     public static List<UserModel> Users ;
+    public static String Address ;
 
+    public static String getAddress() {
+        return Address;
+    }
+
+    public static void setAddress(String address) {
+        Address = address;
+    }
 
     public Offers() {
     }

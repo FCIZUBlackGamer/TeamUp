@@ -12,17 +12,14 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
@@ -93,14 +90,30 @@ public class FragmentOffer2 extends Fragment {
         rent = view.findViewById(R.id.rent);
 
         placeGroup = view.findViewById(R.id.placeGroup);
+        int checkedId = placeGroup.getCheckedRadioButtonId();
+        RequirmentModel.setNeedPlace(checkedId == R.id.yes);
+
         placeKindGroup = view.findViewById(R.id.placeKindGroup);
+        checkedId = placeKindGroup.getCheckedRadioButtonId();
+        RequirmentModel.setNeedPlaceType(checkedId == R.id.rent);
+
+
         placeStateGroup = view.findViewById(R.id.placeStateGroup);
+        checkedId = placeStateGroup.getCheckedRadioButtonId();
+        RequirmentModel.setNeedPlaceType(checkedId == R.id.avail);
+
         exGroup = view.findViewById(R.id.exGroup);
+        checkedId = exGroup.getCheckedRadioButtonId();
+        RequirmentModel.setNeedExperience(checkedId == R.id.y);
+
         placeDesc = view.findViewById(R.id.placeDesc);
         exDesc = view.findViewById(R.id.exDesc);
         experienceFrom = view.findViewById(R.id.experienceFrom);
         experienceTo = view.findViewById(R.id.experienceTo);
+
         exRequiredSeekbar = view.findViewById(R.id.exRequiredSeekbar);
+        RequirmentModel.setExperienceFrom(minExperienceNeeded);
+        RequirmentModel.setExperienceTo(maxExperienceNeeded);
 
         exRec = view.findViewById(R.id.exRec);
         exDep = view.findViewById(R.id.exDep);
@@ -149,25 +162,6 @@ public class FragmentOffer2 extends Fragment {
             }
         });
 
-        exGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.y) {
-                    RequirmentModel.setNeedExperience(true);
-                } else if (checkedId == R.id.n) {
-                    RequirmentModel.setNeedExperience(false);
-                }
-            }
-        });
-
-        exRequiredSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                RequirmentModel.setExperienceFrom((int) minValue);
-                RequirmentModel.setExperienceTo((int) maxValue);
-            }
-        });
-
         placeDesc.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -195,21 +189,20 @@ public class FragmentOffer2 extends Fragment {
             }
         });
 
-        exDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        exDesc.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event != null &&
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (event == null || !event.isShiftPressed()) {
-                        // the user is done typing.
-                        RequirmentModel.setExperienceDescriptions(exDesc.getText().toString());
-                        return true; // consume.
-                    }
-                }
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                RequirmentModel.setExperienceDescriptions(exDesc.getText().toString());
             }
         });
 
@@ -248,8 +241,6 @@ public class FragmentOffer2 extends Fragment {
     }
 
     private void setUpExpDepViews() {
-        //TODO: load data from the network
-
         exRec.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
 
@@ -352,6 +343,9 @@ public class FragmentOffer2 extends Fragment {
                 toEditText.removeTextChangedListener(maxTextWatcher);
                 toEditText.setText(maxValue.toString());
                 toEditText.addTextChangedListener(maxTextWatcher);
+
+                RequirmentModel.setExperienceFrom((int) minValue);
+                RequirmentModel.setExperienceTo((int) maxValue);
             }
         });
 
@@ -390,6 +384,8 @@ public class FragmentOffer2 extends Fragment {
                     notAvail.setEnabled(true);
                     owned.setEnabled(true);
                     rent.setEnabled(true);
+
+                    RequirmentModel.setNeedPlace(true);
                 } else if (checkedId == R.id.no) {
                     map.setEnabled(false);
                     placeDesc.setEnabled(false);
@@ -398,6 +394,8 @@ public class FragmentOffer2 extends Fragment {
                     notAvail.setEnabled(false);
                     owned.setEnabled(false);
                     rent.setEnabled(false);
+
+                    RequirmentModel.setNeedPlace(false);
                 }
             }
         });
@@ -413,12 +411,16 @@ public class FragmentOffer2 extends Fragment {
                     exRequiredSeekbar.setEnabled(true);
                     experienceFrom.setEnabled(true);
                     experienceTo.setEnabled(true);
+
+                    RequirmentModel.setNeedExperience(true);
                 } else if (checkedId == R.id.n) {
                     exDesc.setEnabled(false);
                     exRec.setEnabled(false);
                     exRequiredSeekbar.setEnabled(false);
                     experienceFrom.setEnabled(false);
                     experienceTo.setEnabled(false);
+
+                    RequirmentModel.setNeedExperience(false);
                 }
             }
         });

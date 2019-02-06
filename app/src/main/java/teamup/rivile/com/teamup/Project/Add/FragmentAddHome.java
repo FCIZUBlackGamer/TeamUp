@@ -30,6 +30,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
@@ -38,6 +39,8 @@ public class FragmentAddHome extends Fragment {
 
     private static ArrayList<ExperienceTypeModel> mTagsArrayList = new ArrayList<>();
     private static ArrayList<ExperienceTypeModel> mExperienceTypesArrayList = new ArrayList<>();
+    private static ArrayList<CapitalModel> mLoadedCapitalArrayList = new ArrayList<>();
+    private static ArrayList<CapitalModel> mLoadedCategoryArrayList = new ArrayList<>();
 
     static FloatingActionButton fab;
 
@@ -82,6 +85,7 @@ public class FragmentAddHome extends Fragment {
 
         public pager(FragmentManager fm) {
             super(fm);
+            loadCapTagCat();
         }
 
         @Override
@@ -94,7 +98,7 @@ public class FragmentAddHome extends Fragment {
                 fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesArrayList);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mTagsArrayList);
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mTagsArrayList, mLoadedCapitalArrayList, mLoadedCategoryArrayList);
                 //d.commitNow();
             }
 
@@ -107,12 +111,12 @@ public class FragmentAddHome extends Fragment {
         }
     }
 
-    private void loadAllDepartments() {
+    private void loadCapTagCat() {
         Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
 
-        Call<String> response = retrofitService.getAllDepratments();
+        Call<String> response = retrofitService.getCapTagCat(API.URL_TOKEN);
 
         response.enqueue(new Callback<String>() {
             @Override
@@ -127,7 +131,7 @@ public class FragmentAddHome extends Fragment {
                     } else
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else
-                    Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -142,17 +146,31 @@ public class FragmentAddHome extends Fragment {
         Gson gson = new Gson();
 
         JSONArray tagsJsonArray = responseObject.getJSONArray("Tags");
-        for(int i = tagsJsonArray.length()-1; i >= 0; --i){
+        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
             JSONObject tagJsonObject = tagsJsonArray.getJSONObject(i);
 
-            mTagsArrayList.add(gson.fromJson(tagJsonObject.toString(),ExperienceTypeModel.class));
+            mTagsArrayList.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
         }
 
         JSONArray experienceTypeArray = responseObject.getJSONArray("ExperienceType");
-        for(int i = tagsJsonArray.length()-1; i >= 0; --i){
+        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
             JSONObject tagJsonObject = experienceTypeArray.getJSONObject(i);
 
-            mExperienceTypesArrayList.add(gson.fromJson(tagJsonObject.toString(),ExperienceTypeModel.class));
+            mExperienceTypesArrayList.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
+        }
+
+        JSONArray capitalArray = responseObject.getJSONArray("Capital");
+        for (int i = capitalArray.length() - 1; i >= 0; --i) {
+            JSONObject capitalsJsonObject = capitalArray.getJSONObject(i);
+
+            mLoadedCapitalArrayList.add(gson.fromJson(capitalsJsonObject.toString(), CapitalModel.class));
+        }
+
+        JSONArray categoryArray = responseObject.getJSONArray("Category");
+        for (int i = categoryArray.length() - 1; i >= 0; --i) {
+            JSONObject CategoriesJsonObject = categoryArray.getJSONObject(i);
+
+            mLoadedCategoryArrayList.add(gson.fromJson(CategoriesJsonObject.toString(), CapitalModel.class));
         }
     }
 }

@@ -39,12 +39,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,6 +65,8 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ServerResponse;
+import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
+import teamup.rivile.com.teamup.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
@@ -70,6 +74,7 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
@@ -82,6 +87,11 @@ public class FragmentOffer3 extends Fragment {
     static final int CAMERA_REQUEST = 1888;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
+    ArrayList<CapitalModel> mSelectedCapitalModels = new ArrayList<>();
+    CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
+
+    CapitalModel mSelectedCategory;
+    CategoriesRecyclerViewAdapter mCategoriesRecyclerViewAdapter;
 
     View view;
     RelativeLayout attachment, cap, dep, tags;
@@ -94,7 +104,8 @@ public class FragmentOffer3 extends Fragment {
     ImageView doc, image, preview, delete;
     RecyclerView recFiles, recImages;
     RecyclerView.Adapter imagesAdapter, filesAdapter;
-    GridView recCapitals, recDep;
+    RecyclerView recCapitals;
+    RecyclerView recDep;
     CheckBox egypt;
     EditText tagsInput;
     Button go;
@@ -114,15 +125,20 @@ public class FragmentOffer3 extends Fragment {
     LoadedChipsAdapter mTagsRecLoadedAdapter;
 
     static ArrayList<ExperienceTypeModel> mLoadedTags = new ArrayList<>();
+    static ArrayList<CapitalModel> mLoadedCapitals = new ArrayList<>();
+    static ArrayList<CapitalModel> mLoadedCategories = new ArrayList<>();
     RecyclerView tagsRecUserLoad, tagsRec;
 
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
-    static FragmentOffer3 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, List<ExperienceTypeModel> tagsArrayList) {
+    static FragmentOffer3 setPager(
+            ViewPager viewPager, FragmentPagerAdapter pagerAdapte, List<ExperienceTypeModel> tagsArrayList, List<CapitalModel> loadedCapitals, List<CapitalModel> loadedCategories) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
         mLoadedTags = (ArrayList<ExperienceTypeModel>) tagsArrayList;
+        mLoadedCapitals = (ArrayList<CapitalModel>) loadedCapitals;
+        mLoadedCategories = (ArrayList<CapitalModel>) loadedCategories;
         return new FragmentOffer3();
     }
 
@@ -306,14 +322,47 @@ public class FragmentOffer3 extends Fragment {
             }
         });
 
+        egypt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mSelectedCapitalModels.addAll(mLoadedCapitals);
+                } else {
+                    mSelectedCapitalModels.removeAll(mLoadedCapitals);
+                }
+            }
+        });
+
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (filesModels.size() > 0) {
+                if (true/*filesModels.size() > 0*/) {
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
+                            teamup.rivile.com.teamup.Uitls.APIModels.Offers offers = bindOffers();
+                            teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirmentModel = bindRequirmentModel();
 
+                            Log.v("OFFERSS", new Gson().toJson(offers));
+                            Log.v("RequirmentModel", new Gson().toJson(requirmentModel));
+
+                            if (Offers.getName() == null || Offers.getName().isEmpty()) {
+                                pager.setCurrentItem(0);
+                                //TODO: pagerAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
+                            } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
+                                pager.setCurrentItem(0);
+                                Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
+                            } else if (/*RequirmentModel.isNeedPlace() == null || */RequirmentModel.isNeedPlace() && Offers.getAddress().isEmpty()) {
+                                pager.setCurrentItem(1);
+                                Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
+                            } else if (Offers.getCategoryName() == null || Offers.getCategoryName().isEmpty()) {
+                                Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
+                            } else if (mSelectedCapitalModels.isEmpty()) {
+                                Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
+                            } else {
+                                //TODO: start uploading and adding...
+                            }
                         }
                     });
                 }
@@ -750,5 +799,61 @@ public class FragmentOffer3 extends Fragment {
                 //textView.setText(t.getMessage());
             }
         });
+    }
+
+    private void setUpRecyclerViews() {
+        recCapitals.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(mLoadedCapitals, mSelectedCapitalModels);
+        recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
+
+        recDep.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mCategoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(mLoadedCategories, mSelectedCategory);
+        recDep.setAdapter(mCategoriesRecyclerViewAdapter);
+    }
+
+    private teamup.rivile.com.teamup.Uitls.APIModels.Offers bindOffers() {
+        teamup.rivile.com.teamup.Uitls.APIModels.Offers offers = new teamup.rivile.com.teamup.Uitls.APIModels.Offers();
+        offers.setName(Offers.getName());
+        offers.setDescription(Offers.getDescription());
+        offers.setCategoryId(Offers.getCategoryId());
+        offers.setCategoryName(Offers.getCategoryName());
+        offers.setProfitType(Offers.getProfitType());
+        offers.setProfitFrom(Offers.getProfitFrom());
+        offers.setProfitTo(Offers.getProfitTo());
+        offers.setNumContributorFrom(Offers.getNumContributorFrom());
+        offers.setNumContributorTo(Offers.getNumContributorTo());
+        offers.setAgeRequiredFrom(Offers.getAgeRequiredFrom());
+        offers.setAgeRequiredTo(Offers.getAgeRequiredTo());
+        offers.setGenderContributor(Offers.getGenderContributor());
+        offers.setEducationContributorLevel(Offers.getEducationContributorLevel());
+        offers.setUserId(Offers.getUserId());
+        offers.setNumLiks(Offers.getNumLiks());
+        offers.setNumJoinOffer(Offers.getNumJoinOffer());
+        offers.setUsers(Offers.getUsers());
+        offers.setAddress(Offers.getAddress());
+
+        return offers;
+    }
+
+    private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirmentModel() {
+        teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirmentModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
+        requirmentModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
+        requirmentModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
+        requirmentModel.setNeedPlace(RequirmentModel.isNeedPlace());
+        requirmentModel.setPlaceAddress(RequirmentModel.getPlaceAddress());
+        requirmentModel.setPlaceDescriptions(RequirmentModel.getPlaceDescriptions());
+        requirmentModel.setNeedMoney(RequirmentModel.isNeedMoney());
+        requirmentModel.setMoneyFrom(RequirmentModel.getMoneyFrom());
+        requirmentModel.setMoneyTo(RequirmentModel.getMoneyTo());
+        requirmentModel.setMoneyDescriptions(RequirmentModel.getMoneyDescriptions());
+        requirmentModel.setNeedExperience(RequirmentModel.isNeedExperience());
+        requirmentModel.setExperienceFrom(RequirmentModel.getExperienceFrom());
+        requirmentModel.setExperienceTo(RequirmentModel.getExperienceTo());
+        requirmentModel.setExperienceDescriptions(RequirmentModel.getExperienceDescriptions());
+        requirmentModel.setUserId(RequirmentModel.getUserId());
+        requirmentModel.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
+
+        return requirmentModel;
     }
 }
