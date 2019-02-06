@@ -20,7 +20,8 @@ public class API {
     final public static String LIST_OFFERS_BY_DEPARTMENT_URL = BASE_URL + "";
     final public static String GENERAL_SEARCH_URL = BASE_URL + "";
     final public static String FILTTER_SEARCH_URL = BASE_URL + "";
-    final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "ListOfCapTagCat";
+    final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "ListCat";
+    final public static String LOAD_ListOfCapTagCat_URL = BASE_URL + "ListOfCapTagCat";
     final public static String LOAD_TAGS_URL = BASE_URL + "";
     final public static String LIKE_URL = BASE_URL + "";
     final public static String VIEW_PROJECT_URL = BASE_URL + "";
