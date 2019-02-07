@@ -84,6 +84,7 @@
     <string name="avail" translatable="false"> متوفر </string>
     <string name="notAvail" translatable="false"> غير متوفر </string>
     <string name="exDep" translatable="false"> اقسام الخبره </string>
+    <string name="depName" translatable="false">أسم القسم </string>
     <string name="exDes" translatable="false"> تفاصيل الخبره </string>
     <string name="advancedSearch" translatable="false"> البحث المتقدم للمشروعات </string>
     <string name="searchBla" translatable="false"> قم بتصنيف وعرض المشاريع الأن حسب احتياجاتك بكل سهولة ويسر من خلال الأدوات المتقدمة </string>

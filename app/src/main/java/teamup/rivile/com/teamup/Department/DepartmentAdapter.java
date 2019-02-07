@@ -15,20 +15,19 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
 
 public class DepartmentAdapter extends BaseAdapter {
 
-    private static final String BASE_LINK = ""; /** Domain Name */
     private final Context mContext;
     private final List<Department> categories;
     FragmentManager fragmentManager;
-    int type; // 0 is cat, 1 is employee
 
-    public DepartmentAdapter(Context context, List<Department> categories, int type) {
+    public DepartmentAdapter(Context context, List<Department> categories) {
         this.mContext = context;
         this.categories = categories;
-        this.type = type;
     }
 
     @Override
@@ -69,18 +68,12 @@ public class DepartmentAdapter extends BaseAdapter {
         viewHolder.name.setText(product.getName());
         /** Download Category Image */
 
-        Picasso.get().load(BASE_LINK+product.getImage()).into(viewHolder.image);
+        Picasso.get().load(API.BASE_URL +product.getImage()).into(viewHolder.image);
 
         viewHolder.action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (type == 0)
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.home_frame, new FragmentHome().catOrEmployee(1)).addToBackStack("FragmentHome").commit();
-//                else {
-//                    fragmentManager.beginTransaction()
-//                            .replace(R.id.home_frame, new FragmentProfile().userOrEmployee(1, product.getId())).addToBackStack("FragmentProfile").commit();
-//                }
+                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentListProjects().setDepId(product.getId()));
             }
         });
 

@@ -14,15 +14,18 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Project.List.AdapterListOffers;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
 
 public class FragmentHome extends Fragment {
-    // Trend Category
-//    RecyclerView recyclerView;
-//    RecyclerView.Adapter adapter;
-//    List<Category> categoryList;
 
     // All Category
     GridView gridView;
@@ -31,23 +34,11 @@ public class FragmentHome extends Fragment {
     View view;
 
     FragmentManager fragmentManager;
-    static int catId = -1;
-
-    public static FragmentHome catOrEmployee(int Id){
-        FragmentHome home = new FragmentHome();
-        catId = Id;
-        return home;
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category, container, false);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-//        recyclerView = (RecyclerView) view.findViewById(R.id.trend_rec);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setLayoutManager(layoutManager);
-//        categoryList = new ArrayList<>();
 
         fragmentManager = getFragmentManager();
         gridView = (GridView) view.findViewById(R.id.gridview);
@@ -59,125 +50,36 @@ public class FragmentHome extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).Show("Home");
-
-//        if (catId != -1){
-//            loadEmployees(catId);
-//        }else {
-//            loadCategorys();
-//        }
-
-
-
+        loadOffers();
 
     }
-//
-//    /**
-//     * http://abdelkreimahmed.000webhostapp.com/ListUsersInCat.php
-//     * */
-//    private void loadEmployees(final int catId) {
-//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//        progressDialog.setMessage("جارى تحميل الاقسام ...");
-//        progressDialog.show();
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://abdelkreimahmed.000webhostapp.com/ListUsersInCat.php", new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.e("Response",response);
-//                progressDialog.dismiss();
-//                try {
-//                    JSONObject object = new JSONObject(response);
-//                    JSONArray array = object.getJSONArray("data");
-//                    if (array.length() > 0){
-//                        for (int x=0; x<10; x++){
-//                            JSONObject object1 = array.getJSONObject(x);
-//                            Category category = new Category(object1.getInt("catId"),
-//                                    object1.getInt("numUsers"),
-//                                    object1.getString("catName"));
-//                            category.setRate((float) object1.getDouble("rate"));
-//                            categories.add(category);
-//                        }
-//                        departmentAdapter = new DepartmentAdapter(getActivity(), categories, 1);
-//                        gridView.setAdapter(departmentAdapter);
-//                    }else {
-//                        Toast.makeText(getActivity(),"لا توجد اقسام حاليا", Toast.LENGTH_SHORT).show();
-//                    }
-//                }catch (Exception e){
-//                    Toast.makeText(getActivity(),"صيغه استقبال غير صحيحه", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressDialog.dismiss();
-//                if (error instanceof ServerError)
-//                    Toast.makeText(getActivity(),"خطأ فى الاتصال بالخادم", Toast.LENGTH_SHORT).show();
-//                else if (error instanceof TimeoutError)
-//                    Toast.makeText(getActivity(),"خطأ فى مدة الاتصال", Toast.LENGTH_SHORT).show();
-//                else if (error instanceof NetworkError)
-//                    Toast.makeText(getActivity(),"شبكه الانترنت ضعيفه حاليا", Toast.LENGTH_SHORT).show();
-//            }
-//        }){
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                HashMap<String, String> map = new HashMap<>();
-//                map.put("catId",catId+"");
-//                return map;
-//            }
-//        };
-//        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-//                3,  // maxNumRetries = 2 means no retry
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//        Volley.newRequestQueue(getActivity()).add(stringRequest);
-//    }
-//
-//    /**
-//     * http://abdelkreimahmed.000webhostapp.com/ListCat.php
-//     * */
-//    private void loadCategorys() {
-//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//        progressDialog.setMessage("جارى تحميل الاقسام ...");
-//        progressDialog.show();
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://abdelkreimahmed.000webhostapp.com/ListCat.php", new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.e("Response",response);
-//                progressDialog.dismiss();
-//                try {
-//                    JSONObject object = new JSONObject(response);
-//                    JSONArray array = object.getJSONArray("CatUser");
-//                    if (array.length() > 0){
-//                        for (int x=0; x<10; x++){
-//                            JSONObject object1 = array.getJSONObject(x);
-//                            Category category = new Category(object1.getInt("catId"),
-//                                    object1.getInt("numUsers"),
-//                                    object1.getString("catName"));
-//                            categories.add(category);
-//                        }
-//                        departmentAdapter = new DepartmentAdapter(getActivity(), categories, 0);
-//                        gridView.setAdapter(departmentAdapter);
-//                    }else {
-//                        Toast.makeText(getActivity(),"لا توجد اقسام حاليا", Toast.LENGTH_SHORT).show();
-//                    }
-//                }catch (Exception e){
-//                    Toast.makeText(getActivity(),"صيغه استقبال غير صحيحه", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressDialog.dismiss();
-//                if (error instanceof ServerError)
-//                    Toast.makeText(getActivity(),"خطأ فى الاتصال بالخادم", Toast.LENGTH_SHORT).show();
-//                else if (error instanceof TimeoutError)
-//                    Toast.makeText(getActivity(),"خطأ فى مدة الاتصال", Toast.LENGTH_SHORT).show();
-//                else if (error instanceof NetworkError)
-//                    Toast.makeText(getActivity(),"شبكه الانترنت ضعيفه حاليا", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
-//                3,  // maxNumRetries = 2 means no retry
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//        Volley.newRequestQueue(getActivity()).add(stringRequest);
-//    }
+
+    private void loadOffers() {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.LOAD_DEPARTMENTS_URL);
+
+        ApiConfig getDepartments = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<List<Department>> call = getDepartments.getCategory(API.URL_TOKEN);
+        call.enqueue(new Callback<List<Department>>() {
+            @Override
+            public void onResponse(Call<List<Department>> call, retrofit2.Response<List<Department>> response) {
+                List<Department> serverResponse = response.body();
+                if (serverResponse != null) {
+                    fillOffers(serverResponse);
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Department>> call, Throwable t) {
+                //textView.setText(t.getMessage());
+            }
+        });
+    }
+
+    private void fillOffers(List<Department> categories) {
+        departmentAdapter = new DepartmentAdapter(getActivity(), categories);
+        gridView.setAdapter(departmentAdapter);
+    }
 }

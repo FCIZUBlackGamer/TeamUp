@@ -93,14 +93,118 @@
                         android:text="مصر - الشرقيه - الزقازيق"
                         android:textSize="10sp" />
 
-                    <android.support.v4.view.ViewPager
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/pager"
-                        tools:context="teamup.rivile.com.teamup.Profile">
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:maxWidth="10dp"
+                            android:paddingStart="28dp"
+                            android:paddingEnd="28dp"
+                            android:fontFamily="@font/medium"
+                            android:paddingBottom="15dp"
+                            android:text="برمجيات فى شركة ريفيل" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:fontFamily="@font/medium"
+                                android:textStyle="bold"
+                                android:text="@string/dateOfBirth" />
+
+                            <TextView
+                                android:id="@+id/dateOfBirth"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:fontFamily="@font/medium"
+                                android:padding="5dp"
+                                android:text="برمجيات فى شركة ريفيل" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:text="@string/email" />
+
+                            <TextView
+                                android:id="@+id/email"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:fontFamily="@font/medium"
+                                android:padding="5dp"
+                                android:text="برمجيات فى شركة ريفيل" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:textAlignment="center">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:text="@string/phone" />
+
+                            <TextView
+                                android:id="@+id/phone"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="برمجيات فى شركة ريفيل" />
+                        </LinearLayout>
 
 
-                    </android.support.v4.view.ViewPager>
+                    </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
