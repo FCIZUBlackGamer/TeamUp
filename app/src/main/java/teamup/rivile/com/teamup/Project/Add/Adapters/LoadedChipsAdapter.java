@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
@@ -65,7 +64,7 @@ public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.
         }
     }
 
-    public void swapData(@NonNull ArrayList<ExperienceTypeModel> typeModels) {
+    public void swapData(ArrayList<ExperienceTypeModel> typeModels) {
         mTypeModels = typeModels;
 
         notifyDataSetChanged();

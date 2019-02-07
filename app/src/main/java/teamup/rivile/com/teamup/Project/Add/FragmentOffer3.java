@@ -1,15 +1,15 @@
 package teamup.rivile.com.teamup.Project.Add;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -47,9 +47,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,10 +63,11 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ServerResponse;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
@@ -74,6 +77,7 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
@@ -92,6 +96,8 @@ public class FragmentOffer3 extends Fragment {
 
     CapitalModel mSelectedCategory;
     CategoriesRecyclerViewAdapter mCategoriesRecyclerViewAdapter;
+
+    ArrayList<AttachmentModel> mAttachmentModelArrayList = new ArrayList<>();
 
     View view;
     RelativeLayout attachment, cap, dep, tags;
@@ -124,21 +130,21 @@ public class FragmentOffer3 extends Fragment {
     ChipsAdapter mTagsRecUserAdapter;
     LoadedChipsAdapter mTagsRecLoadedAdapter;
 
-    static ArrayList<ExperienceTypeModel> mLoadedTags = new ArrayList<>();
-    static ArrayList<CapitalModel> mLoadedCapitals = new ArrayList<>();
-    static ArrayList<CapitalModel> mLoadedCategories = new ArrayList<>();
+    static MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedTags = new MutableLiveData<>();
+    static MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitals = new MutableLiveData<>();
+    static MutableLiveData<ArrayList<CapitalModel>> mLoadedCategories = new MutableLiveData<>();
     RecyclerView tagsRecUserLoad, tagsRec;
 
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
     static FragmentOffer3 setPager(
-            ViewPager viewPager, FragmentPagerAdapter pagerAdapte, List<ExperienceTypeModel> tagsArrayList, List<CapitalModel> loadedCapitals, List<CapitalModel> loadedCategories) {
+            ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<ArrayList<ExperienceTypeModel>> tagsArrayList, MutableLiveData<ArrayList<CapitalModel>> loadedCapitals, MutableLiveData<ArrayList<CapitalModel>> loadedCategories) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
-        mLoadedTags = (ArrayList<ExperienceTypeModel>) tagsArrayList;
-        mLoadedCapitals = (ArrayList<CapitalModel>) loadedCapitals;
-        mLoadedCategories = (ArrayList<CapitalModel>) loadedCategories;
+        mLoadedTags = tagsArrayList;
+        mLoadedCapitals = loadedCapitals;
+        mLoadedCategories = loadedCategories;
         return new FragmentOffer3();
     }
 
@@ -192,6 +198,8 @@ public class FragmentOffer3 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        setUpRecyclerViews();
 
         imagesAdapter = new ImagesAdapter(getActivity(), filesModels, new ImagesAdapter.OnItemClickListener() {
             @Override
@@ -278,12 +286,12 @@ public class FragmentOffer3 extends Fragment {
                 /** Choose Either Camera Or Gallery */
                 final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-//                Camera_view = inflater.inflate(R.layout.camera_view, null);
-//
-//                close = Camera_view.findViewById(R.id.close);
-//                minimize = Camera_view.findViewById(R.id.minimize);
-//                cam = Camera_view.findViewById(R.id.cam);
-//                gal = Camera_view.findViewById(R.id.gal);
+                Camera_view = inflater.inflate(R.layout.camera_view, null);
+
+                close = Camera_view.findViewById(R.id.close);
+                minimize = Camera_view.findViewById(R.id.minimize);
+                cam = Camera_view.findViewById(R.id.cam);
+                gal = Camera_view.findViewById(R.id.gal);
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setCancelable(false)
@@ -317,8 +325,6 @@ public class FragmentOffer3 extends Fragment {
 
                     }
                 });
-
-
             }
         });
 
@@ -326,9 +332,13 @@ public class FragmentOffer3 extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mSelectedCapitalModels.addAll(mLoadedCapitals);
+                    if (mLoadedCapitals.getValue() != null) {
+                        mSelectedCapitalModels.addAll(mLoadedCapitals.getValue());
+                        mCapitalsRecyclerViewAdapter.notifyDataSetChanged();
+                    }
                 } else {
-                    mSelectedCapitalModels.removeAll(mLoadedCapitals);
+                    mSelectedCapitalModels.clear();
+                    mCapitalsRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -340,28 +350,36 @@ public class FragmentOffer3 extends Fragment {
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            teamup.rivile.com.teamup.Uitls.APIModels.Offers offers = bindOffers();
-                            teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirmentModel = bindRequirmentModel();
 
-                            Log.v("OFFERSS", new Gson().toJson(offers));
-                            Log.v("RequirmentModel", new Gson().toJson(requirmentModel));
+                            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+                            if (mSelectedCategory == null) {
+                                Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
+                            Offers.setCategoryName(mSelectedCategory.getName());
+
+                            mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
 
                             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                                 pager.setCurrentItem(0);
-                                //TODO: pagerAdapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
                             } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
                                 pager.setCurrentItem(0);
                                 Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
-                            } else if (/*RequirmentModel.isNeedPlace() == null || */RequirmentModel.isNeedPlace() && Offers.getAddress().isEmpty()) {
+                            } else if (RequirmentModel.isNeedPlace() && Offers.getAddress() != null && Offers.getAddress().isEmpty()) {
                                 pager.setCurrentItem(1);
                                 Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
-                            } else if (Offers.getCategoryName() == null || Offers.getCategoryName().isEmpty()) {
+                            } else if (mSelectedCategory == null) {
                                 Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
                             } else if (mSelectedCapitalModels.isEmpty()) {
                                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
                             } else {
                                 //TODO: start uploading and adding...
+                                if (!filesModels.isEmpty())
+                                    CopyFilesUploadFilesAddOffer();
+                                else addOffer();
                             }
                         }
                     });
@@ -369,7 +387,7 @@ public class FragmentOffer3 extends Fragment {
             }
         });
 
-        /*region Shrink And Expand */
+        //region Shrink And Expand
         attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -421,7 +439,7 @@ public class FragmentOffer3 extends Fragment {
                 }
             }
         });
-        /*endregion*/
+        // endregion
 
         setUpExpDepViews();
     }
@@ -474,14 +492,16 @@ public class FragmentOffer3 extends Fragment {
                         }
 
                         //else if user typed something exists int loaded list
-                        for (int i = mLoadedTags.size() - 1; i >= 0; --i) {
-                            ExperienceTypeModel typeModel = mLoadedTags.get(i);
-                            if (typeModel.getName().equals(text)) {
-                                mTagsRecLoadedAdapter.removeTypeModel(typeModel);
-                                mTagsRecUserAdapter.addTypeModel(typeModel);
-                                return;
+                        ArrayList<ExperienceTypeModel> typeModels = mLoadedTags.getValue();
+                        if (typeModels != null)
+                            for (int i = typeModels.size() - 1; i >= 0; --i) {
+                                ExperienceTypeModel typeModel = typeModels.get(i);
+                                if (typeModel.getName().equals(text)) {
+                                    mTagsRecLoadedAdapter.removeTypeModel(typeModel);
+                                    mTagsRecUserAdapter.addTypeModel(typeModel);
+                                    return;
+                                }
                             }
-                        }
 
                         //else
                         ExperienceTypeModel typeModel = new ExperienceTypeModel();
@@ -594,7 +614,7 @@ public class FragmentOffer3 extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             viewPreview.setVisibility(View.VISIBLE);
-            new Handler().postDelayed(new Runnable() {
+            new Handler().post(new Runnable() {
                 @Override
                 public void run() {
                     pager.setCurrentItem(2);
@@ -684,11 +704,8 @@ public class FragmentOffer3 extends Fragment {
                         Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
                     }
                 }
-            }, 100);
-
-
+            });
         }
-
     }
 
     public String getFileName(Uri uri) {
@@ -730,86 +747,129 @@ public class FragmentOffer3 extends Fragment {
     }
 
 
-    @SuppressLint("WorldReadableFiles")
-    private void CopyReadPDFFromAssets(String fileName, Uri fileUri) {
-        AssetManager assetManager = getActivity().getAssets();
+//    @SuppressLint("WorldReadableFiles")
+//    private void CopyReadPDFFromAssets(String fileName, Uri fileUri) {
+//        AssetManager assetManager = getActivity().getAssets();
+//
+//        InputStream in = null;
+//        OutputStream out = null;
+//        File file = new File(getActivity().getFilesDir(), fileName);
+//        try {
+//            in = assetManager.open(fileName);
+//            out = getActivity().openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+//
+//            copyPdfFile(in, out);
+//            in.close();
+//            in = null;
+//            out.flush();
+//            out.close();
+//            out = null;
+//        } catch (Exception e) {
+//            Log.e("exception", e.getMessage());
+//        }
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(
+//                Uri.parse(fileUri.toString()),
+//                "application/pdf");
+//
+//        Intent.createChooser(intent, "Select App");
+//    }
+//
+//    private void copyPdfFile(@NonNull InputStream in, OutputStream out) throws IOException {
+//        byte[] buffer = new byte[1024];
+//        int read;
+//        while ((read = in.read(buffer)) != -1) {
+//            out.write(buffer, 0, read);
+//        }
+//    }
 
-        InputStream in = null;
-        OutputStream out = null;
-        File file = new File(getActivity().getFilesDir(), fileName);
-        try {
-            in = assetManager.open(fileName);
-            out = getActivity().openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+    private void CopyFilesUploadFilesAddOffer() {
+        for (int i = filesModels.size() - 1; i >= 0; --i) {
+            Uri uri = filesModels.get(i).getFileUri();
 
-            copyPdfFile(in, out);
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-        } catch (Exception e) {
-            Log.e("exception", e.getMessage());
-        }
+            try (Cursor cursor = getContext().getContentResolver()
+                    .query(uri, null, null, null, null, null)) {
+                // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
+                // "if there's anything to look at, look at it" conditionals.
+                if (cursor != null && cursor.moveToFirst()) {
+                    final String displayName = cursor.getString(
+                            cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(
-                Uri.parse(fileUri.toString()),
-                "application/pdf");
+                    if (copyFileToProjectDirectory(uri, displayName, i)) {
+                        //Load New File Location
+                        uri = filesModels.get(i).getFileUri();
+                        Log.v("NewFileUri", uri.getPath());
 
-        Intent.createChooser(intent, "Select App");
-    }
+                        // Map is used to multipart the file using okhttp3.RequestBody
+                        File file = new File(uri.getPath());
+                        AppConfig appConfig = new AppConfig(API.BASE_UPLOAD_URL);
 
-    private void copyPdfFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
-    }
+                        // Parsing any Media type file
+                        final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-    private void uploadFile(Uri uri) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        File file = new File(uri.getPath());
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                        Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
+                        call.enqueue(new Callback<List<String>>() {
+                            @Override
+                            public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
+                                List<String> serverResponse = response.body();
+                                if (serverResponse != null) {
+                                    if (!serverResponse.isEmpty()) {
+                                        String url = serverResponse.get(0);//TODO: save file url
+                                        mAttachmentModelArrayList.add(new AttachmentModel(displayName, url));
 
-        // Parsing any Media type file
-        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                                        if (mAttachmentModelArrayList.size() == filesModels.size()) {
+                                            addOffer();
+                                        } else {
+                                            Toast.makeText(getContext(), "mAttachmentModelArrayList ERROR", Toast.LENGTH_SHORT).show();
+                                        }
 
-        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<ServerResponse> call = getResponse.uploadFile(fileToUpload, filename);
-        call.enqueue(new Callback<ServerResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ServerResponse> call, @NonNull retrofit2.Response<ServerResponse> response) {
-                ServerResponse serverResponse = response.body();
-                if (serverResponse != null) {
-                    if (serverResponse.getSuccess()) {
-                        //textView.setText(serverResponse.getMessage());
-                    } else {
-                        //textView.setText(serverResponse.getMessage());
+                                        Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                                //textView.setText(t.getMessage());
+                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
                     }
-                } else {
-                    //textView.setText(serverResponse.toString());
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<ServerResponse> call, @NonNull Throwable t) {
-                //textView.setText(t.getMessage());
-            }
-        });
+        }
     }
 
     private void setUpRecyclerViews() {
         recCapitals.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(mLoadedCapitals, mSelectedCapitalModels);
+        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
         recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
+        mLoadedCapitals.observe(this, new Observer<ArrayList<CapitalModel>>() {
+            @Override
+            public void onChanged(ArrayList<CapitalModel> capitalModels) {
+                mCapitalsRecyclerViewAdapter.swapData(capitalModels);
+            }
+        });
 
         recDep.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mCategoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(mLoadedCategories, mSelectedCategory);
+        mCategoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(null, mSelectedCategory);
         recDep.setAdapter(mCategoriesRecyclerViewAdapter);
+        mLoadedCategories.observe(this, new Observer<ArrayList<CapitalModel>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<CapitalModel> capitalModels) {
+                mCategoriesRecyclerViewAdapter.swapData(capitalModels);
+            }
+        });
     }
 
     private teamup.rivile.com.teamup.Uitls.APIModels.Offers bindOffers() {
@@ -832,28 +892,133 @@ public class FragmentOffer3 extends Fragment {
         offers.setNumJoinOffer(Offers.getNumJoinOffer());
         offers.setUsers(Offers.getUsers());
         offers.setAddress(Offers.getAddress());
+        offers.setUserId(Offers.getUserId());
+        offers.setAddress(Offers.getAddress());
 
         return offers;
     }
 
-    private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirmentModel() {
-        teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirmentModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
-        requirmentModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
-        requirmentModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
-        requirmentModel.setNeedPlace(RequirmentModel.isNeedPlace());
-        requirmentModel.setPlaceAddress(RequirmentModel.getPlaceAddress());
-        requirmentModel.setPlaceDescriptions(RequirmentModel.getPlaceDescriptions());
-        requirmentModel.setNeedMoney(RequirmentModel.isNeedMoney());
-        requirmentModel.setMoneyFrom(RequirmentModel.getMoneyFrom());
-        requirmentModel.setMoneyTo(RequirmentModel.getMoneyTo());
-        requirmentModel.setMoneyDescriptions(RequirmentModel.getMoneyDescriptions());
-        requirmentModel.setNeedExperience(RequirmentModel.isNeedExperience());
-        requirmentModel.setExperienceFrom(RequirmentModel.getExperienceFrom());
-        requirmentModel.setExperienceTo(RequirmentModel.getExperienceTo());
-        requirmentModel.setExperienceDescriptions(RequirmentModel.getExperienceDescriptions());
-        requirmentModel.setUserId(RequirmentModel.getUserId());
-        requirmentModel.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
+    private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirementModel() {
+        teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirementModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
+        requirementModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
+        requirementModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
+        requirementModel.setNeedPlace(RequirmentModel.isNeedPlace());
+        requirementModel.setPlaceAddress(RequirmentModel.getPlaceAddress());
+        requirementModel.setPlaceDescriptions(RequirmentModel.getPlaceDescriptions());
+        requirementModel.setNeedMoney(RequirmentModel.isNeedMoney());
+        requirementModel.setMoneyFrom(RequirmentModel.getMoneyFrom());
+        requirementModel.setMoneyTo(RequirmentModel.getMoneyTo());
+        requirementModel.setMoneyDescriptions(RequirmentModel.getMoneyDescriptions());
+        requirementModel.setNeedExperience(RequirmentModel.isNeedExperience());
+        requirementModel.setExperienceFrom(RequirmentModel.getExperienceFrom());
+        requirementModel.setExperienceTo(RequirmentModel.getExperienceTo());
+        requirementModel.setExperienceDescriptions(RequirmentModel.getExperienceDescriptions());
+        requirementModel.setUserId(RequirmentModel.getUserId());
+        requirementModel.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
 
-        return requirmentModel;
+        return requirementModel;
+    }
+
+    private boolean copyFileToProjectDirectory(Uri srcUri, String displayName, int i) {
+        try {
+            String fileType = displayName.substring(displayName.length() - 3).toLowerCase().equals("pdf") ?
+                    "PDF-Files" : "Images";
+
+            File destFile;
+            if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
+                destFile = new File(Environment.getExternalStoragePublicDirectory(
+                        getString(R.string.app_name) + File.separator + fileType), displayName);
+
+                if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
+
+                if (!destFile.exists()) destFile.createNewFile();
+
+            } else return false;
+
+            OutputStream destOutputStream = new FileOutputStream(destFile);
+            InputStream srcInputStream = getContext().getContentResolver().openInputStream(srcUri);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = srcInputStream.read(buffer)) > 0) {
+                destOutputStream.write(buffer, 0, length);
+            }
+
+            Toast.makeText(getContext(), "File Copied Successfully.", Toast.LENGTH_SHORT).show();
+            filesModels.get(i).setFileUri(Uri.parse(destFile.getPath()));
+            Log.v("NewFileUrl", destFile.getPath());
+
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Failed to copy file." + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void addOffer() {
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .create();
+
+        //offer
+        Offers.setUserId(1);
+        Offers.setAddress("address avoiding null");
+        String offerString = gson.toJson(bindOffers());
+
+        RequirmentModel.setUserId(1);
+        RequirmentModel.setExperienceTypeId(null);
+//        RequirmentModel.setPlaceAddress("place address avoiding null");
+//        RequirmentModel.setPlaceDescriptions("place description avoiding null");
+//        RequirmentModel.setMoneyDescriptions("money description avoiding null");
+//        RequirmentModel.setExperienceDescriptions("experience description avoiding null");
+        String requirementString = gson.toJson(bindRequirementModel());
+
+        //Attachment
+        for (int i = 0; i < mAttachmentModelArrayList.size(); ++i) {
+            mAttachmentModelArrayList.get(i).setRequirmentId(null);
+        }
+
+        String attachmentString = gson.toJson(mAttachmentModelArrayList);
+
+        //Tags
+        String tagsString = gson.toJson(mTagsRecUserAdapter.getSelectedTypeModels());
+
+        //Capital
+        String capitalString = gson.toJson(mSelectedCapitalModels);
+
+        Log.d("MODELSS",
+                "{\"OFFER\": " + offerString + ",\n" +
+                        "\"REQUIREMENT\": " + requirementString + ",\n" +
+                        "\"ATTACHMENT\": " + attachmentString + ",\n" +
+                        "\"TAGS\": " + tagsString + ",\n" +
+                        "\"CAPITALS\": " + capitalString + "\n}");
+
+        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+
+        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+
+        Call<String> response = retrofitService.addOffer(API.URL_TOKEN,
+                offerString, requirementString, attachmentString, capitalString, tagsString);
+
+        response.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if (response.errorBody() == null) {
+                    if (response.body() != null && response.body().equals("Success")) {
+                        Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+                    Log.d("MODELSS", response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.d("MODELSS", t.getCause().getMessage());
+            }
+        });
     }
 }

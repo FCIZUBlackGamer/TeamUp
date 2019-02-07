@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Project.Add;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,12 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -37,10 +32,12 @@ import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class FragmentAddHome extends Fragment {
 
-    private static ArrayList<ExperienceTypeModel> mTagsArrayList = new ArrayList<>();
-    private static ArrayList<ExperienceTypeModel> mExperienceTypesArrayList = new ArrayList<>();
-    private static ArrayList<CapitalModel> mLoadedCapitalArrayList = new ArrayList<>();
-    private static ArrayList<CapitalModel> mLoadedCategoryArrayList = new ArrayList<>();
+    private MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedTagsLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<ExperienceTypeModel>> mExperienceTypesLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitalLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<CapitalModel>> mLoadedCategoryLiveData = new MutableLiveData<>();
+
+
 
     static FloatingActionButton fab;
 
@@ -63,7 +60,7 @@ public class FragmentAddHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_home, container, false);
         //fragmentManager = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
-        viewPager = (ViewPager) view.findViewById(R.id.offer_pager);
+        viewPager = view.findViewById(R.id.offer_pager);
         return view;
     }
 
@@ -95,10 +92,10 @@ public class FragmentAddHome extends Fragment {
                 fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesArrayList);
+                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesLiveData);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mTagsArrayList, mLoadedCapitalArrayList, mLoadedCategoryArrayList);
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData);
                 //d.commitNow();
             }
 
@@ -116,18 +113,17 @@ public class FragmentAddHome extends Fragment {
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
 
-        Call<String> response = retrofitService.getCapTagCat(API.URL_TOKEN);
+        Call<CapTagCat> response = retrofitService.getCapTagCat(API.URL_TOKEN);
 
-        response.enqueue(new Callback<String>() {
+        response.enqueue(new Callback<CapTagCat>() {
             @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+            public void onResponse(@NonNull Call<CapTagCat> call, @NonNull Response<CapTagCat> response) {
                 if (response.errorBody() == null) {
                     if (response.body() != null) {
-                        try {
-                            parseRetrofitResponse(response.body());
-                        } catch (JSONException e) {
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        mLoadedCapitalLiveData.postValue((ArrayList<CapitalModel>) response.body().getCapital());
+                        mLoadedCategoryLiveData.postValue((ArrayList<CapitalModel>) response.body().getCategory());
+                        mLoadedTagsLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getTags());
+                        mExperienceTypesLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getExperienceType());
                     } else
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else
@@ -135,42 +131,41 @@ public class FragmentAddHome extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<CapTagCat> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
-    private void parseRetrofitResponse(String response) throws JSONException {
-        JSONObject responseObject = new JSONObject(response);
-        Gson gson = new Gson();
-
-        JSONArray tagsJsonArray = responseObject.getJSONArray("Tags");
-        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
-            JSONObject tagJsonObject = tagsJsonArray.getJSONObject(i);
-
-            mTagsArrayList.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
-        }
-
-        JSONArray experienceTypeArray = responseObject.getJSONArray("ExperienceType");
-        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
-            JSONObject tagJsonObject = experienceTypeArray.getJSONObject(i);
-
-            mExperienceTypesArrayList.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
-        }
-
-        JSONArray capitalArray = responseObject.getJSONArray("Capital");
-        for (int i = capitalArray.length() - 1; i >= 0; --i) {
-            JSONObject capitalsJsonObject = capitalArray.getJSONObject(i);
-
-            mLoadedCapitalArrayList.add(gson.fromJson(capitalsJsonObject.toString(), CapitalModel.class));
-        }
-
-        JSONArray categoryArray = responseObject.getJSONArray("Category");
-        for (int i = categoryArray.length() - 1; i >= 0; --i) {
-            JSONObject CategoriesJsonObject = categoryArray.getJSONObject(i);
-
-            mLoadedCategoryArrayList.add(gson.fromJson(CategoriesJsonObject.toString(), CapitalModel.class));
-        }
-    }
+//    private void parseRetrofitResponse(String response) throws JSONException {
+//        JSONObject responseObject = new JSONObject(response);
+//        Gson gson = new Gson();
+//
+//        JSONArray tagsJsonArray = responseObject.getJSONArray("Tags");
+//        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
+//            JSONObject tagJsonObject = tagsJsonArray.getJSONObject(i);
+//
+//            mLoadedTagsLiveData.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
+//        }
+//
+//        JSONArray experienceTypeArray = responseObject.getJSONArray("ExperienceType");
+//        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
+//            JSONObject tagJsonObject = experienceTypeArray.getJSONObject(i);
+//
+//            mExperienceTypesLiveData.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
+//        }
+//
+//        JSONArray capitalArray = responseObject.getJSONArray("Capital");
+//        for (int i = capitalArray.length() - 1; i >= 0; --i) {
+//            JSONObject capitalsJsonObject = capitalArray.getJSONObject(i);
+//
+//            mLoadedCapitalLiveData.add(gson.fromJson(capitalsJsonObject.toString(), CapitalModel.class));
+//        }
+//
+//        JSONArray categoryArray = responseObject.getJSONArray("Category");
+//        for (int i = categoryArray.length() - 1; i >= 0; --i) {
+//            JSONObject CategoriesJsonObject = categoryArray.getJSONObject(i);
+//
+//            mLoadedCategoryLiveData.add(gson.fromJson(CategoriesJsonObject.toString(), CapitalModel.class));
+//        }
+//    }
 }

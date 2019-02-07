@@ -14,15 +14,16 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 
 public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.CapitalViewHolder> {
-    private List<CapitalModel> mCapitalModels;
+    private List<CapitalModel> mCategoryModels;
 
-    private CapitalModel mSelectedCapitalModels;
+    private CapitalModel mSelectedCategoryModels;
 
     private CheckBox mLastCheckedCheckBox;
 
-    public CategoriesRecyclerViewAdapter(@NonNull List<CapitalModel> capitalModels, @NonNull CapitalModel selectedCapitalModels) {
-        mCapitalModels = capitalModels;
-        mSelectedCapitalModels = selectedCapitalModels;
+    public CategoriesRecyclerViewAdapter(List<CapitalModel> capitalModels,
+                                         @NonNull CapitalModel selectedCapitalModels) {
+        mCategoryModels = capitalModels;
+        mSelectedCategoryModels = selectedCapitalModels;
     }
 
     @NonNull
@@ -36,24 +37,25 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
     @Override
     public void onBindViewHolder(@NonNull final CapitalViewHolder holder, int i) {
-        final CapitalModel model = mCapitalModels.get(i);
+        final CapitalModel model = mCategoryModels.get(i);
         holder.checkBox.setText(model.getName());
 
-        if (mSelectedCapitalModels.equals(model)) holder.checkBox.setChecked(true);
+        if (mSelectedCategoryModels != null && mSelectedCategoryModels.equals(model))
+            holder.checkBox.setChecked(true);
         else holder.checkBox.setChecked(false);
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mSelectedCapitalModels = model;
+                    mSelectedCategoryModels = model;
                     holder.checkBox.setChecked(true);
 
                     if (mLastCheckedCheckBox != null)
                         mLastCheckedCheckBox.setChecked(false);
                     mLastCheckedCheckBox = holder.checkBox;
                 } else {
-                    mSelectedCapitalModels = null;
+                    mSelectedCategoryModels = null;
                     holder.checkBox.setChecked(false);
 //                    mLastCheckedCheckBox.setChecked(false);
                 }
@@ -63,7 +65,7 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
     @Override
     public int getItemCount() {
-        return mCapitalModels != null ? mCapitalModels.size() : 0;
+        return mCategoryModels != null ? mCategoryModels.size() : 0;
     }
 
     class CapitalViewHolder extends RecyclerView.ViewHolder {
@@ -72,24 +74,17 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
         CapitalViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            checkBox = (CheckBox) itemView;
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 
-//    public void addAllAsSelected(@NonNull List<CapitalModel> models) {
-//        mSelectedCapitalModels = (ArrayList<CapitalModel>) models;
-//
-//        notifyDataSetChanged();
-//    }
-//
-//    public void removeAllSelected(){
-//        mSelectedCapitalModels.clear();
-//
-//        notifyDataSetChanged();
-//    }
-//
-//    @NonNull
-//    public List<CapitalModel> getSelectedCapitals(){
-//        return mSelectedCapitalModels;
-//    }
+    public CapitalModel getSelectedCategory() {
+        return mSelectedCategoryModels;
+    }
+
+    public void swapData(List<CapitalModel> categoryModels) {
+        mCategoryModels = categoryModels;
+
+        notifyDataSetChanged();
+    }
 }

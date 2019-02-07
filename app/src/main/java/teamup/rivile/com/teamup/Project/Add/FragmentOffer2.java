@@ -1,6 +1,8 @@
 package teamup.rivile.com.teamup.Project.Add;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,14 +60,14 @@ public class FragmentOffer2 extends Fragment {
 
     ChipsAdapter mExRecUserAdapter;
     LoadedChipsAdapter mExRecLoadedAdapter;
-    static ArrayList<ExperienceTypeModel> mLoadedExperienceTypes = new ArrayList<>();
+    static MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedExperienceTypes = new MutableLiveData<>();
 
     private int minExperienceNeeded = 0, maxExperienceNeeded = 15;
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
 
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, ArrayList<ExperienceTypeModel> loadedExperienceTypes) {
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<ArrayList<ExperienceTypeModel>> loadedExperienceTypes) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
         mLoadedExperienceTypes = loadedExperienceTypes;
@@ -128,18 +130,6 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.yes) {
-                    RequirmentModel.setNeedPlace(true);
-                } else if (checkedId == R.id.no) {
-                    RequirmentModel.setNeedPlace(false);
-                }
-            }
-        });
-
         placeKindGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -244,12 +234,15 @@ public class FragmentOffer2 extends Fragment {
         exRec.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
 
-        //TODO: change adapter data here or use mTagsRecLoadedAdapter.swapData(<Pass yor Data List>);
         mExRecLoadedAdapter = new LoadedChipsAdapter(null, mExRecUserAdapter);
         exRec.setAdapter(mExRecLoadedAdapter);
-        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
+        mLoadedExperienceTypes.observe(this, new Observer<ArrayList<ExperienceTypeModel>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<ExperienceTypeModel> experienceTypeModels) {
+                mExRecLoadedAdapter.swapData(experienceTypeModels);
+            }
+        });
 
-        //TODO: Same data loading as mTagsRecLoadedAdapter
         exRecUserAdd.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
         mExRecUserAdapter = new ChipsAdapter(null, mExRecLoadedAdapter);
@@ -288,14 +281,16 @@ public class FragmentOffer2 extends Fragment {
                         }
 
                         //else if user typed something exists int loaded list
-                        for (int i = mLoadedExperienceTypes.size() - 1; i >= 0; --i) {
-                            ExperienceTypeModel typeModel = mLoadedExperienceTypes.get(i);
-                            if (typeModel.getName().equals(text)) {
-                                mExRecLoadedAdapter.removeTypeModel(typeModel);
-                                mExRecUserAdapter.addTypeModel(typeModel);
-                                return;
+                        ArrayList<ExperienceTypeModel> experienceTypeModels = mLoadedExperienceTypes.getValue();
+                        if (experienceTypeModels != null)
+                            for (int i = experienceTypeModels.size() - 1; i >= 0; --i) {
+                                ExperienceTypeModel typeModel = experienceTypeModels.get(i);
+                                if (typeModel.getName().equals(text)) {
+                                    mExRecLoadedAdapter.removeTypeModel(typeModel);
+                                    mExRecUserAdapter.addTypeModel(typeModel);
+                                    return;
+                                }
                             }
-                        }
 
                         //else
                         ExperienceTypeModel typeModel = new ExperienceTypeModel();
@@ -384,14 +379,14 @@ public class FragmentOffer2 extends Fragment {
                     notAvail.setEnabled(true);
                     owned.setEnabled(true);
                     rent.setEnabled(true);
+                    avail.setEnabled(false);
+                    notAvail.setEnabled(false);
 
                     RequirmentModel.setNeedPlace(true);
                 } else if (checkedId == R.id.no) {
                     map.setEnabled(false);
                     placeDesc.setEnabled(false);
 
-                    avail.setEnabled(false);
-                    notAvail.setEnabled(false);
                     owned.setEnabled(false);
                     rent.setEnabled(false);
 

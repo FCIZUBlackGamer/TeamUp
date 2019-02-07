@@ -5,9 +5,14 @@ public class AttachmentModel {
     public int Type ;
     public String Name ;
     public String Source ;
-    public int RequirmentId ;
+    public Integer RequirmentId;
 
     public AttachmentModel() {
+    }
+
+    public AttachmentModel(String displayName, String url) {
+        Name = displayName;
+        Source = url;
     }
 
     public void setId(int id) {
@@ -18,7 +23,7 @@ public class AttachmentModel {
         Name = name;
     }
 
-    public void setRequirmentId(int requirmentId) {
+    public void setRequirmentId(Integer requirmentId) {
         RequirmentId = requirmentId;
     }
 
@@ -38,7 +43,7 @@ public class AttachmentModel {
         return Name;
     }
 
-    public int getRequirmentId() {
+    public Integer getRequirmentId() {
         return RequirmentId;
     }
 

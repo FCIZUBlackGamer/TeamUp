@@ -18,7 +18,7 @@ public class RequirmentModel implements Serializable {
     public static int ExperienceTo ;
     public static String ExperienceDescriptions ;
     public static int UserId ;
-    public static int ExperienceTypeId ;
+    public static Integer ExperienceTypeId;
 
     public RequirmentModel() {
     }
@@ -143,11 +143,11 @@ public class RequirmentModel implements Serializable {
         UserId = userId;
     }
 
-    public static int getExperienceTypeId() {
+    public static Integer getExperienceTypeId() {
         return ExperienceTypeId;
     }
 
-    public static void setExperienceTypeId(int experienceTypeId) {
+    public static void setExperienceTypeId(Integer experienceTypeId) {
         ExperienceTypeId = experienceTypeId;
     }
 }

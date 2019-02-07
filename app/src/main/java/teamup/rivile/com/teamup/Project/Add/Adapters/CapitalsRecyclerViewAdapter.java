@@ -61,24 +61,17 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         CapitalViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            checkBox = (CheckBox) itemView;
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 
-//    public void addAllAsSelected(@NonNull List<CapitalModel> models) {
-//        mSelectedCapitalModels = (ArrayList<CapitalModel>) models;
-//
-//        notifyDataSetChanged();
-//    }
-//
-//    public void removeAllSelected(){
-//        mSelectedCapitalModels.clear();
-//
-//        notifyDataSetChanged();
-//    }
-//
-//    @NonNull
-//    public List<CapitalModel> getSelectedCapitals(){
-//        return mSelectedCapitalModels;
-//    }
+    public ArrayList<CapitalModel> getSelectedCapitals() {
+        return mSelectedCapitalModels;
+    }
+
+    public void swapData(List<CapitalModel> capitalModels) {
+        mCapitalModels = capitalModels;
+
+        notifyDataSetChanged();
+    }
 }

@@ -100,17 +100,17 @@
     <string name="to" translatable="false"> إلى </string>
     <string name="min_val_error" translatable="false">"لا يمكن ان تقل القيمة عن "</string>
     <string name="max_error_val" translatable="false">"لا يمكن ان تزيد القيمة عن "</string>
-    <string name="minExperienceNeededKey">minExperienceNeededKey</string>
-    <string name="maxExperienceNeededKey">maxExperienceNeededKey</string>
-    <string name="minMoneyOutKey">minMoneyOutKey</string>
-    <string name="maxMoneyOutKey">maxMoneyOutKey</string>
-    <string name="minMoneyInKey">minMoneyInKey</string>
-    <string name="maxMoneyInKey">maxMoneyInKey</string>
-    <string name="minContributorKey">minContributorKey</string>
-    <string name="maxContributorKey">maxContributorKey</string>
-    <string name="name_required">إسم المشروع مطلوب</string>
-    <string name="details_required">تفاصيل المشروع مطلوبة</string>
-    <string name="location_required">تحديد الموقع مطلوب</string>
-    <string name="dept_error">إختيار القسم مطلوب</string>
-    <string name="cap_required">إختر محافظة واحدة علي الأقل</string>
+    <string name="minExperienceNeededKey" translatable="false">minExperienceNeededKey</string>
+    <string name="maxExperienceNeededKey" translatable="false">maxExperienceNeededKey</string>
+    <string name="minMoneyOutKey" translatable="false">minMoneyOutKey</string>
+    <string name="maxMoneyOutKey" translatable="false">maxMoneyOutKey</string>
+    <string name="minMoneyInKey" translatable="false">minMoneyInKey</string>
+    <string name="maxMoneyInKey" translatable="false">maxMoneyInKey</string>
+    <string name="minContributorKey" translatable="false">minContributorKey</string>
+    <string name="maxContributorKey" translatable="false">maxContributorKey</string>
+    <string name="name_required" translatable="false">إسم المشروع مطلوب</string>
+    <string name="details_required" translatable="false">تفاصيل المشروع مطلوبة</string>
+    <string name="location_required" translatable="false">تحديد الموقع مطلوب</string>
+    <string name="dept_error" translatable="false">إختيار القسم مطلوب</string>
+    <string name="cap_required" translatable="false">إختر محافظة واحدة علي الأقل</string>
 </resources>
