@@ -102,7 +102,6 @@ public class FragmentOffer3 extends Fragment {
     View view;
     RelativeLayout attachment, cap, dep, tags;
     LinearLayout attachmentSection, CapSection, DepSection, tagSection;
-    int a, c, d, t;/** متغير ثابت عشان اغير حاله ال shrink وال expand*/
     /**
      * 1: Expand, 0:Shrink
      */
@@ -120,7 +119,7 @@ public class FragmentOffer3 extends Fragment {
 
     View Camera_view;
     ImageView close, minimize, cam, gal;
-    FloatingActionButton appear;
+    FloatingActionButton arrowAttachments, arrowCapitals, arrowDepartments, arrowTags;
     int close_type;
     RelativeLayout viewPreview;
 
@@ -152,7 +151,6 @@ public class FragmentOffer3 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment3_add_project, container, false);
-        a = c = d = t = 1;
         /** Shrink and Expand Views */
         attachment = view.findViewById(R.id.attachment);
         cap = view.findViewById(R.id.cap);
@@ -162,6 +160,10 @@ public class FragmentOffer3 extends Fragment {
         CapSection = view.findViewById(R.id.CapSection);
         DepSection = view.findViewById(R.id.DepSection);
         tagSection = view.findViewById(R.id.tagSection);
+        arrowAttachments = view.findViewById(R.id.arrowAttachments);
+        arrowDepartments = view.findViewById(R.id.arrowDepartments);
+        arrowCapitals = view.findViewById(R.id.arrowCapitals);
+        arrowTags = view.findViewById(R.id.arrowTags);
         /** Input Views */
 
         doc = view.findViewById(R.id.doc);
@@ -388,15 +390,17 @@ public class FragmentOffer3 extends Fragment {
         });
 
         //region Shrink And Expand
+
         attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (a == 1) {
-                    a = 0;
+                if (attachmentSection.getVisibility() == View.VISIBLE) {
                     attachmentSection.setVisibility(View.GONE);
+                    arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    a = 1;
                     attachmentSection.setVisibility(View.VISIBLE);
+                    arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -404,12 +408,13 @@ public class FragmentOffer3 extends Fragment {
         cap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (c == 1) {
-                    c = 0;
+                if (CapSection.getVisibility() == View.VISIBLE) {
                     CapSection.setVisibility(View.GONE);
+                    arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    c = 1;
                     CapSection.setVisibility(View.VISIBLE);
+                    arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -417,12 +422,13 @@ public class FragmentOffer3 extends Fragment {
         dep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (d == 1) {
-                    d = 0;
+                if (DepSection.getVisibility() == View.VISIBLE) {
                     DepSection.setVisibility(View.GONE);
+                    arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    d = 1;
                     DepSection.setVisibility(View.VISIBLE);
+                    arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -430,12 +436,13 @@ public class FragmentOffer3 extends Fragment {
         tags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (t == 1) {
-                    t = 0;
+                if (tagSection.getVisibility() == View.VISIBLE) {
                     tagSection.setVisibility(View.GONE);
+                    arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    t = 1;
                     tagSection.setVisibility(View.VISIBLE);
+                    arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });

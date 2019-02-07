@@ -81,6 +81,7 @@
                     android:textSize="22sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/arrowPlace"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentTop="true"
@@ -314,6 +315,7 @@
                     android:textSize="22sp" />
 
                 <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/arrowExperiance"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentTop="true"

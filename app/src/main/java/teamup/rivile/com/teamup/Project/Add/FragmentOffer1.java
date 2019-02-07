@@ -1,7 +1,6 @@
 package teamup.rivile.com.teamup.Project.Add;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,11 +33,6 @@ public class FragmentOffer1 extends Fragment {
     View view;
     RelativeLayout money, contributors;
     LinearLayout moneySection, contributorsSection;
-    int m, c;/** متغير ثابت عشان اغير حاله ال shrink وال expand*/
-    /**
-     * 1: Expand, 0:Shrink
-     */
-
 
     TextInputEditText project_name;
     EditText proDetail/*, moneyDesc*/;
@@ -71,12 +65,13 @@ public class FragmentOffer1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment1_add_project, container, false);
-        m = c = 1;
         /** Shrink and Expand Views */
         money = view.findViewById(R.id.money);
         contributors = view.findViewById(R.id.contributors);
         moneySection = view.findViewById(R.id.moneySection);
         contributorsSection = view.findViewById(R.id.contributorsSection);
+        arrowMoney = view.findViewById(R.id.arrowMoney);
+        arrowContributors = view.findViewById(R.id.arrowContributors);
         /** Input Views */
 
         project_name = view.findViewById(R.id.project_name);
@@ -124,9 +119,6 @@ public class FragmentOffer1 extends Fragment {
         educationLevel = view.findViewById(R.id.educationLevel);
         educationLevel.setCurrentStep(0);
         Offers.setEducationContributorLevel(0);
-
-        arrowMoney = view.findViewById(R.id.arrowMoney);
-        arrowContributors = view.findViewById(R.id.arrowContributors);
 
         moneyOutFrom = view.findViewById(R.id.moneyOutFrom);
         moneyOutTo = view.findViewById(R.id.moneyOutTo);
@@ -267,21 +259,18 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
+        //region Shrink And Expand
+
         money.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (m == 1) {
-                    m = 0;
+                if (moneySection.getVisibility() == View.VISIBLE) {
                     moneySection.setVisibility(View.GONE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        arrowMoney.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_down));
-                    }
+                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    m = 1;
                     moneySection.setVisibility(View.VISIBLE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        arrowMoney.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_up));
-                    }
+                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -289,21 +278,18 @@ public class FragmentOffer1 extends Fragment {
         contributors.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (c == 1) {
-                    c = 0;
+                if (contributorsSection.getVisibility() == View.VISIBLE) {
                     contributorsSection.setVisibility(View.GONE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        arrowContributors.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_down));
-                    }
+                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    c = 1;
                     contributorsSection.setVisibility(View.VISIBLE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        arrowContributors.setImageDrawable(getActivity().getDrawable(R.drawable.ic_arrow_up));
-                    }
+                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
+
+        //endregion
     }
 
     private void setUpSeekBarViews(

@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -45,16 +46,13 @@ public class FragmentOffer2 extends Fragment {
     View view;
     RelativeLayout place, experience;
     LinearLayout placeSection, experienceSection;
-    int p, e;/** متغير ثابت عشان اغير حاله ال shrink وال expand*/
-    /**
-     * 1: Expand, 0:Shrink
-     */
 
     RadioGroup placeGroup, placeKindGroup, placeStateGroup, exGroup;
     RadioButton avail, notAvail, owned, rent;
     EditText placeDesc, exDesc, exDep, experienceFrom, experienceTo;
     RecyclerView exRec, exRecUserAdd;
     RangeSeekBar exRequiredSeekbar;
+    FloatingActionButton arrowPlace, arrowExperience;
 
     View map;
 
@@ -78,12 +76,13 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment2_add_project, container, false);
-        p = e = 1;
         /** Shrink and Expand Views */
         place = view.findViewById(R.id.place);
         experience = view.findViewById(R.id.experience);
         placeSection = view.findViewById(R.id.placeSection);
         experienceSection = view.findViewById(R.id.experienceSection);
+        arrowPlace = view.findViewById(R.id.arrowPlace);
+        arrowExperience = view.findViewById(R.id.arrowExperiance);
         /** Input Views */
 
         avail = view.findViewById(R.id.avail);
@@ -200,15 +199,20 @@ public class FragmentOffer2 extends Fragment {
         setUpProjectExperienceNeedViewsVisibility();
         setUpSeekBarViews(minExperienceNeeded, maxExperienceNeeded, experienceFrom, experienceTo, exRequiredSeekbar);
 
+        setUpExpDepViews();
+
+        //region Shrink And Expand
+
         place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (p == 1) {
-                    p = 0;
+                if (placeSection.getVisibility() == View.VISIBLE) {
                     placeSection.setVisibility(View.GONE);
+                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    p = 1;
                     placeSection.setVisibility(View.VISIBLE);
+                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -216,18 +220,18 @@ public class FragmentOffer2 extends Fragment {
         experience.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (e == 1) {
-                    e = 0;
+                if (experienceSection.getVisibility() == View.VISIBLE) {
                     experienceSection.setVisibility(View.GONE);
+                    arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+
                 } else {
-                    e = 1;
                     experienceSection.setVisibility(View.VISIBLE);
+                    arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
 
-
-        setUpExpDepViews();
+        // endregion
     }
 
     private void setUpExpDepViews() {
