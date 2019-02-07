@@ -10,16 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
@@ -46,26 +46,33 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.project_name.setText(offersList.get(position).getName());
         holder.num_likes.setText(offersList.get(position).getNumLiks()+"");
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo()+"");
-
-        for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
-            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()){
-                holder.location.setText(offersList.get(position).getUsers().get(i).getAddress());
-            }
-        }
+        holder.location.setText(offersList.get(position).getAddress());
+        holder.project_desc.setText(offersList.get(position).getDescription());
 
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
-        //Todo: Load userImage From internal database
+        for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
+            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()){
+                Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
+            }
+        }
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /** Move To Profile fragment */
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.frame, new FragmentProfile()).addToBackStack("FragmentProfile").commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame, new FragmentProfileHome().setId(offersList.get(position).getUserId())).addToBackStack("FragmentProfileHome").commit();
             }
         });
 
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Todo: Move to Offer Details Page
+
+            }
+        });
     }
 
     @Override
@@ -74,7 +81,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     }
 
     public class Vholder extends RecyclerView.ViewHolder {
-        TextView project_name, location;
+        TextView project_name, location, project_desc;
         TextView num_likes, num_contributer;
         CircleImageView image;
         LinearLayout linearLayout;
@@ -85,6 +92,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         public Vholder(View itemView) {
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
+            project_desc = itemView.findViewById(R.id.project_desc);
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);
             linearLayout = itemView.findViewById(R.id.lin);

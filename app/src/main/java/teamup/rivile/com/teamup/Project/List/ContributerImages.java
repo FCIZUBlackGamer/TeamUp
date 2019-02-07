@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup.Project.List;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
@@ -45,7 +47,13 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             }
         }
-
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new FragmentProfileHome().setId(deals.get(position).getId())).addToBackStack("FragmentProfileHome").commit();
+            }
+        });
 
 
     }

@@ -31,7 +31,12 @@ public class FragmentListProjects extends Fragment {
     RecyclerView.Adapter adapter;
     List<Offers> offersList;
     View view;
+    static int DepId;
 
+    public static FragmentListProjects setDepId(int id){
+        DepId = id;
+        return new FragmentListProjects();
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,17 +54,22 @@ public class FragmentListProjects extends Fragment {
         super.onStart();
         ((DrawerActivity) getActivity()).Show("ListProjects");
 
-        loadOffers();
+        loadOffers(DepId);
         adapter = new AdapterListOffers(getActivity(), offersList);
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadOffers() {
+    private void loadOffers(int depId) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.HOME_URL);
 
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<List<Offers>> call = getOffers.getOffers(API.URL_TOKEN);
+        Call<List<Offers>> call;
+        if (true){
+            call = getOffers.getOffers(depId, API.URL_TOKEN);
+        }else {
+            call = getOffers.getOffers(depId, API.URL_TOKEN);
+        }
         call.enqueue(new Callback<List<Offers>>() {
             @Override
             public void onResponse(Call<List<Offers>> call, retrofit2.Response<List<Offers>> response) {
