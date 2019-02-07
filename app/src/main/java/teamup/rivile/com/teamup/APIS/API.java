@@ -7,11 +7,11 @@ public class API {
     final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
-    final public static String REGISTER_URL = BASE_URL + "";
+    final public static String REGISTER_URL = BASE_URL + "Register/Register";
     final public static String LOGIN_URL = BASE_URL + "";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
     final public static String GENERAL_MAP_URL = BASE_URL + "";
-    final public static String PROFILE_URL = BASE_URL + "";
+    final public static String PROFILE_URL = BASE_URL + "Register/Profile";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
     final public static String EDIT_OFFER_URL = BASE_URL + "";
     final public static String DELETE_OFFER_URL = BASE_URL + "";
@@ -31,8 +31,7 @@ public class API {
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "";
     final public static String REPORT_URL = BASE_URL + "";
 
-    final public static String BASE_UPLOAD_URL = "http://www.teamupapi.rivile.com/Upload/";
-    public static final String UPLOAD_URL = BASE_UPLOAD_URL + "Upload";
+    public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
 
     public final static String PARAM_NAME_TOKEN = "token";
     public static final String PARAM_NAME_OFFER = "Offer";
