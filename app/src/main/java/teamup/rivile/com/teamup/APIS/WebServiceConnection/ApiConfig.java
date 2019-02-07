@@ -12,7 +12,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Project.Add.CapTagCat;
+import teamup.rivile.com.teamup.Department.Department;
+import teamup.rivile.com.teamup.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public interface ApiConfig {
     @Multipart
@@ -23,7 +26,33 @@ public interface ApiConfig {
     @POST(API.LOAD_ListOfCapTagCat_URL)
     Call<CapTagCat> getCapTagCat(@Field(API.PARAM_NAME_TOKEN) String token);
 
-    Call<List<Offers>> getOffers(@Field("token") String token);
+    @FormUrlEncoded
+    @POST(API.HOME_URL)
+    Call<List<Offers>> getOffers(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.HOME_URL)
+    Call<List<Offers>> getOffers(@Field("CatId") int CatId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.LOGIN_URL)
+    Call<UserModel> login(@Field("User") String User, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.REGISTER_URL)
+    Call<String> register(@Field("User") String User, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.PROFILE_URL)
+    Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.LOAD_DEPARTMENTS_URL)
+    Call<List<Department>> getCategory(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.OFFER_DETAILS_URL)
+    Call<Offers> offerDetails(@Field("Id") int Id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)
