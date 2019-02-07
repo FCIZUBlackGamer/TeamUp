@@ -4,6 +4,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxWidth="10dp"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:fontFamily="@font/medium"
+        android:paddingBottom="15dp"
+        android:text="برمجيات فى شركة ريفيل" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

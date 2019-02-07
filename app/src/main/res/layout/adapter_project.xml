@@ -141,6 +141,16 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/project_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:maxLines="4"
+                    android:text="مشروع مزرعه دواجن "
+                    android:textColor="#000"
+                    android:textDirection="rtl"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
