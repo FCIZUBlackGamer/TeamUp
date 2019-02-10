@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,20 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
-import teamup.rivile.com.teamup.Project.Add.FragmentOffer1;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 
 public class DrawerActivity extends AppCompatActivity
@@ -77,14 +72,14 @@ public class DrawerActivity extends AppCompatActivity
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_saved_project);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentListProjects.setDepId(7)).addToBackStack("Home")
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentListProjects.setDepId(7)).addToBackStack("Home")
+                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_profile:
@@ -121,9 +116,9 @@ public class DrawerActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (Whome.equals("Home")){/** Means Current fragment is home*/
+                if (Whome.equals("Home")) {/** Means Current fragment is home*/
 
-                }else if (Whome.equals("ListProjects")){/** Means Current fragment is ListProjects*/
+                } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
 
                 }
 
@@ -169,7 +164,7 @@ public class DrawerActivity extends AppCompatActivity
         }
     }
 
-    public void initNav(){
+    public void initNav() {
         civ_filter = findViewById(R.id.fab_filter);
 
         iv_cancel = findViewById(R.id.iv_cancel);
@@ -177,27 +172,27 @@ public class DrawerActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         locs = findViewById(R.id.recyclerView);
 
-         //Todo: get list of locations from Api and pass to 'locs'
+        //Todo: get list of locations from Api and pass to 'locs'
 
     }
-    public void actionNav(){
+
+    public void actionNav() {
 
         civ_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()){
+                if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()) {
                     civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_marker));
                     Nav();
                     loadProjectsData();
-                }else {
+                } else {
                     civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_projects));
                     Nav();
                     loadUsersLocationsData();
                 }
 
                 //Todo: Reload recycle view data
-
 
 
             }
@@ -212,14 +207,15 @@ public class DrawerActivity extends AppCompatActivity
         });
     }
 
-    public void opOrCl(){
+    public void opOrCl() {
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
-        }else {
+        } else {
             drawer.openDrawer(GravityCompat.END);
 
         }
     }
+
     private void loadUsersLocationsData() {
         //Todo
     }
@@ -228,23 +224,24 @@ public class DrawerActivity extends AppCompatActivity
         //Todo
     }
 
-    public void Nav(){
+    public void Nav() {
 
-        if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()){
+        if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()) {
 
 
             loadProjectsData();
 
-        }else {
+        } else {
 
             loadUsersLocationsData();
         }
     }
-    public static void Hide(){
+
+    public static void Hide() {
         searchView.setVisibility(View.GONE);
     }
 
-    public static void Show(String whome){
+    public static void Show(String whome) {
         searchView.setVisibility(View.VISIBLE);
         Whome = whome;
     }
@@ -293,13 +290,13 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentListProjects.setDepId(1)).addToBackStack("Home")
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_favourite_projects) {
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame,  FragmentListProjects.setDepId(1)).addToBackStack("Home")
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_profile) {
             toolbar.setVisibility(View.VISIBLE);

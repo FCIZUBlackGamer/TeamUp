@@ -58,24 +58,16 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             }
         }
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /** Move To Profile fragment */
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame, new FragmentProfileHome().setId(offersList.get(position).getUserId())).addToBackStack("FragmentProfileHome").commit();
-            }
+        holder.image.setOnClickListener(v -> {
+            /** Move To Profile fragment */
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentProfileHome().setId(offersList.get(position).getUserId())).addToBackStack("FragmentProfileHome").commit();
         });
 
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame,
-                                FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
-                        .addToBackStack("FragmentProfileHome").commit();
-            }
-        });
+        holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
+                .replace(R.id.frame,
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                .addToBackStack("FragmentProfileHome").commit());
     }
 
     @Override

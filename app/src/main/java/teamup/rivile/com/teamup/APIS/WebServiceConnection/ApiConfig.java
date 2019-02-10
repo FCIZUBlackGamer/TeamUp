@@ -34,11 +34,15 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-    Call<List<Offers>> getOffers(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+    Call<List<Offers>> getOffersByCatAndCapId(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-    Call<Offer> getOffers(@Field("CatId") int CatId, @Field("token") String token);
+    Call<Offer> getOffersByCatId(@Field("CatId") int CatId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.HOME_URL)
+    Call<Offer> getAllOffers(@Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LOGIN_URL)

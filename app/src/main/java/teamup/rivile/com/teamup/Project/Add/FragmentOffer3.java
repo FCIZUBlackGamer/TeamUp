@@ -321,6 +321,7 @@ public class FragmentOffer3 extends Fragment {
 
             mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
 
+            RequirmentModel.setExperienceTypeId(1);
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                 pager.setCurrentItem(0);
                 Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
@@ -544,7 +545,7 @@ public class FragmentOffer3 extends Fragment {
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        inImage.compress(Bitmap.CompressFormat.JPEG, 65, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
@@ -600,7 +601,7 @@ public class FragmentOffer3 extends Fragment {
                         filesModels.add(new FilesModel(uri));
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                            bitmap = getResizedBitmap(bitmap, 100);
+                            bitmap = getResizedBitmap(bitmap, 65);
                             preview.setImageBitmap(bitmap);
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
@@ -615,7 +616,7 @@ public class FragmentOffer3 extends Fragment {
                             // !! You may need to resize the image if it's too large
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                                bitmap = getResizedBitmap(bitmap, 100);
+                                bitmap = getResizedBitmap(bitmap, 65);
                                 preview.setImageBitmap(bitmap);
                                 Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
@@ -627,7 +628,7 @@ public class FragmentOffer3 extends Fragment {
                     Log.e("filesModels Length", filesModels.size() + "");
                 } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    bitmap = getResizedBitmap(bitmap, 100);
+                    bitmap = getResizedBitmap(bitmap, 65);
 //                        Uri imageUri = (Uri) data.getExtras().get("data");
 //                        Log.e("Index ",imageUri+"");
 //                        Toast.makeText(getActivity(), "Cam", Toast.LENGTH_SHORT).show();
@@ -924,8 +925,7 @@ public class FragmentOffer3 extends Fragment {
         String offerString = gson.toJson(bindOffers());
 
         RequirmentModel.setUserId(1);
-        RequirmentModel.setPlaceAddress("address avoiding null");
-        RequirmentModel.setExperienceTypeId(null);
+//        RequirmentModel.setExperienceTypeId(null);
         String requirementString = gson.toJson(bindRequirementModel());
 
         //Attachment

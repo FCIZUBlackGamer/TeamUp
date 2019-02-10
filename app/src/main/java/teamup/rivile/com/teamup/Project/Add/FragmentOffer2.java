@@ -332,42 +332,33 @@ public class FragmentOffer2 extends Fragment {
         toEditText.addTextChangedListener(maxTextWatcher);
 
         seekBar.setRangeValues(minVal, maxVal);
-        seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                fromEditText.removeTextChangedListener(minTextWatcher);
-                fromEditText.setText(minValue.toString());
-                fromEditText.addTextChangedListener(minTextWatcher);
+        seekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            fromEditText.removeTextChangedListener(minTextWatcher);
+            fromEditText.setText(minValue.toString());
+            fromEditText.addTextChangedListener(minTextWatcher);
 
-                toEditText.removeTextChangedListener(maxTextWatcher);
-                toEditText.setText(maxValue.toString());
-                toEditText.addTextChangedListener(maxTextWatcher);
+            toEditText.removeTextChangedListener(maxTextWatcher);
+            toEditText.setText(maxValue.toString());
+            toEditText.addTextChangedListener(maxTextWatcher);
 
-                RequirmentModel.setExperienceFrom((int) minValue);
-                RequirmentModel.setExperienceTo((int) maxValue);
-            }
+            RequirmentModel.setExperienceFrom((int) minValue);
+            RequirmentModel.setExperienceTo((int) maxValue);
         });
 
 //        fromEditText.setText(String.valueOf(minVal));
-        fromEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (fromEditText.getText().toString().isEmpty())
-                    fromEditText.setText(String.valueOf(minVal));
-                if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
-                    fromEditText.setText(toEditText.getText().toString());
-            }
+        fromEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (fromEditText.getText().toString().isEmpty())
+                fromEditText.setText(String.valueOf(minVal));
+            if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
+                fromEditText.setText(toEditText.getText().toString());
         });
 
 //        toEditText.setText(String.valueOf(maxVal));
-        toEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (toEditText.getText().toString().isEmpty())
-                    toEditText.setText(String.valueOf(maxVal));
-                if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
-                    toEditText.setText(fromEditText.getText().toString());
-            }
+        toEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (toEditText.getText().toString().isEmpty())
+                toEditText.setText(String.valueOf(maxVal));
+            if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
+                toEditText.setText(fromEditText.getText().toString());
         });
     }
 
@@ -401,26 +392,23 @@ public class FragmentOffer2 extends Fragment {
     }
 
     private void setUpProjectExperienceNeedViewsVisibility() {
-        exGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.y) {
-                    exDesc.setEnabled(true);
-                    exRec.setEnabled(true);
-                    exRequiredSeekbar.setEnabled(true);
-                    experienceFrom.setEnabled(true);
-                    experienceTo.setEnabled(true);
+        exGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.y) {
+                exDesc.setEnabled(true);
+                exRec.setEnabled(true);
+                exRequiredSeekbar.setEnabled(true);
+                experienceFrom.setEnabled(true);
+                experienceTo.setEnabled(true);
 
-                    RequirmentModel.setNeedExperience(true);
-                } else if (checkedId == R.id.n) {
-                    exDesc.setEnabled(false);
-                    exRec.setEnabled(false);
-                    exRequiredSeekbar.setEnabled(false);
-                    experienceFrom.setEnabled(false);
-                    experienceTo.setEnabled(false);
+                RequirmentModel.setNeedExperience(true);
+            } else if (checkedId == R.id.n) {
+                exDesc.setEnabled(false);
+                exRec.setEnabled(false);
+                exRequiredSeekbar.setEnabled(false);
+                experienceFrom.setEnabled(false);
+                experienceTo.setEnabled(false);
 
-                    RequirmentModel.setNeedExperience(false);
-                }
+                RequirmentModel.setNeedExperience(false);
             }
         });
     }

@@ -47,8 +47,8 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             }
         }
-//        holder.image.setOnClickListener(v -> ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.frame, new FragmentProfileHome().setId(deals.get(position).getId())).addToBackStack("FragmentProfileHome").commit());
+        holder.image.setOnClickListener(v -> ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame, new FragmentProfileHome().setId(deals.get(position).getId())).addToBackStack("FragmentProfileHome").commit());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
         public Vholder(View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.user_image);
+            image = itemView.findViewById(R.id.im);
         }
 
     }

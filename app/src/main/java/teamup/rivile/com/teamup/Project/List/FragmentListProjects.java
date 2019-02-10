@@ -26,19 +26,19 @@ public class FragmentListProjects extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     View view;
-    static int DepId;
+    static int DepId = -1;
 
-    public static FragmentListProjects setDepId(int id){
+    public static FragmentListProjects setDepId(int id) {
         DepId = id;
         return new FragmentListProjects();
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
-        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutManager(layoutManager);
         return view;
     }
@@ -58,7 +58,9 @@ public class FragmentListProjects extends Fragment {
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
         Call<Offer> call;
 
-        call = getOffers.getOffers(depId, API.URL_TOKEN);
+        if (depId != -1)
+            call = getOffers.getOffersByCatId(depId, API.URL_TOKEN);
+        else call = getOffers.getAllOffers(API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
             @Override
