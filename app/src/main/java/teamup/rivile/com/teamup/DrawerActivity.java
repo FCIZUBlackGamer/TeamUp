@@ -293,13 +293,13 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentListProjects.setDepId(3)).addToBackStack("Home")
+                    .replace(R.id.frame, FragmentListProjects.setDepId(1)).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_favourite_projects) {
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame,  FragmentListProjects.setDepId(3)).addToBackStack("Home")
+                    .replace(R.id.frame,  FragmentListProjects.setDepId(1)).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_profile) {
             toolbar.setVisibility(View.VISIBLE);
