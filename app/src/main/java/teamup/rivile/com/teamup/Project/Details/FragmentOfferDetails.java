@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -343,6 +344,8 @@ public class FragmentOfferDetails extends Fragment {
             public void onResponse(Call<OfferDetails> call, retrofit2.Response<OfferDetails> response) {
                 OfferDetails serverResponse = response.body();
                 if (serverResponse != null) {
+                    Gson gson = new Gson();
+                    Log.e("GSON",gson.toJson(serverResponse));
                     fillOffers(serverResponse);
                 } else {
 
