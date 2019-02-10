@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,11 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
-
 public class FragmentProfileHome extends Fragment {
 
     FloatingActionButton fab_edit;
     CircleImageView cir_user_image;
     TextView txt_name, txt_job_title, txt_location, txt_bio, txt_dateOfBirth, txt_email, txt_phone, txt_num_projects;
-
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
@@ -44,10 +43,11 @@ public class FragmentProfileHome extends Fragment {
     View view;
     FragmentManager fragmentManager;
     //    ViewPager viewPager = null;
-    static int Id = 0;
+    static int Id = 1;
 
     public static FragmentProfileHome setId(int id) {
-        Id = id;
+//        Id = id; TODO
+        Id = 1;
         return new FragmentProfileHome();
     }
 
@@ -56,7 +56,7 @@ public class FragmentProfileHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rec);
+        recyclerView = view.findViewById(R.id.rec);
         txt_name = view.findViewById(R.id.name);
         txt_job_title = view.findViewById(R.id.job_title);
         txt_location = view.findViewById(R.id.location);
@@ -67,7 +67,7 @@ public class FragmentProfileHome extends Fragment {
         fab_edit = view.findViewById(R.id.edit);
         cir_user_image = view.findViewById(R.id.user_image);
         txt_num_projects = view.findViewById(R.id.num_projects);
-        recyclerView.setLayoutManager(layoutManager);
+
         recyclerView.setLayoutManager(layoutManager);
         offersList = new ArrayList<>();
         fragmentManager = getFragmentManager();
@@ -91,13 +91,13 @@ public class FragmentProfileHome extends Fragment {
 
     private void loadProfile(int id) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.PROFILE_URL);
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         final ApiConfig profile = appConfig.getRetrofit().create(ApiConfig.class);
         Call<ProfileResponse> call = profile.getProfile(id, API.URL_TOKEN);
         call.enqueue(new Callback<ProfileResponse>() {
             @Override
-            public void onResponse(Call<ProfileResponse> call, retrofit2.Response<ProfileResponse> response) {
+            public void onResponse(@NonNull Call<ProfileResponse> call, @NonNull retrofit2.Response<ProfileResponse> response) {
                 ProfileResponse allData = response.body();
                 UserModel profObject = allData.getUserDetails();
                 List<Offers> offers = allData.getListOffer();
@@ -106,8 +106,8 @@ public class FragmentProfileHome extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ProfileResponse> call, Throwable t) {
-                //textView.setText(t.getMessage());
+            public void onFailure(@NonNull Call<ProfileResponse> call, @NonNull Throwable t) {
+                Log.d("loadProfile", t.getMessage());
             }
         });
     }
@@ -128,15 +128,12 @@ public class FragmentProfileHome extends Fragment {
         txt_email.setText(profObject.getMail());
         txt_phone.setText(profObject.getPhone());
         txt_num_projects.setText(String.valueOf(profObject.getNumProject()));
-        if (!profObject.getImage().isEmpty() && profObject.getImage() != null){
+        if (profObject.getImage() != null && !profObject.getImage().isEmpty() && profObject.getImage() != null) {
             Picasso.get().load(profObject.getImage()).into(cir_user_image);
         }
 
-        fab_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        fab_edit.setOnClickListener(v -> {
 
-            }
         });
     }
 

@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,26 +42,24 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
         holder.project_name.setText(offersList.get(position).getName());
-        holder.num_likes.setText(offersList.get(position).getNumLiks()+"");
-        holder.num_contributer.setText(offersList.get(position).getNumContributorTo()+"");
+        holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
+        holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
 
-        for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
-            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()){
-                holder.location.setText(offersList.get(position).getUsers().get(i).getAddress());
+        if (offersList.get(position).getUsers() != null)
+            for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
+                if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()) {
+                    holder.location.setText(offersList.get(position).getUsers().get(i).getAddress());
+                }
             }
-        }
 
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
         //Todo: Load userImage From internal database
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /** Move To Profile fragment */
+        holder.image.setOnClickListener(v -> {
+            /** Move To Profile fragment */
 //                fragmentManager.beginTransaction()
 //                        .replace(R.id.frame, new FragmentProfile()).addToBackStack("FragmentProfile").commit();
-            }
         });
 
     }

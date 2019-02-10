@@ -2,7 +2,7 @@ package teamup.rivile.com.teamup.Uitls.APIModels;
 
 public class AttachmentModel {
     public int Id ;
-    public int Type ;
+    public boolean Type;
     public String Name ;
     public String Source ;
     public Integer RequirmentId;
@@ -10,9 +10,10 @@ public class AttachmentModel {
     public AttachmentModel() {
     }
 
-    public AttachmentModel(String displayName, String url) {
+    public AttachmentModel(String displayName, String url, boolean type) {
         Name = displayName;
         Source = url;
+        Type = type;
     }
 
     public void setId(int id) {
@@ -31,7 +32,7 @@ public class AttachmentModel {
         Source = source;
     }
 
-    public void setType(int type) {
+    public void setType(boolean type) {
         Type = type;
     }
 
@@ -47,7 +48,7 @@ public class AttachmentModel {
         return RequirmentId;
     }
 
-    public int getType() {
+    public boolean getType() {
         return Type;
     }
 

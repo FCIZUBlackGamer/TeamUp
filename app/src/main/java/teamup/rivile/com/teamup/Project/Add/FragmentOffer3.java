@@ -4,8 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,9 +37,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -203,32 +203,26 @@ public class FragmentOffer3 extends Fragment {
 
         setUpRecyclerViews();
 
-        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, new ImagesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(FilesModel item) {
-                try {
-                    viewPreview.setVisibility(View.VISIBLE);
-                    currentFileModel = item;
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), item.getFileUri());
-                    preview.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, item -> {
+            try {
+                viewPreview.setVisibility(View.VISIBLE);
+                currentFileModel = item;
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), item.getFileUri());
+                preview.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
-        filesAdapter = new FilesAdapter(getActivity(), filesModels, new FilesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(FilesModel item) {
-                try {
-                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + getFileName(item.getFileUri()));
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(file), "text/plain");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        filesAdapter = new FilesAdapter(getActivity(), filesModels, item -> {
+            try {
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + getFileName(item.getFileUri()));
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "text/plain");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         recFiles.setAdapter(filesAdapter);
@@ -239,211 +233,171 @@ public class FragmentOffer3 extends Fragment {
             viewPreview.setVisibility(View.GONE);
         }
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filesModels.remove(currentFileModel);
-                imagesAdapter.notifyDataSetChanged();
-                if (filesModels.size() > 0) {
-                    viewPreview.setVisibility(View.VISIBLE);
-                    try {
-                        currentFileModel = filesModels.get(0);
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filesModels.get(0).getFileUri());
-                        preview.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    viewPreview.setVisibility(View.GONE);
+        delete.setOnClickListener(v -> {
+            filesModels.remove(currentFileModel);
+            imagesAdapter.notifyDataSetChanged();
+            if (filesModels.size() > 0) {
+                viewPreview.setVisibility(View.VISIBLE);
+                try {
+                    currentFileModel = filesModels.get(0);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filesModels.get(0).getFileUri());
+                    preview.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
+            } else {
+                viewPreview.setVisibility(View.GONE);
             }
+
         });
 
         recImages.setAdapter(imagesAdapter);
 
 
-        doc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* Open Storage Files*/
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
+        doc.setOnClickListener(v -> {
+            /* Open Storage Files*/
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                //Limit selection to images an pdf files only
-                intent.setType("application/pdf|text/plain");
-                String[] mimeTypes = {"application/pdf", "|text/plain"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            //Limit selection to images an pdf files only
+            intent.setType("application/pdf|text/plain");
+            String[] mimeTypes = {"application/pdf", "|text/plain"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
-                //local storage only
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(intent, PICKFILE_REQUEST_CODE);
-            }
+            //local storage only
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            startActivityForResult(intent, PICKFILE_REQUEST_CODE);
         });
 
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /** Choose Either Camera Or Gallery */
-                final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        image.setOnClickListener(v -> {
+            /** Choose Either Camera Or Gallery */
+            final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                Camera_view = inflater.inflate(R.layout.camera_view, null);
+            Camera_view = inflater.inflate(R.layout.camera_view, null);
 
-                close = Camera_view.findViewById(R.id.close);
-                minimize = Camera_view.findViewById(R.id.minimize);
-                cam = Camera_view.findViewById(R.id.cam);
-                gal = Camera_view.findViewById(R.id.gal);
+            close = Camera_view.findViewById(R.id.close);
+            minimize = Camera_view.findViewById(R.id.minimize);
+            cam = Camera_view.findViewById(R.id.cam);
+            gal = Camera_view.findViewById(R.id.gal);
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setCancelable(false)
-                        .setView(Camera_view);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setCancelable(false)
+                    .setView(Camera_view);
 
-                final AlertDialog dialog = builder.create();
-                dialog.show();
+            final AlertDialog dialog = builder.create();
+            dialog.show();
 
-                gal.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-                    @Override
-                    public void onClick(View v) {
-                        openGalary();
-                        dialog.dismiss();
-                    }
-                });
+            gal.setOnClickListener(v1 -> {
+                openGalary();
+                dialog.dismiss();
+            });
 
-                cam.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openCamera();
-                        dialog.dismiss();
-                    }
-                });
+            cam.setOnClickListener(v12 -> {
+                openCamera();
+                dialog.dismiss();
+            });
 
-                close.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        close_type = 0;
-                        dialog.dismiss();
+            close.setOnClickListener(v13 -> {
+                close_type = 0;
+                dialog.dismiss();
 
-                    }
-                });
-            }
+            });
         });
 
-        egypt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    if (mLoadedCapitals.getValue() != null) {
-                        mSelectedCapitalModels.addAll(mLoadedCapitals.getValue());
-                        mCapitalsRecyclerViewAdapter.notifyDataSetChanged();
-                    }
-                } else {
-                    mSelectedCapitalModels.clear();
+        egypt.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (mLoadedCapitals.getValue() != null) {
+                    mSelectedCapitalModels.addAll(mLoadedCapitals.getValue());
                     mCapitalsRecyclerViewAdapter.notifyDataSetChanged();
                 }
+            } else {
+                mSelectedCapitalModels.clear();
+                mCapitalsRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
 
-        go.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (true/*filesModels.size() > 0*/) {
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
+        go.setOnClickListener(v -> {
+            if (true/*filesModels.size() > 0*/) {
+                new Handler().post(() -> {
 
-                            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
-                            if (mSelectedCategory == null) {
-                                Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                    mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+                    if (mSelectedCategory == null) {
+                        Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                            Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
-                            Offers.setCategoryName(mSelectedCategory.getName());
+                    Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
+                    Offers.setCategoryName(mSelectedCategory.getName());
 
-                            mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
+                    mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
 
-                            if (Offers.getName() == null || Offers.getName().isEmpty()) {
-                                pager.setCurrentItem(0);
-                                Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
-                            } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
-                                pager.setCurrentItem(0);
-                                Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
-                            } else if (RequirmentModel.isNeedPlace() && Offers.getAddress() != null && Offers.getAddress().isEmpty()) {
-                                pager.setCurrentItem(1);
-                                Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
-                            } else if (mSelectedCategory == null) {
-                                Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
-                            } else if (mSelectedCapitalModels.isEmpty()) {
-                                Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
-                            } else {
-                                //TODO: start uploading and adding...
-                                if (!filesModels.isEmpty())
-                                    CopyFilesUploadFilesAddOffer();
-                                else addOffer();
-                            }
-                        }
-                    });
-                }
+                    if (Offers.getName() == null || Offers.getName().isEmpty()) {
+                        pager.setCurrentItem(0);
+                        Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
+                    } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
+                        pager.setCurrentItem(0);
+                        Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
+                    } else if (RequirmentModel.isNeedPlace() && Offers.getAddress() != null && Offers.getAddress().isEmpty()) {
+                        pager.setCurrentItem(1);
+                        Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
+                    } else if (mSelectedCategory == null) {
+                        Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
+                    } else if (mSelectedCapitalModels.isEmpty()) {
+                        Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
+                    } else {
+                        //TODO: start uploading and adding...
+                        if (!filesModels.isEmpty())
+                            CopyFilesUploadFilesAddOffer();
+                        else addOffer();
+                    }
+                });
             }
         });
 
         //region Shrink And Expand
 
-        attachment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (attachmentSection.getVisibility() == View.VISIBLE) {
-                    attachmentSection.setVisibility(View.GONE);
-                    arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        attachment.setOnClickListener(v -> {
+            if (attachmentSection.getVisibility() == View.VISIBLE) {
+                attachmentSection.setVisibility(View.GONE);
+                arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    attachmentSection.setVisibility(View.VISIBLE);
-                    arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                attachmentSection.setVisibility(View.VISIBLE);
+                arrowAttachments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
-        cap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CapSection.getVisibility() == View.VISIBLE) {
-                    CapSection.setVisibility(View.GONE);
-                    arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        cap.setOnClickListener(v -> {
+            if (CapSection.getVisibility() == View.VISIBLE) {
+                CapSection.setVisibility(View.GONE);
+                arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    CapSection.setVisibility(View.VISIBLE);
-                    arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                CapSection.setVisibility(View.VISIBLE);
+                arrowCapitals.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
-        dep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DepSection.getVisibility() == View.VISIBLE) {
-                    DepSection.setVisibility(View.GONE);
-                    arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        dep.setOnClickListener(v -> {
+            if (DepSection.getVisibility() == View.VISIBLE) {
+                DepSection.setVisibility(View.GONE);
+                arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    DepSection.setVisibility(View.VISIBLE);
-                    arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                DepSection.setVisibility(View.VISIBLE);
+                arrowDepartments.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
-        tags.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tagSection.getVisibility() == View.VISIBLE) {
-                    tagSection.setVisibility(View.GONE);
-                    arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        tags.setOnClickListener(v -> {
+            if (tagSection.getVisibility() == View.VISIBLE) {
+                tagSection.setVisibility(View.GONE);
+                arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    tagSection.setVisibility(View.VISIBLE);
-                    arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                tagSection.setVisibility(View.VISIBLE);
+                arrowTags.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
         // endregion
@@ -621,45 +575,58 @@ public class FragmentOffer3 extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             viewPreview.setVisibility(View.VISIBLE);
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    pager.setCurrentItem(2);
-                    pagerAdapter.notifyDataSetChanged();
-                    Log.e("Item", pager.getCurrentItem() + "");
-                    if (requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                        /** We Got The File */
-                        /** Save File to Local Folder and get Uri and add it to (fileArrayUri) */
-                        Toast.makeText(getActivity(), "File", Toast.LENGTH_SHORT).show();
+            new Handler().post(() -> {
+                pager.setCurrentItem(2);
+                pagerAdapter.notifyDataSetChanged();
+                Log.e("Item", pager.getCurrentItem() + "");
+                if (requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+                    /** We Got The File */
+                    /** Save File to Local Folder and get Uri and add it to (fileArrayUri) */
+                    Toast.makeText(getActivity(), "File", Toast.LENGTH_SHORT).show();
 
-                        ClipData mClipData = data.getClipData();
-                        if (mClipData == null) {
-                            Uri uri = data.getData();
+                    ClipData mClipData = data.getClipData();
+                    if (mClipData == null) {
+                        Uri uri = data.getData();
+                        //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
+                        FilesModel s = new FilesModel(uri);
+                        s.setFileName(getFileName(s.getFileUri()));
+                        filesModels.add(s);
+
+                    } else {
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri uri = item.getUri();
+
                             //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
                             FilesModel s = new FilesModel(uri);
                             s.setFileName(getFileName(s.getFileUri()));
                             filesModels.add(s);
+                            // !! You may need to resize the image if it's too large
 
-                        } else {
-                            for (int i = 0; i < mClipData.getItemCount(); i++) {
-                                ClipData.Item item = mClipData.getItemAt(i);
-                                Uri uri = item.getUri();
-
-                                //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
-                                FilesModel s = new FilesModel(uri);
-                                s.setFileName(getFileName(s.getFileUri()));
-                                filesModels.add(s);
-                                // !! You may need to resize the image if it's too large
-
-                            }
                         }
-                        filesAdapter.notifyDataSetChanged();
-                    } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-                        ClipData mClipData = data.getClipData();
-                        if (mClipData == null) {
-                            Uri uri = data.getData();
+                    }
+                    filesAdapter.notifyDataSetChanged();
+                } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+                    ClipData mClipData = data.getClipData();
+                    if (mClipData == null) {
+                        Uri uri = data.getData();
+                        imagesArrayUri.add(uri);
+                        filesModels.add(new FilesModel(uri));
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            bitmap = getResizedBitmap(bitmap, 100);
+                            preview.setImageBitmap(bitmap);
+                            Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri uri = item.getUri();
                             imagesArrayUri.add(uri);
                             filesModels.add(new FilesModel(uri));
+                            // !! You may need to resize the image if it's too large
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                                 bitmap = getResizedBitmap(bitmap, 100);
@@ -668,48 +635,32 @@ public class FragmentOffer3 extends Fragment {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-                            for (int i = 0; i < mClipData.getItemCount(); i++) {
-                                ClipData.Item item = mClipData.getItemAt(i);
-                                Uri uri = item.getUri();
-                                imagesArrayUri.add(uri);
-                                filesModels.add(new FilesModel(uri));
-                                // !! You may need to resize the image if it's too large
-                                try {
-                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                                    bitmap = getResizedBitmap(bitmap, 100);
-                                    preview.setImageBitmap(bitmap);
-                                    Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
 
-                            }
                         }
-                        Log.e("filesModels Length", filesModels.size() + "");
-                    } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-                        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                        bitmap = getResizedBitmap(bitmap, 100);
+                    }
+                    Log.e("filesModels Length", filesModels.size() + "");
+                } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    bitmap = getResizedBitmap(bitmap, 100);
 //                        Uri imageUri = (Uri) data.getExtras().get("data");
 //                        Log.e("Index ",imageUri+"");
 //                        Toast.makeText(getActivity(), "Cam", Toast.LENGTH_SHORT).show();
-                        /** Save Image to Local Folder and get Uri and add it to (imagesArrayUri) */
-                        preview.setImageBitmap(bitmap);
-                        if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
-                            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                            Uri tempUri = getImageUri(getActivity(), bitmap);
+                    /** Save Image to Local Folder and get Uri and add it to (imagesArrayUri) */
+                    preview.setImageBitmap(bitmap);
+                    if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                        Uri tempUri = getImageUri(getActivity(), bitmap);
 
 
-                            // CALL THIS METHOD TO GET THE ACTUAL PATH
-                            Toast.makeText(getActivity(), "Here " + getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
+                        // CALL THIS METHOD TO GET THE ACTUAL PATH
+                        Toast.makeText(getActivity(), "Here " + getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
 
-                            filesModels.add(new FilesModel(tempUri));
-                        }
+                        filesModels.add(new FilesModel(tempUri));
                     }
-                    imagesAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < filesModels.size(); i++) {
-                        Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
-                    }
+                }
+                imagesAdapter.notifyDataSetChanged();
+                for (int i = 0; i < filesModels.size(); i++) {
+                    Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
                 }
             });
         }
@@ -810,7 +761,7 @@ public class FragmentOffer3 extends Fragment {
 
                         // Map is used to multipart the file using okhttp3.RequestBody
                         File file = new File(uri.getPath());
-                        AppConfig appConfig = new AppConfig(API.BASE_UPLOAD_URL);
+                        AppConfig appConfig = new AppConfig(API.BASE_URL);
 
                         // Parsing any Media type file
                         final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
@@ -819,14 +770,23 @@ public class FragmentOffer3 extends Fragment {
 
                         ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
                         Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
+                        Uri finalUri = uri;
                         call.enqueue(new Callback<List<String>>() {
                             @Override
                             public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
                                 List<String> serverResponse = response.body();
                                 if (serverResponse != null) {
                                     if (!serverResponse.isEmpty()) {
-                                        String url = serverResponse.get(0);//TODO: save file url
-                                        mAttachmentModelArrayList.add(new AttachmentModel(displayName, url));
+                                        String url = serverResponse.get(0);//get file url
+                                        mAttachmentModelArrayList.add(
+                                                new AttachmentModel(
+                                                        displayName,
+                                                        url,
+                                                        !getMimeType(finalUri).substring(0, 5).equals(
+                                                                "image"
+                                                        )
+                                                )
+                                        );
 
                                         if (mAttachmentModelArrayList.size() == filesModels.size()) {
                                             addOffer();
@@ -856,27 +816,68 @@ public class FragmentOffer3 extends Fragment {
         }
     }
 
+    private boolean copyFileToProjectDirectory(Uri srcUri, String displayName, int i) {
+        try {
+            String fileType = getMimeType(srcUri).substring(0, 5).equals(
+                    "image"
+            ) ? "Images" : "Files";
+
+            File destFile;
+            if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
+                destFile = new File(Environment.getExternalStoragePublicDirectory(
+                        getString(R.string.app_name) + File.separator + fileType), displayName);
+
+                if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
+
+                if (!destFile.exists()) destFile.createNewFile();
+
+            } else return false;
+
+            OutputStream destOutputStream = new FileOutputStream(destFile);
+            InputStream srcInputStream = getContext().getContentResolver().openInputStream(srcUri);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = srcInputStream.read(buffer)) > 0) {
+                destOutputStream.write(buffer, 0, length);
+            }
+
+            Log.d("MODELSS", "File Copied Successfully.");
+            filesModels.get(i).setFileUri(Uri.parse(destFile.getPath()));
+            Log.v("NewFileUrl", destFile.getPath());
+
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Failed to copy file." + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public String getMimeType(Uri uri) {
+        String mimeType;
+        if (uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = getContext().getContentResolver();
+            mimeType = cr.getType(uri);
+        } else {
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+                    .toString());
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    fileExtension.toLowerCase());
+        }
+        return mimeType;
+    }
+
     private void setUpRecyclerViews() {
         recCapitals.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
         recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
-        mLoadedCapitals.observe(this, new Observer<ArrayList<CapitalModel>>() {
-            @Override
-            public void onChanged(ArrayList<CapitalModel> capitalModels) {
-                mCapitalsRecyclerViewAdapter.swapData(capitalModels);
-            }
-        });
+        mLoadedCapitals.observe(this, capitalModels -> mCapitalsRecyclerViewAdapter.swapData(capitalModels));
 
         recDep.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mCategoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(null, mSelectedCategory);
         recDep.setAdapter(mCategoriesRecyclerViewAdapter);
-        mLoadedCategories.observe(this, new Observer<ArrayList<CapitalModel>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<CapitalModel> capitalModels) {
-                mCategoriesRecyclerViewAdapter.swapData(capitalModels);
-            }
-        });
+        mLoadedCategories.observe(this, capitalModels -> mCategoriesRecyclerViewAdapter.swapData(capitalModels));
     }
 
     private teamup.rivile.com.teamup.Uitls.APIModels.Offers bindOffers() {
@@ -926,42 +927,6 @@ public class FragmentOffer3 extends Fragment {
         return requirementModel;
     }
 
-    private boolean copyFileToProjectDirectory(Uri srcUri, String displayName, int i) {
-        try {
-            String fileType = displayName.substring(displayName.length() - 3).toLowerCase().equals("pdf") ?
-                    "PDF-Files" : "Images";
-
-            File destFile;
-            if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
-                destFile = new File(Environment.getExternalStoragePublicDirectory(
-                        getString(R.string.app_name) + File.separator + fileType), displayName);
-
-                if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
-
-                if (!destFile.exists()) destFile.createNewFile();
-
-            } else return false;
-
-            OutputStream destOutputStream = new FileOutputStream(destFile);
-            InputStream srcInputStream = getContext().getContentResolver().openInputStream(srcUri);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = srcInputStream.read(buffer)) > 0) {
-                destOutputStream.write(buffer, 0, length);
-            }
-
-            Toast.makeText(getContext(), "File Copied Successfully.", Toast.LENGTH_SHORT).show();
-            filesModels.get(i).setFileUri(Uri.parse(destFile.getPath()));
-            Log.v("NewFileUrl", destFile.getPath());
-
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "Failed to copy file." + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
-    }
-
     private void addOffer() {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
@@ -974,10 +939,6 @@ public class FragmentOffer3 extends Fragment {
 
         RequirmentModel.setUserId(1);
         RequirmentModel.setExperienceTypeId(null);
-//        RequirmentModel.setPlaceAddress("place address avoiding null");
-//        RequirmentModel.setPlaceDescriptions("place description avoiding null");
-//        RequirmentModel.setMoneyDescriptions("money description avoiding null");
-//        RequirmentModel.setExperienceDescriptions("experience description avoiding null");
         String requirementString = gson.toJson(bindRequirementModel());
 
         //Attachment
@@ -994,11 +955,11 @@ public class FragmentOffer3 extends Fragment {
         String capitalString = gson.toJson(mSelectedCapitalModels);
 
         Log.d("MODELSS",
-                "{\"OFFER\": " + offerString + ",\n" +
-                        "\"REQUIREMENT\": " + requirementString + ",\n" +
-                        "\"ATTACHMENT\": " + attachmentString + ",\n" +
-                        "\"TAGS\": " + tagsString + ",\n" +
-                        "\"CAPITALS\": " + capitalString + "\n}");
+                "{\"Offer\": " + offerString + ",\n" +
+                        "\"Requirement\": " + requirementString + ",\n" +
+                        "\"Attachment\": " + attachmentString + ",\n" +
+                        "\"Tags\": " + tagsString + ",\n" +
+                        "\"Capital\": " + capitalString + "\n}");
 
         Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
 

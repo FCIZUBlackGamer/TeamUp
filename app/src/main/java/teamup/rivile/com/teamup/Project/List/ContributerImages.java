@@ -60,7 +60,7 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
     @Override
     public int getItemCount() {
-        return deals.size();
+        return deals != null ? deals.size() : 0;
     }
 
     public class Vholder extends RecyclerView.ViewHolder {
