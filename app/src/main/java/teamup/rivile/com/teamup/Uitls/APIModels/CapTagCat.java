@@ -1,9 +1,6 @@
-package teamup.rivile.com.teamup.Project.Add;
+package teamup.rivile.com.teamup.Uitls.APIModels;
 
 import java.util.List;
-
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 
 public class CapTagCat {
     List<CapitalModel> Category;
