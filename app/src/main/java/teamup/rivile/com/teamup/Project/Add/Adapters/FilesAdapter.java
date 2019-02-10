@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
@@ -30,6 +32,9 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
         this.context = context;
         this.filesModels = filesModels;
         this.listener = listener;
+        if (this.filesModels == null) {
+            this.filesModels = new ArrayList<>();
+        }
     }
 
     @NonNull
@@ -43,9 +48,12 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
         holder.bind(filesModels.get(position), listener);
 
-        if (!filesModels.get(position).getFileUri().toString().isEmpty()) {
+        filesModels.get(position).setIndex(position);
+        try {
             fileUri = filesModels.get(position).getFileUri();
             holder.fileName.setText(filesModels.get(position).getFileName());
+        } catch (Exception e) {
+            Log.e("EX", e.getMessage());
         }
 
         holder.remove.setOnClickListener(new View.OnClickListener() {

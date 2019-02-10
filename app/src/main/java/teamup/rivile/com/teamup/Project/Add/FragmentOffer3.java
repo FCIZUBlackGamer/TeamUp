@@ -924,6 +924,7 @@ public class FragmentOffer3 extends Fragment {
         String offerString = gson.toJson(bindOffers());
 
         RequirmentModel.setUserId(1);
+        RequirmentModel.setPlaceAddress("address avoiding null");
         RequirmentModel.setExperienceTypeId(null);
         String requirementString = gson.toJson(bindRequirementModel());
 
