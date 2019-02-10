@@ -43,7 +43,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
         holder.project_name.setText(offersList.get(position).getName());
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
-        holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
+        holder.nun_contributor.setText(offersList.get(position).getNumContributorTo() + "");
 
         if (offersList.get(position).getUsers() != null)
             for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
@@ -71,7 +71,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
     public class Vholder extends RecyclerView.ViewHolder {
         TextView project_name, location;
-        TextView num_likes, num_contributer;
+        TextView num_likes, nun_contributor;
         CircleImageView image;
         LinearLayout linearLayout;
         RecyclerView recyclerView;
@@ -83,7 +83,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);
             linearLayout = itemView.findViewById(R.id.lin);
-            num_contributer = itemView.findViewById(R.id.num_contributer);
+            nun_contributor = itemView.findViewById(R.id.num_contributer);
             num_likes = itemView.findViewById(R.id.num_likes);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.rec);

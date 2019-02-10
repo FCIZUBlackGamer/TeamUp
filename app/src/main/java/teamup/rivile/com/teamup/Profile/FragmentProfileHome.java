@@ -159,6 +159,5 @@ public class FragmentProfileHome extends Fragment {
         public int getCount() {
             return 2;
         }
-
     }
 }

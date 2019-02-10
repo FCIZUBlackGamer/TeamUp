@@ -41,16 +41,15 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
         final ExperienceTypeModel typeModel = mTypeModels.get(i);
         holder.chip.setText(typeModel.getName());
 
-        holder.chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (typeModel.getId() != 0 && mLoadedDataAdapter != null) {
-                    //restore loaded typeExperience
-                    mLoadedDataAdapter.addTypeModel(typeModel);
-                }
-                mTypeModels.remove(typeModel);
-                notifyDataSetChanged();
+        holder.chip.setOnCloseIconClickListener(v -> {
+            if (typeModel.getId() != 0 && mLoadedDataAdapter != null) {
+                //restore loaded typeExperience
+                mLoadedDataAdapter.addTypeModel(typeModel);
             }
+
+            removeTypeModel(typeModel);
+//            mTypeModels.remove(typeModel);
+//            notifyDataSetChanged();
         });
     }
 
@@ -66,12 +65,6 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
             super(itemView);
             chip = itemView.findViewById(R.id.chip);
         }
-    }
-
-    public void swapData(@NonNull ArrayList<ExperienceTypeModel> typeModels) {
-        mTypeModels = typeModels;
-
-        notifyDataSetChanged();
     }
 
     public void addTypeModel(@NonNull ExperienceTypeModel typeModel) {

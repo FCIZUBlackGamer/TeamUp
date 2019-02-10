@@ -86,7 +86,7 @@ public class FragmentOffer3 extends Fragment {
     private final char SPACE = ' ';
     private final char NEW_LINE = '\n';
 
-    private static final int PICKFILE_REQUEST_CODE = 10;
+    private static final int PICK_FILE_REQUEST_CODE = 10;
     static final int PICK_IMAGE_REQUEST = 1;
     static final int CAMERA_REQUEST = 1888;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
@@ -102,9 +102,6 @@ public class FragmentOffer3 extends Fragment {
     View view;
     RelativeLayout attachment, cap, dep, tags;
     LinearLayout attachmentSection, CapSection, DepSection, tagSection;
-    /**
-     * 1: Expand, 0:Shrink
-     */
 
     ImageView doc, image, preview, delete;
     RecyclerView recFiles, recImages;
@@ -138,9 +135,9 @@ public class FragmentOffer3 extends Fragment {
     static FragmentPagerAdapter pagerAdapter;
 
     static FragmentOffer3 setPager(
-            ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<ArrayList<ExperienceTypeModel>> tagsArrayList, MutableLiveData<ArrayList<CapitalModel>> loadedCapitals, MutableLiveData<ArrayList<CapitalModel>> loadedCategories) {
+            ViewPager viewPager, FragmentPagerAdapter pagerAdapter, MutableLiveData<ArrayList<ExperienceTypeModel>> tagsArrayList, MutableLiveData<ArrayList<CapitalModel>> loadedCapitals, MutableLiveData<ArrayList<CapitalModel>> loadedCategories) {
         pager = viewPager;
-        pagerAdapter = pagerAdapte;
+        FragmentOffer3.pagerAdapter = pagerAdapter;
         mLoadedTags = tagsArrayList;
         mLoadedCapitals = loadedCapitals;
         mLoadedCategories = loadedCategories;
@@ -151,7 +148,7 @@ public class FragmentOffer3 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment3_add_project, container, false);
-        /** Shrink and Expand Views */
+        //Shrink and Expand Views
         attachment = view.findViewById(R.id.attachment);
         cap = view.findViewById(R.id.cap);
         dep = view.findViewById(R.id.dep);
@@ -164,7 +161,7 @@ public class FragmentOffer3 extends Fragment {
         arrowDepartments = view.findViewById(R.id.arrowDepartments);
         arrowCapitals = view.findViewById(R.id.arrowCapitals);
         arrowTags = view.findViewById(R.id.arrowTags);
-        /** Input Views */
+        // Input Views
 
         doc = view.findViewById(R.id.doc);
         image = view.findViewById(R.id.image);
@@ -267,7 +264,7 @@ public class FragmentOffer3 extends Fragment {
             //local storage only
             intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            startActivityForResult(intent, PICKFILE_REQUEST_CODE);
+            startActivityForResult(intent, PICK_FILE_REQUEST_CODE);
         });
 
         image.setOnClickListener(v -> {
@@ -289,7 +286,7 @@ public class FragmentOffer3 extends Fragment {
             dialog.show();
 
             gal.setOnClickListener(v1 -> {
-                openGalary();
+                openGallery();
                 dialog.dismiss();
             });
 
@@ -317,43 +314,33 @@ public class FragmentOffer3 extends Fragment {
             }
         });
 
-        go.setOnClickListener(v -> {
-            if (true/*filesModels.size() > 0*/) {
-                new Handler().post(() -> {
+        go.setOnClickListener(v -> new Handler().post(() -> {
+            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+            Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
+            Offers.setCategoryName(mSelectedCategory.getName());
 
-                    mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
-                    if (mSelectedCategory == null) {
-                        Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+            mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
 
-                    Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
-                    Offers.setCategoryName(mSelectedCategory.getName());
-
-                    mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
-
-                    if (Offers.getName() == null || Offers.getName().isEmpty()) {
-                        pager.setCurrentItem(0);
-                        Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
-                    } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
-                        pager.setCurrentItem(0);
-                        Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
-                    } else if (RequirmentModel.isNeedPlace() && Offers.getAddress() != null && Offers.getAddress().isEmpty()) {
-                        pager.setCurrentItem(1);
-                        Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
-                    } else if (mSelectedCategory == null) {
-                        Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
-                    } else if (mSelectedCapitalModels.isEmpty()) {
-                        Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
-                    } else {
-                        //TODO: start uploading and adding...
-                        if (!filesModels.isEmpty())
-                            CopyFilesUploadFilesAddOffer();
-                        else addOffer();
-                    }
-                });
+            if (Offers.getName() == null || Offers.getName().isEmpty()) {
+                pager.setCurrentItem(0);
+                Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
+            } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
+                pager.setCurrentItem(0);
+                Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
+            } else if (RequirmentModel.isNeedPlace() && Offers.getAddress() != null && Offers.getAddress().isEmpty()) {
+                pager.setCurrentItem(1);
+                Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
+            } else if (mSelectedCategory == null) {
+                Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
+            } else if (mSelectedCapitalModels.isEmpty()) {
+                Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
+            } else {
+                //TODO: start uploading and adding...
+                if (!filesModels.isEmpty())
+                    CopyFilesUploadFilesAddOffer();
+                else addOffer();
             }
-        });
+        }));
 
         //region Shrink And Expand
 
@@ -412,7 +399,6 @@ public class FragmentOffer3 extends Fragment {
 
         mTagsRecLoadedAdapter = new LoadedChipsAdapter(null, mTagsRecUserAdapter);
         tagsRec.setAdapter(mTagsRecLoadedAdapter);
-        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
 
         tagsRecUserLoad.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
@@ -479,7 +465,7 @@ public class FragmentOffer3 extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void openGalary() {
+    private void openGallery() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
@@ -579,7 +565,7 @@ public class FragmentOffer3 extends Fragment {
                 pager.setCurrentItem(2);
                 pagerAdapter.notifyDataSetChanged();
                 Log.e("Item", pager.getCurrentItem() + "");
-                if (requestCode == PICKFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+                if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                     /** We Got The File */
                     /** Save File to Local Folder and get Uri and add it to (fileArrayUri) */
                     Toast.makeText(getActivity(), "File", Toast.LENGTH_SHORT).show();
