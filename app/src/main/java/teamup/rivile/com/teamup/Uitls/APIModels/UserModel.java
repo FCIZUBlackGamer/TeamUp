@@ -1,25 +1,25 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
 public class UserModel {
-    public int Id ;
+    public Integer Id ;
     public String FullName ;
     public String Password ;
-    public boolean Gender ;
+    public Boolean Gender ;
     public String DateOfBirth ;
     public String Phone ;
     public String Address ;
     public String Image ;
     public String Jobtitle ;
-    public int Status ;
+    public Integer Status ;
     public String Bio ;
     public String Mail ;
-    public int NumProject ;
-    public int CapitalId ;
+    public Integer NumProject ;
+    public Integer CapitalId ;
 
     public UserModel() {
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         Id = id;
     }
 
@@ -31,7 +31,7 @@ public class UserModel {
         Bio = bio;
     }
 
-    public void setCapitalId(int capitalId) {
+    public void setCapitalId(Integer capitalId) {
         CapitalId = capitalId;
     }
 
@@ -43,7 +43,7 @@ public class UserModel {
         FullName = fullName;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(Boolean gender) {
         Gender = gender;
     }
 
@@ -59,7 +59,7 @@ public class UserModel {
         Mail = mail;
     }
 
-    public void setNumProject(int numProject) {
+    public void setNumProject(Integer numProject) {
         NumProject = numProject;
     }
 
@@ -71,23 +71,23 @@ public class UserModel {
         Phone = phone;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         Status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return Id;
     }
 
-    public int getCapitalId() {
+    public Integer getCapitalId() {
         return CapitalId;
     }
 
-    public int getNumProject() {
+    public Integer getNumProject() {
         return NumProject;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return Status;
     }
 

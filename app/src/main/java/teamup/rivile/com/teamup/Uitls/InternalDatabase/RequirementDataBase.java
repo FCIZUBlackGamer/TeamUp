@@ -1,11 +1,8 @@
-package teamup.rivile.com.teamup.Project.Details;
+package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
-import java.io.Serializable;
-import java.util.List;
+import io.realm.RealmObject;
 
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
-
-public class OfferDetailsRequirment implements Serializable {
+public class RequirementDataBase extends RealmObject {
     public int Id ;
     public boolean NeedPlaceStatus ;
     public boolean NeedPlaceType ;
@@ -22,9 +19,8 @@ public class OfferDetailsRequirment implements Serializable {
     public String ExperienceDescriptions ;
     public int UserId ;
     public Integer ExperienceTypeId;
-    public List<AttachmentModel> Attachments;
 
-    public OfferDetailsRequirment() {
+    public RequirementDataBase() {
     }
 
     public void setId(int id) {
@@ -37,14 +33,6 @@ public class OfferDetailsRequirment implements Serializable {
 
     public void setExperienceDescriptions(String experienceDescriptions) {
         ExperienceDescriptions = experienceDescriptions;
-    }
-
-    public void setAttachmentModels(List<AttachmentModel> attachmentModels) {
-        this.Attachments = attachmentModels;
-    }
-
-    public List<AttachmentModel> getAttachmentModels() {
-        return Attachments;
     }
 
     public void setExperienceFrom(int experienceFrom) {
@@ -163,4 +151,3 @@ public class OfferDetailsRequirment implements Serializable {
         return NeedPlaceType;
     }
 }
-

@@ -45,6 +45,8 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
+import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOfferDetails extends Fragment {
@@ -335,108 +337,109 @@ public class FragmentOfferDetails extends Fragment {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<OfferDetails> call;
+        Call<OfferDetailsJsonObject> call;
 
         call = getOffers.offerDetails(Id, API.URL_TOKEN);
 
-        call.enqueue(new Callback<OfferDetails>() {
+        call.enqueue(new Callback<OfferDetailsJsonObject>() {
             @Override
-            public void onResponse(Call<OfferDetails> call, retrofit2.Response<OfferDetails> response) {
-                OfferDetails serverResponse = response.body();
-                if (serverResponse != null) {
+            public void onResponse(Call<OfferDetailsJsonObject> call, retrofit2.Response<OfferDetailsJsonObject> response) {
+                OfferDetailsJsonObject Offers = response.body();
+                List<UserModel> Users = Offers.getOffers().getUsers();
+                if (Users != null) {
                     Gson gson = new Gson();
-                    Log.e("GSON",gson.toJson(serverResponse));
-                    fillOffers(serverResponse);
+                    Log.e("GSON",gson.toJson(Users));
+                    fillOffers(Offers.getOffers());
                 } else {
 
                 }
             }
 
             @Override
-            public void onFailure(Call<OfferDetails> call, Throwable t) {
+            public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
                 //textView.setText(t.getMessage());
             }
         });
     }
 
     @SuppressLint("ResourceType")
-    private void fillOffers(OfferDetails OfferDetails) {
-        project_name.setText(OfferDetails.getName());
-        proDetail.setText(OfferDetails.getDescription());
-        num_likes.setText(String.valueOf(OfferDetails.getNumLiks()));
-        nun_contributor.setText(String.valueOf(OfferDetails.getNumContributorTo()));
-        if (OfferDetails.getUsers() != null && OfferDetails.getUsers().size() > 1) {
-            conAdapter = new ContributerImages(getActivity(), OfferDetails.getUsers());
+    private void fillOffers(OfferDetails Offers) {
+        project_name.setText(Offers.getName());
+        proDetail.setText(Offers.getDescription());
+        num_likes.setText(String.valueOf(Offers.getNumLiks()));
+        nun_contributor.setText(String.valueOf(Offers.getNumContributorTo()));
+        if (Offers.getUsers() != null && Offers.getUsers().size() > 1) {
+            conAdapter = new ContributerImages(getActivity(), Offers.getUsers());
             recCont.setAdapter(conAdapter);
         }
 
-        if (OfferDetails.getProfitType() == 0) {
+        if (Offers.getProfitType() == 0) {
             moneyProfitType.setText(getResources().getString(R.id.day));
-        } else if (OfferDetails.getProfitType() == 1) {
+        } else if (Offers.getProfitType() == 1) {
             moneyProfitType.setText(getResources().getString(R.id.month));
-        } else if (OfferDetails.getProfitType() == 2) {
+        } else if (Offers.getProfitType() == 2) {
             moneyProfitType.setText(getResources().getString(R.id.year));
-        } else if (OfferDetails.getProfitType() == 3) {
+        } else if (Offers.getProfitType() == 3) {
             moneyProfitType.setText(getResources().getString(R.id.other));
         }
 
-        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedPlace()) {
-            if (OfferDetails.getRequirments().get(0).isNeedPlaceType()) {
+        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedPlace()) {
+            if (Offers.getRequirments().get(0).isNeedPlaceType()) {
                 placeType.setText(getResources().getString(R.id.avail));
-            } else if (OfferDetails.getProfitType() == 1) {
+            } else if (Offers.getProfitType() == 1) {
                 placeType.setText(getResources().getString(R.id.notAvail));
             }
 
-            if (OfferDetails.getRequirments().get(0).isNeedPlaceStatus()) {
+            if (Offers.getRequirments().get(0).isNeedPlaceStatus()) {
                 placeState.setText(getResources().getString(R.id.rent));
-            } else if (OfferDetails.getProfitType() == 1) {
+            } else if (Offers.getProfitType() == 1) {
                 placeState.setText(getResources().getString(R.id.owned));
             }
-            placeAddress.setText(OfferDetails.getRequirments().get(0).getPlaceAddress());
-            placeDesc.setText(OfferDetails.getRequirments().get(0).getPlaceDescriptions());
+            placeAddress.setText(Offers.getRequirments().get(0).getPlaceAddress());
+            placeDesc.setText(Offers.getRequirments().get(0).getPlaceDescriptions());
         } else {
             place.setVisibility(View.GONE);
             placeSection.setVisibility(View.GONE);
         }
 
-        depName.setText(OfferDetails.getCategoryName());
-        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedExperience()) {
+        depName.setText(Offers.getCategoryName());
+        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedExperience()) {
             //Todo: load Data From Experience Model and load it to (exDep)
-            experienceFrom.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceFrom()));
-            experienceTo.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceTo()));
-            exDesc.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceDescriptions()));
+            experienceFrom.setText(String.valueOf(Offers.getRequirments().get(0).getExperienceFrom()));
+            experienceTo.setText(String.valueOf(Offers.getRequirments().get(0).getExperienceTo()));
+            exDesc.setText(String.valueOf(Offers.getRequirments().get(0).getExperienceDescriptions()));
         } else {
             experience.setVisibility(View.GONE);
             experienceSection.setVisibility(View.GONE);
         }
-        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedMoney()) {
-            moneyOutFrom.setText(String.valueOf(OfferDetails.getProfitFrom()));
-            moneyOutTo.setText(String.valueOf(OfferDetails.getProfitTo()));
-            moneyInFrom.setText(String.valueOf(OfferDetails.getRequirments().get(0).getMoneyFrom()));
-            moneyInTo.setText(String.valueOf(OfferDetails.getRequirments().get(0).getMoneyTo()));
+        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedMoney()) {
+            moneyOutFrom.setText(String.valueOf(Offers.getProfitFrom()));
+            moneyOutTo.setText(String.valueOf(Offers.getProfitTo()));
+            moneyInFrom.setText(String.valueOf(Offers.getRequirments().get(0).getMoneyFrom()));
+            moneyInTo.setText(String.valueOf(Offers.getRequirments().get(0).getMoneyTo()));
         } else {
             moneyRequired.setVisibility(View.GONE);
         }
 
 
-        if (OfferDetails.getGenderContributor() == 0) {
+        if (Offers.getGenderContributor() == 0) {
             genderRequired.setText(getResources().getString(R.id.male));
-        } else if (OfferDetails.getProfitType() == 1) {
+        } else if (Offers.getProfitType() == 1) {
             genderRequired.setText(getResources().getString(R.id.female));
-        } else if (OfferDetails.getProfitType() == 2) {
+        } else if (Offers.getProfitType() == 2) {
             genderRequired.setText(getResources().getString(R.id.both));
         }
 
-        conFrom.setText(String.valueOf(OfferDetails.getNumContributorFrom()));
-        conTo.setText(String.valueOf(OfferDetails.getNumContributorTo()));
-        educationLevel.setCurrentStep(OfferDetails.getEducationContributorLevel());
+        conFrom.setText(String.valueOf(Offers.getNumContributorFrom()));
+        conTo.setText(String.valueOf(Offers.getNumContributorTo()));
+        educationLevel.setCurrentStep(Offers.getEducationContributorLevel());
 
-        if (OfferDetails.getUsers() != null) {
-            for (int i = 0; i < OfferDetails.getUsers().size(); i++) {
-                if (OfferDetails.getUserId() == OfferDetails.getUsers().get(i).getId()) {
-                    if (OfferDetails.getUsers().get(i).getImage() != null && !OfferDetails.getUsers().get(i).getImage().isEmpty()) {
-                        user_name.setText(OfferDetails.getUsers().get(i).getFullName());
-                        Picasso.get().load(API.BASE_URL + OfferDetails.getUsers().get(i).getImage()).into(user_image);
+        if (Offers.getUsers() != null) {
+            for (int i = 0; i < Offers.getUsers().size(); i++) {
+                if (Offers.getUserId() == Offers.getUsers().get(i).getId()) {
+                    if (Offers.getUsers().get(i).getImage() != null && !Offers.getUsers().get(i).getImage().isEmpty()) {
+                        user_name.setText(Offers.getUsers().get(i).getFullName());
+                        Picasso.get().load(API.BASE_URL + Offers.getUsers().get(i).getImage()).into(user_image);
                     }
                 }
             }
@@ -445,10 +448,10 @@ public class FragmentOfferDetails extends Fragment {
         //Todo: Download file names & images source
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
-        if (OfferDetails.getRequirments() != null) {
-            assert OfferDetails.getRequirments().get(0).getAttachmentModels() != null;
-            for (int i = 0; i < OfferDetails.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
-                AttachmentModel model = OfferDetails.getRequirments().get(0).getAttachmentModels().get(i);
+        if (Offers.getRequirments() != null) {
+            assert Offers.getRequirments().get(0).getAttachmentModels() != null;
+            for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
+                AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
                 String fileLink = model.getName(); //Todo: attachment.getName()
                 if (!model.getType()) {
                     ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);

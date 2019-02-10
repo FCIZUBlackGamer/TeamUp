@@ -20,6 +20,7 @@ import teamup.rivile.com.teamup.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
+import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
@@ -62,7 +63,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)
-    Call<OfferDetails> offerDetails(@Field("Id") int Id, @Field("token") String token);
+    Call<OfferDetailsJsonObject> offerDetails(@Field("Id") int Id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LIKE_URL)

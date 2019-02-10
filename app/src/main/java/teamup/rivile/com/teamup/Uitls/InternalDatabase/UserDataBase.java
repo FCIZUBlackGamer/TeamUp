@@ -4,7 +4,6 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class UserDataBase extends RealmObject {
-    @PrimaryKey
     public int Id ;
     public String FullName ;
     public String Password ;

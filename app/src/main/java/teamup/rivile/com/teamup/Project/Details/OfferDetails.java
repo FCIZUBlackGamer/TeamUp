@@ -7,26 +7,28 @@ import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class OfferDetails implements Serializable {
-    public int Id ;
+    public Integer Id ;
     public String Name ;
     public String Description ;
-    public int CategoryId ;
+    public Integer CategoryId ;
     public String CategoryName ;
-    public int ProfitType ;
-    public int ProfitFrom ;
-    public int ProfitTo ;
-    public int NumContributorFrom ;
-    public int NumContributorTo ;
-    public int AgeRequiredFrom ;
-    public int AgeRequiredTo ;
-    public int GenderContributor ;
-    public int EducationContributorLevel ;
-    public int UserId ;
-    public int NumLiks ;
-    public int NumJoinOffer ;
+    public Integer ProfitType ;
+    public Integer ProfitFrom ;
+    public Integer ProfitTo ;
+    public Integer NumContributorFrom ;
+    public Integer NumContributorTo ;
+    public Integer AgeRequiredFrom ;
+    public Integer AgeRequiredTo ;
+    public Integer GenderContributor ;
+    public Integer EducationContributorLevel ;
+    public Integer UserId ;
+    public Integer NumLiks ;
+    public Integer NumJoinOffer ;
     public List<UserModel> Users ;
     public String Address ;
-    public int Status ;
+    public Integer Status ;
+    public Boolean Block;
+    public Boolean IsDelete;
     public List<OfferDetailsRequirment> Requirments ;
     public List<CapitalModel> Capitals ;
 
@@ -34,7 +36,23 @@ public class OfferDetails implements Serializable {
     public OfferDetails() {
     }
 
-    public void setStatus(int status) {
+    public void setBlock(Boolean block) {
+        Block = block;
+    }
+
+    public void setDelete(Boolean delete) {
+        IsDelete = delete;
+    }
+
+    public Boolean isBlock() {
+        return Block;
+    }
+
+    public Boolean isDelete() {
+        return IsDelete;
+    }
+
+    public void setStatus(Integer status) {
         Status = status;
     }
 
@@ -54,7 +72,7 @@ public class OfferDetails implements Serializable {
         return Address;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return Status;
     }
 
@@ -66,11 +84,11 @@ public class OfferDetails implements Serializable {
         return Requirments;
     }
 
-    public void setNumJoinOffer(int numJoinOffer) {
+    public void setNumJoinOffer(Integer numJoinOffer) {
         NumJoinOffer = numJoinOffer;
     }
 
-    public void setNumLiks(int numLiks) {
+    public void setNumLiks(Integer numLiks) {
         NumLiks = numLiks;
     }
 
@@ -78,11 +96,11 @@ public class OfferDetails implements Serializable {
         Users = users;
     }
 
-    public int getNumJoinOffer() {
+    public Integer getNumJoinOffer() {
         return NumJoinOffer;
     }
 
-    public int getNumLiks() {
+    public Integer getNumLiks() {
         return NumLiks;
     }
 
@@ -90,11 +108,11 @@ public class OfferDetails implements Serializable {
         return Users;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(Integer categoryId) {
         CategoryId = categoryId;
     }
 
-    public void setAgeRequiredFrom(int ageRequiredFrom) {
+    public void setAgeRequiredFrom(Integer ageRequiredFrom) {
         AgeRequiredFrom = ageRequiredFrom;
     }
 
@@ -103,15 +121,15 @@ public class OfferDetails implements Serializable {
 
     }
 
-    public void setAgeRequiredTo(int ageRequiredTo) {
+    public void setAgeRequiredTo(Integer ageRequiredTo) {
         AgeRequiredTo = ageRequiredTo;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return UserId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         UserId = userId;
     }
 
@@ -119,15 +137,15 @@ public class OfferDetails implements Serializable {
         Description = description;
     }
 
-    public void setEducationContributorLevel(int educationContributorLevel) {
+    public void setEducationContributorLevel(Integer educationContributorLevel) {
         EducationContributorLevel = educationContributorLevel;
     }
 
-    public void setGenderContributor(int genderContributor) {
+    public void setGenderContributor(Integer genderContributor) {
         GenderContributor = genderContributor;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         Id = id;
     }
 
@@ -135,67 +153,67 @@ public class OfferDetails implements Serializable {
         Name = name;
     }
 
-    public void setNumContributorFrom(int numContributorFrom) {
+    public void setNumContributorFrom(Integer numContributorFrom) {
         NumContributorFrom = numContributorFrom;
     }
 
-    public void setNumContributorTo(int numContributorTo) {
+    public void setNumContributorTo(Integer numContributorTo) {
         NumContributorTo = numContributorTo;
     }
 
-    public void setProfitFrom(int profitFrom) {
+    public void setProfitFrom(Integer profitFrom) {
         ProfitFrom = profitFrom;
     }
 
-    public void setProfitTo(int profitTo) {
+    public void setProfitTo(Integer profitTo) {
         ProfitTo = profitTo;
     }
 
-    public void setProfitType(int profitType) {
+    public void setProfitType(Integer profitType) {
         ProfitType = profitType;
     }
 
-    public int getAgeRequiredFrom() {
+    public Integer getAgeRequiredFrom() {
         return AgeRequiredFrom;
     }
 
-    public int getAgeRequiredTo() {
+    public Integer getAgeRequiredTo() {
         return AgeRequiredTo;
     }
 
-    public int getCategoryId() {
+    public Integer getCategoryId() {
         return CategoryId;
     }
 
-    public int getEducationContributorLevel() {
+    public Integer getEducationContributorLevel() {
         return EducationContributorLevel;
     }
 
-    public int getGenderContributor() {
+    public Integer getGenderContributor() {
         return GenderContributor;
     }
 
-    public int getId() {
+    public Integer getId() {
         return Id;
     }
 
-    public int getNumContributorFrom() {
+    public Integer getNumContributorFrom() {
         return NumContributorFrom;
     }
 
-    public int getNumContributorTo() {
+    public Integer getNumContributorTo() {
         return NumContributorTo;
     }
 
-    public int getProfitFrom() {
+    public Integer getProfitFrom() {
         return ProfitFrom;
     }
 
-    public int getProfitTo() {
+    public Integer getProfitTo() {
         return ProfitTo;
     }
 
-    public int getProfitType() {
+    public Integer getProfitType() {
         return ProfitType;
     }
 
