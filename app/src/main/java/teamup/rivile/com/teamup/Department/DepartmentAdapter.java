@@ -68,7 +68,7 @@ public class DepartmentAdapter extends BaseAdapter {
         viewHolder.name.setText(product.getName());
         /** Download Category Image */
 
-        Picasso.get().load(API.BASE_URL +product.getImage()).into(viewHolder.image);
+//        Picasso.get().load(API.BASE_URL +product.getImage()).into(viewHolder.image);
 
         viewHolder.action.setOnClickListener(new View.OnClickListener() {
             @Override

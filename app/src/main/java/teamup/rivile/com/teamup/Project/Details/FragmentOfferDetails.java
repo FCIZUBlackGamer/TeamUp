@@ -309,9 +309,11 @@ public class FragmentOfferDetails extends Fragment {
                 if (p == 1) {
                     p = 0;
                     placeSection.setVisibility(View.GONE);
+                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
                 } else {
                     p = 1;
                     placeSection.setVisibility(View.VISIBLE);
+                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
@@ -322,12 +324,58 @@ public class FragmentOfferDetails extends Fragment {
                 if (e == 1) {
                     e = 0;
                     experienceSection.setVisibility(View.GONE);
+                    arrowEx.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
                 } else {
                     e = 1;
                     experienceSection.setVisibility(View.VISIBLE);
+                    arrowEx.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
         });
+        //attachment, cap, dep, tags
+        attachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (a == 1) {
+                    a = 0;
+                    attachmentSection.setVisibility(View.GONE);
+                    arrowAttach.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+                } else {
+                    a = 1;
+                    attachmentSection.setVisibility(View.VISIBLE);
+                    arrowAttach.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+                }
+            }
+        });
+        dep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (d == 1) {
+                    d = 0;
+                    DepSection.setVisibility(View.GONE);
+                    arrowDep.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+                } else {
+                    d = 1;
+                    DepSection.setVisibility(View.VISIBLE);
+                    arrowDep.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+                }
+            }
+        });
+        tags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (t == 1) {
+                    t = 0;
+                    tagSection.setVisibility(View.GONE);
+                    arrowTag.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+                } else {
+                    t = 1;
+                    tagSection.setVisibility(View.VISIBLE);
+                    arrowTag.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+                }
+            }
+        });
+
 
 
     }
@@ -374,29 +422,40 @@ public class FragmentOfferDetails extends Fragment {
         }
 
         if (Offers.getProfitType() == 0) {
-            moneyProfitType.setText(getResources().getString(R.id.day));
+            moneyProfitType.setText(getResources().getString(R.string.day));
         } else if (Offers.getProfitType() == 1) {
-            moneyProfitType.setText(getResources().getString(R.id.month));
+            moneyProfitType.setText(getResources().getString(R.string.month));
         } else if (Offers.getProfitType() == 2) {
-            moneyProfitType.setText(getResources().getString(R.id.year));
+            moneyProfitType.setText(getResources().getString(R.string.year));
         } else if (Offers.getProfitType() == 3) {
-            moneyProfitType.setText(getResources().getString(R.id.other));
+            moneyProfitType.setText(getResources().getString(R.string.anotherKind));
         }
 
         if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedPlace()) {
             if (Offers.getRequirments().get(0).isNeedPlaceType()) {
-                placeType.setText(getResources().getString(R.id.avail));
+                placeType.setText(getResources().getString(R.string.avail));
             } else if (Offers.getProfitType() == 1) {
-                placeType.setText(getResources().getString(R.id.notAvail));
+                placeType.setText(getResources().getString(R.string.notAvail));
             }
 
             if (Offers.getRequirments().get(0).isNeedPlaceStatus()) {
-                placeState.setText(getResources().getString(R.id.rent));
+                placeState.setText(getResources().getString(R.string.rent));
             } else if (Offers.getProfitType() == 1) {
-                placeState.setText(getResources().getString(R.id.owned));
+                placeState.setText(getResources().getString(R.string.owned));
             }
-            placeAddress.setText(Offers.getRequirments().get(0).getPlaceAddress());
-            placeDesc.setText(Offers.getRequirments().get(0).getPlaceDescriptions());
+
+            if (Offers.getRequirments().get(0).getPlaceAddress() != null && !Offers.getRequirments().get(0).getPlaceAddress().isEmpty()) {
+                placeAddress.setText(Offers.getRequirments().get(0).getPlaceAddress());
+            } else {
+                placeAddress.setText(getString(R.string.noSpAddress));
+            }
+
+            if (Offers.getRequirments().get(0).getPlaceDescriptions() != null && !Offers.getRequirments().get(0).getPlaceDescriptions().isEmpty()) {
+                placeDesc.setText(Offers.getRequirments().get(0).getPlaceDescriptions());
+            } else {
+                placeDesc.setText(getString(R.string.noDesPlace));
+            }
+
         } else {
             place.setVisibility(View.GONE);
             placeSection.setVisibility(View.GONE);
@@ -421,13 +480,12 @@ public class FragmentOfferDetails extends Fragment {
             moneyRequired.setVisibility(View.GONE);
         }
 
-
         if (Offers.getGenderContributor() == 0) {
-            genderRequired.setText(getResources().getString(R.id.male));
+            genderRequired.setText(getResources().getString(R.string.male));
         } else if (Offers.getProfitType() == 1) {
-            genderRequired.setText(getResources().getString(R.id.female));
+            genderRequired.setText(getResources().getString(R.string.female));
         } else if (Offers.getProfitType() == 2) {
-            genderRequired.setText(getResources().getString(R.id.both));
+            genderRequired.setText(getResources().getString(R.string.both));
         }
 
         conFrom.setText(String.valueOf(Offers.getNumContributorFrom()));
@@ -449,62 +507,71 @@ public class FragmentOfferDetails extends Fragment {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         if (Offers.getRequirments() != null) {
-            assert Offers.getRequirments().get(0).getAttachmentModels() != null;
-            for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
-                AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
-                String fileLink = model.getName(); //Todo: attachment.getName()
-                if (!model.getType()) {
-                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                        @Override
-                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                            AttachmentModel model = response.body();
-                            if (model != null) {
-                                try {
-                                    FilesModel f = new FilesModel();
-                                    f.setFileName(API.BASE_URL + model.getSource());
-                                    imagesModels.add(f);
-                                    imagesAdapter.notifyDataSetChanged();
-                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), f.getFileUri());
-                                    preview.setImageBitmap(bitmap);
+            if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
+                for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
+                    AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
+                    String fileLink = model.getName(); //Todo: attachment.getName()
+                    if (!model.getType()) {
+                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                            @Override
+                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                                AttachmentModel model = response.body();
+                                if (model != null) {
+                                    try {
+                                        FilesModel f = new FilesModel();
+                                        f.setFileName(API.BASE_URL + model.getSource());
+                                        imagesModels.add(f);
+                                        imagesAdapter.notifyDataSetChanged();
+                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), f.getFileUri());
+                                        preview.setImageBitmap(bitmap);
 
-                                } catch (Exception ex) {
-                                    Log.e("Images EX", ex.getMessage());
+                                    } catch (Exception ex) {
+                                        Log.e("Images EX", ex.getMessage());
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
 
-                        }
-                    });
-                } else {
-                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                        @Override
-                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                            AttachmentModel model = response.body();
-                            if (model != null) {
-                                try {
-                                    FilesModel f = new FilesModel();
-                                    f.setFileName(API.BASE_URL + model.getSource());
-                                    filesModels.add(f);
-                                    filesAdapter.notifyDataSetChanged();
-                                } catch (Exception ex) {
-                                    Log.e("Files EX", ex.getMessage());
+                            }
+                        });
+                    } else {
+                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                            @Override
+                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                                AttachmentModel model = response.body();
+                                if (model != null) {
+                                    try {
+                                        FilesModel f = new FilesModel();
+                                        f.setFileName(API.BASE_URL + model.getSource());
+                                        filesModels.add(f);
+                                        filesAdapter.notifyDataSetChanged();
+                                    } catch (Exception ex) {
+                                        Log.e("Files EX", ex.getMessage());
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-
+            } else {
+                attachment.setVisibility(View.GONE);
+//                attachmentSection.setVisibility(View.GONE);
+                recImages.setVisibility(View.GONE);
+                recFiles.setVisibility(View.GONE);
+                preview.setVisibility(View.GONE);
             }
+
+
+
         }
     }
 }

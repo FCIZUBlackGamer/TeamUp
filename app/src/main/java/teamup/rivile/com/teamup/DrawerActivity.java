@@ -108,6 +108,13 @@ public class DrawerActivity extends AppCompatActivity
         fab.setVisibility(View.VISIBLE);
 
 
+        toolbar.setVisibility(View.VISIBLE);
+//        navigation.setSelectedItemId(R.id.navigation_home);
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame, new FragmentHome()).addToBackStack("Home")
+                .commit();
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

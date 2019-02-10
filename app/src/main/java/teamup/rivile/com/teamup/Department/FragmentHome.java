@@ -1,15 +1,19 @@
 package teamup.rivile.com.teamup.Department;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +46,15 @@ public class FragmentHome extends Fragment {
 
         fragmentManager = getFragmentManager();
         gridView = (GridView) view.findViewById(R.id.gridview);
+
         categories = new ArrayList<>();
         return view;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        gridView.setNumColumns(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2);
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -56,14 +67,14 @@ public class FragmentHome extends Fragment {
 
     private void loadOffers() {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.LOAD_DEPARTMENTS_URL);
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         ApiConfig getDepartments = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<List<Department>> call = getDepartments.getCategory(API.URL_TOKEN);
-        call.enqueue(new Callback<List<Department>>() {
+        Call<DepartmentJson> call = getDepartments.getCategory(API.URL_TOKEN);
+        call.enqueue(new Callback<DepartmentJson>() {
             @Override
-            public void onResponse(Call<List<Department>> call, retrofit2.Response<List<Department>> response) {
-                List<Department> serverResponse = response.body();
+            public void onResponse(Call<DepartmentJson> call, retrofit2.Response<DepartmentJson> response) {
+                List<Department> serverResponse = response.body().getCategory();
                 if (serverResponse != null) {
                     fillOffers(serverResponse);
                 } else {
@@ -72,7 +83,7 @@ public class FragmentHome extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Department>> call, Throwable t) {
+            public void onFailure(Call<DepartmentJson> call, Throwable t) {
                 //textView.setText(t.getMessage());
             }
         });

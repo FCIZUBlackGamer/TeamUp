@@ -71,20 +71,20 @@ public class FragmentJoinHome extends Fragment {
 
         public pager(FragmentManager fm) {
             super(fm);
-            loadOffer(1);
+//            loadOffer(1);
         }
 
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, mOffer);
+//                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, mOffer);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mOffer);
+//                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mOffer);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mOffer);
+//                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mOffer);
                 //d.commitNow();
             }
 
@@ -97,29 +97,29 @@ public class FragmentJoinHome extends Fragment {
         }
     }
 
-    private void loadOffer(int id) {
-        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
-
-        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
-
-        Call<Offer> response = retrofitService.offerDetails(id, API.URL_TOKEN);
-
-        response.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(@NonNull Call<Offer> call, @NonNull Response<Offer> response) {
-                if (response.errorBody() == null) {
-                    if (response.body() != null) {
-                        mOffer.postValue(response.body());
-                    } else
-                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Offer> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    private void loadOffer(int id) {
+//        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+//
+//        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+//
+//        Call<Offer> response = retrofitService.offerDetails(id, API.URL_TOKEN);
+//
+//        response.enqueue(new Callback<Offer>() {
+//            @Override
+//            public void onResponse(@NonNull Call<Offer> call, @NonNull Response<Offer> response) {
+//                if (response.errorBody() == null) {
+//                    if (response.body() != null) {
+//                        mOffer.postValue(response.body());
+//                    } else
+//                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+//                } else
+//                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<Offer> call, @NonNull Throwable t) {
+//                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 }

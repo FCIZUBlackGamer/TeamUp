@@ -133,7 +133,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:minHeight="200dp"
+                            android:minHeight="100dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_weight="3"
@@ -156,7 +156,6 @@
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
-
                             </LinearLayout>
 
                             <android.support.v7.widget.RecyclerView
@@ -172,6 +171,17 @@
                     </LinearLayout>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:maxLines="4"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/proDetails"
+                        android:textColor="#000"
+                        android:textDirection="rtl"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/proDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,7 +191,7 @@
                         android:text="مشروع مزرعه دواجن "
                         android:textColor="#000"
                         android:textDirection="rtl"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -263,6 +273,7 @@
                             android:layout_gravity="end"
                             android:layout_marginEnd="20dp"
                             android:editable="false"
+                            android:checked="true"
                             android:fontFamily="@font/medium"
                             android:gravity="end|center_vertical"
                             android:text="@string/day"
@@ -510,6 +521,7 @@
                             android:fontFamily="@font/medium"
                             android:gravity="end|center_vertical"
                             android:text="@string/male"
+                            android:checked="true"
                             app:buttonTint="@color/backgroundDarkGreen" />
 
                         <TextView
@@ -774,6 +786,7 @@
                                 android:fontFamily="@font/medium"
                                 android:gravity="end|center_vertical"
                                 android:text="@string/male"
+                                android:checked="true"
                                 app:buttonTint="@color/backgroundDarkGreen" />
 
                             <TextView
@@ -785,6 +798,7 @@
                                 android:gravity="center"
                                 android:text="@string/placeStatus"
                                 android:textColor="#000"
+                                android:checked="true"
                                 android:textSize="16sp" />
                         </RelativeLayout>
 
@@ -804,6 +818,7 @@
                                 android:fontFamily="@font/medium"
                                 android:gravity="end|center_vertical"
                                 android:text="@string/male"
+                                android:checked="true"
                                 app:buttonTint="@color/backgroundDarkGreen" />
 
                             <TextView
@@ -879,6 +894,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
+                        android:visibility="gone"
                         android:fontFamily="@font/medium"
                         android:text="@string/exDep"
                         android:textColor="#000"
@@ -889,6 +905,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
+                        android:visibility="gone"
                         android:fontFamily="@font/medium"
                         android:text="@string/exDep"
                         android:id="@+id/exDep"

@@ -15,10 +15,12 @@ import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.Department;
+import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
+import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
@@ -57,11 +59,11 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.LOAD_DEPARTMENTS_URL)
-    Call<List<Department>> getCategory(@Field("token") String token);
+    Call<DepartmentJson> getCategory(@Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)
-    Call<Offer> offerDetails(@Field("Id") int Id, @Field("token") String token);
+    Call<OfferDetailsJsonObject> offerDetails(@Field("Id") int Id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LIKE_URL)

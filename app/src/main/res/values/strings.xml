@@ -40,6 +40,7 @@
     <string name="pressHere" translatable="false">أضغط هنا لتعديل اسم المشروع</string>
     <string name="projectDesc" translatable="false">ادخل هنا وصف لمحتوى المشروع ...</string>
     <string name="money" translatable="false">الربح</string>
+    <string name="proDetails" translatable="false">تفاصيل المشروع</string>
     <string name="moneyType" translatable="false">طبيعه الربح</string>
     <string name="day" translatable="false">يومى</string>
     <string name="month" translatable="false">شهرى</string>
@@ -114,4 +115,6 @@
     <string name="location_required" translatable="false">تحديد الموقع مطلوب</string>
     <string name="dept_error" translatable="false">إختيار القسم مطلوب</string>
     <string name="cap_required" translatable="false">إختر محافظة واحدة علي الأقل</string>
+    <string name="noSpAddress">لا يوجد عنوان محدد</string>
+    <string name="noDesPlace">لا يوجد وصف للمكان محدد</string>
 </resources>
