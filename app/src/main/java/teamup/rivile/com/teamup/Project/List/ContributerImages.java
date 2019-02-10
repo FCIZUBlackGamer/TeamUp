@@ -47,15 +47,8 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             }
         }
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentProfileHome().setId(deals.get(position).getId())).addToBackStack("FragmentProfileHome").commit();
-            }
-        });
-
-
+//        holder.image.setOnClickListener(v -> ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.frame, new FragmentProfileHome().setId(deals.get(position).getId())).addToBackStack("FragmentProfileHome").commit());
     }
 
     @Override

@@ -1,50 +1,66 @@
 package teamup.rivile.com.teamup.Project.Details;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
-import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
-import teamup.rivile.com.teamup.Project.List.AdapterListOffers;
+import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
+import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
+import teamup.rivile.com.teamup.Project.List.ContributerImages;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
 public class FragmentOfferDetails extends Fragment {
     View view;
     RelativeLayout money, contributors;
-    LinearLayout moneySection, contributorsSection;
+    LinearLayout moneySection, contributorsSection, moneyRequired;
     RelativeLayout place, experience;
     LinearLayout placeSection, experienceSection;
-    RelativeLayout attachment, cap, dep, tags;
-    LinearLayout attachmentSection, CapSection, DepSection, tagSection;
+    RelativeLayout attachment, cap, dep, tags, DepSection;
+    LinearLayout attachmentSection, CapSection, tagSection;
 
     int m, c, p, e, a, ca, d, t;/** متغير ثابت عشان اغير حاله ال shrink وال expand*/
     /**
      * 1: Expand, 0:Shrink
      */
 
+    CircleImageView user_image;
     TextView project_name, user_name;
     TextView proDetail/*, moneyDesc*/;
     CheckBox moneyProfitType, genderRequired, placeState, placeType;
@@ -55,16 +71,24 @@ public class FragmentOfferDetails extends Fragment {
 
 
     TextView placeDesc, placeAddress, exDesc, exDep, depName, experienceFrom, experienceTo, tagsList;
+    TextView nun_contributor, num_likes;
 
     View map;
 
-    ChipsAdapter mExRecUserAdapter;
-    LoadedChipsAdapter mExRecLoadedAdapter;
-    ArrayList<ExperienceTypeModel> mLoadedExperienceTypes = new ArrayList<>();
+    RecyclerView recFiles, recImages;
+    RecyclerView.Adapter imagesAdapter, filesAdapter;
+    List<FilesModel> filesModels, imagesModels;
+    ImageView preview;
 
-    static int projectId;
+    RecyclerView recCont;
+    RecyclerView.Adapter conAdapter;
 
-    static FragmentOfferDetails setProjectId(int proId) {
+    TextView like, make_offer, share;
+
+
+    static int projectId = 50;
+
+    public static FragmentOfferDetails setProjectId(int proId) {
         projectId = proId;
         return new FragmentOfferDetails();
     }
@@ -78,6 +102,7 @@ public class FragmentOfferDetails extends Fragment {
         a = ca = d = t = 1;
         /** Shrink and Expand Views */
         money = view.findViewById(R.id.money);
+        moneyRequired = view.findViewById(R.id.moneyRequired);
         contributors = view.findViewById(R.id.contributors);
         moneySection = view.findViewById(R.id.moneySection);
         contributorsSection = view.findViewById(R.id.contributorsSection);
@@ -95,8 +120,12 @@ public class FragmentOfferDetails extends Fragment {
         tagSection = view.findViewById(R.id.tagSection);
         /** Input Views */
 
+        user_image = view.findViewById(R.id.user_image);
+        preview = view.findViewById(R.id.preview);
         project_name = view.findViewById(R.id.project_name);
         user_name = view.findViewById(R.id.user_name);
+        num_likes = view.findViewById(R.id.num_likes);
+        nun_contributor = view.findViewById(R.id.num_contributer);
         proDetail = view.findViewById(R.id.proDetail);
         educationLevel = view.findViewById(R.id.educationLevel);
         educationLevel.setCurrentStep(0);
@@ -125,7 +154,21 @@ public class FragmentOfferDetails extends Fragment {
         experienceTo = view.findViewById(R.id.experienceTo);
         tagsList = view.findViewById(R.id.tagsList);
         exDep = view.findViewById(R.id.exDep);
-        map = view.findViewById(R.id.map);
+        share = view.findViewById(R.id.share);
+        like = view.findViewById(R.id.like);
+        make_offer = view.findViewById(R.id.make_offer);
+//        map = view.findViewById(R.id.map);
+
+        recFiles = view.findViewById(R.id.recFiles);
+        recImages = view.findViewById(R.id.recImages);
+        recCont = view.findViewById(R.id.rec);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recImages.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recFiles.setLayoutManager(layoutManager1);
+        filesModels = new ArrayList<>();
+        imagesModels = new ArrayList<>();
 
         return view;
     }
@@ -133,6 +176,92 @@ public class FragmentOfferDetails extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, new ImagesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(FilesModel item) {
+                try {
+                    Picasso.get().load(item.getFileName()).into(preview);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        filesAdapter = new FilesAdapter(getActivity(), filesModels, new FilesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final FilesModel item) {
+                try {
+                    AppConfig appConfig = new AppConfig(API.BASE_URL);
+                    AttachmentModel model = new AttachmentModel();
+                    model.setName(item.getFileName());
+                    String fileLink = model.getName(); //Todo: attachment.getName()
+
+                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                        @Override
+                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                            AttachmentModel model = response.body();
+                            if (model != null) {
+                                try {
+                                    String fileType = "Files";
+                                    File path = Environment.getExternalStoragePublicDirectory(
+                                            getString(R.string.app_name) + File.separator + fileType);
+                                    File file = new File(path, API.BASE_URL + model.getName());
+                                    if (!path.getParentFile().exists())
+                                        path.getParentFile().mkdirs();
+
+                                    if (!path.exists()) path.createNewFile();
+
+                                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                                    InputStream srcInputStream = getContext().getContentResolver().openInputStream(Uri.parse(file.getPath()));
+
+                                    byte[] buffer = new byte[1024];
+                                    int length;
+                                    while ((length = srcInputStream.read(buffer)) > 0) {
+                                        fileOutputStream.write(buffer, 0, length);
+                                    }
+
+                                    Toast.makeText(getContext(), "File Downloaded Successfully.", Toast.LENGTH_SHORT).show();
+                                    Log.v("NewFileUrl", path.getPath());
+
+
+                                    FilesModel filesModel = new FilesModel(Uri.parse(file.getPath()));
+                                    filesModel.setFileName(item.getFileName());
+                                    filesModels.add(item.getIndex(), filesModel);
+                                    filesAdapter.notifyDataSetChanged();
+
+
+                                } catch (Exception ex) {
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+
+                        }
+                    });
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        recFiles.setAdapter(filesAdapter);
+
+        recImages.setAdapter(imagesAdapter);
 
         money.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +297,7 @@ public class FragmentOfferDetails extends Fragment {
             }
         });
 
+        loadOfferDetails(projectId);
 
 
         place.setOnClickListener(new View.OnClickListener() {
@@ -201,17 +331,17 @@ public class FragmentOfferDetails extends Fragment {
 
     private void loadOfferDetails(int Id) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<Offers> call;
+        Call<OfferDetails> call;
 
         call = getOffers.offerDetails(Id, API.URL_TOKEN);
 
-        call.enqueue(new Callback<Offers>() {
+        call.enqueue(new Callback<OfferDetails>() {
             @Override
-            public void onResponse(Call<Offers> call, retrofit2.Response<Offers> response) {
-                Offers serverResponse = response.body();
+            public void onResponse(Call<OfferDetails> call, retrofit2.Response<OfferDetails> response) {
+                OfferDetails serverResponse = response.body();
                 if (serverResponse != null) {
                     fillOffers(serverResponse);
                 } else {
@@ -220,51 +350,155 @@ public class FragmentOfferDetails extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Offers> call, Throwable t) {
+            public void onFailure(Call<OfferDetails> call, Throwable t) {
                 //textView.setText(t.getMessage());
             }
         });
     }
 
     @SuppressLint("ResourceType")
-    private void fillOffers(Offers offers) {
-        project_name.setText(offers.getName());
-        proDetail.setText(offers.getDescription());
-        if (offers.getProfitType() == 0){
+    private void fillOffers(OfferDetails OfferDetails) {
+        project_name.setText(OfferDetails.getName());
+        proDetail.setText(OfferDetails.getDescription());
+        num_likes.setText(String.valueOf(OfferDetails.getNumLiks()));
+        nun_contributor.setText(String.valueOf(OfferDetails.getNumContributorTo()));
+        if (OfferDetails.getUsers() != null && OfferDetails.getUsers().size() > 1) {
+            conAdapter = new ContributerImages(getActivity(), OfferDetails.getUsers());
+            recCont.setAdapter(conAdapter);
+        }
+
+        if (OfferDetails.getProfitType() == 0) {
             moneyProfitType.setText(getResources().getString(R.id.day));
-        }else if (offers.getProfitType() == 1){
+        } else if (OfferDetails.getProfitType() == 1) {
             moneyProfitType.setText(getResources().getString(R.id.month));
-        }else if (offers.getProfitType() == 2){
+        } else if (OfferDetails.getProfitType() == 2) {
             moneyProfitType.setText(getResources().getString(R.id.year));
-        }else if (offers.getProfitType() == 3){
+        } else if (OfferDetails.getProfitType() == 3) {
             moneyProfitType.setText(getResources().getString(R.id.other));
         }
 
-        if (offers.getGenderContributor() == 0){
-            moneyProfitType.setText(getResources().getString(R.id.male));
-        }else if (offers.getProfitType() == 1){
-            moneyProfitType.setText(getResources().getString(R.id.female));
-        }else if (offers.getProfitType() == 2){
-            moneyProfitType.setText(getResources().getString(R.id.both));
+        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedPlace()) {
+            if (OfferDetails.getRequirments().get(0).isNeedPlaceType()) {
+                placeType.setText(getResources().getString(R.id.avail));
+            } else if (OfferDetails.getProfitType() == 1) {
+                placeType.setText(getResources().getString(R.id.notAvail));
+            }
+
+            if (OfferDetails.getRequirments().get(0).isNeedPlaceStatus()) {
+                placeState.setText(getResources().getString(R.id.rent));
+            } else if (OfferDetails.getProfitType() == 1) {
+                placeState.setText(getResources().getString(R.id.owned));
+            }
+            placeAddress.setText(OfferDetails.getRequirments().get(0).getPlaceAddress());
+            placeDesc.setText(OfferDetails.getRequirments().get(0).getPlaceDescriptions());
+        } else {
+            place.setVisibility(View.GONE);
+            placeSection.setVisibility(View.GONE);
+        }
+
+        depName.setText(OfferDetails.getCategoryName());
+        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedExperience()) {
+            //Todo: load Data From Experience Model and load it to (exDep)
+            experienceFrom.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceFrom()));
+            experienceTo.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceTo()));
+            exDesc.setText(String.valueOf(OfferDetails.getRequirments().get(0).getExperienceDescriptions()));
+        } else {
+            experience.setVisibility(View.GONE);
+            experienceSection.setVisibility(View.GONE);
+        }
+        if (OfferDetails.getRequirments() != null && OfferDetails.getRequirments().get(0).isNeedMoney()) {
+            moneyOutFrom.setText(String.valueOf(OfferDetails.getProfitFrom()));
+            moneyOutTo.setText(String.valueOf(OfferDetails.getProfitTo()));
+            moneyInFrom.setText(String.valueOf(OfferDetails.getRequirments().get(0).getMoneyFrom()));
+            moneyInTo.setText(String.valueOf(OfferDetails.getRequirments().get(0).getMoneyTo()));
+        } else {
+            moneyRequired.setVisibility(View.GONE);
         }
 
 
-        if (offers.getRequirments().get(0).isNeedPlaceType()){
-            placeType.setText(getResources().getString(R.id.avail));
-        }else if (offers.getProfitType() == 1){
-            placeType.setText(getResources().getString(R.id.notAvail));
+        if (OfferDetails.getGenderContributor() == 0) {
+            genderRequired.setText(getResources().getString(R.id.male));
+        } else if (OfferDetails.getProfitType() == 1) {
+            genderRequired.setText(getResources().getString(R.id.female));
+        } else if (OfferDetails.getProfitType() == 2) {
+            genderRequired.setText(getResources().getString(R.id.both));
         }
 
-        if (offers.getRequirments().get(0).isNeedPlaceStatus()){
-            placeState.setText(getResources().getString(R.id.rent));
-        }else if (offers.getProfitType() == 1){
-            placeState.setText(getResources().getString(R.id.owned));
+        conFrom.setText(String.valueOf(OfferDetails.getNumContributorFrom()));
+        conTo.setText(String.valueOf(OfferDetails.getNumContributorTo()));
+        educationLevel.setCurrentStep(OfferDetails.getEducationContributorLevel());
+
+        if (OfferDetails.getUsers() != null) {
+            for (int i = 0; i < OfferDetails.getUsers().size(); i++) {
+                if (OfferDetails.getUserId() == OfferDetails.getUsers().get(i).getId()) {
+                    if (OfferDetails.getUsers().get(i).getImage() != null && !OfferDetails.getUsers().get(i).getImage().isEmpty()) {
+                        user_name.setText(OfferDetails.getUsers().get(i).getFullName());
+                        Picasso.get().load(API.BASE_URL + OfferDetails.getUsers().get(i).getImage()).into(user_image);
+                    }
+                }
+            }
         }
 
-        educationLevel.setCurrentStep(offers.getEducationContributorLevel());
+        //Todo: Download file names & images source
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
 
-//        user_name;
-//
-//        educationLevel;
+        if (OfferDetails.getRequirments() != null) {
+            assert OfferDetails.getRequirments().get(0).getAttachmentModels() != null;
+            for (int i = 0; i < OfferDetails.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
+                AttachmentModel model = OfferDetails.getRequirments().get(0).getAttachmentModels().get(i);
+                String fileLink = model.getName(); //Todo: attachment.getName()
+                if (!model.getType()) {
+                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                        @Override
+                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                            AttachmentModel model = response.body();
+                            if (model != null) {
+                                try {
+                                    FilesModel f = new FilesModel();
+                                    f.setFileName(API.BASE_URL + model.getSource());
+                                    imagesModels.add(f);
+                                    imagesAdapter.notifyDataSetChanged();
+                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), f.getFileUri());
+                                    preview.setImageBitmap(bitmap);
+
+                                } catch (Exception ex) {
+                                    Log.e("Images EX", ex.getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+
+                        }
+                    });
+                } else {
+                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                        @Override
+                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                            AttachmentModel model = response.body();
+                            if (model != null) {
+                                try {
+                                    FilesModel f = new FilesModel();
+                                    f.setFileName(API.BASE_URL + model.getSource());
+                                    filesModels.add(f);
+                                    filesAdapter.notifyDataSetChanged();
+                                } catch (Exception ex) {
+                                    Log.e("Files EX", ex.getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+            }
+        }
     }
 }

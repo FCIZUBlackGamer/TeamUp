@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
+import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
@@ -44,11 +47,15 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
         holder.bind(filesModels.get(position), listener);
 
-        if (!filesModels.get(position).getFileUri().toString().isEmpty()){
+        if (filesModels.get(position).getFileName().startsWith(API.BASE_URL)){
+            Picasso.get().load(filesModels.get(position).getFileName()).into(holder.image);
+            notifyDataSetChanged();
+        } else if (!filesModels.get(position).getFileUri().toString().isEmpty()){
             Uri imageUri = filesModels.get(position).getFileUri();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
                 holder.image.setImageBitmap(bitmap);
+                notifyDataSetChanged();
             }catch (Exception e){
                 Log.e("Ex", e.getMessage());
             }

@@ -35,8 +35,8 @@ JoinOffer{
 
 Attachment{
     Type{
-        Image: 0
-        File: 1
+        Image: false
+        File: true
     }
 }
 

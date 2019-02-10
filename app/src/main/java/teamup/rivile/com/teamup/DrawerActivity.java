@@ -77,14 +77,14 @@ public class DrawerActivity extends AppCompatActivity
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_saved_project);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
+                            .replace(R.id.frame, FragmentListProjects.setDepId(7)).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
+                            .replace(R.id.frame, FragmentListProjects.setDepId(7)).addToBackStack("Home")
                             .commit();
                     return true;
                 case R.id.navigation_profile:
@@ -293,13 +293,13 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
+                    .replace(R.id.frame, FragmentListProjects.setDepId(3)).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_favourite_projects) {
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
+                    .replace(R.id.frame,  FragmentListProjects.setDepId(3)).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_profile) {
             toolbar.setVisibility(View.VISIBLE);

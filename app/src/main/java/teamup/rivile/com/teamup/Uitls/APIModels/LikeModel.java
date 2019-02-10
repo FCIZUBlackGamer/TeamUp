@@ -4,6 +4,7 @@ public class LikeModel {
     public int Id ;
     public int UserId ;
     public int OfferId ;
+    public int Status ;
 
     public LikeModel() {
     }
@@ -30,5 +31,13 @@ public class LikeModel {
 
     public int getOfferId() {
         return OfferId;
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
+
+    public int getStatus() {
+        return Status;
     }
 }

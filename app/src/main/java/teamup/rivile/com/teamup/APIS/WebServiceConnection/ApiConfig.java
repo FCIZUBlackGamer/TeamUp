@@ -5,15 +5,21 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Project.Add.CapTagCat;
 import teamup.rivile.com.teamup.Department.Department;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
+import teamup.rivile.com.teamup.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
@@ -32,7 +38,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-    Call<List<Offers>> getOffers(@Field("CatId") int CatId, @Field("token") String token);
+    Call<Offer> getOffers(@Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LOGIN_URL)
@@ -52,7 +58,11 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)
-    Call<Offers> offerDetails(@Field("Id") int Id, @Field("token") String token);
+    Call<OfferDetails> offerDetails(@Field("Id") int Id, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.LIKE_URL)
+    Call<String> likeOffer(@Field("Like") String Like, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)
@@ -63,4 +73,7 @@ public interface ApiConfig {
                           @Field(API.PARAM_NAME_CAPITAL) String capital,
                           @Field(API.PARAM_NAME_TAGS) String tags);
 
+    @POST("{file_name}")
+    @Streaming
+    void download(@Path("file_name") String fileName, Callback<AttachmentModel> callback);
 }

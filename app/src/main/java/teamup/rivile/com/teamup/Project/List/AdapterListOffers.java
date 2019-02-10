@@ -18,6 +18,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
@@ -69,8 +70,10 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: Move to Offer Details Page
-
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame,
+                                FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                        .addToBackStack("FragmentProfileHome").commit();
             }
         });
     }
@@ -102,10 +105,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             num_contributer = itemView.findViewById(R.id.num_contributer);
             num_likes = itemView.findViewById(R.id.num_likes);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-            recyclerView = (RecyclerView) itemView.findViewById(R.id.rec);
+            recyclerView = itemView.findViewById(R.id.rec);
             recyclerView.setLayoutManager(layoutManager);
         }
-
     }
-
 }

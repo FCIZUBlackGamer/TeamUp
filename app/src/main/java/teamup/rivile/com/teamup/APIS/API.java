@@ -13,7 +13,7 @@ public class API {
     final public static String EDIT_OFFER_URL = BASE_URL + "";
     final public static String DELETE_OFFER_URL = BASE_URL + "";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer/";
-    final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOffer/";
+    final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/";
     final public static String LIST_OFFERS_BY_PROJECT_URL = BASE_URL + "";
     final public static String LIST_OFFERS_BY_DEPARTMENT_URL = BASE_URL + "";
     final public static String GENERAL_SEARCH_URL = BASE_URL + "";
@@ -36,5 +36,6 @@ public class API {
     public static final String PARAM_NAME_ATTACHMENT = "Attachment";
     public static final String PARAM_NAME_CAPITAL = "Capital";
     public static final String PARAM_NAME_TAGS = "Tags";
+    public static final String FILE_NAME = "";
 
 }
