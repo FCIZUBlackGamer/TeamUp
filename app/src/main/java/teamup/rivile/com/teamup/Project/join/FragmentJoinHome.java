@@ -89,8 +89,6 @@ public class FragmentJoinHome extends Fragment {
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     private RequirmentModel mRequirementModel = new RequirmentModel();
-    private ArrayList<AttachmentModel> mAttachmentModels = new ArrayList<>();
-
     View view;
     RelativeLayout money, contributors;
     LinearLayout moneySection, contributorsSection;
@@ -773,7 +771,7 @@ public class FragmentJoinHome extends Fragment {
             });
         }
 
-        String attachments = new GsonBuilder().serializeNulls().create().toJson(mAttachmentModels);
+        String attachments = new GsonBuilder().serializeNulls().create().toJson(mAttachmentModelArrayList);
         Log.d("DABUGGonActivityResult", "\"Attachment\": " + attachments);
 
         String requirements = new GsonBuilder().serializeNulls().create().toJson(mRequirementModel);
@@ -858,6 +856,7 @@ public class FragmentJoinHome extends Fragment {
             mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
                     fileExtension.toLowerCase());
         }
+        if (mimeType == null) mimeType = "application/*";
         return mimeType;
     }
 
@@ -872,9 +871,7 @@ public class FragmentJoinHome extends Fragment {
                 cameraIntent.putExtra("PageNo", 2);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
-
         }
-
     }
 
     private void openGallery() {
@@ -1007,15 +1004,17 @@ public class FragmentJoinHome extends Fragment {
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
 
-        String attachments = new GsonBuilder().serializeNulls().create().toJson(mAttachmentModels);
+        String attachments = new GsonBuilder().serializeNulls().create().toJson(mAttachmentModelArrayList);
         Log.v("DABUGG", "\"Attachment\": " + attachments);
 
         mRequirementModel.setUserId(1);
         String requirements = new GsonBuilder().serializeNulls().create().toJson(mRequirementModel);
         Log.v("DABUGG", "\"Requirement\": " + requirements);
 
+        Log.v("DABUGG", "OfferId: " + String.valueOf(mOfferId));
+
         Call<String> response = retrofitService.joinOffer(API.URL_TOKEN,
-                attachments, requirements, String.valueOf(mOfferId));
+                requirements, attachments, String.valueOf(mOfferId));
 
         response.enqueue(new Callback<String>() {
             @Override
@@ -1023,14 +1022,20 @@ public class FragmentJoinHome extends Fragment {
                 if (response.errorBody() == null) {
                     if (response.body() != null) {
                         Log.v("DABUGG", response.body());
-                    } else
+                        Toast.makeText(getContext(), response.body(), Toast.LENGTH_SHORT).show();
+                    } else {
                         Log.v("DABUGG", "RESPONSE ERROR!");
-                } else
+                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
                     Log.v("DABUGG", response.errorBody().toString());
+                    Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Log.v("DABUGG", t.getMessage());
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
