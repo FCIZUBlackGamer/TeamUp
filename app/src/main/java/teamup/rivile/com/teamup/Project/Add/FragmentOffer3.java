@@ -338,7 +338,7 @@ public class FragmentOffer3 extends Fragment {
             } else {
                 //TODO: start uploading and adding...
                 if (!filesModels.isEmpty())
-                    CopyFilesUploadFilesAddOffer();
+                    copyFilesUploadFilesAddOffer();
                 else addOffer();
             }
         }));
@@ -729,7 +729,7 @@ public class FragmentOffer3 extends Fragment {
 //        }
 //    }
 
-    private void CopyFilesUploadFilesAddOffer() {
+    private void copyFilesUploadFilesAddOffer() {
         for (int i = filesModels.size() - 1; i >= 0; --i) {
             Uri uri = filesModels.get(i).getFileUri();
 

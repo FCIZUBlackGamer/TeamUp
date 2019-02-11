@@ -43,6 +43,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
+import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
@@ -180,85 +181,81 @@ public class FragmentOfferDetails extends Fragment {
     public void onStart() {
         super.onStart();
 
+        make_offer.setOnClickListener(v -> getFragmentManager().beginTransaction()
+                .replace(R.id.frame,
+                        FragmentJoinHome.setOfferId(projectId))
+                .addToBackStack("FragmentJoinHome").commit());
 
-        like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
+        like.setOnClickListener(v -> {
+
         });
 
 
-        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, new ImagesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(FilesModel item) {
-                try {
-                    Picasso.get().load(item.getFileName()).into(preview);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, item -> {
+            try {
+                Picasso.get().load(item.getFileName()).into(preview);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        filesAdapter = new FilesAdapter(getActivity(), filesModels, new FilesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(final FilesModel item) {
-                try {
-                    AppConfig appConfig = new AppConfig(API.BASE_URL);
-                    AttachmentModel model = new AttachmentModel();
-                    model.setName(item.getFileName());
-                    String fileLink = model.getName(); //Todo: attachment.getName()
+        filesAdapter = new FilesAdapter(getActivity(), filesModels, item -> {
+            try {
+                AppConfig appConfig = new AppConfig(API.BASE_URL);
+                AttachmentModel model = new AttachmentModel();
+                model.setName(item.getFileName());
+                String fileLink = model.getName(); //Todo: attachment.getName()
 
-                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                    getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                        @Override
-                        public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                            AttachmentModel model = response.body();
-                            if (model != null) {
-                                try {
-                                    String fileType = "Files";
-                                    File path = Environment.getExternalStoragePublicDirectory(
-                                            getString(R.string.app_name) + File.separator + fileType);
-                                    File file = new File(path, API.BASE_URL + model.getName());
-                                    if (!path.getParentFile().exists())
-                                        path.getParentFile().mkdirs();
+                ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                getResponse.download(fileLink, new Callback<AttachmentModel>() {
+                    @Override
+                    public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+                        AttachmentModel model = response.body();
+                        if (model != null) {
+                            try {
+                                String fileType = "Files";
+                                File path = Environment.getExternalStoragePublicDirectory(
+                                        getString(R.string.app_name) + File.separator + fileType);
+                                File file = new File(path, API.BASE_URL + model.getName());
+                                if (!path.getParentFile().exists())
+                                    path.getParentFile().mkdirs();
 
-                                    if (!path.exists()) path.createNewFile();
+                                if (!path.exists()) path.createNewFile();
 
-                                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                                    InputStream srcInputStream = getContext().getContentResolver().openInputStream(Uri.parse(file.getPath()));
+                                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                                InputStream srcInputStream = getContext().getContentResolver().openInputStream(Uri.parse(file.getPath()));
 
-                                    byte[] buffer = new byte[1024];
-                                    int length;
-                                    while ((length = srcInputStream.read(buffer)) > 0) {
-                                        fileOutputStream.write(buffer, 0, length);
-                                    }
-
-                                    Toast.makeText(getContext(), "File Downloaded Successfully.", Toast.LENGTH_SHORT).show();
-                                    Log.v("NewFileUrl", path.getPath());
-
-
-                                    FilesModel filesModel = new FilesModel(Uri.parse(file.getPath()));
-                                    filesModel.setFileName(item.getFileName());
-                                    filesModels.add(item.getIndex(), filesModel);
-                                    filesAdapter.notifyDataSetChanged();
-
-
-                                } catch (Exception ex) {
+                                byte[] buffer = new byte[1024];
+                                int length;
+                                while ((length = srcInputStream.read(buffer)) > 0) {
+                                    fileOutputStream.write(buffer, 0, length);
                                 }
+
+                                Toast.makeText(getContext(), "File Downloaded Successfully.", Toast.LENGTH_SHORT).show();
+                                Log.v("NewFileUrl", path.getPath());
+
+
+                                FilesModel filesModel = new FilesModel(Uri.parse(file.getPath()));
+                                filesModel.setFileName(item.getFileName());
+                                filesModels.add(item.getIndex(), filesModel);
+                                filesAdapter.notifyDataSetChanged();
+
+
+                            } catch (Exception ex) {
                             }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<AttachmentModel> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<AttachmentModel> call, Throwable t) {
 
-                        }
-                    });
+                    }
+                });
 
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
@@ -266,38 +263,32 @@ public class FragmentOfferDetails extends Fragment {
 
         recImages.setAdapter(imagesAdapter);
 
-        money.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (m == 1) {
-                    m = 0;
-                    moneySection.setVisibility(View.GONE);
-                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        money.setOnClickListener(v -> {
+            if (m == 1) {
+                m = 0;
+                moneySection.setVisibility(View.GONE);
+                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    m = 1;
-                    moneySection.setVisibility(View.VISIBLE);
-                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+            } else {
+                m = 1;
+                moneySection.setVisibility(View.VISIBLE);
+                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
 
-                }
             }
         });
 
-        contributors.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (c == 1) {
-                    c = 0;
-                    contributorsSection.setVisibility(View.GONE);
-                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        contributors.setOnClickListener(v -> {
+            if (c == 1) {
+                c = 0;
+                contributorsSection.setVisibility(View.GONE);
+                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    c = 1;
-                    contributorsSection.setVisibility(View.VISIBLE);
-                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
-
+            } else {
+                c = 1;
+                contributorsSection.setVisibility(View.VISIBLE);
+                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
+
         });
 
         loadOfferDetails(projectId);
@@ -377,7 +368,6 @@ public class FragmentOfferDetails extends Fragment {
         });
 
 
-
     }
 
     private void loadOfferDetails(int Id) {
@@ -396,7 +386,7 @@ public class FragmentOfferDetails extends Fragment {
                 List<UserModel> Users = Offers.getOffers().getUsers();
                 if (Users != null) {
                     Gson gson = new Gson();
-                    Log.e("GSON",gson.toJson(Users));
+                    Log.e("GSON", gson.toJson(Users));
                     fillOffers(Offers.getOffers());
                 } else {
 
@@ -569,7 +559,6 @@ public class FragmentOfferDetails extends Fragment {
                 recFiles.setVisibility(View.GONE);
                 preview.setVisibility(View.GONE);
             }
-
 
 
         }

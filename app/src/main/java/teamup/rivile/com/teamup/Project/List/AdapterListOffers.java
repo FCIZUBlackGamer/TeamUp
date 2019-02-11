@@ -19,6 +19,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
+import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
@@ -45,15 +46,15 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
         holder.project_name.setText(offersList.get(position).getName());
-        holder.num_likes.setText(offersList.get(position).getNumLiks()+"");
-        holder.num_contributer.setText(offersList.get(position).getNumContributorTo()+"");
+        holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
+        holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
         holder.location.setText(offersList.get(position).getAddress());
         holder.project_desc.setText(offersList.get(position).getDescription());
 
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
-            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()){
+            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()) {
                 Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
             }
         }
@@ -67,6 +68,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                .addToBackStack("FragmentProfileHome").commit());
+
+        holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
+                .replace(R.id.frame,
+                        FragmentJoinHome.setOfferId(offersList.get(position).getId()))
                 .addToBackStack("FragmentProfileHome").commit());
     }
 

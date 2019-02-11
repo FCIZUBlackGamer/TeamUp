@@ -304,7 +304,7 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentJoinHome.setOfferId(2)).addToBackStack("Home")
+                    .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
                     .commit();
         } else if (id == R.id.nav_profile) {
             toolbar.setVisibility(View.VISIBLE);
@@ -316,7 +316,7 @@ public class DrawerActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

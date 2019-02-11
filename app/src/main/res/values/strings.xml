@@ -117,4 +117,6 @@
     <string name="cap_required" translatable="false">إختر محافظة واحدة علي الأقل</string>
     <string name="noSpAddress">لا يوجد عنوان محدد</string>
     <string name="noDesPlace">لا يوجد وصف للمكان محدد</string>
+    <string name="years_of_experience">عدد سنين الخبرة</string>
+    <string name="money_participant">كمية رأس المال المشارك بها</string>
 </resources>

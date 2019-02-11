@@ -47,7 +47,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
         holder.bind(filesModels.get(position), listener);
 
-        if (filesModels.get(position).getFileName().startsWith(API.BASE_URL)) {
+        if (filesModels.get(position).getFileName() != null && filesModels.get(position).getFileName().startsWith(API.BASE_URL)) {
             Picasso.get().load(filesModels.get(position).getFileName()).into(holder.image);
             notifyDataSetChanged();
         } else if (!filesModels.get(position).getFileUri().toString().isEmpty()) {
@@ -62,7 +62,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
         } else {
             Log.e("Ex", "EMpty");
         }
-
     }
 
     @Override
