@@ -7,6 +7,7 @@
 
     <android.support.v7.widget.AppCompatCheckBox xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/checkBox"
+        android:textColor="#000"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

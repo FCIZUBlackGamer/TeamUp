@@ -17,14 +17,10 @@ import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHolder> {
     private ArrayList<ExperienceTypeModel> mTypeModels;
 
-    private LoadedChipsAdapter mLoadedDataAdapter;
-
-    public ChipsAdapter(@Nullable ArrayList<ExperienceTypeModel> typeModels, @Nullable LoadedChipsAdapter loadedDataAdapter) {
+    public ChipsAdapter(@Nullable ArrayList<ExperienceTypeModel> typeModels) {
         if (typeModels != null)
             mTypeModels = typeModels;
         else mTypeModels = new ArrayList<>();
-
-        mLoadedDataAdapter = loadedDataAdapter;
     }
 
     @NonNull
@@ -32,7 +28,7 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
     public ChipsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return new ChipsViewHolder(
                 LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.entry_chip_list_item, viewGroup, false)
+                        .inflate(R.layout.chip_list_item, viewGroup, false)
         );
     }
 
@@ -40,17 +36,6 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
     public void onBindViewHolder(@NonNull ChipsViewHolder holder, int i) {
         final ExperienceTypeModel typeModel = mTypeModels.get(i);
         holder.chip.setText(typeModel.getName());
-
-        holder.chip.setOnCloseIconClickListener(v -> {
-            if (typeModel.getId() != 0 && mLoadedDataAdapter != null) {
-                //restore loaded typeExperience
-                mLoadedDataAdapter.addTypeModel(typeModel);
-            }
-
-            removeTypeModel(typeModel);
-//            mTypeModels.remove(typeModel);
-//            notifyDataSetChanged();
-        });
     }
 
     @Override
@@ -67,22 +52,9 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
         }
     }
 
-    public void addTypeModel(@NonNull ExperienceTypeModel typeModel) {
-        mTypeModels.add(typeModel);
+    public void swapData(ArrayList<ExperienceTypeModel> typeModels){
+        mTypeModels = typeModels;
 
-        notifyItemInserted(mTypeModels.size() - 1);
-//        notifyDataSetChanged();
-    }
-
-    public void removeTypeModel(@NonNull ExperienceTypeModel typeModel) {
-        mTypeModels.remove(typeModel);
-
-        notifyItemRemoved(mTypeModels.size() - 1);
-//        notifyDataSetChanged();
-    }
-
-    @NonNull
-    public List<ExperienceTypeModel> getSelectedTypeModels() {
-        return mTypeModels;
+        notifyDataSetChanged();
     }
 }

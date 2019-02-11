@@ -37,5 +37,5 @@ public class API {
     public static final String PARAM_NAME_CAPITAL = "Capital";
     public static final String PARAM_NAME_TAGS = "Tags";
     public static final String FILE_NAME = "";
-
+    public static final String PARAM_NAME_OFFER_ID = "OfferId";
 }

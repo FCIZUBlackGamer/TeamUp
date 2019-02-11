@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.Project.join.Adapters;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,11 +18,8 @@ import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRecyclerViewAdapter.CapitalViewHolder> {
     private List<CapitalModel> mCapitalModels;
 
-    private ArrayList<CapitalModel> mSelectedCapitalModels;
-
-    public CapitalsRecyclerViewAdapter(@NonNull List<CapitalModel> capitalModels, @NonNull ArrayList<CapitalModel> selectedCapitalModels) {
+    public CapitalsRecyclerViewAdapter(@NonNull List<CapitalModel> capitalModels) {
         mCapitalModels = capitalModels;
-        mSelectedCapitalModels = selectedCapitalModels;
     }
 
     @NonNull
@@ -37,17 +35,8 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
     public void onBindViewHolder(@NonNull CapitalViewHolder holder, int i) {
         final CapitalModel model = mCapitalModels.get(i);
         holder.checkBox.setText(model.getName());
-
-        if (mSelectedCapitalModels.contains(model)) holder.checkBox.setChecked(true);
-        else holder.checkBox.setChecked(false);
-
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mSelectedCapitalModels.add(model);
-                else mSelectedCapitalModels.remove(model);
-            }
-        });
+        holder.checkBox.setEnabled(false);
+        holder.checkBox.setChecked(true);
     }
 
     @Override
@@ -63,10 +52,6 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
 
             checkBox = itemView.findViewById(R.id.checkBox);
         }
-    }
-
-    public ArrayList<CapitalModel> getSelectedCapitals() {
-        return mSelectedCapitalModels;
     }
 
     public void swapData(List<CapitalModel> capitalModels) {

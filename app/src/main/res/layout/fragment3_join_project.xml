@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -73,43 +74,46 @@
                     app:maxImageSize="24dp" />
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recFiles"
-                android:layout_width="match_parent"
-                android:layout_height="100dp">
 
-            </android.support.v7.widget.RecyclerView>
-
-            <RelativeLayout
-                android:id="@+id/view"
+            <LinearLayout
+                android:id="@+id/attachmentSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/preview"
-                    android:layout_width="320dp"
-                    android:layout_height="320dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_stairs" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recFiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
 
-                <ImageView
-                    android:id="@+id/delete"
-                    android:layout_width="wrap_content"
+                </android.support.v7.widget.RecyclerView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+                <RelativeLayout
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
-            </RelativeLayout>
+                    android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recImages"
-                android:layout_width="match_parent"
-                android:layout_height="100dp">
-
-            </android.support.v7.widget.RecyclerView>
+                    <ImageView
+                        android:id="@+id/preview"
+                        android:layout_width="320dp"
+                        android:layout_height="320dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/ic_stairs" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/cap"
@@ -161,15 +165,15 @@
                 android:orientation="vertical">
 
                 <CheckBox
-                    android:enabled="false"
-                    android:textColor="#000"
                     android:id="@+id/egypt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:enabled="false"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
                     android:text="@string/egypt"
+                    android:textColor="#000"
                     app:buttonTint="@color/backgroundDarkGreen" />
 
                 <android.support.v7.widget.RecyclerView
@@ -228,10 +232,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recDep"
+                <TextView
+                    android:id="@+id/tv_category"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="Department" />
 
             </LinearLayout>
 
@@ -247,35 +256,7 @@
                     android:background="#FF00DBFF"
                     android:gravity="center_vertical" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="20dp"
-                    android:background="#fff"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="@string/tags"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
 
-                <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/arrowTags"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:backgroundTint="#fff"
-                    android:foregroundGravity="center"
-                    android:src="@drawable/ic_arrow_up"
-                    android:textAlignment="center"
-                    app:backgroundTint="@color/backgroundBlue"
-                    app:borderWidth="2dp"
-                    app:fabCustomSize="@dimen/design_fab_image_size"
-                    app:maxImageSize="24dp" />
             </RelativeLayout>
 
             <LinearLayout
@@ -284,36 +265,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <EditText
-                    android:id="@+id/tagsInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/rounded_corner_edit_text"
-                    android:fontFamily="@font/medium"
-                    android:gravity="right"
-                    android:lines="3"
-                    android:padding="10dp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/tagsRec"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/rounded_corner_edit_text" />
-
                 <Button
                     android:id="@+id/go"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
+                    android:layout_margin="8dp"
                     android:background="@color/colorPrimaryDark"
                     android:fontFamily="@font/medium"
                     android:text="Join"

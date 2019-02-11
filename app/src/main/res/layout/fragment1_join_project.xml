@@ -117,7 +117,7 @@
                         android:textSize="18sp" />
 
                     <RadioButton
-                        android:id="@+id/rb_money"
+                        android:id="@+id/rb_profit_type"
                         style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_margin="10dp"
                     android:fontFamily="@font/medium"
                     android:text="@string/numContributors"
                     android:textColor="#000"

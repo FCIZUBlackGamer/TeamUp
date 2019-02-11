@@ -81,4 +81,11 @@ public interface ApiConfig {
     @POST("{file_name}")
     @Streaming
     void download(@Path("file_name") String fileName, Callback<AttachmentModel> callback);
+
+    @FormUrlEncoded
+    @POST(API.JOIN_OFFER_URL)
+    Call<String> joinOffer(@Field(API.PARAM_NAME_TOKEN) String token,
+                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
+                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+                           @Field(API.PARAM_NAME_OFFER_ID) String offerId);
 }

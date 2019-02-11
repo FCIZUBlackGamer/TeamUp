@@ -100,6 +100,7 @@
                         android:textSize="16sp" />
 
                     <RadioButton
+                        android:checked="true"
                         android:id="@+id/rb_place"
                         style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -146,6 +147,7 @@
                         android:textSize="16sp" />
 
                     <RadioButton
+                        android:checked="true"
                         android:id="@+id/rb_placeState"
                         style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -177,6 +179,7 @@
                         android:textSize="16sp" />
 
                     <RadioButton
+                        android:checked="true"
                         android:id="@+id/rb_placeKind"
                         style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"
@@ -262,6 +265,7 @@
 
 
                     <RadioButton
+                        android:checked="true"
                         android:id="@+id/rb_ex"
                         style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
                         android:layout_width="wrap_content"

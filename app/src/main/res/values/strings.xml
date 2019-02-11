@@ -50,7 +50,7 @@
     <string name="moneyExpected" translatable="false">كمية الربح المتوقعه</string>
     <string name="contributors" translatable="false">المشتركين</string>
     <string name="both" translatable="false">النوعين</string>
-    <string name="numContributors" translatable="false">عدد المساهمين فى المشروع</string>
+    <string name="numContributors" translatable="false">عدد المساهمين فى المشروع"</string>
     <string name="educationLevelContributors" translatable="false">المستوى التعليمى للمشتركين</string>
     <string name="basicLevel" translatable="false"> اساسى</string>
     <string name="midLevel" translatable="false"> متوسط</string>
