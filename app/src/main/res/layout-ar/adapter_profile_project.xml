@@ -23,15 +23,15 @@
                 android:id="@+id/user_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <LinearLayout
                 android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="13dp"
-                android:layout_toLeftOf="@id/user_image"
+                android:layout_marginEnd="13dp"
+                android:layout_toStartOf="@id/user_image"
                 android:orientation="vertical">
 
                 <TextView
@@ -66,7 +66,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:drawableRight="@drawable/ic_placeholder"
+                                android:drawableEnd="@drawable/ic_placeholder"
                                 android:gravity="center_vertical"
                                 android:maxLength="50"
                                 android:id="@+id/location"
@@ -105,14 +105,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:orientation="vertical">
 
                         <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_dd"
+                            android:drawableStart="@drawable/ic_dd"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:maxLength="6"
@@ -124,7 +124,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_like"
+                            android:drawableStart="@drawable/ic_like"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:maxLength="6"

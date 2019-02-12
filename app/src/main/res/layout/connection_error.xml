@@ -13,18 +13,18 @@
         android:text="حدث خطأ فى الأتصال"
         android:textColor="#fff"
         android:textSize="20sp"
-        android:gravity="right"
+        android:gravity="end"
         android:id="@+id/ff"
         android:layout_marginEnd="5dp"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentStart="true"/>
 
     <ImageView
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_broken_link"
-        android:layout_alignRight="@id/ff"
+        android:layout_alignEnd="@id/ff"
         android:layout_marginEnd="50dp"/>
 
 </LinearLayout>

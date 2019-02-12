@@ -28,13 +28,13 @@ public class Login extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private ProfileTracker mProfileTracker;
 
-    EditText ed_full_name, ed_email, ed_user_name, ed_password;
+    EditText ed_email, ed_password;
     Button btn_save;
     TextView tv_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
         initViews();
         UserModel userModel = new UserModel();
         //Todo: Call login(userModel)
@@ -45,9 +45,7 @@ public class Login extends AppCompatActivity {
     private void initViews() {
         tv_login = findViewById(R.id.tv_login);
         btn_save = findViewById(R.id.btn_save);
-        ed_full_name = findViewById(R.id.ed_full_name);
         ed_email = findViewById(R.id.ed_email);
-//        ed_user_name = findViewById(R.id.ed_user_name);
         ed_password = findViewById(R.id.ed_password);
     }
 

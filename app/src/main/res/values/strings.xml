@@ -130,4 +130,5 @@
     <string name="loginOrSignup">قم بتسجيل الدخول أو انشأ حساب جديد</string>
     <string name="forgotPassword">هل نسيت كلمة المرور الخاصة بك؟</string>
     <string name="recoverPassword">استعادة كلمة المرور</string>
+    <string name="resetPassword">لا تقلق فقط قم بكتابة البريد الإلكترونى الخاص بحسابك ﻻسترجاع كلمة المرور عبر البريد الإلكترونى</string>
 </resources>

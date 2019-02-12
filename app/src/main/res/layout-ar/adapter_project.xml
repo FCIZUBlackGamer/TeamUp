@@ -25,16 +25,16 @@
                 android:id="@+id/user_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <LinearLayout
                 android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@id/user_image"
-                android:gravity="right"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/user_image"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:drawableRight="@drawable/ic_placeholder"
+                        android:drawableEnd="@drawable/ic_placeholder"
                         android:fontFamily="@font/medium"
                         android:gravity="center_vertical"
                         android:maxLength="50"
@@ -92,7 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/medium"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:maxLength="50"
                     android:text="المشاركين فى المشروع"
                     android:textColor="#000"
@@ -107,8 +107,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="4dp"
-                android:gravity="right"
+                android:layout_marginEnd="4dp"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_dd"
+                    android:drawableStart="@drawable/ic_dd"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
                     android:maxLength="6"
@@ -128,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_like"
+                    android:drawableStart="@drawable/ic_like"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
                     android:maxLength="6"
@@ -146,7 +146,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/medium"
             android:maxLines="4"
-            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
             android:text="مشروع مزرعه دواجن "
             android:textColor="#000"
             android:textDirection="rtl"
@@ -165,7 +165,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableRight="@drawable/ic_favorite_border_black_24dp"
+                android:drawableEnd="@drawable/ic_favorite_border_black_24dp"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"
@@ -177,7 +177,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableRight="@drawable/ic_chat"
+                android:drawableEnd="@drawable/ic_chat"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"
@@ -188,7 +188,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableRight="@drawable/ic_share"
+                android:drawableEnd="@drawable/ic_share"
                 android:drawablePadding="10dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"

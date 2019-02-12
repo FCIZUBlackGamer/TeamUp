@@ -247,7 +247,7 @@
             app:layout_constraintVertical_chainStyle="spread_inside"
             tools:buttonSize="1" />
 
-        <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/btn_login_facebook"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -258,31 +258,27 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/btn_login_google"
             app:layout_constraintStart_toStartOf="@+id/btn_login_google"
-            app:layout_constraintTop_toBottomOf="@+id/btn_login_google"
- />
+            app:layout_constraintTop_toBottomOf="@+id/btn_login_google" />
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/medium"
             android:gravity="start"
             android:text="@string/forgotPassword"
-            app:layout_constraintBottom_toBottomOf="btn_login_facebook"
             app:layout_constraintEnd_toEndOf="@+id/btn_save"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/btn_save"
-            app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook" />
 
         <TextView
             android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:fontFamily="@font/medium"

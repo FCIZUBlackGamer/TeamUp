@@ -24,16 +24,16 @@
                 android:id="@+id/user_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <LinearLayout
                 android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@id/user_image"
-                android:gravity="right"
+                android:layout_marginEnd="8dp"
+                android:layout_toStartOf="@id/user_image"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
@@ -58,7 +58,7 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_placeholder"
+                        android:drawableEnd="@drawable/ic_placeholder"
                         android:gravity="center_vertical"
                         android:maxLength="50"
                         android:text="مصر - الشرقيه - الزقازيق"
@@ -79,8 +79,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="left"
-                android:layout_marginRight="4dp"
+                android:gravity="start"
+                android:layout_marginEnd="4dp"
                 android:orientation="vertical">
 
                 <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_dd"
+                    android:drawableStart="@drawable/ic_dd"
                     android:gravity="center"
                     android:maxLength="6"
                     android:text="150"
@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_like"
+                    android:drawableStart="@drawable/ic_like"
                     android:gravity="center"
                     android:maxLength="6"
                     android:text="150"
@@ -116,7 +116,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:maxLength="50"
                     android:text="المشاركين فى المشروع"
                     android:textColor="#000"
