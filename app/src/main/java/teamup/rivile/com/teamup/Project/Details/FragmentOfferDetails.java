@@ -6,7 +6,6 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,10 +28,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
+import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
@@ -53,7 +56,10 @@ import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 
-public class FragmentOfferDetails extends Fragment {
+public class FragmentOfferDetails extends Fragment implements ShareDialogFragment.Helper {
+    private String mProjectURL = "";
+    private String mProjectName = "";
+
     View view;
     RelativeLayout money, contributors;
     LinearLayout moneySection, contributorsSection, moneyRequired;
@@ -213,6 +219,11 @@ public class FragmentOfferDetails extends Fragment {
             likeOffer(projectId);
         });
 
+        share.setOnClickListener(
+                v -> ShareDialogFragment.getInstance(this)
+                        .show(getFragmentManager(), "ShareDialogFragment")
+        );
+
         imagesAdapter = new ImagesAdapter(getActivity(), imagesModels, item -> {
             try {
                 Picasso.get().load(item.getFileName()).into(preview);
@@ -254,7 +265,7 @@ public class FragmentOfferDetails extends Fragment {
                     request.setTitle(item.getServerFileName());
                     downloadManager.enqueue(request);
                 } else {
-                    Toast.makeText(getActivity(),getString(R.string.noSapce),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.noSapce), Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {
@@ -377,7 +388,6 @@ public class FragmentOfferDetails extends Fragment {
             }
         });
 
-
     }
 
     private void loadOfferDetails(int Id) {
@@ -429,7 +439,7 @@ public class FragmentOfferDetails extends Fragment {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String Offers = response.body();
-                Log.e("Like",Offers);
+                Log.e("Like", Offers);
 
             }
 
@@ -442,7 +452,12 @@ public class FragmentOfferDetails extends Fragment {
 
     @SuppressLint("ResourceType")
     private void fillOffers(OfferDetails Offers) {
+        //TODO: get project URL and send it here
+        //TODO:mProjectURL = Offers.getURL();
+
         project_name.setText(Offers.getName());
+        mProjectName = Offers.getName();
+
         proDetail.setText(Offers.getDescription());
         num_likes.setText(String.valueOf(Offers.getNumLiks()));
         nun_contributor.setText(String.valueOf(Offers.getNumContributorTo()));
@@ -659,4 +674,93 @@ public class FragmentOfferDetails extends Fragment {
             Toast.makeText(ctxt, getString(R.string.finishFileDownload), Toast.LENGTH_LONG).show();
         }
     };
+
+    @Override
+    public void onClick(int viewId) {
+        switch (viewId) {
+            case R.id.cl_facebook:
+                try {
+                    shareToFaceBook();
+                } catch (IOException e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.cl_twitter:
+                shareToTwitter();
+                break;
+
+            case R.id.cl_whatsapp:
+                shareToWhatsApp();
+        }
+    }
+
+    private void shareToWhatsApp() {
+        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+
+        if (ShareDialogFragment.isWhatsAppAvailable)
+            whatsappIntent.setPackage(ShareDialogFragment.WHATSAPP_PACKAGE);
+        else if (ShareDialogFragment.isWhatsAppBusinessAvailable)
+            whatsappIntent.setPackage(ShareDialogFragment.WHATSAPP_BUSINESS_PACKAGE);
+
+        whatsappIntent.setType("text/plain");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, mProjectName + "\n" + mProjectURL + "\n");
+//        if (imageUri != null)
+//            whatsappIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+
+        whatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivity(whatsappIntent);
+        } catch (android.content.ActivityNotFoundException ignored) {
+            Toast.makeText(getContext(), ignored.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareToTwitter() {
+        Intent twitterIntent = new Intent(Intent.ACTION_SEND);
+        twitterIntent.setType("*/*");
+
+        if (ShareDialogFragment.isTwitterAvailable)
+            twitterIntent.setPackage(ShareDialogFragment.TWITTER_PACKAGE);
+        else if (ShareDialogFragment.isTwitterLiteAvailable)
+            twitterIntent.setPackage(ShareDialogFragment.TWITTER_LITE_PACKAGE);
+
+        twitterIntent.putExtra(Intent.EXTRA_TEXT, mProjectName + "\n" + mProjectURL + "\n");
+//        if (imageUri != null)
+//            twitterIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+
+        twitterIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivity(twitterIntent);
+        } catch (android.content.ActivityNotFoundException ignored) {
+            Toast.makeText(getContext(), ignored.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareToFaceBook() throws IOException {
+//        if (imageUri != null) {
+//            //share image(s)
+//            SharePhoto photo1 = new SharePhoto.Builder()
+//                    .setBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri))
+//                    .build();
+//            ShareContent shareContent = new ShareMediaContent.Builder()
+//                    .addMedium(photo1)
+////                .addMedium(photo2)
+////                .addMedium(photo3)
+////                .addMedium(photo4)
+//                    .build();
+//
+//            ShareDialog shareDialog = new ShareDialog(this);
+//            shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC);
+//        } else {
+        //share URL
+        ShareLinkContent shareLinkContent = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(mProjectURL))
+                .setQuote(mProjectName)
+                .build();
+
+        ShareDialog shareDialog = new ShareDialog(this);
+        shareDialog.show(shareLinkContent, ShareDialog.Mode.AUTOMATIC);
+//        }
+    }
 }
