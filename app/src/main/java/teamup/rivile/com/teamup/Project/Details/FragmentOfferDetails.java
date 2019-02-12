@@ -1,11 +1,15 @@
 package teamup.rivile.com.teamup.Project.Details;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,15 +33,12 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
@@ -46,6 +48,7 @@ import teamup.rivile.com.teamup.Project.List.ContributerImages;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
@@ -57,7 +60,7 @@ public class FragmentOfferDetails extends Fragment {
     RelativeLayout place, experience;
     LinearLayout placeSection, experienceSection;
     RelativeLayout attachment, cap, dep, tags, DepSection;
-    LinearLayout attachmentSection, CapSection, tagSection;
+    LinearLayout CapSection, tagSection;
 
     int m, c, p, e, a, ca, d, t;/** متغير ثابت عشان اغير حاله ال shrink وال expand*/
     /**
@@ -91,6 +94,8 @@ public class FragmentOfferDetails extends Fragment {
 
 
     static int projectId = 50;
+    DownloadManager downloadManager;
+    ImageView report;
 
     public static FragmentOfferDetails setProjectId(int proId) {
         projectId = proId;
@@ -118,12 +123,12 @@ public class FragmentOfferDetails extends Fragment {
         cap = view.findViewById(R.id.cap);
         dep = view.findViewById(R.id.dep);
         tags = view.findViewById(R.id.tags);
-        attachmentSection = view.findViewById(R.id.attachmentSection);
         CapSection = view.findViewById(R.id.CapSection);
         DepSection = view.findViewById(R.id.DepSection);
         tagSection = view.findViewById(R.id.tagSection);
         /** Input Views */
 
+        report = view.findViewById(R.id.report);
         user_image = view.findViewById(R.id.user_image);
         preview = view.findViewById(R.id.preview);
         project_name = view.findViewById(R.id.project_name);
@@ -178,8 +183,25 @@ public class FragmentOfferDetails extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        registerReceiver(onComplete,
+//                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        loadOfferDetails(projectId);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
+
+        report.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            EditText textReport = new EditText(getActivity());
+            textReport.setHint(getString(R.string.reportText));
+            //Todo: Report Action (view, inflate, webservice)
+
+        });
 
         make_offer.setOnClickListener(v -> getFragmentManager().beginTransaction()
                 .replace(R.id.frame,
@@ -188,11 +210,10 @@ public class FragmentOfferDetails extends Fragment {
 
 
         like.setOnClickListener(v -> {
-
+            likeOffer(projectId);
         });
 
-
-        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, item -> {
+        imagesAdapter = new ImagesAdapter(getActivity(), imagesModels, item -> {
             try {
                 Picasso.get().load(item.getFileName()).into(preview);
             } catch (Exception e) {
@@ -202,62 +223,45 @@ public class FragmentOfferDetails extends Fragment {
 
         filesAdapter = new FilesAdapter(getActivity(), filesModels, item -> {
             try {
-                AppConfig appConfig = new AppConfig(API.BASE_URL);
-                AttachmentModel model = new AttachmentModel();
-                model.setName(item.getFileName());
-                String fileLink = model.getName(); //Todo: attachment.getName()
+                String fileType = "Files";
+                Environment.getExternalStoragePublicDirectory(
+                        getString(R.string.app_name) + File.separator + fileType);
+//                File file = new File(path, item.getFileName());
 
-                ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                    @Override
-                    public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                        AttachmentModel model = response.body();
-                        if (model != null) {
-                            try {
-                                String fileType = "Files";
-                                File path = Environment.getExternalStoragePublicDirectory(
-                                        getString(R.string.app_name) + File.separator + fileType);
-                                File file = new File(path, API.BASE_URL + model.getName());
-                                if (!path.getParentFile().exists())
-                                    path.getParentFile().mkdirs();
-
-                                if (!path.exists()) path.createNewFile();
-
-                                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                                InputStream srcInputStream = getContext().getContentResolver().openInputStream(Uri.parse(file.getPath()));
-
-                                byte[] buffer = new byte[1024];
-                                int length;
-                                while ((length = srcInputStream.read(buffer)) > 0) {
-                                    fileOutputStream.write(buffer, 0, length);
-                                }
-
-                                Toast.makeText(getContext(), "File Downloaded Successfully.", Toast.LENGTH_SHORT).show();
-                                Log.v("NewFileUrl", path.getPath());
+                downloadManager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri;
+                Log.e("File Link", item.getFileName());
+                uri = Uri.parse(item.getFileName());
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                File folder = new File(Environment.getExternalStoragePublicDirectory(
+                        getString(R.string.app_name) + File.separator + fileType), item.getFileName());
+                Uri path = Uri.withAppendedPath(Uri.fromFile(folder), item.getFileName());
 
 
-                                FilesModel filesModel = new FilesModel(Uri.parse(file.getPath()));
-                                filesModel.setFileName(item.getFileName());
-                                filesModels.add(item.getIndex(), filesModel);
-                                filesAdapter.notifyDataSetChanged();
-
-
-                            } catch (Exception ex) {
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AttachmentModel> call, Throwable t) {
-
-                    }
-                });
-
+                boolean success = true;
+                if (!folder.exists()) {
+                    success = folder.mkdirs();
+                    System.out.println("Done");
+                }
+                if (success) {
+                    System.out.println("Done");
+                    request.setDestinationUri(path);
+//                    request.setDestinationInExternalFilesDir(getActivity(), getString(R.string.app_name) + File.separator + fileType, item.getFileName());
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
+                    request.setAllowedOverRoaming(false);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI |
+                            DownloadManager.Request.NETWORK_MOBILE);
+                    request.setTitle(item.getServerFileName());
+                    downloadManager.enqueue(request);
+                } else {
+                    Toast.makeText(getActivity(),getString(R.string.noSapce),Toast.LENGTH_LONG).show();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+
 
         recFiles.setAdapter(filesAdapter);
 
@@ -290,8 +294,6 @@ public class FragmentOfferDetails extends Fragment {
             }
 
         });
-
-        loadOfferDetails(projectId);
 
 
         place.setOnClickListener(new View.OnClickListener() {
@@ -329,11 +331,19 @@ public class FragmentOfferDetails extends Fragment {
             public void onClick(View v) {
                 if (a == 1) {
                     a = 0;
-                    attachmentSection.setVisibility(View.GONE);
+//                    attachment.setVisibility(View.GONE);
+//                attachmentSection.setVisibility(View.GONE);
+                    recImages.setVisibility(View.GONE);
+                    recFiles.setVisibility(View.GONE);
+                    preview.setVisibility(View.GONE);
                     arrowAttach.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
                 } else {
                     a = 1;
-                    attachmentSection.setVisibility(View.VISIBLE);
+//                    attachment.setVisibility(View.VISIBLE);
+//                attachmentSection.setVisibility(View.GONE);
+                    recImages.setVisibility(View.VISIBLE);
+                    recFiles.setVisibility(View.VISIBLE);
+                    preview.setVisibility(View.VISIBLE);
                     arrowAttach.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
                 }
             }
@@ -384,9 +394,9 @@ public class FragmentOfferDetails extends Fragment {
             public void onResponse(Call<OfferDetailsJsonObject> call, retrofit2.Response<OfferDetailsJsonObject> response) {
                 OfferDetailsJsonObject Offers = response.body();
                 List<UserModel> Users = Offers.getOffers().getUsers();
-                if (Users != null) {
+                if (Offers.getOffers() != null) {
                     Gson gson = new Gson();
-                    Log.e("GSON", gson.toJson(Users));
+                    Log.e("GSON", gson.toJson(Offers.getOffers()));
                     fillOffers(Offers.getOffers());
                 } else {
 
@@ -395,6 +405,36 @@ public class FragmentOfferDetails extends Fragment {
 
             @Override
             public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
+                //textView.setText(t.getMessage());
+            }
+        });
+    }
+
+
+    public static void likeOffer(int offerId) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call;
+        LikeModel likeModel = new LikeModel();
+        likeModel.setOfferId(offerId);
+        likeModel.setUserId(1);
+        Gson gson = new Gson();
+
+
+        call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String Offers = response.body();
+                Log.e("Like",Offers);
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
             }
         });
@@ -484,7 +524,7 @@ public class FragmentOfferDetails extends Fragment {
 
         if (Offers.getUsers() != null) {
             for (int i = 0; i < Offers.getUsers().size(); i++) {
-                if (Offers.getUserId() == Offers.getUsers().get(i).getId()) {
+                if (Offers.getUserId().equals(Offers.getUsers().get(i).getId())) {
                     if (Offers.getUsers().get(i).getImage() != null && !Offers.getUsers().get(i).getImage().isEmpty()) {
                         user_name.setText(Offers.getUsers().get(i).getFullName());
                         Picasso.get().load(API.BASE_URL + Offers.getUsers().get(i).getImage()).into(user_image);
@@ -493,74 +533,130 @@ public class FragmentOfferDetails extends Fragment {
             }
         }
 
-        //Todo: Download file names & images source
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
+            for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) {
+                AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
+                Gson gson = new Gson();
+                Log.e("Gson", gson.toJson(model));
+                if (model.getType().equals(true)) {
+                    Log.e("Type", "File");
+                    try {
+                        FilesModel f = new FilesModel();
+                        f.setFileName(API.BASE_URL + model.getSource());
+                        f.setServerFileName(model.getName());
+                        filesModels.add(f);
+                        filesAdapter.notifyDataSetChanged();
+                    } catch (Exception ex) {
+                        Log.e("Files EX", ex.getMessage());
+                    }
+                } else {
+                    Log.e("Type", "Image");
+                    try {
+                        FilesModel f = new FilesModel();
+                        f.setFileName(API.BASE_URL + model.getSource());
+                        imagesModels.add(f);
+                        imagesAdapter.notifyDataSetChanged();
+                        Picasso.get().load(API.BASE_URL + model.getSource()).into(preview);
 
-        if (Offers.getRequirments() != null) {
-            if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
-                for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
-                    AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
-                    String fileLink = model.getName(); //Todo: attachment.getName()
-                    if (!model.getType()) {
-                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                            @Override
-                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                                AttachmentModel model = response.body();
-                                if (model != null) {
-                                    try {
-                                        FilesModel f = new FilesModel();
-                                        f.setFileName(API.BASE_URL + model.getSource());
-                                        imagesModels.add(f);
-                                        imagesAdapter.notifyDataSetChanged();
-                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), f.getFileUri());
-                                        preview.setImageBitmap(bitmap);
-
-                                    } catch (Exception ex) {
-                                        Log.e("Images EX", ex.getMessage());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
-
-                            }
-                        });
-                    } else {
-                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
-                            @Override
-                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
-                                AttachmentModel model = response.body();
-                                if (model != null) {
-                                    try {
-                                        FilesModel f = new FilesModel();
-                                        f.setFileName(API.BASE_URL + model.getSource());
-                                        filesModels.add(f);
-                                        filesAdapter.notifyDataSetChanged();
-                                    } catch (Exception ex) {
-                                        Log.e("Files EX", ex.getMessage());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
-
-                            }
-                        });
+                    } catch (Exception ex) {
+                        Log.e("Images EX", ex.getMessage());
                     }
                 }
-            } else {
-                attachment.setVisibility(View.GONE);
-//                attachmentSection.setVisibility(View.GONE);
-                recImages.setVisibility(View.GONE);
-                recFiles.setVisibility(View.GONE);
-                preview.setVisibility(View.GONE);
+
+            }
+
+            if (filesModels.size() > 0) {
+                recFiles.setVisibility(View.VISIBLE);
+            }
+
+            if (imagesModels.size() > 0) {
+                recImages.setVisibility(View.VISIBLE);
+                preview.setVisibility(View.VISIBLE);
             }
 
 
+        } else {
+            attachment.setVisibility(View.GONE);
+//                attachmentSection.setVisibility(View.GONE);
+            recImages.setVisibility(View.GONE);
+            recFiles.setVisibility(View.GONE);
+            preview.setVisibility(View.GONE);
         }
+
+
+//        //Todo: Download file names & images source
+//        AppConfig appConfig = new AppConfig(API.BASE_URL);
+//
+//        if (Offers.getRequirments() != null) {
+//            if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
+//                for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) { // Todo: Attachment.size()
+//                    AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
+//                    String fileLink = model.getName(); //Todo: attachment.getName()
+//                    if (!model.getType()) {
+//                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+//                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
+//                            @Override
+//                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+//                                AttachmentModel model = response.body();
+//                                if (model != null) {
+//                                    try {
+//                                        FilesModel f = new FilesModel();
+//                                        f.setFileName(API.BASE_URL + model.getSource());
+//                                        imagesModels.add(f);
+//                                        imagesAdapter.notifyDataSetChanged();
+//                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), f.getFileUri());
+//                                        preview.setImageBitmap(bitmap);
+//
+//                                    } catch (Exception ex) {
+//                                        Log.e("Images EX", ex.getMessage());
+//                                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
+//
+//                            }
+//                        });
+//                    } else {
+//                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+//                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
+//                            @Override
+//                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
+//                                AttachmentModel model = response.body();
+//                                if (model != null) {
+//                                    try {
+//                                        FilesModel f = new FilesModel();
+//                                        f.setFileName(API.BASE_URL + model.getSource());
+//                                        filesModels.add(f);
+//                                        filesAdapter.notifyDataSetChanged();
+//                                    } catch (Exception ex) {
+//                                        Log.e("Files EX", ex.getMessage());
+//                                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<AttachmentModel> call, Throwable t) {
+//
+//                            }
+//                        });
+//                    }
+//                }
+//            } else {
+//                attachment.setVisibility(View.GONE);
+////                attachmentSection.setVisibility(View.GONE);
+//                recImages.setVisibility(View.GONE);
+//                recFiles.setVisibility(View.GONE);
+//                preview.setVisibility(View.GONE);
+//            }
+//
+//        }
     }
+
+    BroadcastReceiver onComplete = new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            Toast.makeText(ctxt, getString(R.string.finishFileDownload), Toast.LENGTH_LONG).show();
+        }
+    };
 }

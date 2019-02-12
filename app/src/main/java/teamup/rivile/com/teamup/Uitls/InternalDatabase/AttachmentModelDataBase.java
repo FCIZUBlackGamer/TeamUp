@@ -1,16 +1,18 @@
-package teamup.rivile.com.teamup.Uitls.APIModels;
+package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
-public class AttachmentModel {
+import io.realm.RealmObject;
+
+public class AttachmentModelDataBase extends RealmObject {
     public int Id ;
     public Boolean Type;
     public String Name ;
     public String Source ;
     public Integer RequirmentId;
 
-    public AttachmentModel() {
+    public AttachmentModelDataBase() {
     }
 
-    public AttachmentModel(String displayName, String url, Boolean type) {
+    public AttachmentModelDataBase(String displayName, String url, Boolean type) {
         Name = displayName;
         Source = url;
         Type = type;

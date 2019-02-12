@@ -6,6 +6,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.ProfileTracker;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -16,6 +19,14 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class Login extends AppCompatActivity {
+    private static final int RC_SIGN_IN = 100;
+    private static final String EMAIL = "email";
+
+    private GoogleSignInClient mGoogleSignInClient;
+
+
+    private CallbackManager mCallbackManager;
+    private ProfileTracker mProfileTracker;
 
     EditText ed_full_name, ed_email, ed_user_name, ed_password;
     Button btn_save;

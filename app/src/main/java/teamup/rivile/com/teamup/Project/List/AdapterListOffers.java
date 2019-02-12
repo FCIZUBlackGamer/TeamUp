@@ -70,10 +70,24 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
                 .addToBackStack("FragmentProfileHome").commit());
 
+        holder.con.setOnClickListener(v -> fragmentManager.beginTransaction()
+                .replace(R.id.frame,
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                .addToBackStack("FragmentProfileHome").commit());
+
+        holder.project_desc.setOnClickListener(v -> fragmentManager.beginTransaction()
+                .replace(R.id.frame,
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                .addToBackStack("FragmentProfileHome").commit());
+
         holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentJoinHome.setOfferId(offersList.get(position).getId()))
                 .addToBackStack("FragmentProfileHome").commit());
+
+        holder.like.setOnClickListener(v -> {
+            FragmentOfferDetails.likeOffer(offersList.get(position).getId());
+        });
     }
 
     @Override
@@ -85,7 +99,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         TextView project_name, location, project_desc;
         TextView num_likes, num_contributer;
         CircleImageView image;
-        LinearLayout linearLayout;
+        LinearLayout linearLayout, con;
         TextView like, share, make_offer;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
@@ -97,6 +111,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);
             linearLayout = itemView.findViewById(R.id.lin);
+            con = itemView.findViewById(R.id.con);
             like = itemView.findViewById(R.id.like);
             share = itemView.findViewById(R.id.share);
             make_offer = itemView.findViewById(R.id.make_offer);

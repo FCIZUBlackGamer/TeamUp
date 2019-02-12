@@ -6,9 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -80,6 +78,16 @@
                         android:src="@drawable/ic_dashboard_black_24dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:ignore="MissingConstraints" />
+
+                    <ImageView
+                        android:id="@+id/report"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@android:drawable/ic_delete" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -1054,6 +1062,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recFiles"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/attachment">
@@ -1068,6 +1077,7 @@
 
                     <ImageView
                         android:id="@+id/preview"
+                        android:visibility="gone"
                         android:layout_width="320dp"
                         android:layout_height="320dp"
                         android:layout_centerHorizontal="true"
@@ -1081,6 +1091,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recImages"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/view">

@@ -49,20 +49,22 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
         holder.bind(filesModels.get(position), listener);
 
         filesModels.get(position).setIndex(position);
-        try {
+        try {Log.e("Files", "Here");
+            Log.e("Files", filesModels.get(position).getFileName());
             fileUri = filesModels.get(position).getFileUri();
-            holder.fileName.setText(filesModels.get(position).getFileName());
+            if (filesModels.get(position).getFileName().isEmpty()){
+                holder.fileName.setText(filesModels.get(position).getFileName());
+            }else {
+                holder.fileName.setText(filesModels.get(position).getServerFileName());
+            }
         } catch (Exception e) {
             Log.e("EX", e.getMessage());
         }
 
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fileUri != null){
-                    filesModels.remove(position);
-                    notifyDataSetChanged();
-                }
+        holder.remove.setOnClickListener(v -> {
+            if (fileUri != null){
+                filesModels.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -85,12 +87,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
 
         public void bind(final FilesModel item, final OnItemClickListener listener) {
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(item);
-                }
-            });
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
 
     }

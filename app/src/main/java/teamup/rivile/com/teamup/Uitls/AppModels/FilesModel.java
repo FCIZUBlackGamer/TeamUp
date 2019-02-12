@@ -6,8 +6,16 @@ public class FilesModel {
     static int id;
     Uri fileUri;
     String fileName;
+    String ServerFileName;
     int index;
 
+    public String getServerFileName() {
+        return ServerFileName;
+    }
+
+    public void setServerFileName(String serverFileName) {
+        ServerFileName = serverFileName;
+    }
 
     public FilesModel() {
         this.id ++;

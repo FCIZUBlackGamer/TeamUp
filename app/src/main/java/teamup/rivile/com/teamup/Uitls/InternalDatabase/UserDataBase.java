@@ -1,7 +1,6 @@
 package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class UserDataBase extends RealmObject {
     public int Id ;

@@ -65,9 +65,11 @@ public interface ApiConfig {
     @POST(API.OFFER_DETAILS_URL)
     Call<OfferDetailsJsonObject> offerDetails(@Field("Id") int Id, @Field("token") String token);
 
+
     @FormUrlEncoded
     @POST(API.LIKE_URL)
     Call<String> likeOffer(@Field("Like") String Like, @Field("token") String token);
+
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)

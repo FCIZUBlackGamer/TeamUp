@@ -48,14 +48,17 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
         holder.bind(filesModels.get(position), listener);
 
         if (filesModels.get(position).getFileName().startsWith(API.BASE_URL)){
+            Log.e("Image", "Here");
+            Log.e("Image", filesModels.get(position).getFileName());
             Picasso.get().load(filesModels.get(position).getFileName()).into(holder.image);
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
         } else if (!filesModels.get(position).getFileUri().toString().isEmpty()){
+            Log.e("Image", "Here1");
             Uri imageUri = filesModels.get(position).getFileUri();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
                 holder.image.setImageBitmap(bitmap);
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
             }catch (Exception e){
                 Log.e("Ex", e.getMessage());
             }

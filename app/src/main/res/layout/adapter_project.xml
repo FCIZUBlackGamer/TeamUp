@@ -41,6 +41,7 @@
                     android:id="@+id/project_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/medium"
                     android:layout_marginTop="10dp"
                     android:maxLength="40"
                     android:maxLines="1"
@@ -61,7 +62,9 @@
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/ic_placeholder"
                         android:gravity="center_vertical"
+                        android:fontFamily="@font/medium"
                         android:maxLength="50"
+                        android:layout_gravity="start"
                         android:text="مصر - الشرقيه - الزقازيق"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -89,6 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/medium"
                     android:drawableLeft="@drawable/ic_dd"
                     android:gravity="center"
                     android:maxLength="6"
@@ -99,6 +103,7 @@
                     android:id="@+id/num_likes"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:fontFamily="@font/medium"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_like"
                     android:gravity="center"
@@ -112,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="5"
+                android:id="@+id/con"
                 android:orientation="vertical">
 
                 <TextView
@@ -119,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:maxLength="50"
+                    android:fontFamily="@font/medium"
                     android:text="المشاركين فى المشروع"
                     android:textColor="#000"
                     android:textSize="16sp" />
@@ -135,9 +142,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="6dp"
+            android:layout_margin="10dp"
             android:maxLines="4"
             android:paddingRight="8dp"
+            android:fontFamily="@font/medium"
             android:text="مشروع مزرعه دواجن "
             android:textColor="#000"
             android:textDirection="rtl"
@@ -156,6 +164,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/medium"
                 android:drawableRight="@drawable/ic_share"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
@@ -166,6 +175,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="@font/medium"
                 android:drawableRight="@drawable/ic_chat"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
@@ -174,6 +184,7 @@
             <TextView
                 android:id="@+id/like"
                 android:layout_width="0dp"
+                android:fontFamily="@font/medium"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:drawableRight="@drawable/ic_favorite_border_black_24dp"
