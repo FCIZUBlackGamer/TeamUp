@@ -28,6 +28,7 @@
 
             <!-- TODO: Make this as Launcher Activity -->
         </activity>
+        <activity android:name=".FirstActivity"/>
         <activity
             android:name=".DrawerActivity"
             android:label="@string/title_activity_drawer"
