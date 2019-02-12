@@ -13,4 +13,7 @@
     <dimen name="floating_content_height">300dp</dimen>
 
     <dimen name="design_fab_image_size" tools:override="true">26dp</dimen>
+
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
 </resources>

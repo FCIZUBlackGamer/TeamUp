@@ -25,13 +25,17 @@ import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
+    private Helper mHelper;
+
     Context context;
     List<Offers> offersList;
     FragmentManager fragmentManager;
 
-    public AdapterListOffers(Context context, List<Offers> talabats) {
+    public AdapterListOffers(Context context, List<Offers> talabats, Helper helper) {
         this.context = context;
         this.offersList = talabats;
+
+        mHelper = helper;
     }
 
     @NonNull
@@ -88,6 +92,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.like.setOnClickListener(v -> {
             FragmentOfferDetails.likeOffer(offersList.get(position).getId());
         });
+
+        //TODO: get project URL and send it here
+        holder.share.setOnClickListener(v -> mHelper.shareUrl("", offersList.get(position).getName()));
     }
 
     @Override
@@ -121,5 +128,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             recyclerView = itemView.findViewById(R.id.rec);
             recyclerView.setLayoutManager(layoutManager);
         }
+    }
+
+    public interface Helper {
+        void shareUrl(String url, String projectName);
     }
 }
