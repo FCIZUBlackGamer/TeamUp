@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -57,7 +58,7 @@ public class DepartmentAdapter extends BaseAdapter {
 
             final TextView name = (TextView) convertView.findViewById(R.id.dep_name);
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            final Button action = (Button) convertView.findViewById(R.id.action);
+            final RelativeLayout action = (RelativeLayout ) convertView.findViewById(R.id.action);
 
             final ViewHolder viewHolder = new ViewHolder(name, imageView, action);
             convertView.setTag(viewHolder);
@@ -83,10 +84,10 @@ public class DepartmentAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView name;
 //        TextView numProjects;
-        Button action;
+        RelativeLayout action;
         ImageView image;
 
-        public ViewHolder(TextView name, ImageView image, Button action) {
+        public ViewHolder(TextView name, ImageView image, RelativeLayout action) {
             this.name = name;
             this.image = image;
             this.action = action;

@@ -20,6 +20,28 @@ public class UserDataBase extends RealmObject {
     public String IdentityNum ;
     public String SocialId ;
     public String IdentityImage ;
+    public Boolean IsCoded ;
+    public String Code ;
+
+    public boolean isGender() {
+        return Gender;
+    }
+
+    public Boolean getCoded() {
+        return IsCoded;
+    }
+
+    public void setCoded(Boolean coded) {
+        IsCoded = coded;
+    }
+
+    public String getCode() {
+        return Code;
+    }
+
+    public void setCode(String code) {
+        Code = code;
+    }
 
     public Boolean getGender() {
         return Gender;

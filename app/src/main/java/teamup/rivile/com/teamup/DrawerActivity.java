@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.GoMap.GoMap;
@@ -129,16 +128,21 @@ public class DrawerActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                if (Whome.equals("Home")) {/** Means Current fragment is home*/
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, FragmentHome.setWord(s)).addToBackStack(null)
+                            .commit();
+                } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, FragmentListProjects.setWord(s)).addToBackStack(null)
+                            .commit();
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (Whome.equals("Home")) {/** Means Current fragment is home*/
 
-                } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
-
-                }
 
                 return false;
             }

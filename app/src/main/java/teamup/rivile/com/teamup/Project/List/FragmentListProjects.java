@@ -40,6 +40,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.CapitalModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsRequirmentDataBase;
@@ -58,7 +59,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     View view;
     static int DepId = -1;
     static int ProType = -1;
+    static String Word;
     Realm realm;
+    List<LikeModelDataBase> likeModelDataBase;
 
     /**
      * @param id refers to Department Id from Home Page
@@ -73,6 +76,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
      */
     public static FragmentListProjects setType(int id) {
         ProType = id;
+        return new FragmentListProjects();
+    }
+
+    /**
+     * @param word refers to my projects(1), favourite projects(2) or all projects(-1)
+     */
+    public static FragmentListProjects setWord(String word) {
+        Word = word;//Todo: Make Action
         return new FragmentListProjects();
     }
 
@@ -93,6 +104,11 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         realm = Realm.getDefaultInstance();
 
+        realm.executeTransaction(realm1 -> {
+            LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
+                    .findFirst();
+            likeModelDataBase = loginDataBases.getLikes();
+        });
         if (DepId != -1) {
             loadOffers(DepId);
         }
@@ -111,7 +127,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 } else {
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).commit();
+                            .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
                 }
             });
         } else if (ProType == 2) {
@@ -144,14 +160,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     } else {
                         //Todo: Show Empty view
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty()).commit();
+                                .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
                     }
 
 
                 } else {
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).commit();
+                            .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
                 }
 
             });
@@ -360,8 +376,10 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     private void fillOffers(Offer offers, int type) {
-        adapter = new AdapterListOffers(getActivity(), offers.getOffersList(), type, this);
-        recyclerView.setAdapter(adapter);
+        if (likeModelDataBase != null){
+            adapter = new AdapterListOffers(getActivity(), offers.getOffersList(), likeModelDataBase, type, this);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     @Override

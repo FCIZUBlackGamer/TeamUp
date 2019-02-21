@@ -25,6 +25,7 @@ import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
@@ -36,12 +37,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     List<Offers> offersList;
     FragmentManager fragmentManager;
     Realm realm;
+    List<LikeModelDataBase> likeModelDataBase;
     int ty;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, int type, Helper helper) {
+    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper) {
         this.context = context;
         this.offersList = talabats;
         ty = type;
+        likeModelDataBase  = likeModel;
         mHelper = helper;
     }
 
@@ -60,6 +63,12 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         if (ty == FragmentListProjects.NORMAL) {
             holder.delete.setVisibility(View.VISIBLE);
         }
+        for (int i = 0; i < likeModelDataBase.size(); i++) {
+            if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()){
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,0,0,0);
+            }
+        }
+
         holder.project_name.setText(offersList.get(position).getName());
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
@@ -113,7 +122,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.like.setOnClickListener(v -> {
-            FragmentOfferDetails.likeOffer(offersList.get(position).getId());
+            if (holder.like.getCompoundDrawables().equals(context.getResources().getDrawable(R.drawable.ic_like))){
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_border_black_24dp,0,0,0);
+            }else {
+                FragmentOfferDetails.likeOffer(offersList.get(position).getId());
+            }
         });
 
         //TODO: get project URL and send it here
