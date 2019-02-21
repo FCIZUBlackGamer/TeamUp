@@ -24,10 +24,12 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
@@ -38,13 +40,20 @@ public class FragmentAddHome extends Fragment {
     private MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitalLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<CapitalModel>> mLoadedCategoryLiveData = new MutableLiveData<>();
 
-
+    private static int mProjectId = -1;
+    private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = new MutableLiveData<>();
 
     static FloatingActionButton fab;
 
     public static FragmentAddHome setFab(FloatingActionButton view) {
         fab = view;
         return new FragmentAddHome();
+    }
+
+    public static FragmentAddHome openForEdit(int projectId, FloatingActionButton view) {
+        mProjectId = projectId;
+
+        return setFab(view);
     }
 
     View view;
@@ -72,7 +81,8 @@ public class FragmentAddHome extends Fragment {
 
         //d = fragmentManager.beginTransaction();
 
-        fab.setVisibility(View.GONE);
+        if (fab != null)
+            fab.setVisibility(View.GONE);
         pagerAdapter = new pager(getChildFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
@@ -90,13 +100,13 @@ public class FragmentAddHome extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter);
+                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesLiveData);
+                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesLiveData, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData);
+                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             }
 
@@ -125,6 +135,9 @@ public class FragmentAddHome extends Fragment {
                         mLoadedCategoryLiveData.postValue((ArrayList<CapitalModel>) response.body().getCategory());
                         mLoadedTagsLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getTags());
                         mExperienceTypesLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getExperienceType());
+                        if (mProjectId != -1)
+                            loadAllProjectDataForEdit();
+
                     } else
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else
@@ -137,6 +150,33 @@ public class FragmentAddHome extends Fragment {
             }
         });
     }
+
+    private void loadAllProjectDataForEdit() {
+        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+
+        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+
+        Call<OfferDetailsJsonObject> response = retrofitService.offerDetails(mProjectId, API.URL_TOKEN);
+
+        response.enqueue(new Callback<OfferDetailsJsonObject>() {
+            @Override
+            public void onResponse(Call<OfferDetailsJsonObject> call, Response<OfferDetailsJsonObject> response) {
+                if (response.errorBody() == null) {
+                    if (response.body() != null) {
+                        mLoadedProjectWithAllDataLiveData.postValue(response.body().getOffer());
+                    } else
+                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 //    private void parseRetrofitResponse(String response) throws JSONException {
 //        JSONObject responseObject = new JSONObject(response);
 //        Gson gson = new Gson();

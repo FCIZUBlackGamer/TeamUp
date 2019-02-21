@@ -38,15 +38,12 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         final CapitalModel model = mCapitalModels.get(i);
         holder.checkBox.setText(model.getName());
 
-        if (mSelectedCapitalModels.contains(model)) holder.checkBox.setChecked(true);
+        if (selected(model)) holder.checkBox.setChecked(true);
         else holder.checkBox.setChecked(false);
 
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mSelectedCapitalModels.add(model);
-                else mSelectedCapitalModels.remove(model);
-            }
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) mSelectedCapitalModels.add(model);
+            else mSelectedCapitalModels.remove(model);
         });
     }
 
@@ -73,5 +70,18 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         mCapitalModels = capitalModels;
 
         notifyDataSetChanged();
+    }
+
+    public void setSelectedCapitalModels(ArrayList<CapitalModel> mSelectedCapitalModels) {
+        this.mSelectedCapitalModels = mSelectedCapitalModels;
+
+        notifyDataSetChanged();
+    }
+
+    private boolean selected(CapitalModel model) {
+        for (int i = 0; i < mSelectedCapitalModels.size(); ++i) {
+            if (mSelectedCapitalModels.get(i).getId().equals(model.getId())) return true;
+        }
+        return false;
     }
 }

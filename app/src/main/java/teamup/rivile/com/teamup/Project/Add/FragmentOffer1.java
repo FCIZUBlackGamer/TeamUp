@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Project.Add;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,8 +24,12 @@ import android.widget.RelativeLayout;
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
+import java.util.List;
+
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
+import teamup.rivile.com.teamup.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.MaxTextWatcher;
 import teamup.rivile.com.teamup.Uitls.MinTextWatcher;
@@ -53,13 +58,14 @@ public class FragmentOffer1 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
+    private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
 
-    static FragmentOffer1 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte) {
+    static FragmentOffer1 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
+        mLoadedProjectWithAllDataLiveData = loadedProjectWithAllDataLiveData;
         return new FragmentOffer1();
     }
-
 
     @Nullable
     @Override
@@ -144,7 +150,6 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
-
         proDetail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -215,33 +220,27 @@ public class FragmentOffer1 extends Fragment {
 //                return false;
 //            }
 //        });
-        moneyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.day) {
-                    Offers.setProfitType(0);
-                } else if (checkedId == R.id.month) {
-                    Offers.setProfitType(1);
-                } else if (checkedId == R.id.year) {
-                    Offers.setProfitType(2);
-                } else if (checkedId == R.id.other) {
-                    Offers.setProfitType(3);
-                }
+        moneyGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.day) {
+                Offers.setProfitType(0);
+            } else if (checkedId == R.id.month) {
+                Offers.setProfitType(1);
+            } else if (checkedId == R.id.year) {
+                Offers.setProfitType(2);
+            } else if (checkedId == R.id.other) {
+                Offers.setProfitType(3);
             }
         });
 
         setUpProjectMoneyAvailabilityViewsVisibility();
 
-        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.male) {
-                    Offers.setGenderContributor(0);
-                } else if (checkedId == R.id.female) {
-                    Offers.setGenderContributor(1);
-                } else if (checkedId == R.id.both) {
-                    Offers.setGenderContributor(2);
-                }
+        genderGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.male) {
+                Offers.setGenderContributor(0);
+            } else if (checkedId == R.id.female) {
+                Offers.setGenderContributor(1);
+            } else if (checkedId == R.id.both) {
+                Offers.setGenderContributor(2);
             }
         });
 
@@ -251,45 +250,89 @@ public class FragmentOffer1 extends Fragment {
 
         if (educationLevel.getCurrentStep() != 0)
             Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
-        educationLevel.addOnStepClickListener(new StepperIndicator.OnStepClickListener() {
-            @Override
-            public void onStepClicked(int step) {
-                educationLevel.setCurrentStep(step);
-                Offers.setEducationContributorLevel(step);
-            }
+        educationLevel.addOnStepClickListener(step -> {
+            educationLevel.setCurrentStep(step);
+            Offers.setEducationContributorLevel(step);
         });
 
         //region Shrink And Expand
 
-        money.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (moneySection.getVisibility() == View.VISIBLE) {
-                    moneySection.setVisibility(View.GONE);
-                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        money.setOnClickListener(v -> {
+            if (moneySection.getVisibility() == View.VISIBLE) {
+                moneySection.setVisibility(View.GONE);
+                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    moneySection.setVisibility(View.VISIBLE);
-                    arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                moneySection.setVisibility(View.VISIBLE);
+                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
-        contributors.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contributorsSection.getVisibility() == View.VISIBLE) {
-                    contributorsSection.setVisibility(View.GONE);
-                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        contributors.setOnClickListener(v -> {
+            if (contributorsSection.getVisibility() == View.VISIBLE) {
+                contributorsSection.setVisibility(View.GONE);
+                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    contributorsSection.setVisibility(View.VISIBLE);
-                    arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                contributorsSection.setVisibility(View.VISIBLE);
+                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
         //endregion
+
+        if (mLoadedProjectWithAllDataLiveData != null) {
+            mLoadedProjectWithAllDataLiveData.observe(this, offers -> {
+                if (offers != null) {
+                    project_name.setText(offers.getName());
+                    proDetail.setText(offers.getDescription());
+                    switch (offers.getProfitType()) {
+                        case 0:
+                            moneyGroup.check(R.id.day);
+                            break;
+                        case 1:
+                            moneyGroup.check(R.id.month);
+                            break;
+                        case 2:
+                            moneyGroup.check(R.id.year);
+                            break;
+                        case 3:
+                            moneyGroup.check(R.id.other);
+                            break;
+                    }
+
+                    moneyOutFrom.setText(String.valueOf(offers.getProfitFrom()));
+                    moneyOutTo.setText(String.valueOf(offers.getProfitTo()));
+
+                    switch (offers.getGenderContributor()) {
+                        case 0:
+                            genderGroup.check(R.id.male);
+                            break;
+                        case 1:
+                            genderGroup.check(R.id.female);
+                            break;
+                        case 2:
+                            genderGroup.check(R.id.both);
+                            break;
+                    }
+
+                    conFrom.setText(String.valueOf(offers.getNumContributorFrom()));
+                    conTo.setText(String.valueOf(offers.getNumContributorTo()));
+
+                    educationLevel.setCurrentStep(offers.getEducationContributorLevel());
+
+                    List<OfferDetailsRequirment> requirmentModels = offers.getRequirments();
+                    if (!requirmentModels.isEmpty()) {
+                        OfferDetailsRequirment requirmentModel = requirmentModels.get(0);
+
+                        availGroupMoney.check(requirmentModel.isNeedMoney() ? R.id.avail : R.id.notAvail);
+                        moneyInFrom.setText(String.valueOf(requirmentModel.getMoneyFrom()));
+                        moneyInTo.setText(String.valueOf(requirmentModel.getMoneyTo()));
+                    }
+                }
+            });
+        }
+
     }
 
     private void setUpSeekBarViews(

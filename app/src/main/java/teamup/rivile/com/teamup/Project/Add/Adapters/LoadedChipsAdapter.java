@@ -40,13 +40,10 @@ public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.
         final ExperienceTypeModel typeModel = mTypeModels.get(i);
         holder.chip.setText(typeModel.getName());
 
-        holder.chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mUserAddedDataAdapter.addTypeModel(typeModel);
-                mTypeModels.remove(typeModel);
-                notifyDataSetChanged();
-            }
+        holder.chip.setOnCloseIconClickListener(v -> {
+            mUserAddedDataAdapter.addTypeModel(typeModel);
+            mTypeModels.remove(typeModel);
+            notifyDataSetChanged();
         });
     }
 

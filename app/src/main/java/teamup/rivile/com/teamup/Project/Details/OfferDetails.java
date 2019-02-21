@@ -4,28 +4,37 @@ import java.io.Serializable;
 import java.util.List;
 
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class OfferDetails implements Serializable {
-    public Integer Id ;
-    public String Name ;
-    public String Description ;
-    public Integer CategoryId ;
-    public String CategoryName ;
-    public Integer ProfitType ;
-    public Integer ProfitFrom ;
-    public Integer ProfitTo ;
-    public Integer NumContributorFrom ;
-    public Integer NumContributorTo ;
-    public Integer AgeRequiredFrom ;
-    public Integer AgeRequiredTo ;
-    public Integer GenderContributor ;
-    public Integer EducationContributorLevel ;
-    public Integer UserId ;
-    public Integer NumLiks ;
-    public Integer NumJoinOffer ;
-    public List<UserModel> Users ;
-    public String Address ;
+    public Integer Id;
+    public String Name;
+    public String Description;
+    public Integer CategoryId;
+    public String CategoryName;
+    public Integer ProfitType;
+    public Integer ProfitFrom;
+    public Integer ProfitTo;
+    public Integer NumContributorFrom;
+    public Integer NumContributorTo;
+    public Integer AgeRequiredFrom;
+    public Integer AgeRequiredTo;
+    public Integer GenderContributor;
+    public Integer EducationContributorLevel;
+    public Integer UserId;
+    public Integer NumLiks;
+    public Integer NumJoinOffer;
+    public List<UserModel> Users;
+    public String Address;
+    public String Date;
+    public Integer Status;
+    public Boolean Block;
+    public Boolean IsDelete;
+    public List<OfferDetailsRequirment> Requirments;
+    public List<CapitalModel> Capitals;
+    public List<ExperienceTypeModel> Tags;
+
 
     public String getDate() {
         return Date;
@@ -43,13 +52,13 @@ public class OfferDetails implements Serializable {
         return IsDelete;
     }
 
-    public String Date ;
-    public Integer Status ;
-    public Boolean Block;
-    public Boolean IsDelete;
-    public List<OfferDetailsRequirment> Requirments ;
-    public List<CapitalModel> Capitals ;
+    public List<ExperienceTypeModel> getTags() {
+        return Tags;
+    }
 
+    public void setTags(List<ExperienceTypeModel> tags) {
+        Tags = tags;
+    }
 
     public OfferDetails() {
     }
