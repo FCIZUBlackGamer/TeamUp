@@ -8,12 +8,13 @@ public class API {
     final public static String LOGIN_URL = BASE_URL + "Register/Login";
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
-    final public static String ListRequirmentByUserId_URL = BASE_URL + "Offer/Income/";
+    final public static String LIST_REQUIREMENT_BY_USER_ID_URL = BASE_URL + "Offer/Income/";
     final public static String SelectOffer_URL = BASE_URL + "Offer/SelectOffer/";
     final public static String GENERAL_MAP_URL = BASE_URL + "";
     final public static String PROFILE_URL = BASE_URL + "Register/Profile";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
-    final public static String EDIT_OFFER_URL = BASE_URL + "";
+    final public static String EDIT_OFFER_URL = BASE_URL + "Edit";
+    final public static String EDIT_REQUIREMENT_URL = BASE_URL + "EditRequirement";
     final public static String DELETE_OFFER_URL = BASE_URL + "";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer";
     final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/"; //VIEW_PROJECT_URL
@@ -43,4 +44,6 @@ public class API {
     public static final String PARAM_NAME_TAGS = "Tags";
     public static final String FILE_NAME = "";
     public static final String PARAM_NAME_OFFER_ID = "OfferId";
+    public static final String PARAM_NAME_ID = "Id";
+    public static final String PARAM_NAME_USER_ID = "UserId";
 }

@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup.Project.join;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.ClipData;
 import android.content.ContentResolver;
@@ -148,7 +149,11 @@ public class FragmentJoinHome extends Fragment {
     RecyclerView tagsRec;
     Button accept, reject;
 
-    public static int mOfferId = -1;
+    private static int mOfferId = -1;
+    private static OfferDetails mRequirementDetails = null;
+    private static int mUserId = 1;
+
+    private static ProgressDialog mProgressDialog;
 
     public static OfferDetailsRequirment requirmentModel = null;
 
@@ -157,6 +162,12 @@ public class FragmentJoinHome extends Fragment {
     ImageView delete_req;
 
     //endregion variable declarations
+
+    public static FragmentJoinHome openForEdit(OfferDetails requirementDetails, int offerId) {
+        mRequirementDetails = requirementDetails;
+        mOfferId = offerId;
+        return new FragmentJoinHome();
+    }
 
     public static FragmentJoinHome setOfferId(int offerId) {
         mOfferId = offerId;
@@ -199,8 +210,14 @@ public class FragmentJoinHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (requirmentModel == null) {
+        if (requirmentModel == null && mRequirementDetails == null && mOfferId != -1) {
             loadOffer();
+        }
+
+        if (mRequirementDetails != null) {
+            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setMessage("جاري التجميل...");
         }
 
         view = inflater.inflate(R.layout.fragment_join_home, container, false);
@@ -362,85 +379,85 @@ public class FragmentJoinHome extends Fragment {
                     }
                 });
             } else moneyInEditText.setEnabled(false);
-        }
 
-        placeRadioButton.setText(model.isNeedPlace() ?
-                getString(R.string.yes) : getString(R.string.no));
+            placeRadioButton.setText(model.isNeedPlace() ?
+                    getString(R.string.yes) : getString(R.string.no));
 
-        if (!model.isNeedPlace() || model.isNeedPlaceStatus()) {
-            placeSection.setVisibility(View.GONE);
-        } else {
-            mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
-        }
-
-        placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
-                getString(R.string.avail) : getString(R.string.notAvail));
-
-        placeKindRadioButton.setText(model.isNeedPlaceType() ?
-                getString(R.string.owned) : getString(R.string.rent));
-
-        exRadioButton.setText(model.isNeedExperience() ?
-                getString(R.string.yes) : getString(R.string.no));
-
-        experienceEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            if (!model.isNeedPlace() || model.isNeedPlaceStatus()) {
+                placeSection.setVisibility(View.GONE);
+            } else {
+                mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
+                    getString(R.string.avail) : getString(R.string.notAvail));
 
-            }
+            placeKindRadioButton.setText(model.isNeedPlaceType() ?
+                    getString(R.string.owned) : getString(R.string.rent));
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().isEmpty()) {
-                    mRequirementModel.setExperienceTo(Integer.valueOf(s.toString()));
-                } else {
-                    experienceEditText.setText("0");
-                    mRequirementModel.setExperienceTo(0);
+            exRadioButton.setText(model.isNeedExperience() ?
+                    getString(R.string.yes) : getString(R.string.no));
+
+            experienceEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
                 }
-            }
-        });
-        exDesc.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
-            }
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!s.toString().isEmpty()) {
+                        mRequirementModel.setExperienceTo(Integer.valueOf(s.toString()));
+                    } else {
+                        experienceEditText.setText("0");
+                        mRequirementModel.setExperienceTo(0);
+                    }
+                }
+            });
+            exDesc.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                mRequirementModel.setExperienceDescriptions(s.toString());
-            }
-        });
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    mRequirementModel.setExperienceDescriptions(s.toString());
+                }
+            });
+        }
+
 
 //        API.BASE_URL
-        for (int i = 0; i < requirmentModel.getAttachmentModels().size(); i++) {
-            FilesModel filesModel = new FilesModel();
-            filesModel.setFileName(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource());
-            if (requirmentModel.getAttachmentModels().get(i).getType()) {
-                fileArrayUri.add(filesModel);
-            } else {
-                imagesArrayUri.add(filesModel);
-                Picasso.get().load(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource()).into(preview);
+        if (requirmentModel != null)
+            for (int i = 0; i < requirmentModel.getAttachmentModels().size(); i++) {
+                FilesModel filesModel = new FilesModel();
+                filesModel.setFileName(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource());
+                if (requirmentModel.getAttachmentModels().get(i).getType()) {
+                    fileArrayUri.add(filesModel);
+                } else {
+                    imagesArrayUri.add(filesModel);
+                    Picasso.get().load(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource()).into(preview);
+                }
             }
-        }
         filesAdapter.notifyDataSetChanged();
         imagesAdapter.notifyDataSetChanged();
 
     }
 
-
     private void acceptOrReject(int offerId, int requirementId, boolean accept) {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         // Parsing any Media type file
-
 
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
         Call<String> call;
@@ -668,31 +685,25 @@ public class FragmentJoinHome extends Fragment {
 
         //region Shrink And Expand
 
-        place.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (placeSection.getVisibility() == View.VISIBLE) {
-                    placeSection.setVisibility(View.GONE);
-                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        place.setOnClickListener(v -> {
+            if (placeSection.getVisibility() == View.VISIBLE) {
+                placeSection.setVisibility(View.GONE);
+                arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    placeSection.setVisibility(View.VISIBLE);
-                    arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                placeSection.setVisibility(View.VISIBLE);
+                arrowPlace.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
-        experience.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (experienceSection.getVisibility() == View.VISIBLE) {
-                    experienceSection.setVisibility(View.GONE);
-                    arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+        experience.setOnClickListener(v -> {
+            if (experienceSection.getVisibility() == View.VISIBLE) {
+                experienceSection.setVisibility(View.GONE);
+                arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
 
-                } else {
-                    experienceSection.setVisibility(View.VISIBLE);
-                    arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
-                }
+            } else {
+                experienceSection.setVisibility(View.VISIBLE);
+                arrowExperience.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
             }
         });
 
@@ -768,7 +779,6 @@ public class FragmentJoinHome extends Fragment {
             }
         });
         recFiles.setAdapter(filesAdapter);
-
 
         recImages.setAdapter(imagesAdapter);
 
@@ -873,6 +883,8 @@ public class FragmentJoinHome extends Fragment {
             });
         });
 
+        if (mRequirementDetails != null)
+            loadDataFroEdit(mRequirementDetails);
     }
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
@@ -1237,7 +1249,7 @@ public class FragmentJoinHome extends Fragment {
         String attachments = new GsonBuilder().serializeNulls().create().toJson(mAttachmentModelArrayList);
         Log.v("DABUGG", "\"Attachment\": " + attachments);
 
-        mRequirementModel.setUserId(1);
+        mRequirementModel.setUserId(mUserId);
         String requirements = new GsonBuilder().serializeNulls().create().toJson(mRequirementModel);
         Log.v("DABUGG", "\"Requirement\": " + requirements);
 
@@ -1276,5 +1288,75 @@ public class FragmentJoinHome extends Fragment {
 
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null);
         recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
+    }
+
+    private void loadDataFroEdit(@NonNull OfferDetails offerDetails) {
+
+        project_name.setText(offerDetails.getName());
+
+        switch (offerDetails.getProfitType()) {
+            case 0:
+                profitTypeRadioButton.setText(getString(R.string.day));
+                break;
+            case 1:
+                profitTypeRadioButton.setText(getString(R.string.month));
+                break;
+            case 2:
+                profitTypeRadioButton.setText(getString(R.string.year));
+                break;
+            case 3:
+                profitTypeRadioButton.setText(getString(R.string.anotherKind));
+                break;
+        }
+
+        switch (offerDetails.getGenderContributor()) {
+            case 0:
+                genderRadioButton.setText(getString(R.string.male));
+                break;
+            case 1:
+                genderRadioButton.setText(getString(R.string.female));
+                break;
+            case 2:
+                genderRadioButton.setText(getString(R.string.both));
+                break;
+        }
+
+        numCon.setText(offerDetails.getNumContributorFrom());
+
+        educationLevel.setCurrentStep(offerDetails.getEducationContributorLevel());
+
+        categoryTextView.setText(offerDetails.getCategoryName());
+
+        List<CapitalModel> capitalModels = offerDetails.getCapitals();
+        if (capitalModels != null && !capitalModels.isEmpty()) {
+            mCapitalsRecyclerViewAdapter.swapData(capitalModels);
+        }
+
+        List<OfferDetailsRequirment> requirments = offerDetails.getRequirments();
+        if (requirments != null && !requirments.isEmpty()) {
+            OfferDetailsRequirment requirment = requirments.get(0);
+
+            availMoneyRadioButton.setText(
+                    getString(requirment.isNeedMoney() ? R.string.yes : R.string.no));
+
+            moneyInEditText.setText(String.valueOf(requirment.getMoneyFrom()));
+
+            placeRadioButton.setText(requirment.isNeedPlace() ? R.string.yes : R.string.no);
+
+            placeStateRadioButton.setText(requirment.isNeedPlaceStatus() ? R.string.avail : R.string.notAvail);
+
+            placeKindRadioButton.setText(requirment.isNeedPlaceType() ? R.string.owned : R.string.rent);
+
+            exRadioButton.setText(requirment.isNeedExperience() ? R.string.yes : R.string.no);
+
+            experienceEditText.setText(String.valueOf(requirment.getExperienceFrom()));
+
+            exDesc.setText(requirment.getExperienceDescriptions());
+
+            List<AttachmentModel> attachmentModels = requirment.getAttachmentModels();
+            if (attachmentModels != null && attachmentModels.isEmpty()) {
+                //TODO: Load Attachment Here...
+            }
+        }
     }
 }

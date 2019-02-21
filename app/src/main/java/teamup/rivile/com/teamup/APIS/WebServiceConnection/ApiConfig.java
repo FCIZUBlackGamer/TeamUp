@@ -16,6 +16,7 @@ import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
+import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
@@ -61,7 +62,7 @@ public interface ApiConfig {
     Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
 
     @FormUrlEncoded
-    @POST(API.ListRequirmentByUserId_URL)
+    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
     Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
@@ -82,7 +83,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)
-    Call<OfferDetailsJsonObject> offerDetails(@Field("Id") int Id, @Field("token") String token);
+    Call<OfferDetailsJsonObject> offerDetails(@Field(API.PARAM_NAME_ID) int Id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ACCEPT_JOIN_OFFER_URL)
@@ -125,4 +126,9 @@ public interface ApiConfig {
                            @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                            @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                            @Field(API.PARAM_NAME_OFFER_ID) String offerId);
+
+    @FormUrlEncoded
+    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
+    Call<OfferDetailsJsonObject> listRequirmentByUserId(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
+                                                        @Field(API.PARAM_NAME_TOKEN) String token);
 }

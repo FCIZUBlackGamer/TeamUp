@@ -40,25 +40,23 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
         final CapitalModel model = mCategoryModels.get(i);
         holder.checkBox.setText(model.getName());
 
-        if (mSelectedCategoryModels != null && mSelectedCategoryModels.equals(model))
+        if (mSelectedCategoryModels != null && mSelectedCategoryModels.getId().equals(model.getId())) {
             holder.checkBox.setChecked(true);
-        else holder.checkBox.setChecked(false);
+            mLastCheckedCheckBox = holder.checkBox;
+        } else holder.checkBox.setChecked(false);
 
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mSelectedCategoryModels = model;
-                    holder.checkBox.setChecked(true);
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mSelectedCategoryModels = model;
+                holder.checkBox.setChecked(true);
 
-                    if (mLastCheckedCheckBox != null)
-                        mLastCheckedCheckBox.setChecked(false);
-                    mLastCheckedCheckBox = holder.checkBox;
-                } else {
-                    mSelectedCategoryModels = null;
-                    holder.checkBox.setChecked(false);
+                if (mLastCheckedCheckBox != null)
+                    mLastCheckedCheckBox.setChecked(false);
+                mLastCheckedCheckBox = holder.checkBox;
+            } else {
+                mSelectedCategoryModels = null;
+                holder.checkBox.setChecked(false);
 //                    mLastCheckedCheckBox.setChecked(false);
-                }
             }
         });
     }
@@ -85,6 +83,11 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
     public void swapData(List<CapitalModel> categoryModels) {
         mCategoryModels = categoryModels;
 
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedCategoryModels(CapitalModel mSelectedCategoryModels) {
+        this.mSelectedCategoryModels = mSelectedCategoryModels;
         notifyDataSetChanged();
     }
 }

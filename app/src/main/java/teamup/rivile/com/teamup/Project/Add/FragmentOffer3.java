@@ -76,6 +76,8 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
+import teamup.rivile.com.teamup.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
@@ -134,13 +136,21 @@ public class FragmentOffer3 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
+    private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
+
     static FragmentOffer3 setPager(
-            ViewPager viewPager, FragmentPagerAdapter pagerAdapter, MutableLiveData<ArrayList<ExperienceTypeModel>> tagsArrayList, MutableLiveData<ArrayList<CapitalModel>> loadedCapitals, MutableLiveData<ArrayList<CapitalModel>> loadedCategories) {
+            ViewPager viewPager, FragmentPagerAdapter pagerAdapter,
+            MutableLiveData<ArrayList<ExperienceTypeModel>> tagsArrayList,
+            MutableLiveData<ArrayList<CapitalModel>> loadedCapitals,
+            MutableLiveData<ArrayList<CapitalModel>> loadedCategories,
+            MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
+
         pager = viewPager;
         FragmentOffer3.pagerAdapter = pagerAdapter;
         mLoadedTags = tagsArrayList;
         mLoadedCapitals = loadedCapitals;
         mLoadedCategories = loadedCategories;
+        mLoadedProjectWithAllDataLiveData = loadedProjectWithAllDataLiveData;
         return new FragmentOffer3();
     }
 
@@ -319,12 +329,6 @@ public class FragmentOffer3 extends Fragment {
         });
 
         go.setOnClickListener(v -> new Handler().post(() -> {
-            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
-            Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
-            Offers.setCategoryName(mSelectedCategory.getName());
-
-            mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
-
             RequirmentModel.setExperienceTypeId(1);
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                 pager.setCurrentItem(0);
@@ -340,6 +344,12 @@ public class FragmentOffer3 extends Fragment {
             } else if (mSelectedCapitalModels.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
             } else {
+                mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+                Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
+                Offers.setCategoryName(mSelectedCategory.getName());
+
+                mSelectedCapitalModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
+
                 //TODO: start uploading and adding...
                 for (int i = 0; i < imagesArrayUri.size(); i++) {
                     FilesModel model = new FilesModel();
@@ -412,6 +422,53 @@ public class FragmentOffer3 extends Fragment {
         // endregion
 
         setUpExpDepViews();
+
+        if (mLoadedProjectWithAllDataLiveData != null) {
+            mLoadedProjectWithAllDataLiveData.observe(this, offer -> {
+                if (offer != null) {
+                    mSelectedCategory = new CapitalModel();
+                    mSelectedCategory.setId(offer.getCategoryId());
+                    mSelectedCategory.setName(offer.getCategoryName());
+                    mCategoriesRecyclerViewAdapter.setSelectedCategoryModels(mSelectedCategory);
+
+                    List<OfferDetailsRequirment> requirmentModels = offer.getRequirments();
+                    if (!requirmentModels.isEmpty()) {
+                        OfferDetailsRequirment requirmentModel = requirmentModels.get(0);
+
+                        List<AttachmentModel> attachmentModels = requirmentModel.getAttachmentModels();
+                        if (!attachmentModels.isEmpty()) {
+                            for (int i = 0; i < attachmentModels.size(); ++i) {
+                                AttachmentModel Attachment = attachmentModels.get(i);
+                                //TODO: Load Attachment Here...
+                            }
+                        }
+
+                        mAttachmentModelArrayList = (ArrayList<AttachmentModel>) attachmentModels;
+                    }
+
+                    List<ExperienceTypeModel> tagsModels = offer.getTags();
+                    if (!tagsModels.isEmpty()) {
+                        for (int i = 0; i < tagsModels.size(); ++i) {
+                            ExperienceTypeModel tag = tagsModels.get(i);
+                            mTagsRecUserAdapter.addTypeModel(tag);
+                            mTagsRecLoadedAdapter.removeTypeModel(tag);
+                        }
+                    }
+
+                    List<CapitalModel> capitalModels = offer.getCapitals();
+                    if (!capitalModels.isEmpty()) {
+                        for (int i = 0; i < capitalModels.size(); ++i) {
+                            CapitalModel capital = capitalModels.get(i);
+                            if (!mSelectedCapitalModels.contains(capital)) {
+                                mSelectedCapitalModels.add(capital);
+                            }
+                        }
+
+                        mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(mSelectedCapitalModels);
+                    }
+                }
+            });
+        }
     }
 
     private void setUpExpDepViews() {
@@ -426,7 +483,6 @@ public class FragmentOffer3 extends Fragment {
                 StaggeredGridLayoutManager.HORIZONTAL));
         mTagsRecUserAdapter = new ChipsAdapter(null, mTagsRecLoadedAdapter);
         tagsRecUserLoad.setAdapter(mTagsRecUserAdapter);
-        //TODO: to get selected chips, use mTagsRecLoadedAdapter.getSelectedTypeModels(). get them when moving to next fragment
 
         tagsInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -891,6 +947,11 @@ public class FragmentOffer3 extends Fragment {
 
     private teamup.rivile.com.teamup.Uitls.APIModels.Offers bindOffers() {
         teamup.rivile.com.teamup.Uitls.APIModels.Offers offers = new teamup.rivile.com.teamup.Uitls.APIModels.Offers();
+        if (mLoadedProjectWithAllDataLiveData != null) {
+            OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
+            if (o != null)
+                offers.setId(o.getId());
+        }
         offers.setName(Offers.getName());
         offers.setDescription(Offers.getDescription());
         offers.setCategoryId(Offers.getCategoryId());

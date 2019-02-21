@@ -34,6 +34,8 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
+import teamup.rivile.com.teamup.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.MaxTextWatcher;
@@ -64,11 +66,15 @@ public class FragmentOffer2 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
 
+    private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
 
-    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<ArrayList<ExperienceTypeModel>> loadedExperienceTypes) {
+    static FragmentOffer2 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte,
+                                   MutableLiveData<ArrayList<ExperienceTypeModel>> loadedExperienceTypes,
+                                   MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
         mLoadedExperienceTypes = loadedExperienceTypes;
+        mLoadedProjectWithAllDataLiveData = loadedProjectWithAllDataLiveData;
         return new FragmentOffer2();
     }
 
@@ -129,6 +135,7 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         placeKindGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -232,6 +239,24 @@ public class FragmentOffer2 extends Fragment {
         });
 
         // endregion
+
+        if (mLoadedProjectWithAllDataLiveData != null) {
+            mLoadedProjectWithAllDataLiveData.observe(this, offers -> {
+                if (offers != null) {
+                    List<OfferDetailsRequirment> requirmentModels = offers.getRequirments();
+                    if (!requirmentModels.isEmpty()) {
+                        OfferDetailsRequirment requirmentModel = requirmentModels.get(0);
+
+                        placeGroup.check(requirmentModel.isNeedPlace() ? R.id.yes : R.id.no);
+                        placeDesc.setText(requirmentModel.getPlaceDescriptions());
+                        exGroup.check(requirmentModel.isNeedExperience() ? R.id.y : R.id.n);
+                        experienceFrom.setText(String.valueOf(requirmentModel.getExperienceFrom()));
+                        experienceTo.setText(String.valueOf(requirmentModel.getExperienceTo()));
+                        exDesc.setText(requirmentModel.getExperienceDescriptions());
+                    }
+                }
+            });
+        }
     }
 
     private void setUpExpDepViews() {

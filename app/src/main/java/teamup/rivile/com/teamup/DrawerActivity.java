@@ -109,6 +109,7 @@ public class DrawerActivity extends AppCompatActivity
         searchView = findViewById(R.id.search);
 
 
+        Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         setSupportActionBar(toolbar);
@@ -332,7 +333,7 @@ public class DrawerActivity extends AppCompatActivity
                         .findFirst();
                 navigation.setSelectedItemId(R.id.navigation_profile);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.frame, new FragmentProfileHome().setId(loginDataBases.getUser().getId())).addToBackStack("Home")
+                        .replace(R.id.frame, FragmentProfileHome.setId(loginDataBases.getUser().getId())).addToBackStack("Home")
                         .commit();
             });
 
