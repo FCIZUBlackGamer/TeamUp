@@ -37,18 +37,40 @@
                 android:gravity="end"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/project_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
-                    android:layout_marginTop="10dp"
-                    android:maxLength="40"
-                    android:maxLines="1"
-                    android:text="مشروع مزرعه دواجن "
-                    android:textColor="#000"
-                    android:textDirection="rtl"
-                    android:textSize="18sp" />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="invisible"
+                        android:src="@android:drawable/ic_delete"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/project_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:text="مشروع مزرعه دواجن "
+                        android:textColor="#000"
+                        android:textDirection="rtl"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -93,6 +115,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/medium"
+                    android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_dd"
                     android:gravity="center"
                     android:maxLength="6"
@@ -104,6 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:fontFamily="@font/medium"
+                    android:drawablePadding="5dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_like"
                     android:gravity="center"

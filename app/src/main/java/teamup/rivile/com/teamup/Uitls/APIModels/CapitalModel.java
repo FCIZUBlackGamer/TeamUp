@@ -1,7 +1,7 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
 public class CapitalModel {
-    public int Id ;
+    public Integer Id ;
     public String Name ;
 
     public CapitalModel() {
@@ -11,7 +11,7 @@ public class CapitalModel {
         return Name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return Id;
     }
 
@@ -19,7 +19,7 @@ public class CapitalModel {
         Name = name;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         Id = id;
     }
 }

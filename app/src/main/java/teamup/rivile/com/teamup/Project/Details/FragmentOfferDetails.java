@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
@@ -47,6 +49,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
+import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
@@ -55,6 +58,8 @@ import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
 public class FragmentOfferDetails extends Fragment implements ShareDialogFragment.Helper {
     private String mProjectURL = "";
@@ -97,14 +102,18 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     RecyclerView.Adapter conAdapter;
 
     TextView like, make_offer, share;
+    static int type, position;
 
 
     static int projectId = 50;
     DownloadManager downloadManager;
     ImageView report;
+    Realm realm;
 
-    public static FragmentOfferDetails setProjectId(int proId) {
+    public static FragmentOfferDetails setProjectId(int proId, int ty, int pos) {
         projectId = proId;
+        type = ty;
+        position = pos;
         return new FragmentOfferDetails();
     }
 
@@ -179,11 +188,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         recCont = view.findViewById(R.id.rec);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recImages.setLayoutManager(layoutManager);
+        recCont.setLayoutManager(layoutManager2);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recFiles.setLayoutManager(layoutManager1);
         filesModels = new ArrayList<>();
         imagesModels = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
 
         return view;
     }
@@ -202,10 +214,23 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         super.onStart();
 
         report.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            EditText textReport = new EditText(getActivity());
-            textReport.setHint(getString(R.string.reportText));
-            //Todo: Report Action (view, inflate, webservice)
+            if (type == FragmentListProjects.NORMAL) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                EditText textReport = new EditText(getActivity());
+                textReport.setHint(getString(R.string.reportText));
+                //Todo: Report Action (view, inflate, webservice)
+            } else if (type == FragmentListProjects.FAVOURITE) {
+
+            } else if (type == FragmentListProjects.MINE) {
+                realm.executeTransaction(realm1 -> {
+                    RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
+                            .findAll();
+                    OfferDetailsDataBase offerDetailsDataBases = loginDataBases.get(0).getOffers().get(position);
+                    offerDetailsDataBases.deleteFromRealm();
+                    realm1.commitTransaction();
+                });
+            }
+
 
         });
 
@@ -403,11 +428,11 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             @Override
             public void onResponse(Call<OfferDetailsJsonObject> call, retrofit2.Response<OfferDetailsJsonObject> response) {
                 OfferDetailsJsonObject Offers = response.body();
-                List<UserModel> Users = Offers.getOffers().getUsers();
-                if (Offers.getOffers() != null) {
+                List<UserModel> Users = Offers.getOffer().getUsers();
+                if (Offers.getOffer() != null) {
                     Gson gson = new Gson();
-                    Log.e("GSON", gson.toJson(Offers.getOffers()));
-                    fillOffers(Offers.getOffers());
+                    Log.e("GSON", gson.toJson(Offers.getOffer()));
+                    fillOffers(Offers.getOffer());
                 } else {
 
                 }
@@ -462,6 +487,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         num_likes.setText(String.valueOf(Offers.getNumLiks()));
         nun_contributor.setText(String.valueOf(Offers.getNumContributorTo()));
         if (Offers.getUsers() != null && Offers.getUsers().size() > 1) {
+            Log.e("U", Offers.getUsers().get(0).getImage() + " WWWWWw");
             conAdapter = new ContributerImages(getActivity(), Offers.getUsers());
             recCont.setAdapter(conAdapter);
         }

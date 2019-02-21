@@ -1,6 +1,5 @@
 package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
-import java.io.Serializable;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -21,11 +20,28 @@ public class OfferDetailsRequirmentDataBase extends RealmObject {
     public int ExperienceFrom ;
     public int ExperienceTo ;
     public String ExperienceDescriptions ;
+    public String Date ;
     public int UserId ;
     public Integer ExperienceTypeId;
     public RealmList<AttachmentModelDataBase> Attachments;
 
     public OfferDetailsRequirmentDataBase() {
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public RealmList<AttachmentModelDataBase> getAttachments() {
+        return Attachments;
+    }
+
+    public void setAttachments(RealmList<AttachmentModelDataBase> attachments) {
+        Attachments = attachments;
     }
 
     public void setId(int id) {

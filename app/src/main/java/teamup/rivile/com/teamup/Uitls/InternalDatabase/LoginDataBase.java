@@ -1,14 +1,15 @@
 package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class LoginDataBase extends RealmObject {
     UserDataBase User;
-    LikeDataBase Likes;
-    FavouriteDataBase Favorites;
-    OfferDetailsDataBase Offers;
+    RealmList<LikeModelDataBase> Likes;
+    RealmList<FavouriteDataBase> Favorites;
+    RealmList<OfferDetailsDataBase> Offers;
 
-    public LoginDataBase(UserDataBase user, LikeDataBase likes, FavouriteDataBase favorites, OfferDetailsDataBase offers) {
+    public LoginDataBase(UserDataBase user, RealmList<LikeModelDataBase> likes, RealmList<FavouriteDataBase> favorites, RealmList<OfferDetailsDataBase> offers) {
         User = user;
         Likes = likes;
         Favorites = favorites;
@@ -26,27 +27,27 @@ public class LoginDataBase extends RealmObject {
         User = user;
     }
 
-    public LikeDataBase getLikes() {
+    public RealmList<LikeModelDataBase> getLikes() {
         return Likes;
     }
 
-    public void setLikes(LikeDataBase likes) {
+    public void setLikes(RealmList<LikeModelDataBase> likes) {
         Likes = likes;
     }
 
-    public FavouriteDataBase getFavorites() {
+    public RealmList<FavouriteDataBase> getFavorites() {
         return Favorites;
     }
 
-    public void setFavorites(FavouriteDataBase favorites) {
+    public void setFavorites(RealmList<FavouriteDataBase> favorites) {
         Favorites = favorites;
     }
 
-    public OfferDetailsDataBase getOffers() {
+    public RealmList<OfferDetailsDataBase> getOffers() {
         return Offers;
     }
 
-    public void setOffers(OfferDetailsDataBase offers) {
+    public void setOffers(RealmList<OfferDetailsDataBase> offers) {
         Offers = offers;
     }
 }

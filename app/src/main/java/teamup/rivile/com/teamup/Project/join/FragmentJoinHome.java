@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -132,28 +133,40 @@ public class FragmentJoinHome extends Fragment {
     CheckBox egypt;
     EditText tagsInput;
     Button Join;
-    private ArrayList<Uri> imagesArrayUri, fileArrayUri;
+    private ArrayList<FilesModel> imagesArrayUri, fileArrayUri;
     List<FilesModel> filesModels;
 
     TextView categoryTextView;
 
     FloatingActionButton arrowAttachments, arrowCapitals, arrowDepartments, arrowTags;
     RelativeLayout viewPreview;
+    LinearLayout accept_reject;
 
     FilesModel currentFileModel;
 
     ChipsAdapter mTagsRecUserAdapter;
     RecyclerView tagsRec;
+    Button accept, reject;
 
     public static int mOfferId = -1;
 
+    public static OfferDetailsRequirment requirmentModel = null;
+
     private static MutableLiveData<OfferDetailsJsonObject> mOffer = new MutableLiveData<>();
+    RelativeLayout offerPref;
+    ImageView delete_req;
 
     //endregion variable declarations
 
     public static FragmentJoinHome setOfferId(int offerId) {
         mOfferId = offerId;
 
+        return new FragmentJoinHome();
+    }
+
+    public static FragmentJoinHome setRequirement(OfferDetailsRequirment requiremnt, int offerId) {
+        mOfferId = offerId;
+        requirmentModel = requiremnt;
         return new FragmentJoinHome();
     }
 
@@ -186,7 +199,9 @@ public class FragmentJoinHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        loadOffer();
+        if (requirmentModel == null) {
+            loadOffer();
+        }
 
         view = inflater.inflate(R.layout.fragment_join_home, container, false);
         /** Shrink and Expand Views */
@@ -198,6 +213,11 @@ public class FragmentJoinHome extends Fragment {
         arrowContributors = view.findViewById(R.id.arrowContributors);
         /** Input Views */
 
+        delete_req = view.findViewById(R.id.delete_req);
+        accept_reject = view.findViewById(R.id.accept_reject);
+        accept = view.findViewById(R.id.accept);
+        reject = view.findViewById(R.id.reject);
+        offerPref = view.findViewById(R.id.offerPref);
         project_name = view.findViewById(R.id.project_name);
 
         genderRadioButton = view.findViewById(R.id.rb_gender);
@@ -264,11 +284,15 @@ public class FragmentJoinHome extends Fragment {
         egypt = view.findViewById(R.id.egypt);
         tagsInput = view.findViewById(R.id.tagsInput);
         Join = view.findViewById(R.id.go);
-        imagesArrayUri = new ArrayList<>();
-        fileArrayUri = new ArrayList<>();
 
         if (filesModels == null) {
             filesModels = new ArrayList<>();
+        }
+        if (imagesArrayUri == null) {
+            imagesArrayUri = new ArrayList<>();
+        }
+        if (fileArrayUri == null) {
+            fileArrayUri = new ArrayList<>();
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -284,6 +308,198 @@ public class FragmentJoinHome extends Fragment {
         return view;
     }
 
+    private void Incoming(OfferDetailsRequirment model) {
+        if (model != null) {
+            cap.setVisibility(View.GONE);
+            offerPref.setVisibility(View.GONE);
+            tagSection.setVisibility(View.GONE);
+            dep.setVisibility(View.GONE);
+            tags.setVisibility(View.GONE);
+            CapSection.setVisibility(View.GONE);
+            DepSection.setVisibility(View.GONE);
+            tagSection.setVisibility(View.GONE);
+            cap.setVisibility(View.GONE);
+            accept_reject.setVisibility(View.VISIBLE);
+            delete_req.setVisibility(View.VISIBLE);
+
+            accept.setOnClickListener(v -> {
+                acceptOrReject(mOfferId, requirmentModel.getId(), true);
+            });
+
+            reject.setOnClickListener(v -> {
+                acceptOrReject(mOfferId, requirmentModel.getId(), false);
+            });
+
+            delete_req.setOnClickListener(v -> {
+                delete(requirmentModel.getId());
+            });
+
+            String availMoney = model.isNeedMoney() ?
+                    getString(R.string.yes) : getString(R.string.no);
+            availMoneyRadioButton.setText(availMoney);
+
+            if (model.isNeedMoney()) {
+                moneyInEditText.setEnabled(true);
+                moneyInEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!s.toString().isEmpty()) {
+                            mRequirementModel.setMoneyTo(Integer.valueOf(s.toString()));
+                        } else {
+                            moneyInEditText.setText("0");
+                            mRequirementModel.setMoneyTo(0);
+                        }
+                    }
+                });
+            } else moneyInEditText.setEnabled(false);
+        }
+
+        placeRadioButton.setText(model.isNeedPlace() ?
+                getString(R.string.yes) : getString(R.string.no));
+
+        if (!model.isNeedPlace() || model.isNeedPlaceStatus()) {
+            placeSection.setVisibility(View.GONE);
+        } else {
+            mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
+        }
+
+        placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
+                getString(R.string.avail) : getString(R.string.notAvail));
+
+        placeKindRadioButton.setText(model.isNeedPlaceType() ?
+                getString(R.string.owned) : getString(R.string.rent));
+
+        exRadioButton.setText(model.isNeedExperience() ?
+                getString(R.string.yes) : getString(R.string.no));
+
+        experienceEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().isEmpty()) {
+                    mRequirementModel.setExperienceTo(Integer.valueOf(s.toString()));
+                } else {
+                    experienceEditText.setText("0");
+                    mRequirementModel.setExperienceTo(0);
+                }
+            }
+        });
+        exDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mRequirementModel.setExperienceDescriptions(s.toString());
+            }
+        });
+
+//        API.BASE_URL
+        for (int i = 0; i < requirmentModel.getAttachmentModels().size(); i++) {
+            FilesModel filesModel = new FilesModel();
+            filesModel.setFileName(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource());
+            if (requirmentModel.getAttachmentModels().get(i).getType()) {
+                fileArrayUri.add(filesModel);
+            } else {
+                imagesArrayUri.add(filesModel);
+                Picasso.get().load(API.BASE_URL + requirmentModel.getAttachmentModels().get(i).getSource()).into(preview);
+            }
+        }
+        filesAdapter.notifyDataSetChanged();
+        imagesAdapter.notifyDataSetChanged();
+
+    }
+
+
+    private void acceptOrReject(int offerId, int requirementId, boolean accept) {
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        // Parsing any Media type file
+
+
+        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call;
+        if (accept) {
+            call = reg.acceptRequirement(offerId, requirementId, API.URL_TOKEN);
+        } else {
+            call = reg.rejectRequirement(offerId, requirementId, API.URL_TOKEN);
+        }
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String serverResponse = response.body();
+                if (serverResponse != null) {
+                    Toast.makeText(getActivity(), serverResponse, Toast.LENGTH_LONG).show();
+
+                } else {
+                    //textView.setText(serverResponse.toString());
+                    Log.e("Err", "Empty");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Log.e("Err", t.getMessage());
+            }
+        });
+    }
+
+    private void delete(int requirementId) {
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        // Parsing any Media type file
+
+
+        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call;
+        call = reg.deleteRequirement(requirementId, API.URL_TOKEN);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String serverResponse = response.body();
+                if (serverResponse != null) {
+                    Toast.makeText(getActivity(), serverResponse, Toast.LENGTH_LONG).show();
+
+                } else {
+                    //textView.setText(serverResponse.toString());
+                    Log.e("Err", "Empty");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Log.e("Err", t.getMessage());
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -292,7 +508,8 @@ public class FragmentJoinHome extends Fragment {
 
         mOffer.observe(this, offerDetailsJsonObject -> {
             if (offerDetailsJsonObject != null) {
-                OfferDetails details = offerDetailsJsonObject.getOffers();
+
+                OfferDetails details = offerDetailsJsonObject.getOffer();
                 project_name.setText(details.getName());
 
                 String profitType = null;
@@ -349,7 +566,7 @@ public class FragmentJoinHome extends Fragment {
             }
 
             if (offerDetailsJsonObject != null) {
-                OfferDetails details = offerDetailsJsonObject.getOffers();
+                OfferDetails details = offerDetailsJsonObject.getOffer();
                 OfferDetailsRequirment requirementModel = details.getRequirments().get(0);
                 if (requirementModel != null) {
                     placeRadioButton.setText(requirementModel.isNeedPlace() ?
@@ -411,7 +628,7 @@ public class FragmentJoinHome extends Fragment {
             }
 
             if (offerDetailsJsonObject != null) {
-                OfferDetails details = offerDetailsJsonObject.getOffers();
+                OfferDetails details = offerDetailsJsonObject.getOffer();
                 mOfferId = details.getId();
 
                 List<CapitalModel> capitalModels = details.getCapitals();
@@ -528,7 +745,7 @@ public class FragmentJoinHome extends Fragment {
         });
         // endregion
 
-        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, item -> {
+        imagesAdapter = new ImagesAdapter(getActivity(), imagesArrayUri, item -> {
             try {
                 viewPreview.setVisibility(View.VISIBLE);
                 currentFileModel = item;
@@ -539,7 +756,7 @@ public class FragmentJoinHome extends Fragment {
             }
         });
 
-        filesAdapter = new FilesAdapter(getActivity(), filesModels, item -> {
+        filesAdapter = new FilesAdapter(getActivity(), fileArrayUri, item -> {
             try {
                 File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + getFileName(item.getFileUri()));
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -552,28 +769,25 @@ public class FragmentJoinHome extends Fragment {
         });
         recFiles.setAdapter(filesAdapter);
 
-        if (filesModels.size() > 0) {
-            viewPreview.setVisibility(View.VISIBLE);
-        } else {
-            viewPreview.setVisibility(View.GONE);
-        }
 
         recImages.setAdapter(imagesAdapter);
 
-        if (filesModels.size() > 0) {
+        Incoming(requirmentModel);
+
+        if (imagesArrayUri.size() > 0) {
             viewPreview.setVisibility(View.VISIBLE);
         } else {
             viewPreview.setVisibility(View.GONE);
         }
 
         delete.setOnClickListener(v -> {
-            filesModels.remove(currentFileModel);
+            imagesArrayUri.remove(currentFileModel);
             imagesAdapter.notifyDataSetChanged();
-            if (filesModels.size() > 0) {
+            if (imagesArrayUri.size() > 0) {
                 viewPreview.setVisibility(View.VISIBLE);
                 try {
-                    currentFileModel = filesModels.get(0);
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filesModels.get(0).getFileUri());
+                    currentFileModel = imagesArrayUri.get(0);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(0).getFileUri());
                     preview.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -586,6 +800,22 @@ public class FragmentJoinHome extends Fragment {
 
         Join.setOnClickListener(v -> new Handler().post(() -> {
             if (mOfferId != -1) {
+                for (int i = 0; i < imagesArrayUri.size(); i++) {
+                    FilesModel model = new FilesModel();
+                    model.setFileName(imagesArrayUri.get(i).getFileName());
+                    model.setServerFileName(imagesArrayUri.get(i).getServerFileName());
+                    model.setFileUri(imagesArrayUri.get(i).getFileUri());
+                    model.setFileName(imagesArrayUri.get(i).getFileName());
+                    filesModels.add(model);
+                }
+                for (int i = 0; i < fileArrayUri.size(); i++) {
+                    FilesModel model = new FilesModel();
+                    model.setFileName(fileArrayUri.get(i).getFileName());
+                    model.setServerFileName(fileArrayUri.get(i).getServerFileName());
+                    model.setFileUri(fileArrayUri.get(i).getFileUri());
+                    model.setFileName(fileArrayUri.get(i).getFileName());
+                    filesModels.add(model);
+                }
                 if (!filesModels.isEmpty())
                     copyFilesUploadFilesJoinOffer();
                 else joinOffer();
@@ -692,7 +922,7 @@ public class FragmentJoinHome extends Fragment {
                         FilesModel s = new FilesModel(uri);
                         s.setFileName(getFileName(s.getFileUri()));
                         Log.e("File1", s.getFileName());
-                        filesModels.add(s);
+                        fileArrayUri.add(s);
 
                     } else {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -703,7 +933,7 @@ public class FragmentJoinHome extends Fragment {
                             FilesModel s = new FilesModel(uri);
                             s.setFileName(getFileName(s.getFileUri()));
                             Log.e("File2", s.getFileName());
-                            filesModels.add(s);
+                            fileArrayUri.add(s);
                             // !! You may need to resize the image if it's too large
 
                         }
@@ -713,9 +943,9 @@ public class FragmentJoinHome extends Fragment {
                     ClipData mClipData = data.getClipData();
                     if (mClipData == null) {
                         Uri uri = data.getData();
-                        imagesArrayUri.add(uri);
+                        imagesArrayUri.add(new FilesModel(uri));
                         Log.e("File3", uri + "");
-                        filesModels.add(new FilesModel(uri));
+//                        filesModels.add(new FilesModel(uri));
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                             bitmap = getResizedBitmap(bitmap, 65);
@@ -728,9 +958,9 @@ public class FragmentJoinHome extends Fragment {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            imagesArrayUri.add(uri);
+                            imagesArrayUri.add(new FilesModel(uri));
                             Log.e("File4", uri + "");
-                            filesModels.add(new FilesModel(uri));
+//                            filesModels.add(new FilesModel(uri));
                             // !! You may need to resize the image if it's too large
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -760,14 +990,14 @@ public class FragmentJoinHome extends Fragment {
                         Log.e("File5", tempUri + "");
                         // CALL THIS METHOD TO GET THE ACTUAL PATH
                         Toast.makeText(getActivity(), "Here " + getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
-                        filesModels.add(new FilesModel(tempUri));
+                        imagesArrayUri.add(new FilesModel(tempUri));
+//                        filesModels.add(new FilesModel(tempUri));
                     }
                 }
                 imagesAdapter.notifyDataSetChanged();
-                for (int i = 0; i < filesModels.size(); i++) {
-                    Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
-                }
+//                for (int i = 0; i < filesModels.size(); i++) {
+//                    Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
+//                }
             });
         }
 

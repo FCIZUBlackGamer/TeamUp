@@ -42,6 +42,8 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
             try {
                 if (!deals.get(position).getImage().isEmpty()) {
                     Picasso.get().load(deals.get(position).getImage()).into(holder.image);
+                } else {
+                    holder.image.setImageResource(R.drawable.ic_launcher);
                 }
             } catch (Exception e) {
 

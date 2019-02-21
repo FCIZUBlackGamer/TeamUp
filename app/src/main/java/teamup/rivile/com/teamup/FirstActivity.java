@@ -9,6 +9,9 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-        getSupportFragmentManager().beginTransaction().replace(R.id.first, new Login()).addToBackStack("FF").commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.first, new Login())
+                .addToBackStack("FF").commit();
     }
 }

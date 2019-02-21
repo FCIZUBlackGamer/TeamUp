@@ -26,6 +26,24 @@ public class OfferDetails implements Serializable {
     public Integer NumJoinOffer ;
     public List<UserModel> Users ;
     public String Address ;
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public Boolean getBlock() {
+        return Block;
+    }
+
+    public Boolean getDelete() {
+        return IsDelete;
+    }
+
+    public String Date ;
     public Integer Status ;
     public Boolean Block;
     public Boolean IsDelete;

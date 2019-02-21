@@ -4,20 +4,20 @@ import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 
 public class OfferDetailsJsonObject {
 
-    private OfferDetails Offers;
+    private OfferDetails Offer;
 
-    public OfferDetailsJsonObject(OfferDetails offers) {
-        Offers = offers;
+    public OfferDetailsJsonObject(OfferDetails offer) {
+        Offer = offer;
     }
 
     public OfferDetailsJsonObject() {
     }
 
-    public OfferDetails getOffers() {
-        return Offers;
+    public OfferDetails getOffer() {
+        return Offer;
     }
 
-    public void setOffers(OfferDetails offers) {
-        Offers = offers;
+    public void setOffer(OfferDetails offer) {
+        Offer = offer;
     }
 }

@@ -17,6 +17,37 @@ public class UserDataBase extends RealmObject {
     public String Mail ;
     public int NumProject ;
     public int CapitalId ;
+    public String IdentityNum ;
+    public String SocialId ;
+    public String IdentityImage ;
+
+    public Boolean getGender() {
+        return Gender;
+    }
+
+    public String getIdentityNum() {
+        return IdentityNum;
+    }
+
+    public void setIdentityNum(String identityNum) {
+        IdentityNum = identityNum;
+    }
+
+    public String getSocialId() {
+        return SocialId;
+    }
+
+    public void setSocialId(String socialId) {
+        SocialId = socialId;
+    }
+
+    public String getIdentityImage() {
+        return IdentityImage;
+    }
+
+    public void setIdentityImage(String identityImage) {
+        IdentityImage = identityImage;
+    }
 
     public UserDataBase() {
     }

@@ -17,10 +17,19 @@ public class RequirementDataBase extends RealmObject {
     public int ExperienceFrom ;
     public int ExperienceTo ;
     public String ExperienceDescriptions ;
+    public String Date ;
     public int UserId ;
     public Integer ExperienceTypeId;
 
     public RequirementDataBase() {
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
     }
 
     public void setId(int id) {

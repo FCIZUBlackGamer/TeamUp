@@ -3,31 +3,40 @@ package teamup.rivile.com.teamup.Uitls.APIModels;
 import java.io.Serializable;
 
 public class RequirmentModel implements Serializable {
-    public int Id ;
+    public Integer Id ;
     public boolean NeedPlaceStatus ;
     public boolean NeedPlaceType ;
     public boolean NeedPlace ;
     public String PlaceAddress ;
     public String PlaceDescriptions ;
     public boolean NeedMoney ;
-    public int MoneyFrom ;
-    public int MoneyTo ;
+    public Integer MoneyFrom ;
+    public Integer MoneyTo ;
     public String MoneyDescriptions ;
     public boolean NeedExperience ;
-    public int ExperienceFrom ;
-    public int ExperienceTo ;
+    public Integer ExperienceFrom ;
+    public Integer ExperienceTo ;
     public String ExperienceDescriptions ;
-    public int UserId ;
+    public String Date ;
+    public Integer UserId ;
     public Integer ExperienceTypeId;
 
     public RequirmentModel() {
     }
 
-    public void setId(int id) {
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
+    }
+
+    public void setId(Integer id) {
         Id = id;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         UserId = userId;
     }
 
@@ -35,11 +44,11 @@ public class RequirmentModel implements Serializable {
         ExperienceDescriptions = experienceDescriptions;
     }
 
-    public void setExperienceFrom(int experienceFrom) {
+    public void setExperienceFrom(Integer experienceFrom) {
         ExperienceFrom = experienceFrom;
     }
 
-    public void setExperienceTo(int experienceTo) {
+    public void setExperienceTo(Integer experienceTo) {
         ExperienceTo = experienceTo;
     }
 
@@ -51,11 +60,11 @@ public class RequirmentModel implements Serializable {
         MoneyDescriptions = moneyDescriptions;
     }
 
-    public void setMoneyFrom(int moneyFrom) {
+    public void setMoneyFrom(Integer moneyFrom) {
         MoneyFrom = moneyFrom;
     }
 
-    public void setMoneyTo(int moneyTo) {
+    public void setMoneyTo(Integer moneyTo) {
         MoneyTo = moneyTo;
     }
 
@@ -87,31 +96,31 @@ public class RequirmentModel implements Serializable {
         PlaceDescriptions = placeDescriptions;
     }
 
-    public int getId() {
+    public Integer getId() {
         return Id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return UserId;
     }
 
-    public int getExperienceFrom() {
+    public Integer getExperienceFrom() {
         return ExperienceFrom;
     }
 
-    public int getExperienceTo() {
+    public Integer getExperienceTo() {
         return ExperienceTo;
     }
 
-    public int getExperienceTypeId() {
+    public Integer getExperienceTypeId() {
         return ExperienceTypeId;
     }
 
-    public int getMoneyFrom() {
+    public Integer getMoneyFrom() {
         return MoneyFrom;
     }
 
-    public int getMoneyTo() {
+    public Integer getMoneyTo() {
         return MoneyTo;
     }
 

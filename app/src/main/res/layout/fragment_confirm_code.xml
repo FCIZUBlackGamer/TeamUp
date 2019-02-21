@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl">
@@ -18,7 +17,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="80dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_password"
+            android:src="@drawable/ic_tick"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,12 +30,12 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/medium"
-            android:gravity="start"
+            android:gravity="center"
             android:paddingStart="20dp"
-            android:text="@string/forgotPassword"
+            android:text="@string/gotoEmail"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorBlue"
-            android:textSize="20dp"
+            android:textSize="22dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -48,48 +47,94 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/medium"
-            android:gravity="start"
+            android:gravity="center"
             android:paddingStart="30dp"
             android:paddingEnd="20dp"
-            android:text="@string/resetPassword"
+            android:text="@string/writeTheCode"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/textColorBlue"
-            android:textSize="15dp"
+            android:textSize="22dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/medium"
-            android:gravity="start"
-            android:text="@string/email"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/textColorGray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="382dp" />
-
-        <EditText
+        <LinearLayout
             android:id="@+id/ed_email"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_corner_edit_text"
-            android:fontFamily="@font/medium"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:padding="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textView9">
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n6"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n5"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n4"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n3"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n2"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="53dp"
+                android:layout_height="52dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:focusable="true"
+                android:fontFamily="@font/medium"
+                android:inputType="number"
+                android:maxLines="1"
+                android:id="@+id/n1"
+                android:padding="8dp" />
+        </LinearLayout>
+
 
         <!--<TextView-->
         <!--android:id="@+id/textView13"-->
@@ -134,11 +179,11 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_corner_button_blue"
             android:fontFamily="@font/medium"
-            android:text="@string/recover"
-            android:textSize="30sp"
-            android:textStyle="bold"
+            android:text="@string/confirm"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorWhite"
+            android:textSize="30sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/ed_email"
             app:layout_constraintStart_toStartOf="@+id/ed_email"
@@ -151,9 +196,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_left_arrow"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_left_arrow" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/resend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_cloud_reload"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

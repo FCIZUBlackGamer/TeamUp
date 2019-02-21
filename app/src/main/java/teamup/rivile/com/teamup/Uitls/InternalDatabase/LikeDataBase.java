@@ -1,37 +1,19 @@
 package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class LikeDataBase extends RealmObject {
-    public int Id ;
-    public int UserId ;
-    public int OfferId ;
+    RealmList<LikeModelDataBase> Likes;
 
     public LikeDataBase() {
     }
 
-    public void setId(int id) {
-        Id = id;
+    public RealmList<LikeModelDataBase> getLikes() {
+        return Likes;
     }
 
-    public void setUserId(int userId) {
-        UserId = userId;
+    public void setLikes(RealmList<LikeModelDataBase> likes) {
+        Likes = likes;
     }
-
-    public void setOfferId(int offerId) {
-        OfferId = offerId;
-    }
-
-    public int getId() {
-        return Id;
-    }
-
-    public int getUserId() {
-        return UserId;
-    }
-
-    public int getOfferId() {
-        return OfferId;
-    }
-
 }

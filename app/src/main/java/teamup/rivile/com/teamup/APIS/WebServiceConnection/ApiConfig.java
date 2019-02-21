@@ -14,7 +14,6 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.Department.Department;
 import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
@@ -22,7 +21,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public interface ApiConfig {
     @Multipart
@@ -47,7 +46,11 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.LOGIN_URL)
-    Call<UserModel> login(@Field("User") String User, @Field("token") String token);
+    Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.SOCIAL_LOGIN_URL)
+    Call<LoginDataBase> loginFb(@Field("User") String User, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.REGISTER_URL)
@@ -58,12 +61,44 @@ public interface ApiConfig {
     Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
 
     @FormUrlEncoded
+    @POST(API.ListRequirmentByUserId_URL)
+    Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ForgetPassword_URL)
+    Call<Integer> ForgetPassword(@Field("Mail") String Mail, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.CheakCode_URL)
+    Call<Integer> CheakCode(@Field("Code") String Code, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.CheakCode_URL)
+    Call<LoginDataBase> SavePasswordLogin(@Field("Id") int Id, @Field("Password") String Password, @Field("token") String token);
+
+    @FormUrlEncoded
     @POST(API.LOAD_DEPARTMENTS_URL)
     Call<DepartmentJson> getCategory(@Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)
     Call<OfferDetailsJsonObject> offerDetails(@Field("Id") int Id, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ACCEPT_JOIN_OFFER_URL)
+    Call<String> acceptRequirement(@Field("OfferId") int OfferId, @Field("RequirementId") int RequirementId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.DeleteRequirement_URL)
+    Call<String> deleteRequirement(@Field("Id") int Id, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.REFUSE_JOIN_OFFER_URL)
+    Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("RequirementId") int RequirementId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.SelectOffer_URL)
+    Call<Offer> SelectOffer(@Field("UserId") int UserId, @Field("token") String token);
 
 
     @FormUrlEncoded

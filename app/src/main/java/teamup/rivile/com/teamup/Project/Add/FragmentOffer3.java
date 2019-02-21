@@ -111,8 +111,8 @@ public class FragmentOffer3 extends Fragment {
     CheckBox egypt;
     EditText tagsInput;
     Button go;
-    private ArrayList<Uri> imagesArrayUri, fileArrayUri;
-    List<FilesModel> filesModels;
+    private ArrayList<FilesModel> imagesArrayUri, fileArrayUri;
+    List<FilesModel> finalFileModel;
 
     View Camera_view;
     ImageView close, minimize, cam, gal;
@@ -175,11 +175,15 @@ public class FragmentOffer3 extends Fragment {
         egypt = view.findViewById(R.id.egypt);
         tagsInput = view.findViewById(R.id.tagsInput);
         go = view.findViewById(R.id.go);
-        imagesArrayUri = new ArrayList<>();
-        fileArrayUri = new ArrayList<>();
 
-        if (filesModels == null) {
-            filesModels = new ArrayList<>();
+        if (finalFileModel == null) {
+            finalFileModel = new ArrayList<>();
+        }
+        if (imagesArrayUri == null) {
+            imagesArrayUri = new ArrayList<>();
+        }
+        if (fileArrayUri == null) {
+            fileArrayUri = new ArrayList<>();
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -200,7 +204,7 @@ public class FragmentOffer3 extends Fragment {
 
         setUpRecyclerViews();
 
-        imagesAdapter = new ImagesAdapter(getActivity(), filesModels, item -> {
+        imagesAdapter = new ImagesAdapter(getActivity(), imagesArrayUri, item -> {
             try {
                 viewPreview.setVisibility(View.VISIBLE);
                 currentFileModel = item;
@@ -211,7 +215,7 @@ public class FragmentOffer3 extends Fragment {
             }
         });
 
-        filesAdapter = new FilesAdapter(getActivity(), filesModels, item -> {
+        filesAdapter = new FilesAdapter(getActivity(), fileArrayUri, item -> {
             try {
                 File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + getFileName(item.getFileUri()));
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -224,20 +228,20 @@ public class FragmentOffer3 extends Fragment {
         });
         recFiles.setAdapter(filesAdapter);
 
-        if (filesModels.size() > 0) {
+        if (imagesArrayUri.size() > 0) {
             viewPreview.setVisibility(View.VISIBLE);
         } else {
             viewPreview.setVisibility(View.GONE);
         }
 
         delete.setOnClickListener(v -> {
-            filesModels.remove(currentFileModel);
+            imagesArrayUri.remove(currentFileModel);
             imagesAdapter.notifyDataSetChanged();
-            if (filesModels.size() > 0) {
+            if (imagesArrayUri.size() > 0) {
                 viewPreview.setVisibility(View.VISIBLE);
                 try {
-                    currentFileModel = filesModels.get(0);
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filesModels.get(0).getFileUri());
+                    currentFileModel = imagesArrayUri.get(0);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(0).getFileUri());
                     preview.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -337,7 +341,24 @@ public class FragmentOffer3 extends Fragment {
                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
             } else {
                 //TODO: start uploading and adding...
-                if (!filesModels.isEmpty())
+                for (int i = 0; i < imagesArrayUri.size(); i++) {
+                    FilesModel model = new FilesModel();
+                    model.setFileName(imagesArrayUri.get(i).getFileName());
+                    model.setServerFileName(imagesArrayUri.get(i).getServerFileName());
+                    model.setFileUri(imagesArrayUri.get(i).getFileUri());
+                    model.setFileName(imagesArrayUri.get(i).getFileName());
+                    finalFileModel.add(model);
+                }
+                for (int i = 0; i < fileArrayUri.size(); i++) {
+                    FilesModel model = new FilesModel();
+                    model.setFileName(fileArrayUri.get(i).getFileName());
+                    model.setServerFileName(fileArrayUri.get(i).getServerFileName());
+                    model.setFileUri(fileArrayUri.get(i).getFileUri());
+                    model.setFileName(fileArrayUri.get(i).getFileName());
+                    finalFileModel.add(model);
+                }
+
+                if (!finalFileModel.isEmpty())
                     copyFilesUploadFilesAddOffer();
                 else addOffer();
             }
@@ -577,7 +598,7 @@ public class FragmentOffer3 extends Fragment {
                         //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
                         FilesModel s = new FilesModel(uri);
                         s.setFileName(getFileName(s.getFileUri()));
-                        filesModels.add(s);
+                        fileArrayUri.add(s);
 
                     } else {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -587,7 +608,7 @@ public class FragmentOffer3 extends Fragment {
                             //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
                             FilesModel s = new FilesModel(uri);
                             s.setFileName(getFileName(s.getFileUri()));
-                            filesModels.add(s);
+                            fileArrayUri.add(s);
                             // !! You may need to resize the image if it's too large
 
                         }
@@ -597,8 +618,8 @@ public class FragmentOffer3 extends Fragment {
                     ClipData mClipData = data.getClipData();
                     if (mClipData == null) {
                         Uri uri = data.getData();
-                        imagesArrayUri.add(uri);
-                        filesModels.add(new FilesModel(uri));
+                        imagesArrayUri.add(new FilesModel(uri));
+//                        finalFileModel.add(new FilesModel(uri));
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                             bitmap = getResizedBitmap(bitmap, 65);
@@ -611,8 +632,8 @@ public class FragmentOffer3 extends Fragment {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            imagesArrayUri.add(uri);
-                            filesModels.add(new FilesModel(uri));
+                            imagesArrayUri.add(new FilesModel(uri));
+//                            finalFileModel.add(new FilesModel(uri));
                             // !! You may need to resize the image if it's too large
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -625,7 +646,7 @@ public class FragmentOffer3 extends Fragment {
 
                         }
                     }
-                    Log.e("filesModels Length", filesModels.size() + "");
+                    Log.e("finalFileModel Length", finalFileModel.size() + "");
                 } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                     bitmap = getResizedBitmap(bitmap, 65);
@@ -642,12 +663,12 @@ public class FragmentOffer3 extends Fragment {
                         // CALL THIS METHOD TO GET THE ACTUAL PATH
                         Toast.makeText(getActivity(), "Here " + getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
 
-                        filesModels.add(new FilesModel(tempUri));
+                        imagesArrayUri.add(new FilesModel(tempUri));
                     }
                 }
                 imagesAdapter.notifyDataSetChanged();
-                for (int i = 0; i < filesModels.size(); i++) {
-                    Log.e("Index " + i, filesModels.get(i).getFileUri().toString());
+                for (int i = 0; i < imagesArrayUri.size(); i++) {
+                    Log.e("Index " + i, imagesArrayUri.get(i).getFileUri().toString());
                 }
             });
         }
@@ -730,8 +751,9 @@ public class FragmentOffer3 extends Fragment {
 //    }
 
     private void copyFilesUploadFilesAddOffer() {
-        for (int i = filesModels.size() - 1; i >= 0; --i) {
-            Uri uri = filesModels.get(i).getFileUri();
+
+        for (int i = finalFileModel.size() - 1; i >= 0; --i) {
+            Uri uri = finalFileModel.get(i).getFileUri();
 
             try (Cursor cursor = getContext().getContentResolver()
                     .query(uri, null, null, null, null, null)) {
@@ -743,7 +765,7 @@ public class FragmentOffer3 extends Fragment {
 
                     if (copyFileToProjectDirectory(uri, displayName, i)) {
                         //Load New File Location
-                        uri = filesModels.get(i).getFileUri();
+                        uri = finalFileModel.get(i).getFileUri();
                         Log.v("NewFileUri", uri.getPath());
 
                         // Map is used to multipart the file using okhttp3.RequestBody
@@ -775,7 +797,7 @@ public class FragmentOffer3 extends Fragment {
                                                 )
                                         );
 
-                                        if (mAttachmentModelArrayList.size() == filesModels.size()) {
+                                        if (mAttachmentModelArrayList.size() == finalFileModel.size()) {
                                             addOffer();
                                         } else {
                                             Toast.makeText(getContext(), "mAttachmentModelArrayList ERROR", Toast.LENGTH_SHORT).show();
@@ -830,7 +852,7 @@ public class FragmentOffer3 extends Fragment {
             }
 
             Log.d("MODELSS", "File Copied Successfully.");
-            filesModels.get(i).setFileUri(Uri.parse(destFile.getPath()));
+            finalFileModel.get(i).setFileUri(Uri.parse(destFile.getPath()));
             Log.v("NewFileUrl", destFile.getPath());
 
         } catch (IOException e) {

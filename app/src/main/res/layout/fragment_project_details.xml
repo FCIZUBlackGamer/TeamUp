@@ -87,7 +87,8 @@
                         android:layout_marginTop="8dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@android:drawable/ic_delete" />
+                        app:srcCompat="@android:drawable/ic_dialog_alert"
+                        android:background="@color/colorAccent"/>
 
 
                 </android.support.constraint.ConstraintLayout>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:text="@string/pressHere">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
@@ -22,7 +22,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_margin="10dp"
+                android:id="@+id/offerPref">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/user_image"
@@ -30,9 +31,6 @@
                     android:layout_height="60dp"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_dashboard_black_24dp" />
-
-
-                .
 
                 <TextView
                     android:id="@+id/project_name"
@@ -49,6 +47,14 @@
                     android:textDirection="rtl"
                     android:textSize="22sp"
                     tools:text="@string/pressHere" />
+
+                <ImageView
+                    android:id="@+id/delete_req"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundBlue"
+                    android:visibility="gone"
+                    app:srcCompat="@android:drawable/ic_menu_delete" />
 
             </RelativeLayout>
 
@@ -979,6 +985,29 @@
                         android:text="Join"
                         android:textColor="#fff" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/accept_reject"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/accept"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/accept"/>
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/reject"
+                        android:fontFamily="@font/medium"
+                        android:layout_weight="1"
+                        android:text="@string/reject"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

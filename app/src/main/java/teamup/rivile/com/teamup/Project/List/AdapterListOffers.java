@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,11 +18,15 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
@@ -30,11 +35,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     Context context;
     List<Offers> offersList;
     FragmentManager fragmentManager;
+    Realm realm;
+    int ty;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, Helper helper) {
+    public AdapterListOffers(Context context, List<Offers> talabats, int type, Helper helper) {
         this.context = context;
         this.offersList = talabats;
-
+        ty = type;
         mHelper = helper;
     }
 
@@ -43,12 +50,16 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     public Vholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_project, parent, false);
         fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+        realm = Realm.getDefaultInstance();
         return new Vholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
+        if (ty == FragmentListProjects.NORMAL) {
+            holder.delete.setVisibility(View.VISIBLE);
+        }
         holder.project_name.setText(offersList.get(position).getName());
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
@@ -63,6 +74,18 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             }
         }
 
+        holder.delete.setOnClickListener(v -> {
+            realm.executeTransaction(realm1 -> {
+                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
+                        .findAll();
+                OfferDetailsDataBase offerDetailsDataBases = loginDataBases.get(0).getOffers().get(position);
+                offerDetailsDataBases.deleteFromRealm();
+                realm1.commitTransaction();
+                offersList.remove(position);
+                notifyDataSetChanged();
+            });
+        });
+
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
             fragmentManager.beginTransaction()
@@ -71,17 +94,17 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.con.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.project_desc.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId()))
+                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
@@ -110,10 +133,12 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         TextView like, share, make_offer;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
+        ImageView delete;
 
         public Vholder(View itemView) {
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
+            delete = itemView.findViewById(R.id.delete);
             project_desc = itemView.findViewById(R.id.project_desc);
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);

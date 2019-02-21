@@ -13,12 +13,18 @@
     <string name="title_dashboard" translatable="false">Dashboard</string>
     <string name="title_notifications" translatable="false">Notifications</string>
 
+    <string-array name="test">
+        <item>على</item>
+        <item>على</item>
+        <item>على</item>
+    </string-array>
+
     <string name="saw_intro_preference_key" translatable="false">saw_introduction</string>
     <string name="shared_preferences_name" translatable="false">preference</string>
     <string name="title_activity_go_map" tools:ignore="MissingTranslation">Map</string>
     <string name="log_in" translatable="false">"تسجيل الدخول"</string>
-    <string name="facebook_app_id" translatable="false">524668391365433</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb524668391365433</string>
+    <string name="facebook_app_id" translatable="false">424047931700835</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb424047931700835</string>
     <string name="already_have_an_account" translatable="false">"لديك حساب بالفعل ؟"</string>
     <string name="join_us_now" translatable="false">إشترك معنا الآن</string>
     <string name="join_us_now_1" translatable="false">سجل حساب الآن وابدأ بالإستثمار</string>
@@ -117,19 +123,36 @@
     <string name="location_required" translatable="false">تحديد الموقع مطلوب</string>
     <string name="dept_error" translatable="false">إختيار القسم مطلوب</string>
     <string name="cap_required" translatable="false">إختر محافظة واحدة علي الأقل</string>
-    <string name="noSpAddress">لا يوجد عنوان محدد</string>
-    <string name="noDesPlace">لا يوجد وصف للمكان محدد</string>
-    <string name="years_of_experience">عدد سنين الخبرة</string>
-    <string name="money_participant">كمية رأس المال المشارك بها</string>
-    <string name="finishFileDownload">تم تحميل الملف تستطيع تصفحه الأن</string>
-    <string name="downloadRunningFiles">جارى تحميل ملفات المشروع</string>
-    <string name="noSapce">لا توجد مساحه للتحميل</string>
-    <string name="reportText">ادخل محتوى الشكوة</string>
-    <string name="hi">مرحبا!</string>
-    <string name="happyHome">نحن سعداء بعودتك</string>
-    <string name="loginOrSignup">قم بتسجيل الدخول أو انشأ حساب جديد</string>
-    <string name="forgotPassword">هل نسيت كلمة المرور الخاصة بك؟</string>
-    <string name="recoverPassword">استعادة كلمة المرور</string>
-    <string name="resetPassword">لا تقلق فقط قم بكتابة البريد الإلكترونى الخاص بحسابك ﻻسترجاع كلمة المرور عبر البريد الإلكترونى</string>
-    <string name="recover">استرجاع</string>
+    <string name="noSpAddress" translatable="false">لا يوجد عنوان محدد</string>
+    <string name="noDesPlace" translatable="false">لا يوجد وصف للمكان محدد</string>
+    <string name="years_of_experience" translatable="false">عدد سنين الخبرة</string>
+    <string name="money_participant" translatable="false">كمية رأس المال المشارك بها</string>
+    <string name="finishFileDownload" translatable="false">تم تحميل الملف تستطيع تصفحه الأن</string>
+    <string name="downloadRunningFiles" translatable="false">جارى تحميل ملفات المشروع</string>
+    <string name="noSapce" translatable="false">لا توجد مساحه للتحميل</string>
+    <string name="reportText" translatable="false">ادخل محتوى الشكوة</string>
+    <string name="hi" translatable="false">مرحبا!</string>
+    <string name="happyHome" translatable="false">نحن سعداء بعودتك</string>
+    <string name="loginOrSignup" translatable="false">قم بتسجيل الدخول أو انشأ حساب جديد</string>
+    <string name="forgotPassword" translatable="false">هل نسيت كلمة المرور الخاصة بك؟</string>
+    <string name="recoverPassword" translatable="false">استعادة كلمة المرور</string>
+    <string name="resetPassword" translatable="false">لا تقلق فقط قم بكتابة البريد الإلكترونى الخاص بحسابك ﻻسترجاع كلمة المرور عبر البريد الإلكترونى</string>
+    <string name="recover" translatable="false">استرجاع</string>
+    <string name="home" translatable="false">الرئيسية</string>
+    <string name="goMap" translatable="false">جو ماب</string>
+    <string name="savedProjects" translatable="false">المشاريع المسجلة</string>
+    <string name="perposedOffers" translatable="false">العروض المقترحة</string>
+    <string name="favourite" translatable="false">المفضلة</string>
+    <string name="profileSettings" translatable="false">إعدادات الحساب الشخصى</string>
+    <string name="logout" translatable="false">تسجيل الخروج</string>
+    <string name="noDataYet">لا توجد بيانات متوفرة الأن</string>
+    <string name="details">التفاصيل</string>
+    <string name="accept">قبول</string>
+    <string name="reject">رفض</string>
+    <string name="gotoEmail">راجع البريد الإلكترونى</string>
+    <string name="writeTheCode">وأكتب رمز التفعيل الخاص</string>
+    <string name="confirm">تأكيد</string>
+    <string name="write">قم بكتابة</string>
+    <string name="newPassword">كلمة المرور الجديدة</string>
+    <string name="confirmPassword">تأكيد كلمة المرور</string>
 </resources>

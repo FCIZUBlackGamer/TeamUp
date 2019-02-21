@@ -15,6 +15,55 @@ public class UserModel {
     public String Mail ;
     public Integer NumProject ;
     public Integer CapitalId ;
+    public String IdentityNum ;
+    public String SocialId ;
+    public String IdentityImage ;
+    public Boolean IsCoded ;
+    public String Code ;
+
+    public Boolean getCoded() {
+        return IsCoded;
+    }
+
+    public void setCoded(Boolean coded) {
+        IsCoded = coded;
+    }
+
+    public String getCode() {
+        return Code;
+    }
+
+    public void setCode(String code) {
+        Code = code;
+    }
+
+    public Boolean getGender() {
+        return Gender;
+    }
+
+    public String getIdentityNum() {
+        return IdentityNum;
+    }
+
+    public void setIdentityNum(String identityNum) {
+        IdentityNum = identityNum;
+    }
+
+    public String getSocialId() {
+        return SocialId;
+    }
+
+    public void setSocialId(String socialId) {
+        SocialId = socialId;
+    }
+
+    public String getIdentityImage() {
+        return IdentityImage;
+    }
+
+    public void setIdentityImage(String identityImage) {
+        IdentityImage = identityImage;
+    }
 
     public UserModel() {
     }

@@ -28,7 +28,13 @@
 
             <!-- TODO: Make this as Launcher Activity -->
         </activity>
-        <activity android:name=".FirstActivity"/>
+        <activity android:name=".FirstActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DrawerActivity"
             android:label="@string/title_activity_drawer"
@@ -36,11 +42,8 @@
         <activity
             android:name=".Introduction.IntroductionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

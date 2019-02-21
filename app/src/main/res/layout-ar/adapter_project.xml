@@ -25,7 +25,7 @@
                 android:id="@+id/user_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <LinearLayout
@@ -33,22 +33,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@id/user_image"
+                android:layout_toEndOf="@id/user_image"
                 android:gravity="end"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/project_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
-                    android:layout_marginTop="10dp"
-                    android:maxLength="40"
-                    android:maxLines="1"
-                    android:text="مشروع مزرعه دواجن "
-                    android:textColor="#000"
-                    android:textDirection="rtl"
-                    android:textSize="18sp" />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="invisible"
+                        android:layout_marginEnd="8dp"
+                        android:src="@android:drawable/ic_delete"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/project_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:text="مشروع مزرعه دواجن "
+                        android:textColor="#000"
+                        android:textDirection="rtl"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:drawableEnd="@drawable/ic_placeholder"
+                        android:drawableStart="@drawable/ic_placeholder"
                         android:fontFamily="@font/medium"
                         android:gravity="center_vertical"
                         android:maxLength="50"
@@ -92,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/medium"
-                    android:gravity="end"
+                    android:gravity="start"
                     android:maxLength="50"
                     android:text="المشاركين فى المشروع"
                     android:textColor="#000"
@@ -116,7 +137,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_dd"
+                    android:drawableEnd="@drawable/ic_dd"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
                     android:maxLength="6"
@@ -128,7 +150,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_like"
+                    android:drawableEnd="@drawable/ic_like"
+                    android:drawablePadding="5dp"
                     android:fontFamily="@font/medium"
                     android:gravity="center"
                     android:maxLength="6"
@@ -165,7 +188,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableEnd="@drawable/ic_favorite_border_black_24dp"
+                android:drawableStart="@drawable/ic_favorite_border_black_24dp"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"
@@ -177,7 +200,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableEnd="@drawable/ic_chat"
+                android:drawableStart="@drawable/ic_chat"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"
@@ -188,7 +211,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableEnd="@drawable/ic_share"
+                android:drawableStart="@drawable/ic_share"
                 android:drawablePadding="10dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center_vertical"

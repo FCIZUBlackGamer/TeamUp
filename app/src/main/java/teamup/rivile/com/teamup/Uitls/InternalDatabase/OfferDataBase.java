@@ -25,6 +25,7 @@ public class OfferDataBase extends RealmObject {
     public int NumLiks ;
     public int NumJoinOffer ;
     public String Address ;
+    public String Date ;
     public int Status ;
     public RealmList<RequirementDataBase> Requirments ;
     public RealmList<CapitalDataBase> Capitals ;
@@ -33,6 +34,14 @@ public class OfferDataBase extends RealmObject {
 
 
     public OfferDataBase() {
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    public void setDate(String date) {
+        Date = date;
     }
 
     public void setStatus(int status) {
