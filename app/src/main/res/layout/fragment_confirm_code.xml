@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl">
@@ -15,27 +16,26 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_tick"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/back" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/medium"
             android:gravity="center"
-            android:paddingStart="20dp"
             android:text="@string/gotoEmail"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorBlue"
-            android:textSize="22dp"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -44,96 +44,132 @@
             android:id="@+id/textView9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/medium"
             android:gravity="center"
-            android:paddingStart="30dp"
-            android:paddingEnd="20dp"
             android:text="@string/writeTheCode"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/textColorBlue"
-            android:textSize="22dp"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/ed_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:gravity="center"
             android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9">
 
             <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
-                android:inputType="number"
-                android:maxLines="1"
                 android:id="@+id/n6"
-                android:padding="8dp" />
-
-            <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:fontFamily="@font/medium"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/n5"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
                 android:id="@+id/n5"
-                android:padding="8dp" />
-
-            <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:fontFamily="@font/medium"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/n6"
+                app:layout_constraintEnd_toStartOf="@+id/n4"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/n6"
+                app:layout_constraintTop_toTopOf="@+id/n6" />
+
+            <EditText
                 android:id="@+id/n4"
-                android:padding="8dp" />
-
-            <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:fontFamily="@font/medium"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/n5"
+                app:layout_constraintEnd_toStartOf="@+id/n3"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/n5"
+                app:layout_constraintTop_toTopOf="@+id/n5" />
+
+            <EditText
                 android:id="@+id/n3"
-                android:padding="8dp" />
-
-            <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:fontFamily="@font/medium"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
-                android:id="@+id/n2"
-                android:padding="8dp" />
+                app:layout_constraintBottom_toBottomOf="@+id/n4"
+                app:layout_constraintEnd_toStartOf="@+id/n2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/n4"
+                app:layout_constraintTop_toTopOf="@+id/n4" />
 
             <EditText
-                android:layout_width="53dp"
-                android:layout_height="52dp"
-                android:layout_margin="5dp"
+                android:id="@+id/n2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rounded_corner_edit_text"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/n3"
+                app:layout_constraintEnd_toStartOf="@+id/n1"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/n3"
+                app:layout_constraintTop_toTopOf="@+id/n3" />
+
+            <EditText
+                android:id="@+id/n1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:focusable="true"
                 android:fontFamily="@font/medium"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
-                android:id="@+id/n1"
-                android:padding="8dp" />
-        </LinearLayout>
+                app:layout_constraintBottom_toBottomOf="@+id/n2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/n2"
+                app:layout_constraintTop_toTopOf="@+id/n2" />
+        </android.support.constraint.ConstraintLayout>
 
 
         <!--<TextView-->
@@ -194,20 +230,20 @@
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_left_arrow"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_right_arrow"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/resend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:src="@drawable/ic_cloud_reload"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
