@@ -44,7 +44,7 @@ public class DrawerActivity extends AppCompatActivity
     Toolbar toolbar;
     static DrawerLayout drawer;
 
-    FloatingActionButton fab;
+    static FloatingActionButton fab;
     MovableFloatingActionButton movableFloatingActionButton;
     FloatingActionButton civ_filter;
 
@@ -268,6 +268,14 @@ public class DrawerActivity extends AppCompatActivity
         Whome = whome;
     }
 
+    public static void HideFab() {
+        fab.setVisibility(View.GONE);
+    }
+
+    public static void ShowFab() {
+        fab.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -341,8 +349,8 @@ public class DrawerActivity extends AppCompatActivity
             realm.executeTransaction(realm1 -> {
                 RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
                 results.deleteAllFromRealm();
-                finish();
-                startActivity(new Intent(DrawerActivity.this, Login.class));
+//                finish();
+                startActivity(new Intent(DrawerActivity.this, FirstActivity.class));
             });
         }
 

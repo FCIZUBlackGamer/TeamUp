@@ -156,4 +156,5 @@
     <string name="newPassword">كلمة المرور الجديدة</string>
     <string name="confirmPassword">تأكيد كلمة المرور</string>
     <string name="upload_attachment_failed_try_again">فشل تحميل الملحقات. حاول مرة أخري.</string>
+    <string name="bio">نبذة مختصرة</string>
 </resources>

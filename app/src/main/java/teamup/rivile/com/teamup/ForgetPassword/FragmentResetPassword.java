@@ -25,7 +25,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Login;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentResetPassword extends Fragment {
@@ -44,7 +43,7 @@ public class FragmentResetPassword extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_reset_password, container, false);
-        ed_pass = view.findViewById(R.id.ed_password);
+        ed_pass = view.findViewById(R.id.til_password);
         ed_conPass = view.findViewById(R.id.ed_conPassword);
         reset = view.findViewById(R.id.btn_save);
         back = view.findViewById(R.id.back);

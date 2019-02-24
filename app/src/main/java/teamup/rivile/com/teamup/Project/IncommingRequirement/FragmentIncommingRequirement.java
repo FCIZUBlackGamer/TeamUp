@@ -62,6 +62,7 @@ public class FragmentIncommingRequirement extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).HideFab();
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
@@ -80,6 +81,7 @@ public class FragmentIncommingRequirement extends Fragment {
             adapter = new AdapterListRequirement(getActivity(), offers);
             recyclerView.setAdapter(adapter);
         }else {
+            ((DrawerActivity) getActivity()).Hide();
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame, new FragmentEmpty()).commit();
             project_requests.setVisibility(View.GONE);
@@ -119,6 +121,7 @@ public class FragmentIncommingRequirement extends Fragment {
 //                trans.commit();
 //                manager.popBackStack();
 
+            ((DrawerActivity) getActivity()).Hide();
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame, new FragmentEmpty()).commit();
             project_requests.setVisibility(View.GONE);

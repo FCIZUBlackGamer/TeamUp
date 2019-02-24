@@ -104,6 +104,10 @@ public interface ApiConfig {
     @POST(API.SelectOffer_URL)
     Call<Offer> SelectOffer(@Field("UserId") int UserId, @Field("token") String token);
 
+    @FormUrlEncoded
+    @POST(API.EDIT_PROFILE_URL)
+    Call<String> editProfile(@Field("User") String User, @Field("token") String token);
+
 
     @FormUrlEncoded
     @POST(API.LIKE_URL)

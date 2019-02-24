@@ -253,7 +253,7 @@ public class Login extends Fragment {
         tv_login = view.findViewById(R.id.tv_login);
         btn_save = view.findViewById(R.id.btn_save);
         ed_email = view.findViewById(R.id.ed_email);
-        ed_password = view.findViewById(R.id.ed_password);
+        ed_password = view.findViewById(R.id.til_password);
         signInButton = view.findViewById(R.id.btn_login_google);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         loginButton = view.findViewById(R.id.btn_login_facebook);

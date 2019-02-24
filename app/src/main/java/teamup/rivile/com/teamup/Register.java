@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
@@ -56,7 +55,7 @@ public class Register extends AppCompatActivity {
         ed_full_name = findViewById(R.id.ed_full_name);
         ed_email = findViewById(R.id.ed_email);
 //        ed_user_name = findViewById(R.id.ed_user_name);
-        ed_password = findViewById(R.id.ed_password);
+        ed_password = findViewById(R.id.til_password);
     }
 
     private void register(UserModel userModel) {
