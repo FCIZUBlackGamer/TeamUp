@@ -47,7 +47,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Vholder> {
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
         holder.bind(filesModels.get(position), listener);
 
-        if (filesModels.get(position).getFileName().startsWith(API.BASE_URL)){
+        if (filesModels.get(position).getFileName() != null && filesModels.get(position).getFileName().startsWith(API.BASE_URL)){
             Log.e("Image", "Here");
             Log.e("Image", filesModels.get(position).getFileName());
             Picasso.get().load(filesModels.get(position).getFileName()).into(holder.image);

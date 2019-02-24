@@ -55,6 +55,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -330,6 +331,8 @@ public class FragmentOffer3 extends Fragment {
 
         go.setOnClickListener(v -> new Handler().post(() -> {
             RequirmentModel.setExperienceTypeId(1);
+            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                 pager.setCurrentItem(0);
                 Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
@@ -344,7 +347,6 @@ public class FragmentOffer3 extends Fragment {
             } else if (mSelectedCapitalModels.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
             } else {
-                mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
                 Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
                 Offers.setCategoryName(mSelectedCategory.getName());
 
@@ -807,10 +809,8 @@ public class FragmentOffer3 extends Fragment {
 //    }
 
     private void copyFilesUploadFilesAddOffer() {
-
         for (int i = finalFileModel.size() - 1; i >= 0; --i) {
             Uri uri = finalFileModel.get(i).getFileUri();
-
             try (Cursor cursor = getContext().getContentResolver()
                     .query(uri, null, null, null, null, null)) {
                 // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
@@ -819,66 +819,72 @@ public class FragmentOffer3 extends Fragment {
                     final String displayName = cursor.getString(
                             cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
 
-                    if (copyFileToProjectDirectory(uri, displayName, i)) {
-                        //Load New File Location
-                        uri = finalFileModel.get(i).getFileUri();
-                        Log.v("NewFileUri", uri.getPath());
-
-                        // Map is used to multipart the file using okhttp3.RequestBody
-                        File file = new File(uri.getPath());
-                        AppConfig appConfig = new AppConfig(API.BASE_URL);
-
-                        // Parsing any Media type file
-                        final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-                        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
-
-                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                        Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
-                        Uri finalUri = uri;
-                        call.enqueue(new Callback<List<String>>() {
-                            @Override
-                            public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
-                                List<String> serverResponse = response.body();
-                                if (serverResponse != null) {
-                                    if (!serverResponse.isEmpty()) {
-                                        String url = serverResponse.get(0);//get file url
-                                        mAttachmentModelArrayList.add(
-                                                new AttachmentModel(
-                                                        displayName,
-                                                        url,
-                                                        !getMimeType(finalUri).substring(0, 5).equals(
-                                                                "image"
-                                                        )
-                                                )
-                                        );
-
-                                        if (mAttachmentModelArrayList.size() == finalFileModel.size()) {
-                                            addOffer();
-                                        } else {
-                                            Toast.makeText(getContext(), "mAttachmentModelArrayList ERROR", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                                //textView.setText(t.getMessage());
-                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-
+                    if (!copyFileToProjectDirectory(uri, displayName, i)) {
+                        Toast.makeText(getContext(), getString(R.string.upload_attachment_failed_try_again), Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 }
             }
         }
+
+        ArrayList<MultipartBody.Part> filesToUpload = new ArrayList<>();
+        for (int i = finalFileModel.size() - 1; i >= 0; --i) {
+            //Load New File Location
+            Uri uri = finalFileModel.get(i).getFileUri();
+            Log.v("NewFileUri", uri.getPath());
+
+            File file = new File(uri.getPath());
+
+            // Parsing any Media type file
+            final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+            filesToUpload.add(MultipartBody.Part.createFormData("file", file.getName(), requestBody));
+        }
+
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<List<String>> call = getResponse.uploadMultipleFiles(filesToUpload);
+        call.enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
+                List<String> serverResponse = response.body();
+                if (serverResponse != null) {
+                    if (!serverResponse.isEmpty()) {
+                        for (int i = 0; i < serverResponse.size(); ++i) {
+                            String url = serverResponse.get(i);//get file url
+                            boolean fileType;
+                            try {
+                                fileType = !getMimeType(
+                                        finalFileModel.get(i)
+                                                .getFileUri())
+                                        .substring(0, 5).equals("image");
+                            } catch (NullPointerException e) {
+                                //FAILED_TO_DETECT_FILE_TYPE.
+                                //FILE_ADDED_TO_FILES_FOLDER
+                                //TODO: What's going on here ?
+                                fileType =true;
+                            }
+                            mAttachmentModelArrayList.add(
+                                    new AttachmentModel(finalFileModel.get(i)
+                                                    .getFileName(), url, fileType)
+                            );
+                        }
+
+                        //add the new offer
+                        addOffer();
+                    } else {
+                        Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                //textView.setText(t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private boolean copyFileToProjectDirectory(Uri srcUri, String displayName, int i) {
@@ -909,7 +915,7 @@ public class FragmentOffer3 extends Fragment {
 
             Log.d("MODELSS", "File Copied Successfully.");
             finalFileModel.get(i).setFileUri(Uri.parse(destFile.getPath()));
-            Log.v("NewFileUrl", destFile.getPath());
+            finalFileModel.get(i).setFileName(displayName);
 
         } catch (IOException e) {
             Toast.makeText(getContext(), "Failed to copy file." + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -920,6 +926,7 @@ public class FragmentOffer3 extends Fragment {
 
     public String getMimeType(Uri uri) {
         String mimeType;
+
         if (uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
             ContentResolver cr = getContext().getContentResolver();
             mimeType = cr.getType(uri);
