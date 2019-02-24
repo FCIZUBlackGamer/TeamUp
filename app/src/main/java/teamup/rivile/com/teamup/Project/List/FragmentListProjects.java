@@ -101,6 +101,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).Show("ListProjects");
+        ((DrawerActivity) getActivity()).ShowFab();
 
         realm = Realm.getDefaultInstance();
 
@@ -125,6 +126,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 if (offerDetailsDataBases.size() > 0) {
                     fillOffers(convertList(offerDetailsDataBases), MINE);
                 } else {
+                    ((DrawerActivity) getActivity()).Hide();
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
@@ -158,6 +160,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     if (offerDetailsDataBases.size() > 0) {
                         fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
                     } else {
+                        ((DrawerActivity) getActivity()).Hide();
                         //Todo: Show Empty view
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
@@ -165,6 +168,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
 
                 } else {
+                    ((DrawerActivity) getActivity()).Hide();
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();

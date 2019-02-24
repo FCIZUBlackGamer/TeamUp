@@ -155,4 +155,5 @@
     <string name="write">قم بكتابة</string>
     <string name="newPassword">كلمة المرور الجديدة</string>
     <string name="confirmPassword">تأكيد كلمة المرور</string>
+    <string name="bio">نبذة مختصرة</string>
 </resources>

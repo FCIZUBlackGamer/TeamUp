@@ -52,7 +52,7 @@ public class FragmentHome extends Fragment {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        gridView.setNumColumns(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2);
+//        gridView.setNumColumns(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2);
         super.onConfigurationChanged(newConfig);
     }
 
@@ -60,6 +60,7 @@ public class FragmentHome extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).Show("Home");
+        ((DrawerActivity) getActivity()).ShowFab();
         loadOffers();
 
     }

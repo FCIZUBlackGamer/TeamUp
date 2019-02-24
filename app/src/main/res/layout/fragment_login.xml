@@ -204,7 +204,7 @@
             app:passwordToggleEnabled="true">
 
             <EditText
-                android:id="@+id/ed_password"
+                android:id="@+id/til_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_edit_text"

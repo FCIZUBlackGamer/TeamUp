@@ -1,43 +1,77 @@
 package teamup.rivile.com.teamup.Profile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsRequirmentDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class FragmentProfileHome extends Fragment {
@@ -55,6 +89,39 @@ public class FragmentProfileHome extends Fragment {
     static int Id = -1;
     CollapsingToolbarLayout ctl ;
     Realm realm;
+    View edit_data;
+    /**
+     * edit_data Views
+     */
+    EditText ed_name, ed_address, ed_job, ed_email, ed_national_id, ed_password, ed_bio, ed_phone;
+    TextView tv_birth_date;
+    RadioGroup rb_gender;
+    ImageView iv_national_image, iv_cancel;
+    CircleImageView civ_user_image, civ_edit, civ_edit2;
+    Button btn_save;
+    int id = 0;
+
+    /**
+     * Image view
+     */
+
+    View Camera_view;
+    ImageView close, cam, gal;
+    static final int PICK_IMAGE_REQUEST = 1;
+    static final int CAMERA_REQUEST = 1888;
+    static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    Uri imageUri;
+    int imageType;
+    final int USER_IMAGE = 0;
+    final int USER_SSN = 1;
+    private FilesModel userImageFile, userSSNCode;
+    private AttachmentModel user, ssn;
+
+    /**
+     * to get data from realm and initialize it to popup edit views
+     **/
+
+    UserModel profObject;
 
     public static FragmentProfileHome setId(int id) {
         Id = id; //TODO
@@ -85,6 +152,10 @@ public class FragmentProfileHome extends Fragment {
         fragmentManager = getFragmentManager();
         realm = Realm.getDefaultInstance();
 //        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        userImageFile = new FilesModel();
+        userSSNCode = new FilesModel();
+        user = new AttachmentModel();
+        ssn = new AttachmentModel();
         return view;
     }
 
@@ -93,8 +164,14 @@ public class FragmentProfileHome extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).HideFab();
         ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
         ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
+
+//        viewPager.setAdapter(new pager(fragmentManager));
+        adapter = new AdapterProfileProject(getActivity(), offersList);
+        recyclerView.setAdapter(adapter);
+
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
@@ -107,16 +184,376 @@ public class FragmentProfileHome extends Fragment {
             }
         });
 
+        fab_edit.setOnClickListener(v -> {
 
-//        viewPager.setAdapter(new pager(fragmentManager));
-        adapter = new AdapterProfileProject(getActivity(), offersList);
-        recyclerView.setAdapter(adapter);
+            realm.executeTransaction(realm1 -> {
+                id = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+            });
+
+            final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            edit_data = inflater.inflate(R.layout.marker_view, null);
+            iv_cancel = edit_data.findViewById(R.id.iv_cancel);
+            ed_name = edit_data.findViewById(R.id.ed_name);
+            ed_bio = edit_data.findViewById(R.id.ed_bio);
+            ed_address = edit_data.findViewById(R.id.ed_address);
+            ed_job = edit_data.findViewById(R.id.ed_job);
+            ed_email = edit_data.findViewById(R.id.ed_email);
+            ed_phone = edit_data.findViewById(R.id.ed_phone);
+            ed_national_id = edit_data.findViewById(R.id.ed_national_id);
+            ed_password = edit_data.findViewById(R.id.ed_password);
+            tv_birth_date = edit_data.findViewById(R.id.tv_birth_date);
+            rb_gender = edit_data.findViewById(R.id.rb_gender);
+            iv_national_image = edit_data.findViewById(R.id.iv_national_image);
+            civ_user_image = edit_data.findViewById(R.id.civ_user_image);
+            civ_edit = edit_data.findViewById(R.id.civ_edit);
+            civ_edit2 = edit_data.findViewById(R.id.civ_edit2);
+            btn_save = edit_data.findViewById(R.id.btn_save);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setCancelable(false)
+                    .setView(edit_data);
+
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+
+            iv_cancel.setOnClickListener(v1 -> {
+                dialog.dismiss();
+            });
+
+            /**
+             * Display default values stored in realm
+             * */
+
+            ed_name.setText(profObject.getFullName());
+            ed_bio.setText(profObject.getBio());
+            ed_address.setText(profObject.getAddress());
+            ed_job.setText(profObject.getJobtitle());
+            ed_email.setText(profObject.getMail());
+            ed_phone.setText(profObject.getPhone());
+            ed_national_id.setText(profObject.getIdentityNum());
+            ed_password.setText(profObject.getPassword());
+            tv_birth_date.setText(profObject.getDateOfBirth());
+            if (profObject.getGender())
+                ed_email.setText(getResources().getString(R.string.male));
+            else
+                ed_email.setText(getResources().getString(R.string.female));
+            /**
+             * replace code with one which get Image from phone if exist
+             * */
+            if (profObject.getImage() != null && !profObject.getImage().isEmpty())
+                Picasso.get().load(profObject.getImage()).into(civ_user_image);
+
+
+            if (profObject.getIdentityImage() != null && !profObject.getIdentityImage().isEmpty())
+                Picasso.get().load(profObject.getIdentityImage()).into(cir_user_image);
+
+            civ_user_image.setOnClickListener(v1 -> {
+                imageType = USER_IMAGE;
+                addImage();
+            });
+
+            civ_edit.setOnClickListener(v1 -> {
+                imageType = USER_IMAGE;
+                addImage();
+            });
+
+            iv_national_image.setOnClickListener(v1 -> {
+                imageType = USER_SSN;
+                addImage();
+            });
+
+            civ_edit2.setOnClickListener(v1 -> {
+                imageType = USER_SSN;
+                addImage();
+            });
+
+            btn_save.setOnClickListener(v1 -> {
+                if (id != 0) {
+                    /** Validation **/
+
+                    copyFilesUploadFilesAddOffer(userImageFile, USER_IMAGE);
+                    copyFilesUploadFilesAddOffer(userSSNCode, USER_SSN);
+
+                    UserModel model = new UserModel();
+
+                    model.setId(id);
+                    model.setFullName(ed_name.getText().toString());
+                    model.setPhone(ed_phone.getText().toString());
+                    model.setJobtitle(ed_job.getText().toString());
+                    model.setIdentityNum(ed_national_id.getText().toString());
+                    model.setBio(ed_bio.getText().toString());
+                    model.setMail(ed_email.getText().toString());
+                    model.setPassword(ed_password.getText().toString());
+
+                    /**
+                     * upload userImage
+                     * upload user SSN image
+                     * */
+
+                    model.setImage(profObject.getImage());
+
+                    model.setIdentityImage(profObject.getIdentityImage());
+
+                    editAction(model);
+                    dialog.dismiss();
+                }
+            });
+
+
+        });
+
+    }
+
+    private void copyFilesUploadFilesAddOffer(FilesModel model, int type) {
+
+        Uri uri = model.getFileUri();
+
+        try (Cursor cursor = getContext().getContentResolver()
+                .query(uri, null, null, null, null, null)) {
+            // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
+            // "if there's anything to look at, look at it" conditionals.
+            if (cursor != null && cursor.moveToFirst()) {
+                final String displayName = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+
+                if (copyFileToProjectDirectory(model, displayName)) {
+                    //Load New File Location
+                    uri = model.getFileUri();
+                    Log.v("NewFileUri", uri.getPath());
+
+                    // Map is used to multipart the file using okhttp3.RequestBody
+                    File file = new File(uri.getPath());
+                    AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+                    // Parsing any Media type file
+                    final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                    RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                    Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
+                    call.enqueue(new Callback<List<String>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
+                            List<String> serverResponse = response.body();
+                            if (serverResponse != null) {
+                                if (!serverResponse.isEmpty()) {
+                                    String url = serverResponse.get(0);//get file url
+                                    if (type == USER_IMAGE) {
+                                        user = new AttachmentModel(
+                                                displayName,
+                                                url,
+                                                false
+                                        );
+                                        profObject.setImage(url);
+                                    } else {
+                                        ssn = new AttachmentModel(
+                                                displayName,
+                                                url,
+                                                false
+                                        );
+                                        profObject.setIdentityImage(url);
+                                    }
+
+                                    Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                            //textView.setText(t.getMessage());
+                            Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            }
+
+        }
+    }
+
+    private boolean copyFileToProjectDirectory(FilesModel model, String displayName) {
+        try {
+            String fileType = "Images";
+
+            File destFile;
+            if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {
+                destFile = new File(Environment.getExternalStoragePublicDirectory(
+                        getString(R.string.app_name) + File.separator + fileType), displayName);
+
+                if (!destFile.getParentFile().exists()) destFile.getParentFile().mkdirs();
+
+                if (!destFile.exists()) destFile.createNewFile();
+
+            } else return false;
+
+            OutputStream destOutputStream = new FileOutputStream(destFile);
+            InputStream srcInputStream = getContext().getContentResolver().openInputStream(model.getFileUri());
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = srcInputStream.read(buffer)) > 0) {
+                destOutputStream.write(buffer, 0, length);
+            }
+
+            Log.d("MODELSS", "File Copied Successfully.");
+            model.setFileUri(Uri.parse(destFile.getPath()));
+            Log.v("NewFileUrl", destFile.getPath());
+
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Failed to copy file." + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void addImage() {
+        final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        Camera_view = inflater.inflate(R.layout.camera_view, null);
+
+        close = Camera_view.findViewById(R.id.close);
+        cam = Camera_view.findViewById(R.id.cam);
+        gal = Camera_view.findViewById(R.id.gal);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false)
+                .setView(Camera_view);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        gal.setOnClickListener(v1 -> {
+            openGallery();
+            dialog.dismiss();
+        });
+
+        cam.setOnClickListener(v12 -> {
+            openCamera();
+            dialog.dismiss();
+        });
+
+        close.setOnClickListener(v13 -> {
+            dialog.dismiss();
+
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void openGallery() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
+
+        } else {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);// ACTION_VIEW
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        }
+    }
+
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{permission},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE));
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
+
+    private void openCamera() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST);
+
+        } else {
+            if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraIntent.putExtra("PageNo", 2);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+
+        }
+
+    }
+
+    private void editAction(UserModel userModel) {
+        Gson gson = new Gson();
+
+        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+
+        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+
+        Call<String> response = retrofitService.editProfile(gson.toJson(userModel) ,API.URL_TOKEN);
+
+        response.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if (response.errorBody() == null) {
+                    if (response.body() != null && response.body().equals("Success")) {
+                        Toast.makeText(getContext(), "Profile # Successfully.", Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+                    Log.d("MODELSS", response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.d("MODELSS", t.getCause().getMessage());
+            }
+        });
+
     }
 
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
         UserDataBase userDataBase = loginDataBases.getUser();
         List<OfferDetailsDataBase> offerDetailsDataBase = loginDataBases.getOffers();
-        UserModel profObject = loadUser(userDataBase);
+        profObject = loadUser(userDataBase);
         List<Offers> offers = loadOffers(offerDetailsDataBase);
         fillProfData(profObject);
         fillProfOffersData(offers);
@@ -242,10 +679,6 @@ public class FragmentProfileHome extends Fragment {
         if (user.getImage() != null && !user.getImage().isEmpty() && user.getImage() != null) {
             Picasso.get().load(user.getImage()).into(cir_user_image);
         }
-
-        fab_edit.setOnClickListener(v -> {
-
-        });
     }
 
     class pager extends FragmentPagerAdapter {
@@ -270,5 +703,103 @@ public class FragmentProfileHome extends Fragment {
         public int getCount() {
             return 2;
         }
+    }
+
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            new Handler().post(() -> {
+
+                if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+                    ClipData mClipData = data.getClipData();
+                    if (mClipData == null) {
+                        Uri uri = data.getData();
+                        imageUri = uri;
+                        userImageFile.setFileUri(imageUri);
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            bitmap = getResizedBitmap(bitmap, 65);
+                            if (imageType == USER_IMAGE) {
+                                cir_user_image.setImageBitmap(bitmap);
+                            } else {
+                                iv_national_image.setImageBitmap(bitmap);
+                            }
+                            Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    bitmap = getResizedBitmap(bitmap, 65);
+                    if (imageType == USER_IMAGE) {
+                        cir_user_image.setImageBitmap(bitmap);
+                    } else {
+                        iv_national_image.setImageBitmap(bitmap);
+                    }
+                    if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                        imageUri = getImageUri(getActivity(), bitmap);
+                        userSSNCode.setFileUri(imageUri);
+                    }
+                }
+
+            });
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 65, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }
