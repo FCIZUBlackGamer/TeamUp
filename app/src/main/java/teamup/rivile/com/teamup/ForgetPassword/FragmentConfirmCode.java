@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,66 +58,128 @@ public class FragmentConfirmCode extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        n1.setFocusable(true);
-        n1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n1.getText().toString().length() == 1) {
-                    n2.setFocusable(true);
-                    n1.setEnabled(false);
-                }
-                return false;
-            }
-        });
-        n2.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n2.getText().toString().length() == 1) {
-                    n3.setFocusable(true);
-                    n2.setEnabled(false);
-                }
-                return false;
-            }
-        });
-        n3.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n3.getText().toString().length() == 1) {
-                    n4.setFocusable(true);
-                    n3.setEnabled(false);
-                }
-                return false;
-            }
-        });
-        n4.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n4.getText().toString().length() == 1) {
-                    n5.setFocusable(true);
-                    n4.setEnabled(false);
-                }
-                return false;
-            }
-        });
-        n5.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n5.getText().toString().length() == 1) {
-                    n6.setFocusable(true);
-                    n5.setEnabled(false);
-                }
-                return false;
-            }
-        });
-        n6.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (n6.getText().toString().length() == 1) {
-                    n6.setEnabled(false);
-                    n6.setFocusable(false);
 
+        n1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 1) {
+                    n2.requestFocus();
+                } else if(s.toString().length() > 1){
+                    n1.setText(s.toString().substring(1));
                 }
-                return false;
+            }
+        });
+
+        n2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 1) {
+                    n3.requestFocus();
+                } else if(s.toString().length() > 1){
+                    n2.setText(s.toString().substring(1));
+                }
+            }
+        });
+
+        n3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 1) {
+                    n4.requestFocus();
+                } else if(s.toString().length() > 1){
+                    n3.setText(s.toString().substring(1));
+                }
+            }
+        });
+
+        n4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 1) {
+                    n5.requestFocus();
+                } else if(s.toString().length() > 1){
+                    n4.setText(s.toString().substring(1));
+                }
+            }
+        });
+
+        n5.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 1) {
+                    n6.requestFocus();
+                } else if(s.toString().length() > 1){
+                    n5.setText(s.toString().substring(1));
+                }
+            }
+        });
+
+        n6.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+               if(s.toString().length() == 2){
+                    n6.setText(s.toString().substring(1));
+                }
             }
         });
 
@@ -125,6 +189,7 @@ public class FragmentConfirmCode extends Fragment {
             transaction.replace(R.id.first, new Login());
             transaction.commit();
         });
+
         confirm.setOnClickListener(v -> {
             /** Make The Action*/
             String code = n1.getText().toString() + n2.getText().toString() + n3.getText().toString() + n4.getText().toString() + n5.getText().toString() + n6.getText().toString();
@@ -149,21 +214,21 @@ public class FragmentConfirmCode extends Fragment {
             public void onResponse(Call<Integer> call, retrofit2.Response<Integer> response) {
                 Integer serverResponse = response.body();
                 if (serverResponse != null) {
-                    Log.i("Response",serverResponse+"");
+                    Log.i("Response", serverResponse + "");
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
                     transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
                     transaction.commit();
                 } else {
                     //textView.setText(serverResponse.toString());
-                    Log.e("Err","Empty");
+                    Log.e("Err", "Empty");
                 }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 //textView.setText(t.getMessage());
-                Log.e("Err",t.getMessage());
+                Log.e("Err", t.getMessage());
             }
         });
     }
@@ -180,18 +245,18 @@ public class FragmentConfirmCode extends Fragment {
             public void onResponse(Call<Integer> call, retrofit2.Response<Integer> response) {
                 Integer serverResponse = response.body();
                 if (serverResponse != null) {
-                    Log.i("Response",serverResponse+"");
+                    Log.i("Response", serverResponse + "");
                     id = serverResponse;
                 } else {
                     //textView.setText(serverResponse.toString());
-                    Log.e("Err","Empty");
+                    Log.e("Err", "Empty");
                 }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 //textView.setText(t.getMessage());
-                Log.e("Err",t.getMessage());
+                Log.e("Err", t.getMessage());
             }
         });
     }

@@ -9,7 +9,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <!-- TODO: Change image source to match the design -->
         <ImageView
@@ -221,26 +221,22 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_corner_button_blue"
             android:fontFamily="@font/medium"
             android:text="@string/sign_up"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorWhite"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tied_password"
             app:layout_constraintStart_toStartOf="@+id/tied_password"
-            app:layout_constraintTop_toBottomOf="@+id/tied_password"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/tied_password" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/btn_login_google"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/btn_login_facebook"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_save"
@@ -252,11 +248,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/btn_login_google"
             app:layout_constraintStart_toStartOf="@+id/btn_login_google"
             app:layout_constraintTop_toBottomOf="@+id/btn_login_google" />
@@ -265,36 +259,28 @@
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:fontFamily="@font/medium"
             android:gravity="start"
             android:text="@string/forgotPassword"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_login_facebook"
-            app:layout_constraintEnd_toEndOf="@+id/btn_save"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_save"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook" />
 
         <TextView
             android:id="@+id/tv_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
             android:fontFamily="@font/medium"
             android:gravity="start"
             android:text="@string/recoverPassword"
             android:textColor="@color/textColorBlue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/btn_save"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="@+id/textView15"
             app:layout_constraintStart_toEndOf="@+id/textView15"
-            app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/textView15" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
