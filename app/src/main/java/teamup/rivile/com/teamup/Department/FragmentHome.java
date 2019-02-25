@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 
 
 public class FragmentHome extends Fragment {
@@ -38,6 +40,7 @@ public class FragmentHome extends Fragment {
         Word = word;
         return new FragmentHome();
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,17 +77,21 @@ public class FragmentHome extends Fragment {
         call.enqueue(new Callback<DepartmentJson>() {
             @Override
             public void onResponse(Call<DepartmentJson> call, retrofit2.Response<DepartmentJson> response) {
-                List<Department> serverResponse = response.body().getCategory();
-                if (serverResponse != null) {
-                    fillOffers(serverResponse);
+                if (response.body() != null) {
+                    if (response.body().getCategory() != null) {
+                        List<Department> serverResponse = response.body().getCategory();
+                        fillOffers(serverResponse);
+                    } else {
+                        Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-
+                    Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<DepartmentJson> call, Throwable t) {
-                //textView.setText(t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -876,11 +876,9 @@ public class FragmentOffer3 extends Fragment {
 
                             @Override
                             public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                                //textView.setText(t.getMessage());
                                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
-
                     }
                 }
             }
@@ -889,9 +887,18 @@ public class FragmentOffer3 extends Fragment {
 
     private boolean copyFileToProjectDirectory(Uri srcUri, String displayName, int i) {
         try {
-            String fileType = getMimeType(srcUri).substring(0, 5).equals(
-                    "image"
-            ) ? "Images" : "Files";
+            String fileType;
+            try {
+                fileType = getMimeType(srcUri).substring(0, 5).equals(
+                        "image"
+                ) ? "Images" : "Files";
+            } catch (NullPointerException e) {
+                //FAILED_TO_DETECT_FILE_TYPE.
+                //FILE_ADDED_TO_FILES_FOLDER
+                //TODO: What's going on here ?
+                fileType = "Files";
+            }
+
 
             File destFile;
             if (checkPermissionREAD_EXTERNAL_STORAGE(getContext())) {

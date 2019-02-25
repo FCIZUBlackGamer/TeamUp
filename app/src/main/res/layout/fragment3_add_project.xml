@@ -11,6 +11,7 @@
         android:padding="5dp">
 
         <LinearLayout
+            android:id="@+id/ll_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#fff"
@@ -271,6 +272,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recDep"
                     android:layout_width="match_parent"
@@ -360,20 +362,18 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/rounded_corner_edit_text" />
 
-                <Button
-                    android:id="@+id/go"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:fontFamily="@font/medium"
-                    android:text="@string/go"
-                    android:textColor="#fff" />
-
             </LinearLayout>
+            <Button
+                android:id="@+id/go"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorPrimaryDark"
+                android:fontFamily="@font/medium"
+                android:text="@string/go"
+                android:textColor="#fff" />
         </LinearLayout>
-
     </RelativeLayout>
 </ScrollView>
 
