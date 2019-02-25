@@ -217,6 +217,7 @@ public class Login extends Fragment {
                     }
                 });
 
+
         mProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {

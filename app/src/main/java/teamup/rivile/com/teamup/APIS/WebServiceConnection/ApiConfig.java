@@ -16,6 +16,7 @@ import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
+import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
@@ -26,11 +27,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 public interface ApiConfig {
     @Multipart
     @POST(API.UPLOAD_URL)
-    Call<List<String>> uploadFile(@Part MultipartBody.Part file);
-
-    @Multipart
-    @POST(API.UPLOAD_URL)
-    Call<List<String>> uploadMultipleFiles(@Part List<MultipartBody.Part> files);
+    Call<List<String>> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name);
 
     @FormUrlEncoded
     @POST(API.LOAD_ListOfCapTagCat_URL)
