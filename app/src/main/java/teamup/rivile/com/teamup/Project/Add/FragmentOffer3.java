@@ -60,6 +60,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.Realm;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -87,6 +88,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentOffer3 extends Fragment {
     private final char SPACE = ' ';
@@ -134,6 +136,8 @@ public class FragmentOffer3 extends Fragment {
     ChipsAdapter mTagsRecUserAdapter;
     LoadedChipsAdapter mTagsRecLoadedAdapter;
 
+    private int mUserId = -1;
+
     static MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedTags = new MutableLiveData<>();
     static MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitals = new MutableLiveData<>();
     static MutableLiveData<ArrayList<CapitalModel>> mLoadedCategories = new MutableLiveData<>();
@@ -141,7 +145,6 @@ public class FragmentOffer3 extends Fragment {
 
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
-
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
 
     static FragmentOffer3 setPager(
@@ -178,6 +181,8 @@ public class FragmentOffer3 extends Fragment {
         arrowCapitals = view.findViewById(R.id.arrowCapitals);
         arrowTags = view.findViewById(R.id.arrowTags);
         // Input Views
+
+        realm = Realm.getDefaultInstance();
 
         doc = view.findViewById(R.id.doc);
         image = view.findViewById(R.id.image);
@@ -218,6 +223,11 @@ public class FragmentOffer3 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        realm.executeTransaction(realm1 -> {
+            mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+        });
+
 
         setUpRecyclerViews();
 
@@ -353,6 +363,13 @@ public class FragmentOffer3 extends Fragment {
             } else if (mSelectedCapitalModels.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
             } else {
+
+                if (mUserId != -1) {
+                    Offers.setUserId(mUserId);
+                } else {
+                    Toast.makeText(getContext(), "User Id is not set yet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
                 Offers.setCategoryName(mSelectedCategory.getName());
 
@@ -1060,7 +1077,6 @@ public class FragmentOffer3 extends Fragment {
                 .create();
 
         //offer
-        Offers.setUserId(1);
         Offers.setAddress("address avoiding null");
         String offerString = gson.toJson(bindOffers());
 
