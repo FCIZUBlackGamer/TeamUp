@@ -330,6 +330,8 @@ public class FragmentOffer3 extends Fragment {
 
         go.setOnClickListener(v -> new Handler().post(() -> {
             RequirmentModel.setExperienceTypeId(1);
+            mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                 pager.setCurrentItem(0);
                 Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
@@ -344,7 +346,6 @@ public class FragmentOffer3 extends Fragment {
             } else if (mSelectedCapitalModels.isEmpty()) {
                 Toast.makeText(getContext(), getString(R.string.cap_required), Toast.LENGTH_SHORT).show();
             } else {
-                mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
                 Offers.setCategoryId(mSelectedCategory.getId() > 0 ? mSelectedCategory.getId() : 0);
                 Offers.setCategoryName(mSelectedCategory.getName());
 
@@ -843,23 +844,28 @@ public class FragmentOffer3 extends Fragment {
                                 if (serverResponse != null) {
                                     if (!serverResponse.isEmpty()) {
                                         String url = serverResponse.get(0);//get file url
+
+                                        Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+
+                                        boolean fileType;
+                                        try {
+                                            fileType = !getMimeType(
+                                                    finalUri)
+                                                    .substring(0, 5).equals("image");
+                                        } catch (NullPointerException e) {
+                                            //FAILED_TO_DETECT_FILE_TYPE.
+                                            //FILE_ADDED_TO_FILES_FOLDER
+                                            //TODO: What's going on here ?
+                                            fileType = true;
+                                        }
                                         mAttachmentModelArrayList.add(
-                                                new AttachmentModel(
-                                                        displayName,
-                                                        url,
-                                                        !getMimeType(finalUri).substring(0, 5).equals(
-                                                                "image"
-                                                        )
-                                                )
+                                                new AttachmentModel(displayName, url, fileType)
                                         );
 
                                         if (mAttachmentModelArrayList.size() == finalFileModel.size()) {
                                             addOffer();
-                                        } else {
-                                            Toast.makeText(getContext(), "mAttachmentModelArrayList ERROR", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Adding Offer...", Toast.LENGTH_SHORT).show();
                                         }
-
-                                        Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                                     }
@@ -952,6 +958,7 @@ public class FragmentOffer3 extends Fragment {
             if (o != null)
                 offers.setId(o.getId());
         }
+        if (offers.getId() == null) offers.setId(0);
         offers.setName(Offers.getName());
         offers.setDescription(Offers.getDescription());
         offers.setCategoryId(Offers.getCategoryId());
@@ -978,6 +985,7 @@ public class FragmentOffer3 extends Fragment {
 
     private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirementModel() {
         teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirementModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
+        requirementModel.setId(RequirmentModel.getId());
         requirementModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
         requirementModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
         requirementModel.setNeedPlace(RequirmentModel.isNeedPlace());
@@ -1008,6 +1016,7 @@ public class FragmentOffer3 extends Fragment {
         String offerString = gson.toJson(bindOffers());
 
         RequirmentModel.setUserId(1);
+        RequirmentModel.setId(0);
 //        RequirmentModel.setExperienceTypeId(null);
         String requirementString = gson.toJson(bindRequirementModel());
 
@@ -1043,7 +1052,7 @@ public class FragmentOffer3 extends Fragment {
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body().equals("Success")) {
-                        Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_LONG).show();
                     } else
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else {
