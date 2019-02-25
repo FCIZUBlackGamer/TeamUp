@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- TODO: Change image source to match the design -->
+        <!-- TODO: Change icon source to match the design -->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="150dp"

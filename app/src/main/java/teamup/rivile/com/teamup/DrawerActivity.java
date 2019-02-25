@@ -41,15 +41,15 @@ public class DrawerActivity extends AppCompatActivity
     FragmentManager fragmentManager;
     static SearchView searchView;
     static String Whome = "Home";
-    Toolbar toolbar;
+    static Toolbar toolbar;
     static DrawerLayout drawer;
 
     static FloatingActionButton fab;
     MovableFloatingActionButton movableFloatingActionButton;
-    FloatingActionButton civ_filter;
+    static FloatingActionButton civ_filter;
 
     Drawable filterDrawable, filterFABDrawable;
-    ImageView iv_cancel;
+    static ImageView iv_cancel;
 
     RecyclerView locs;
     RecyclerView.Adapter adapter;
@@ -276,27 +276,36 @@ public class DrawerActivity extends AppCompatActivity
         fab.setVisibility(View.VISIBLE);
     }
 
+    public static void HideToolbar() {
+        toolbar.setVisibility(View.GONE);
+    }
+
+    public static void ShowToolbar() {
+        toolbar.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
         return true;
     }
+    //Todo: active it and setup settings
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

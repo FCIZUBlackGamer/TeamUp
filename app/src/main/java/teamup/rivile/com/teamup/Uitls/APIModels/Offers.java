@@ -27,9 +27,18 @@ public class Offers implements Serializable {
     public Integer Status ;
     public List<RequirmentModel> Requirments ;
     public List<CapitalModel> Capitals ;
+    public List<TagsModel> Tags ;
 
 
     public Offers() {
+    }
+
+    public void setTags(List<TagsModel> tags) {
+        Tags = tags;
+    }
+
+    public List<TagsModel> getTags() {
+        return Tags;
     }
 
     public String getDate() {

@@ -59,7 +59,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:fontFamily="@font/medium"
-                        android:gravity="end"
+                        android:gravity="start"
                         android:maxLength="40"
                         android:maxLines="1"
                         android:text="مشروع مزرعه دواجن "
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_placeholder"
-                        android:gravity="center_vertical"
+                        android:gravity="start|center_vertical"
                         android:fontFamily="@font/medium"
                         android:maxLength="50"
                         android:layout_gravity="start"
@@ -147,7 +147,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
+                    android:gravity="start"
                     android:maxLength="50"
                     android:fontFamily="@font/medium"
                     android:text="المشاركين فى المشروع"
@@ -169,9 +169,25 @@
             android:layout_margin="10dp"
             android:maxLines="4"
             android:paddingEnd="8dp"
+            android:gravity="start"
             android:fontFamily="@font/medium"
             android:text="مشروع مزرعه دواجن "
             android:textColor="#000"
+            android:textDirection="rtl"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/project_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/medium"
+            android:maxLines="4"
+            android:paddingEnd="8dp"
+            android:text="مشروع مزرعه دواجن "
+            android:textColor="#2196F3"
             android:textDirection="rtl"
             android:textSize="18sp" />
 

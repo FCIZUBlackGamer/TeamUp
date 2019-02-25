@@ -58,6 +58,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -83,6 +85,8 @@ import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class FragmentOffer3 extends Fragment {
     private final char SPACE = ' ';
@@ -124,6 +128,8 @@ public class FragmentOffer3 extends Fragment {
 
 
     FilesModel currentFileModel;
+    Realm realm;
+    OfferDetailsDataBase offerDetailsDataBase;
 
     ChipsAdapter mTagsRecUserAdapter;
     LoadedChipsAdapter mTagsRecLoadedAdapter;
@@ -205,6 +211,7 @@ public class FragmentOffer3 extends Fragment {
         tagsRecUserLoad = view.findViewById(R.id.tagsRecUserLoad);
         tagsRec = view.findViewById(R.id.tagsRec);
 
+        realm = Realm.getDefaultInstance();
         return view;
     }
 
@@ -987,6 +994,41 @@ public class FragmentOffer3 extends Fragment {
         offers.setUserId(Offers.getUserId());
         offers.setAddress(Offers.getAddress());
 
+        realm.executeTransaction(realm1 -> {
+//            OfferDetailsDataBase
+            offerDetailsDataBase.setName(Offers.getName());
+            offerDetailsDataBase.setDescription(Offers.getDescription());
+            offerDetailsDataBase.setCategoryId(Offers.getCategoryId());
+            offerDetailsDataBase.setCategoryName(Offers.getCategoryName());
+            offerDetailsDataBase.setProfitType(Offers.getProfitType());
+            offerDetailsDataBase.setProfitFrom(Offers.getProfitFrom());
+            offerDetailsDataBase.setProfitTo(Offers.getProfitTo());
+            offerDetailsDataBase.setNumContributorFrom(Offers.getNumContributorFrom());
+            offerDetailsDataBase.setNumContributorTo(Offers.getNumContributorTo());
+            offerDetailsDataBase.setAgeRequiredFrom(Offers.getAgeRequiredFrom());
+            offerDetailsDataBase.setAgeRequiredTo(Offers.getAgeRequiredTo());
+            offerDetailsDataBase.setGenderContributor(Offers.getGenderContributor());
+            offerDetailsDataBase.setEducationContributorLevel(Offers.getEducationContributorLevel());
+            offerDetailsDataBase.setUserId(Offers.getUserId());
+            offerDetailsDataBase.setNumLiks(Offers.getNumLiks());
+            offerDetailsDataBase.setNumJoinOffer(Offers.getNumJoinOffer());
+            /**
+             * start User Section
+             * */
+            UserDataBase userDataBase = new UserDataBase();
+            userDataBase.setId(Offers.getUsers().get(0).getId());
+            userDataBase.setFullName(Offers.getUsers().get(0).getFullName());
+            userDataBase.setImage(Offers.getUsers().get(0).getImage());
+            RealmList<UserDataBase> userDataBases = new RealmList<>();
+            userDataBases.add(userDataBase);
+            offerDetailsDataBase.setUsers(userDataBases);
+            /**
+             * end User Section
+             * */
+            offerDetailsDataBase.setAddress(Offers.getAddress());
+            offerDetailsDataBase.setUserId(Offers.getUserId());
+            offerDetailsDataBase.setAddress(Offers.getAddress());
+        });
         return offers;
     }
 

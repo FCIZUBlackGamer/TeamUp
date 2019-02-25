@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,12 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
         holder.location.setText(offersList.get(position).getAddress());
         holder.project_desc.setText(offersList.get(position).getDescription());
+        if (offersList.get(position).getTags() != null){
+            for (int i = 0; i < offersList.get(position).getTags().size() ;i++) {
+                holder.project_tag.append("\n#"+offersList.get(position).getTags().get(i).getName());
+            }
+        }
+
 
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
@@ -122,10 +129,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.like.setOnClickListener(v -> {
+            Log.e("Like","1");
             if (holder.like.getCompoundDrawables().equals(context.getResources().getDrawable(R.drawable.ic_like))){
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_border_black_24dp,0,0,0);
+                Log.e("Like","2");
             }else {
                 FragmentOfferDetails.likeOffer(offersList.get(position).getId());
+                Log.e("Like","3");
             }
         });
 
@@ -139,7 +149,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     }
 
     public class Vholder extends RecyclerView.ViewHolder {
-        TextView project_name, location, project_desc;
+        TextView project_name, location, project_desc, project_tag;
         TextView num_likes, num_contributer;
         CircleImageView image;
         LinearLayout linearLayout, con;
@@ -151,6 +161,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         public Vholder(View itemView) {
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
+            project_tag = itemView.findViewById(R.id.project_tag);
             delete = itemView.findViewById(R.id.delete);
             project_desc = itemView.findViewById(R.id.project_desc);
             location = itemView.findViewById(R.id.location);

@@ -69,6 +69,7 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Project.join.Adapters.CapitalsRecyclerViewAdapter;
@@ -520,6 +521,7 @@ public class FragmentJoinHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((DrawerActivity) getActivity()).HideFab();
 
         setUpRecyclerViews();
 

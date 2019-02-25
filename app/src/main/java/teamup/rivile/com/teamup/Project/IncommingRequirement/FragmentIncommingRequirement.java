@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class FragmentIncommingRequirement extends Fragment {
     }
 
     private void fillOffers(OfferDetailsJsonObject offers) {
-        if (offers.getOffer().getRequirments().size() > 0){
+        if (offers.getOffer()!=null && offers.getOffer().getRequirments()!=null && offers.getOffer().getRequirments().size() > 0){
             adapter = new AdapterListRequirement(getActivity(), offers);
             recyclerView.setAdapter(adapter);
         }else {
@@ -139,7 +140,9 @@ public class FragmentIncommingRequirement extends Fragment {
             public void onResponse(Call<OfferDetailsJsonObject> call, retrofit2.Response<OfferDetailsJsonObject> response) {
                 OfferDetailsJsonObject serverResponse = response.body();
                 if (serverResponse != null) {
-                    Gson gson = new Gson();
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.serializeNulls();
+                    Gson gson = gsonBuilder.create();
                     Log.i("Response", gson.toJson(serverResponse));
 
                     fillOffers(serverResponse);

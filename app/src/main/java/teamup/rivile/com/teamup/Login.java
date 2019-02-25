@@ -323,7 +323,11 @@ public class Login extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mProfileTracker.stopTracking();
+        try {
+            mProfileTracker.stopTracking();
+        }catch (Exception e){
+
+        }
     }
 
     private void login(UserModel userModel) {

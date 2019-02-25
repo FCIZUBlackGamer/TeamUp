@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class Department implements Serializable {
     int Id;
     String Name;
-//    String Image;
+    String Icon;
 //
 //
-//    public Department(int id, String Image, String name) {
+//    public Department(int id, String Icon, String name) {
 //        Id = id;
-//        this.Image = Image;
+//        this.Icon = Icon;
 //        Name = name;
 //    }
 //
@@ -27,9 +27,9 @@ public class Department implements Serializable {
         Name = name;
     }
 
-//    public void setImage(String image) {
-//        Image = image;
-//    }
+    public void setIcon(String icon) {
+        Icon = icon;
+    }
 
     public void setId(int id) {
         Id = id;
@@ -39,9 +39,9 @@ public class Department implements Serializable {
         return Id;
     }
 
-//    public String getImage() {
-//        return Image;
-//    }
+    public String getIcon() {
+        return Icon;
+    }
 
     public String getName() {
         return Name;

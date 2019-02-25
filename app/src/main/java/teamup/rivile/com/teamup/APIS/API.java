@@ -12,7 +12,7 @@ public class API {
     final public static String SelectOffer_URL = BASE_URL + "Offer/SelectOffer/";
     final public static String GENERAL_MAP_URL = BASE_URL + "";
     final public static String PROFILE_URL = BASE_URL + "Register/Profile";
-    final public static String EDIT_PROFILE_URL = BASE_URL + "Register/EditProf"; //Todo: Change Method name
+    final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
     final public static String EDIT_OFFER_URL = BASE_URL + "Edit";
     final public static String EDIT_REQUIREMENT_URL = BASE_URL + "EditRequirement";

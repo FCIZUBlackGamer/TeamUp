@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -192,7 +193,7 @@ public class FragmentProfileHome extends Fragment {
 
             final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            edit_data = inflater.inflate(R.layout.marker_view, null);
+            edit_data = inflater.inflate(R.layout.edit_personal_data, null);
             iv_cancel = edit_data.findViewById(R.id.iv_cancel);
             ed_name = edit_data.findViewById(R.id.ed_name);
             ed_bio = edit_data.findViewById(R.id.ed_bio);
@@ -309,15 +310,15 @@ public class FragmentProfileHome extends Fragment {
 
         Uri uri = model.getFileUri();
 
-        try (Cursor cursor = getContext().getContentResolver()
-                .query(uri, null, null, null, null, null)) {
+        try /*(Cursor cursor = getContext().getContentResolver()
+                .query(uri, null, null, null, null, null))*/ {
             // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
             // "if there's anything to look at, look at it" conditionals.
-            if (cursor != null && cursor.moveToFirst()) {
-                final String displayName = cursor.getString(
-                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+//            if (cursor != null && cursor.moveToFirst()) {
+//                final String displayName = cursor.getString(
+//                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
 
-                if (copyFileToProjectDirectory(model, displayName)) {
+                if (copyFileToProjectDirectory(model, "fee")) {
                     //Load New File Location
                     uri = model.getFileUri();
                     Log.v("NewFileUri", uri.getPath());
@@ -342,18 +343,20 @@ public class FragmentProfileHome extends Fragment {
                                     String url = serverResponse.get(0);//get file url
                                     if (type == USER_IMAGE) {
                                         user = new AttachmentModel(
-                                                displayName,
+                                                "fee",
                                                 url,
                                                 false
                                         );
                                         profObject.setImage(url);
+                                        Log.v("getImage", profObject.getImage());
                                     } else {
                                         ssn = new AttachmentModel(
-                                                displayName,
+                                                "fee",
                                                 url,
                                                 false
                                         );
                                         profObject.setIdentityImage(url);
+                                        Log.v("getIdentityImage", profObject.getIdentityImage());
                                     }
 
                                     Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
@@ -373,8 +376,11 @@ public class FragmentProfileHome extends Fragment {
                     });
 
                 }
-            }
+//            }
 
+        }catch (Exception e){
+
+            Log.v("getIdentityImage", "bug");
         }
     }
 
@@ -560,6 +566,10 @@ public class FragmentProfileHome extends Fragment {
     }
 
     private List<Offers> loadOffers(List<OfferDetailsDataBase> offerDetailsDataBase) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeNulls();
+        Gson gson = gsonBuilder.create();
+        Log.i("Gson",gson.toJson(offerDetailsDataBase.toString()));
         List<Offers> offers =  new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBase.size(); i++) {
             Offers offers1 = new Offers();
@@ -584,18 +594,20 @@ public class FragmentProfileHome extends Fragment {
 //            offers1.setProfitTo(base.getProfitTo());
 //            offers1.setProfitType(base.getProfitType());
             offers1.setStatus(base.getStatus());
-            List<UserModel> userModels = new ArrayList<>();
-            for (int j = 0; j < offers1.getUsers().size(); j++) {
-                UserModel userModel = new UserModel();
-                UserDataBase base1 = base.getUsers().get(j);
-                userModel.setId(base1.getId());
-                userModel.setFullName(base1.getFullName());
-                userModel.setImage(base1.getImage());
-                userModel.setId(base1.getId());
-                userModels.add(userModel);
+            if (offers1.getUsers()!= null && offers1.getUsers().size()> 0) {
+                List<UserModel> userModels = new ArrayList<>();
+                for (int j = 0; j < offers1.getUsers().size(); j++) {
+                    UserModel userModel = new UserModel();
+                    UserDataBase base1 = base.getUsers().get(j);
+                    userModel.setId(base1.getId());
+                    userModel.setFullName(base1.getFullName());
+                    userModel.setImage(base1.getImage());
+                    userModel.setId(base1.getId());
+                    userModels.add(userModel);
+                }
+                offers1.setUsers(userModels);
+                offers.add(offers1);
             }
-            offers1.setUsers(userModels);
-            offers.add(offers1);
 //            List<RequirmentModel> rec = new ArrayList<>();
 //            for (int j = 0; j < base.getRequirments().size(); j++) {
 //                RequirmentModel requirmentModel = new RequirmentModel();
@@ -722,8 +734,8 @@ public class FragmentProfileHome extends Fragment {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                             bitmap = getResizedBitmap(bitmap, 65);
                             if (imageType == USER_IMAGE) {
-                                cir_user_image.setImageBitmap(bitmap);
-                            } else {
+                                civ_user_image.setImageBitmap(bitmap);
+                            } else if (imageType == USER_SSN){
                                 iv_national_image.setImageBitmap(bitmap);
                             }
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
@@ -736,8 +748,8 @@ public class FragmentProfileHome extends Fragment {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
                     bitmap = getResizedBitmap(bitmap, 65);
                     if (imageType == USER_IMAGE) {
-                        cir_user_image.setImageBitmap(bitmap);
-                    } else {
+                        civ_user_image.setImageBitmap(bitmap);
+                    } else if (imageType == USER_SSN){
                         iv_national_image.setImageBitmap(bitmap);
                     }
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {

@@ -3,11 +3,11 @@ package teamup.rivile.com.teamup.Department;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,15 +67,17 @@ public class DepartmentAdapter extends BaseAdapter {
         final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
         viewHolder.name.setText(product.getName());
-        /** Download Category Image */
+        /** Download Category Icon */
 
-//        Picasso.get().load(API.BASE_URL +product.getImage()).into(viewHolder.image);
+        if (product.getIcon() != null && !product.getIcon().isEmpty())
+            Picasso.get().load(API.BASE_URL + product.getIcon()).into(viewHolder.image);
 
-        viewHolder.action.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentListProjects().setDepId(product.getId()));
-            }
+        viewHolder.action.setOnClickListener(v -> {
+            Log.e("DepId", product.getId() + "");
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame, new FragmentListProjects().setDepId(product.getId()))
+                    .addToBackStack("FragmentListProjects")
+                    .commit();
         });
 
         return convertView;

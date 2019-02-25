@@ -105,14 +105,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         realm = Realm.getDefaultInstance();
 
+        if (DepId != -1) {
+            loadOffers(DepId);
+        }
+
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
             likeModelDataBase = loginDataBases.getLikes();
         });
-        if (DepId != -1) {
-            loadOffers(DepId);
-        }
+
 
         Log.e("Type",ProType+"");
         if (ProType == 1) {
@@ -129,7 +131,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     ((DrawerActivity) getActivity()).Hide();
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
+                            .replace(R.id.frame, new FragmentEmpty()).commit();
                 }
             });
         } else if (ProType == 2) {
@@ -163,7 +165,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                         ((DrawerActivity) getActivity()).Hide();
                         //Todo: Show Empty view
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
+                                .replace(R.id.frame, new FragmentEmpty()).commit();
                     }
 
 
@@ -171,7 +173,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     ((DrawerActivity) getActivity()).Hide();
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
+                            .replace(R.id.frame, new FragmentEmpty()).commit();
                 }
 
             });
