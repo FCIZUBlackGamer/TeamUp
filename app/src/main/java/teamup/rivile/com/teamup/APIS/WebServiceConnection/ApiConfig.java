@@ -113,7 +113,16 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)
-    Call<String> addOffer(@Field(API.PARAM_NAME_TOKEN) String token,
+    Call<Integer> addOffer(@Field(API.PARAM_NAME_TOKEN) String token,
+                          @Field(API.PARAM_NAME_OFFER) String offer,
+                          @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
+                          @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+                          @Field(API.PARAM_NAME_CAPITAL) String capital,
+                          @Field(API.PARAM_NAME_TAGS) String tags);
+
+    @FormUrlEncoded
+    @POST(API.ADD_OFFER_URL)
+    Call<Integer> editOffer(@Field(API.PARAM_NAME_TOKEN) String token,
                           @Field(API.PARAM_NAME_OFFER) String offer,
                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,

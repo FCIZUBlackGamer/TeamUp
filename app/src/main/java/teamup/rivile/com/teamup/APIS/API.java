@@ -14,7 +14,7 @@ public class API {
     final public static String PROFILE_URL = BASE_URL + "Register/Profile";
     final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
-    final public static String EDIT_OFFER_URL = BASE_URL + "Edit";
+    final public static String EDIT_OFFER_URL = BASE_URL + "Offer/Edit";
     final public static String EDIT_REQUIREMENT_URL = BASE_URL + "EditRequirement";
     final public static String DELETE_OFFER_URL = BASE_URL + "";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer";
