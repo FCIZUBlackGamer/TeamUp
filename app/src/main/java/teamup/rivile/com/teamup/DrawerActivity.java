@@ -65,35 +65,35 @@ public class DrawerActivity extends AppCompatActivity
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_home);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentHome()).addToBackStack("Home")
+                            .replace(R.id.frame, new FragmentHome())
                             .commit();
                     return true;
                 case R.id.navigation_go_map:
                     toolbar.setVisibility(View.GONE);
                     navigationView.setCheckedItem(R.id.nav_go_map);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new GoMap()).addToBackStack("Home")
+                            .replace(R.id.frame, new GoMap())
                             .commit();
                     return true;
                 case R.id.navigation_saved_project:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_saved_project);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects()).addToBackStack("Home")
+                            .replace(R.id.frame, new FragmentListProjects())
                             .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentJoinHome.setOfferId(2)).addToBackStack("Home")
+                            .replace(R.id.frame, FragmentJoinHome.setOfferId(2))
                             .commit();
                     return true;
                 case R.id.navigation_profile:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_profile);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentProfileHome()).addToBackStack("Home")
+                            .replace(R.id.frame, new FragmentProfileHome())
                             .commit();
                     return true;
             }
@@ -105,7 +105,7 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         searchView = findViewById(R.id.search);
 
 
@@ -115,7 +115,7 @@ public class DrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        fab = (FloatingActionButton) findViewById(R.id.addOffer);
+        fab = findViewById(R.id.addOffer);
         fab.setVisibility(View.VISIBLE);
 
 
@@ -148,16 +148,16 @@ public class DrawerActivity extends AppCompatActivity
                 return false;
             }
         });
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.nav_home);
         navigationView.setCheckedItem(R.id.navigation_home);
@@ -166,20 +166,17 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /** Half Pizza Animation */
-                Hide();
-                fab.setVisibility(View.GONE);
-                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome().setFab(fab)).commit();
-            }
+        fab.setOnClickListener(view -> {
+            /** Half Pizza Animation */
+            Hide();
+            fab.setVisibility(View.GONE);
+            fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome().setFab(fab)).commit();
         });
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -201,33 +198,24 @@ public class DrawerActivity extends AppCompatActivity
 
     public void actionNav() {
 
-        civ_filter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        civ_filter.setOnClickListener(v -> {
 
-                if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()) {
-                    civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_marker));
-                    Nav();
-                    loadProjectsData();
-                } else {
-                    civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_projects));
-                    Nav();
-                    loadUsersLocationsData();
-                }
-
-                //Todo: Reload recycle view data
-
-
+            if (civ_filter.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_projects).getConstantState()) {
+                civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_marker));
+                Nav();
+                loadProjectsData();
+            } else {
+                civ_filter.setImageDrawable(getResources().getDrawable(R.drawable.ic_projects));
+                Nav();
+                loadUsersLocationsData();
             }
+
+            //Todo: Reload recycle view data
+
+
         });
 
-        iv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                opOrCl();
-
-            }
-        });
+        iv_cancel.setOnClickListener(v -> opOrCl());
     }
 
     public void opOrCl() {
@@ -317,31 +305,31 @@ public class DrawerActivity extends AppCompatActivity
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_home);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentHome()).addToBackStack("Home")
+                    .replace(R.id.frame, new FragmentHome())
                     .commit();
         } else if (id == R.id.nav_go_map) {
             toolbar.setVisibility(View.GONE);
             navigation.setSelectedItemId(R.id.navigation_go_map);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new GoMap()).addToBackStack("Home")
+                    .replace(R.id.frame, new GoMap())
                     .commit();
         } else if (id == R.id.nav_saved_project) {// internal db
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentListProjects.setType(1)).addToBackStack("Home")
+                    .replace(R.id.frame, FragmentListProjects.setType(1))
                     .commit();
         } else if (id == R.id.nav_requirement) {// internal db
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_saved_project);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentIncommingRequirement()).addToBackStack(null)
+                    .replace(R.id.frame, new FragmentIncommingRequirement())
                     .commit();
         } else if (id == R.id.nav_favourite_projects) {// internal db
             toolbar.setVisibility(View.VISIBLE);
             navigation.setSelectedItemId(R.id.navigation_favourite_projects);
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentListProjects.setType(2)).addToBackStack("Home")
+                    .replace(R.id.frame, FragmentListProjects.setType(2))
                     .commit();
         } else if (id == R.id.nav_profile) {
             toolbar.setVisibility(View.VISIBLE);
@@ -350,7 +338,7 @@ public class DrawerActivity extends AppCompatActivity
                         .findFirst();
                 navigation.setSelectedItemId(R.id.navigation_profile);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.frame, FragmentProfileHome.setId(loginDataBases.getUser().getId())).addToBackStack("Home")
+                        .replace(R.id.frame, FragmentProfileHome.setId(loginDataBases.getUser().getId()))
                         .commit();
             });
 

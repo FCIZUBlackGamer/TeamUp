@@ -1252,6 +1252,7 @@ public class FragmentJoinHome extends Fragment {
         Log.v("DABUGG", "\"Attachment\": " + attachments);
 
         mRequirementModel.setUserId(mUserId);
+        mRequirementModel.setId(requirmentModel != null ? requirmentModel.getId() : 0);     //new Requirements
         String requirements = new GsonBuilder().serializeNulls().create().toJson(mRequirementModel);
         Log.v("DABUGG", "\"Requirement\": " + requirements);
 

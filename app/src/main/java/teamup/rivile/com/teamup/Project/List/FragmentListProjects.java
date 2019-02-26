@@ -123,7 +123,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
                         .findAll();
                 RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
-//                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
+////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
                 Log.e("Size",offerDetailsDataBases.size()+"");
                 if (offerDetailsDataBases.size() > 0) {
                     fillOffers(convertList(offerDetailsDataBases), MINE);

@@ -75,10 +75,13 @@ public class DepartmentAdapter extends BaseAdapter {
         viewHolder.action.setOnClickListener(v -> {
             Log.e("DepId", product.getId() + "");
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentListProjects().setDepId(product.getId()))
+                    .replace(R.id.frame, FragmentListProjects.setDepId(product.getId()))
                     .addToBackStack("FragmentListProjects")
                     .commit();
         });
+
+        viewHolder.image.setOnClickListener(v -> viewHolder.action.callOnClick());
+        viewHolder.name.setOnClickListener(v -> viewHolder.action.callOnClick());
 
         return convertView;
     }

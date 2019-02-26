@@ -48,7 +48,7 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
         holder.person_name.setText(userModel.getFullName());
         holder.sent_time.setText(incomingRequirments.getOffer().getDate());
 
-        if (!userModel.getImage().isEmpty()) {
+        if (userModel.getImage() != null && !userModel.getImage().isEmpty()) {
             try {
                 Picasso.get().load(userModel.getImage()).into(holder.image);
             } catch (Exception e) {
