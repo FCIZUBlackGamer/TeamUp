@@ -346,9 +346,11 @@ public class FragmentOffer3 extends Fragment {
             }
         });
 
-        go.setOnClickListener(v -> new Handler().post(() -> {
+        go.setOnClickListener(v -> {
             RequirmentModel.setExperienceTypeId(1);
             mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
+
+            Log.v("mSelectedCategory", String.valueOf(mSelectedCategory));
 
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
                 pager.setCurrentItem(0);
@@ -398,7 +400,7 @@ public class FragmentOffer3 extends Fragment {
                     copyFilesUploadFilesAddOffer();
                 else addOffer();
             }
-        }));
+        });
 
         //region Shrink And Expand
 
@@ -1012,49 +1014,57 @@ public class FragmentOffer3 extends Fragment {
         offers.setUserId(Offers.getUserId());
         offers.setAddress(Offers.getAddress());
 
-        if (mLoadedProjectWithAllDataLiveData != null) {
-            OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
-            if (o != null)
-                offerDetailsDataBase.setId(o.getId());
+        if (offerDetailsDataBase != null) {
+            if (mLoadedProjectWithAllDataLiveData != null) {
+                OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
+                if (o != null)
+                    offerDetailsDataBase.setId(o.getId());
+            }
+            if (offerDetailsDataBase.getId() == null) offerDetailsDataBase.setId(0);
+            offerDetailsDataBase.setName(Offers.getName());
+            offerDetailsDataBase.setDescription(Offers.getDescription());
+            offerDetailsDataBase.setCategoryId(Offers.getCategoryId());
+            offerDetailsDataBase.setCategoryName(Offers.getCategoryName());
+            offerDetailsDataBase.setProfitType(Offers.getProfitType());
+            offerDetailsDataBase.setProfitFrom(Offers.getProfitFrom());
+            offerDetailsDataBase.setProfitTo(Offers.getProfitTo());
+            offerDetailsDataBase.setNumContributorFrom(Offers.getNumContributorFrom());
+            offerDetailsDataBase.setNumContributorTo(Offers.getNumContributorTo());
+            offerDetailsDataBase.setAgeRequiredFrom(Offers.getAgeRequiredFrom());
+            offerDetailsDataBase.setAgeRequiredTo(Offers.getAgeRequiredTo());
+            offerDetailsDataBase.setGenderContributor(Offers.getGenderContributor());
+            offerDetailsDataBase.setEducationContributorLevel(Offers.getEducationContributorLevel());
+            offerDetailsDataBase.setUserId(Offers.getUserId());
+            offerDetailsDataBase.setNumLiks(Offers.getNumLiks());
+            offerDetailsDataBase.setNumJoinOffer(Offers.getNumJoinOffer());
+            /**
+             * start User Section
+             * */
+            UserDataBase userDataBase = new UserDataBase();
+            userDataBase.setId(mUserId);
+            userDataBase.setFullName(Offers.getUsers().get(0).getFullName());
+            userDataBase.setImage(Offers.getUsers().get(0).getImage());
+            RealmList<UserDataBase> userDataBases = new RealmList<>();
+            userDataBases.add(userDataBase);
+            offerDetailsDataBase.setUsers(userDataBases);
+            /**
+             * end User Section
+             * */
+            offerDetailsDataBase.setAddress(Offers.getAddress());
+            offerDetailsDataBase.setUserId(Offers.getUserId());
+            offerDetailsDataBase.setAddress(Offers.getAddress());
         }
-        if (offerDetailsDataBase.getId() == null) offerDetailsDataBase.setId(0);
-        offerDetailsDataBase.setName(Offers.getName());
-        offerDetailsDataBase.setDescription(Offers.getDescription());
-        offerDetailsDataBase.setCategoryId(Offers.getCategoryId());
-        offerDetailsDataBase.setCategoryName(Offers.getCategoryName());
-        offerDetailsDataBase.setProfitType(Offers.getProfitType());
-        offerDetailsDataBase.setProfitFrom(Offers.getProfitFrom());
-        offerDetailsDataBase.setProfitTo(Offers.getProfitTo());
-        offerDetailsDataBase.setNumContributorFrom(Offers.getNumContributorFrom());
-        offerDetailsDataBase.setNumContributorTo(Offers.getNumContributorTo());
-        offerDetailsDataBase.setAgeRequiredFrom(Offers.getAgeRequiredFrom());
-        offerDetailsDataBase.setAgeRequiredTo(Offers.getAgeRequiredTo());
-        offerDetailsDataBase.setGenderContributor(Offers.getGenderContributor());
-        offerDetailsDataBase.setEducationContributorLevel(Offers.getEducationContributorLevel());
-        offerDetailsDataBase.setUserId(Offers.getUserId());
-        offerDetailsDataBase.setNumLiks(Offers.getNumLiks());
-        offerDetailsDataBase.setNumJoinOffer(Offers.getNumJoinOffer());
-        /**
-         * start User Section
-         * */
-        UserDataBase userDataBase = new UserDataBase();
-        userDataBase.setId(mUserId);
-        userDataBase.setFullName(Offers.getUsers().get(0).getFullName());
-        userDataBase.setImage(Offers.getUsers().get(0).getImage());
-        RealmList<UserDataBase> userDataBases = new RealmList<>();
-        userDataBases.add(userDataBase);
-        offerDetailsDataBase.setUsers(userDataBases);
-        /**
-         * end User Section
-         * */
-        offerDetailsDataBase.setAddress(Offers.getAddress());
-        offerDetailsDataBase.setUserId(Offers.getUserId());
-        offerDetailsDataBase.setAddress(Offers.getAddress());
         return offers;
     }
 
     private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirementModel() {
         teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirementModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
+        if (mLoadedProjectWithAllDataLiveData != null) {
+            OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
+            if (o != null)
+                requirementModel.setId(o.getId());
+        }
+        if (requirementModel.getId() == null) requirementModel.setId(0);
         requirementModel.setId(RequirmentModel.getId());
         requirementModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
         requirementModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
@@ -1091,7 +1101,7 @@ public class FragmentOffer3 extends Fragment {
         offerDetailsRequirmentDataBase.setUserId(RequirmentModel.getUserId());
         offerDetailsRequirmentDataBase.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
         list.add(offerDetailsRequirmentDataBase);
-        offerDetailsDataBase.setRequirments(list);
+        if (offerDetailsDataBase != null) offerDetailsDataBase.setRequirments(list);
         return requirementModel;
     }
 
@@ -1132,17 +1142,17 @@ public class FragmentOffer3 extends Fragment {
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
 
-        Call<Integer> response ;
+        Call<Integer> response;
         if (mLoadedProjectWithAllDataLiveData != null) {
             OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
             if (o != null)
                 offerDetailsDataBase.setId(o.getId());
         }
 
-        if (offerDetailsDataBase==null){
+        if (offerDetailsDataBase == null) {
             response = retrofitService.addOffer(API.URL_TOKEN,
                     offerString, requirementString, attachmentString, capitalString, tagsString);
-        }else {
+        } else {
             response = retrofitService.editOffer(API.URL_TOKEN,
                     offerString, requirementString, attachmentString, capitalString, tagsString);
         }
