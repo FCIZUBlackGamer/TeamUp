@@ -62,20 +62,6 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
                     .replace(R.id.frame, new FragmentProfileHome().setId(userModel.getId())).addToBackStack("FragmentProfileHome").commit();
         });
 
-        holder.linearLayout.setOnClickListener(v -> {
-            for (int i = 0; i < incomingRequirments.getOffer().getRequirments().size(); i++) {
-                if (incomingRequirments.getOffer().getRequirments().get(i).getUserId() == incomingRequirments.getOffer().getUsers().get(position).getId()) {
-                    Gson gson = new Gson();
-                    Log.e("Requirement", gson.toJson(incomingRequirments.getOffer().getRequirments().get(i)));
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame,
-                                    FragmentJoinHome.setRequirement(incomingRequirments.getOffer().getRequirments().get(i), incomingRequirments.getOffer().getId()))
-                            .addToBackStack("FragmentJoinHome").commit();
-                }
-            }
-
-        });
-
         //Todo: implement details Action
         holder.details.setOnClickListener(v -> {
             for (int i = 0; i < incomingRequirments.getOffer().getRequirments().size(); i++) {
@@ -102,14 +88,12 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
         TextView person_name, sent_time;
         CircleImageView image;
         Button details;
-        LinearLayout linearLayout;
 
         public Vholder(View itemView) {
             super(itemView);
             person_name = itemView.findViewById(R.id.person_name);
             sent_time = itemView.findViewById(R.id.sent_time);
             image = itemView.findViewById(R.id.im);
-            linearLayout = itemView.findViewById(R.id.lin);
             details = itemView.findViewById(R.id.details);
         }
     }
