@@ -1164,6 +1164,7 @@ public class FragmentOffer3 extends Fragment {
                     if (response.body() != null && response.body() != 0) {
                         Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_LONG).show();
                         offerDetailsDataBase.setId(response.body());
+                        offerDetailsDataBase.updateNumProject();
                         realm.executeTransaction(realm1 -> {
                             realm1.insertOrUpdate(offerDetailsDataBase);
                             realm1.commitTransaction();

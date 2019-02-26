@@ -139,9 +139,21 @@ public class DrawerActivity extends AppCompatActivity
                             .replace(R.id.frame, FragmentHome.setWord(s)).addToBackStack(null)
                             .commit();
                 } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentListProjects.setWord(s)).addToBackStack(null)
-                            .commit();
+                    if (s.startsWith("#")) {
+                        String word = s.replace("#","");
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(0, word))
+                                .commit();
+                    } else if (s.startsWith("@")) {
+                        String word = s.replace("@","");
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(2, word))
+                                .commit();
+                    } else {
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(1, s))
+                                .commit();
+                    }
                 }
                 return false;
             }
@@ -168,7 +180,7 @@ public class DrawerActivity extends AppCompatActivity
 
         realm.executeTransaction(realm1 -> {
             UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
-            user_num_projects.setText(User.getNumProject() + "");
+            user_num_projects.setText(getResources().getString(R.string.nav_header_subtitle) + User.getNumProject());
             String[] name = User.getFullName().split(" ");
             user_name.setText(name[0]);
             if (User.getImage() != null && !User.getImage().isEmpty()) {

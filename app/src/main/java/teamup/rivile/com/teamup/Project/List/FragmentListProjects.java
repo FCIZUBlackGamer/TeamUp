@@ -60,6 +60,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     static int DepId = -1;
     static int ProType = -1;
     static String Word;
+    static int Type = -1;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
 
@@ -81,9 +82,11 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     /**
      * @param word refers to my projects(1), favourite projects(2) or all projects(-1)
+     * @param type {2: UserName, 1: ProjectName, 0: Tag}
      */
-    public static FragmentListProjects setWord(String word) {
+    public static FragmentListProjects setWord(int type, String word) {
         Word = word;//Todo: Make Action
+        Type = type;
         return new FragmentListProjects();
     }
 
@@ -105,9 +108,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         realm = Realm.getDefaultInstance();
 
+        if (Type != -1){
+            DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
+            loadOffers(Type, Word);
+        }
         if (DepId != -1) {
             loadOffers(DepId);
         }
+
 
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
@@ -361,6 +369,35 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         if (depId != -1)
             call = getOffers.getOffersByCatId(depId, API.URL_TOKEN);
         else call = getOffers.getAllOffers(API.URL_TOKEN);
+
+        call.enqueue(new Callback<Offer>() {
+            @Override
+            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+                Offer serverResponse = response.body();
+                if (serverResponse != null) {
+                    fillOffers(serverResponse, NORMAL);
+                } else {
+                    Log.d("DABUGG", "serverResponse = null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Offer> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Log.d("DABUGG", t.getMessage());
+            }
+        });
+    }
+
+    private void loadOffers(int type, String word) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.HOME_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<Offer> call;
+
+            call = getOffers.searchOffer(type, word, API.URL_TOKEN);
+
 
         call.enqueue(new Callback<Offer>() {
             @Override

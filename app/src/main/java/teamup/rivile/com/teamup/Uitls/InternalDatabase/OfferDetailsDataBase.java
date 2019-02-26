@@ -112,6 +112,10 @@ public class OfferDetailsDataBase extends RealmObject {
         Users = users;
     }
 
+    public void updateNumProject(){
+        int num = Users.get(0).getNumProject();
+        Users.get(0).setNumProject(num++);
+    }
     public Integer getNumJoinOffer() {
         return NumJoinOffer;
     }
