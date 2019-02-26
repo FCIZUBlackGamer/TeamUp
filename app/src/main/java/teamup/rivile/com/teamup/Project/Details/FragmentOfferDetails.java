@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -241,7 +242,21 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
 
         like.setOnClickListener(v -> {
-            likeOffer(projectId);
+            Drawable likeDrawable = like.getCompoundDrawables()[2]; //right drawable
+            if (likeDrawable.getConstantState()
+                    .equals(getContext()
+                            .getResources()
+                            .getDrawable(R.drawable.ic_like)
+                            .getConstantState())) {
+                like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+            } else if (likeDrawable.getConstantState()
+                    .equals(getContext()
+                            .getResources()
+                            .getDrawable(R.drawable.ic_favorite_border_black_24dp)
+                            .getConstantState())) {
+                like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+                likeOffer(projectId);
+            }
         });
 
         share.setOnClickListener(

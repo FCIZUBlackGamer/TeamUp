@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Project.List;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +46,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         this.context = context;
         this.offersList = talabats;
         ty = type;
-        likeModelDataBase  = likeModel;
+        likeModelDataBase = likeModel;
         mHelper = helper;
     }
 
@@ -65,8 +66,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             holder.delete.setVisibility(View.VISIBLE);
         }
         for (int i = 0; i < likeModelDataBase.size(); i++) {
-            if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()){
-                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,0,0,0);
+            if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
             }
         }
 
@@ -75,9 +76,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
         holder.location.setText(offersList.get(position).getAddress());
         holder.project_desc.setText(offersList.get(position).getDescription());
-        if (offersList.get(position).getTags() != null){
-            for (int i = 0; i < offersList.get(position).getTags().size() ;i++) {
-                holder.project_tag.append("\n#"+offersList.get(position).getTags().get(i).getName());
+        if (offersList.get(position).getTags() != null) {
+            for (int i = 0; i < offersList.get(position).getTags().size(); i++) {
+                holder.project_tag.append("\n#" + offersList.get(position).getTags().get(i).getName());
             }
         }
 
@@ -129,14 +130,22 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 .addToBackStack("FragmentProfileHome").commit());
 
         holder.like.setOnClickListener(v -> {
-            Log.e("Like","1");
-            if (holder.like.getCompoundDrawables().equals(context.getResources().getDrawable(R.drawable.ic_like))){
-                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_border_black_24dp,0,0,0);
-                Log.e("Like","2");
-            }else {
+            Drawable likeDrawable = holder.like.getCompoundDrawables()[2]; //right drawable
+            if (likeDrawable.getConstantState()
+                    .equals(context
+                            .getResources()
+                            .getDrawable(R.drawable.ic_like)
+                            .getConstantState())) {
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+            } else if (likeDrawable.getConstantState()
+                    .equals(context
+                            .getResources()
+                            .getDrawable(R.drawable.ic_favorite_border_black_24dp)
+                            .getConstantState())) {
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
                 FragmentOfferDetails.likeOffer(offersList.get(position).getId());
-                Log.e("Like","3");
             }
+
         });
 
         //TODO: get project URL and send it here
