@@ -186,7 +186,6 @@
             android:fontFamily="@font/medium"
             android:maxLines="4"
             android:paddingEnd="8dp"
-            android:text="مشروع مزرعه دواجن "
             android:textColor="#2196F3"
             android:textDirection="rtl"
             android:textSize="18sp" />

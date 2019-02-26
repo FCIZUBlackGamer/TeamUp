@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.Project.IncommingRequirement;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -123,8 +124,13 @@ public class FragmentIncommingRequirement extends Fragment {
 //                manager.popBackStack();
 
             ((DrawerActivity) getActivity()).Hide();
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame, new FragmentEmpty()).commit();
+            ((DrawerActivity) getActivity()).HideFab();
+            try {
+                ((DrawerActivity) getActivity()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new FragmentEmpty()).commit();
+            }catch (Exception e){
+
+            }
             project_requests.setVisibility(View.GONE);
         }
     }

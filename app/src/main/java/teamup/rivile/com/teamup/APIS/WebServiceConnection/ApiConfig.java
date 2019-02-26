@@ -45,6 +45,13 @@ public interface ApiConfig {
     @POST(API.HOME_URL)
     Call<Offer> getAllOffers(@Field("token") String token);
 
+    /**
+     * @param Type {2: UserName, 1: ProjectName, 0: Tag}
+     * */
+    @FormUrlEncoded
+    @POST(API.GENERAL_SEARCH_URL)
+    Call<Offer> searchOffer(@Field("Type") int Type, @Field("Name") String Name, @Field("token") String token);
+
     @FormUrlEncoded
     @POST(API.LOGIN_URL)
     Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token);

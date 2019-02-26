@@ -21,7 +21,7 @@ public class API {
     final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/"; //VIEW_PROJECT_URL
     final public static String LIST_OFFERS_BY_PROJECT_URL = BASE_URL + "";
     final public static String LIST_OFFERS_BY_DEPARTMENT_URL = BASE_URL + "";
-    final public static String GENERAL_SEARCH_URL = BASE_URL + "";
+    final public static String GENERAL_SEARCH_URL = BASE_URL + "Offer/BasicSearch";
     final public static String FILTTER_SEARCH_URL = BASE_URL + "";
     final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "Offer/ListCat/";
     final public static String LOAD_ListOfCapTagCat_URL = BASE_URL + "Offer/ListOfCapTagCat/";

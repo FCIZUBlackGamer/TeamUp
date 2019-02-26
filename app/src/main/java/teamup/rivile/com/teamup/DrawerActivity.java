@@ -16,13 +16,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
@@ -32,6 +36,7 @@ import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRe
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -134,9 +139,21 @@ public class DrawerActivity extends AppCompatActivity
                             .replace(R.id.frame, FragmentHome.setWord(s)).addToBackStack(null)
                             .commit();
                 } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentListProjects.setWord(s)).addToBackStack(null)
-                            .commit();
+                    if (s.startsWith("#")) {
+                        String word = s.replace("#","");
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(0, word))
+                                .commit();
+                    } else if (s.startsWith("@")) {
+                        String word = s.replace("@","");
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(2, word))
+                                .commit();
+                    } else {
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, FragmentListProjects.setWord(1, s))
+                                .commit();
+                    }
                 }
                 return false;
             }
@@ -156,6 +173,20 @@ public class DrawerActivity extends AppCompatActivity
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        CircleImageView user_image = header.findViewById(R.id.imageView);
+        TextView user_name = header.findViewById(R.id.user_name);
+        TextView user_num_projects = header.findViewById(R.id.num_projects);
+
+        realm.executeTransaction(realm1 -> {
+            UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
+            user_num_projects.setText(getResources().getString(R.string.nav_header_subtitle) + User.getNumProject());
+            String[] name = User.getFullName().split(" ");
+            user_name.setText(name[0]);
+            if (User.getImage() != null && !User.getImage().isEmpty()) {
+                Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
+            }
+        });
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -272,13 +303,13 @@ public class DrawerActivity extends AppCompatActivity
         toolbar.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.drawer, menu);
-        return true;
-    }
     //Todo: active it and setup settings
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.drawer, menu);
+//        return true;
+//    }
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {

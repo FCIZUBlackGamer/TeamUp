@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">مؤمن شاهين</string>
-    <string name="nav_header_subtitle" translatable="false">مشترك فى 6 مشاريع</string>
+    <string name="nav_header_subtitle" translatable="false"> مشاريع </string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings" translatable="false">Settings</string>
 
