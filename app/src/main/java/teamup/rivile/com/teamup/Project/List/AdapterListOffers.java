@@ -107,28 +107,28 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, FragmentProfileHome.setId(offersList.get(position).getUserId())).addToBackStack(null).commit();
+                    .replace(R.id.frame, FragmentProfileHome.setId(offersList.get(position).getUserId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
         });
 
         holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(null).commit());
+                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
 
         holder.con.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(null).commit());
+                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
 
         holder.project_desc.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(null).commit());
+                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
 
         holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentJoinHome.setOfferId(offersList.get(position).getId()))
-                .addToBackStack(null).commit());
+                .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit());
 
         realm.executeTransaction(realm1 -> {
             RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();

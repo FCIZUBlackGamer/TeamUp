@@ -64,7 +64,6 @@ public class FragmentIncommingRequirement extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Toast.makeText(getContext(), "FragmentIncommingRequirement", Toast.LENGTH_SHORT).show();//todo
 
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).HideFab();

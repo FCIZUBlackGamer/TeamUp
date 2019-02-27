@@ -44,7 +44,6 @@ public class FragmentHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Toast.makeText(getContext(), "FragmentHome", Toast.LENGTH_SHORT).show();//todo
 
         view = inflater.inflate(R.layout.fragment_category, container, false);
 

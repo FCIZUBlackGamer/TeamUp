@@ -131,7 +131,7 @@ public class DrawerActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String s) {
                 if (Whome.equals("Home")) {/** Means Current fragment is home*/
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentHome.setWord(s)).addToBackStack(null)
+                            .replace(R.id.frame, FragmentHome.setWord(s)).addToBackStack(FragmentHome.class.getSimpleName())
                             .commit();
                 } else if (Whome.equals("ListProjects")) {/** Means Current fragment is ListProjects*/
                     if (s.startsWith("#")) {
@@ -175,7 +175,7 @@ public class DrawerActivity extends AppCompatActivity
 
         realm.executeTransaction(realm1 -> {
             UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
-            user_num_projects.setText(getResources().getString(R.string.nav_header_subtitle) + User.getNumProject());
+            user_num_projects.setText(User.getNumProject() + " " + getResources().getString(R.string.nav_header_subtitle));
             String[] name = User.getFullName().split(" ");
             user_name.setText(name[0]);
             if (User.getImage() != null && !User.getImage().isEmpty()) {
@@ -203,7 +203,7 @@ public class DrawerActivity extends AppCompatActivity
             /** Half Pizza Animation */
             Hide();
             fab.setVisibility(View.GONE);
-            fragmentManager.beginTransaction().replace(R.id.frame, new FragmentAddHome().setFab(fab)).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab)).commit();
         });
     }
 
@@ -212,11 +212,18 @@ public class DrawerActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (fragmentManager.getBackStackEntryCount() == 0) {
             super.onBackPressed();
-            Fragment currentFragment = fragmentManager.findFragmentById(R.id.frame);
-            if (currentFragment != null && currentFragment instanceof FragmentHome)
+        } else {
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStackImmediate();
+            }
+//            super.onBackPressed();
+            if (fragmentManager.getBackStackEntryCount() == 0) {
                 mIsCurrentFragmentIsHomeFragment = true;
+                fragmentManager.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
+                showToolbar();
+            }
         }
     }
 
@@ -354,7 +361,8 @@ public class DrawerActivity extends AppCompatActivity
                 navigation.setSelectedItemId(R.id.navigation_go_map);
 
                 fragmentTransaction.replace(R.id.frame, new GoMap());
-                if (mIsCurrentFragmentIsHomeFragment) fragmentTransaction.addToBackStack(null);
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(GoMap.class.getSimpleName());
                 break;
 
             case R.id.nav_saved_project: // internal db
@@ -362,7 +370,8 @@ public class DrawerActivity extends AppCompatActivity
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
                 fragmentTransaction.replace(R.id.frame, FragmentListProjects.setType(1));
-                if (mIsCurrentFragmentIsHomeFragment) fragmentTransaction.addToBackStack(null);
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
 
             case R.id.nav_requirement: // internal db
@@ -370,7 +379,8 @@ public class DrawerActivity extends AppCompatActivity
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
                 fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
-                if (mIsCurrentFragmentIsHomeFragment) fragmentTransaction.addToBackStack(null);
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentIncommingRequirement.class.getSimpleName());
                 break;
 
             case R.id.nav_favourite_projects: // internal db
@@ -378,7 +388,8 @@ public class DrawerActivity extends AppCompatActivity
                 navigation.setSelectedItemId(R.id.navigation_favourite_projects);
 
                 fragmentTransaction.replace(R.id.frame, FragmentListProjects.setType(2));
-                if (mIsCurrentFragmentIsHomeFragment) fragmentTransaction.addToBackStack(null);
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
 
             case R.id.nav_profile:
@@ -390,7 +401,8 @@ public class DrawerActivity extends AppCompatActivity
 
                     fragmentTransaction.replace(R.id.frame,
                             FragmentProfileHome.setId(loginDataBases.getUser().getId()));
-                    if (mIsCurrentFragmentIsHomeFragment) fragmentTransaction.addToBackStack(null);
+                    if (mIsCurrentFragmentIsHomeFragment)
+                        fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
                 });
 
                 break;
@@ -419,7 +431,7 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
-    public void setTitle(String name){
+    public void setTitle(String name) {
         getSupportActionBar().setTitle(name);
     }
 }

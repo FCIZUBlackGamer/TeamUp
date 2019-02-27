@@ -75,7 +75,6 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
-        Toast.makeText(getContext(), "GoMap", Toast.LENGTH_SHORT).show();//todo
 
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).Hide();

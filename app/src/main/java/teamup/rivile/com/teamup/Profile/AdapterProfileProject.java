@@ -59,7 +59,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
 //                fragmentManager.beginTransaction()
-//                        .replace(R.id.frame, new FragmentProfile()).addToBackStack("FragmentProfile").commit();
+//                        .replace(R.id.frame, new FragmentProfile()).addToBackStack(FragmentProfile.class.getSimpleName()).commit();
         });
 
     }

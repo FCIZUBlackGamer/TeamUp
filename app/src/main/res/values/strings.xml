@@ -130,7 +130,7 @@
     <string name="finishFileDownload" translatable="false">تم تحميل الملف تستطيع تصفحه الأن</string>
     <string name="downloadRunningFiles" translatable="false">جارى تحميل ملفات المشروع</string>
     <string name="noSapce" translatable="false">لا توجد مساحه للتحميل</string>
-    <string name="reportText" translatable="false">ادخل محتوى الشكوة</string>
+    <string name="reportText" translatable="false">ادخل محتوى الشكوي</string>
     <string name="hi" translatable="false">مرحبا!</string>
     <string name="happyHome" translatable="false">نحن سعداء بعودتك</string>
     <string name="loginOrSignup" translatable="false">قم بتسجيل الدخول أو انشأ حساب جديد</string>

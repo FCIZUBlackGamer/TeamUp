@@ -11,7 +11,6 @@ public class FirstActivity extends AppCompatActivity {
         setContentView(R.layout.activity_first);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.first, new Login())
-                .addToBackStack(null).commit();
+                .replace(R.id.first, new Login()).commit();
     }
 }

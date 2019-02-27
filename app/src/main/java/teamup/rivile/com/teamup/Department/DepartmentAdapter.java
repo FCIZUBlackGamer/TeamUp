@@ -76,7 +76,7 @@ public class DepartmentAdapter extends BaseAdapter {
             Log.e("DepId", product.getId() + "");
             fragmentManager.beginTransaction()
                     .replace(R.id.frame, FragmentListProjects.setDepId(product.getId()))
-                    .addToBackStack(null)
+                    .addToBackStack(FragmentListProjects.class.getSimpleName())
                     .commit();
         });
 

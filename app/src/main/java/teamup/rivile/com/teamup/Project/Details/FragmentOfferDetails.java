@@ -246,7 +246,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         make_offer.setOnClickListener(v -> getFragmentManager().beginTransaction()
                 .replace(R.id.frame,
                         FragmentJoinHome.setOfferId(projectId))
-                .addToBackStack(null).commit());
+                .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit());
 
 
         like.setOnClickListener(v -> {
