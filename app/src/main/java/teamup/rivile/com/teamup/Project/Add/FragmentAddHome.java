@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ public class FragmentAddHome extends Fragment {
     private MutableLiveData<ArrayList<ExperienceTypeModel>> mExperienceTypesLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitalLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<CapitalModel>> mLoadedCategoryLiveData = new MutableLiveData<>();
+
+    private ImageView mIndicatorImageView;
 
     private static int mProjectId = -1;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = new MutableLiveData<>();
@@ -71,6 +74,7 @@ public class FragmentAddHome extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_home, container, false);
         //fragmentManager = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
         viewPager = view.findViewById(R.id.offer_pager);
+        mIndicatorImageView = view.findViewById(R.id.iv_indicator);
         return view;
     }
 
@@ -86,7 +90,27 @@ public class FragmentAddHome extends Fragment {
         pagerAdapter = new pager(getChildFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
+        mIndicatorImageView.setImageResource(R.drawable.ic_indicator_first);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (i == 0) mIndicatorImageView.setImageResource(R.drawable.ic_indicator_first);
+                else if (i == 1)
+                    mIndicatorImageView.setImageResource(R.drawable.ic_indicator_second);
+                else if (i == 2)
+                    mIndicatorImageView.setImageResource(R.drawable.ic_indicator_third);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
 
     class pager extends FragmentPagerAdapter {
@@ -100,13 +124,13 @@ public class FragmentAddHome extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentOffer1().setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
+                fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             } else if (position == 1) {
-                fragment = new FragmentOffer2().setPager(viewPager, pagerAdapter, mExperienceTypesLiveData, mLoadedProjectWithAllDataLiveData);
+                fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mExperienceTypesLiveData, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             } else if (position == 2) {
-                fragment = new FragmentOffer3().setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
+                fragment = FragmentOffer3.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
                 //d.commitNow();
             }
 

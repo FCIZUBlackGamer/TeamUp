@@ -203,7 +203,8 @@ public class DrawerActivity extends AppCompatActivity
             /** Half Pizza Animation */
             Hide();
             fab.setVisibility(View.GONE);
-            fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab)).commit();
+            fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
+                    .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
         });
     }
 
