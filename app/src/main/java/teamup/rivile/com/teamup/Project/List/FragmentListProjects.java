@@ -103,6 +103,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public void onStart() {
         super.onStart();
+        Toast.makeText(getContext(), "FragmentListProjects", Toast.LENGTH_SHORT).show();//todo
+
         ((DrawerActivity) getActivity()).Show("ListProjects");
         ((DrawerActivity) getActivity()).ShowFab();
 
@@ -139,7 +141,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     ((DrawerActivity) getActivity()).Hide();
                     //Todo: Show Empty view
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).commit();
+                            .replace(R.id.frame, new FragmentEmpty()).addToBackStack(null).commit();
                 }
             });
         } else if (ProType == 2) {

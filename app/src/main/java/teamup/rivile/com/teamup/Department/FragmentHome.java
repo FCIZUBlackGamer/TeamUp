@@ -61,6 +61,8 @@ public class FragmentHome extends Fragment {
 
     @Override
     public void onStart() {
+        Toast.makeText(getContext(), "FragmentHome", Toast.LENGTH_SHORT).show();//todo
+
         super.onStart();
         ((DrawerActivity) getActivity()).Show("Home");
         ((DrawerActivity) getActivity()).ShowFab();

@@ -164,6 +164,8 @@ public class FragmentProfileHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Toast.makeText(getContext(), "FragmentProfileHome", Toast.LENGTH_SHORT).show();//todo
+
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).HideFab();
         ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);

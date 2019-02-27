@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,6 +64,8 @@ public class FragmentIncommingRequirement extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Toast.makeText(getContext(), "FragmentIncommingRequirement", Toast.LENGTH_SHORT).show();//todo
+
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).HideFab();
         realm = Realm.getDefaultInstance();

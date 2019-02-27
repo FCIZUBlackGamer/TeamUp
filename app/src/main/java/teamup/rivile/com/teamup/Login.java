@@ -96,6 +96,7 @@ public class Login extends Fragment {
                 Gson gson = new Gson();
                 Log.e("results", results.get(0).getUser().getId()+"");
                 startActivity(new Intent(getActivity(), DrawerActivity.class));
+                getActivity().finish();
             }
         });
 
@@ -353,6 +354,7 @@ public class Login extends Fragment {
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
                         startActivity(new Intent(getActivity(), DrawerActivity.class));
+                        getActivity().finish();
                     });
                 } else {
                     //textView.setText(serverResponse.toString());
@@ -393,6 +395,7 @@ public class Login extends Fragment {
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
                         startActivity(new Intent(getActivity(), DrawerActivity.class));
+                        getActivity().finish();
                     });
 
                 } else {
