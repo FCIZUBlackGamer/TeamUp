@@ -71,3 +71,10 @@ RequirmentModel{
         Available: 1
     }
 }
+
+LikeModel {
+    Status{
+        like: 0
+        disLike: else
+    }
+}

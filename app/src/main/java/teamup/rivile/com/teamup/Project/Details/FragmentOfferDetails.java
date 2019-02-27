@@ -41,12 +41,14 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
@@ -59,6 +61,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
@@ -109,7 +112,8 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     static int projectId = 50;
     DownloadManager downloadManager;
     ImageView report;
-    Realm realm;
+    static Realm realm;
+    static int userId;
 
     public static FragmentOfferDetails setProjectId(int proId, int ty, int pos) {
         projectId = proId;
@@ -207,12 +211,16 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 //        registerReceiver(onComplete,
 //                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+        realm.executeTransaction(realm1 -> {
+            userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+        });
         loadOfferDetails(projectId);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
 
         report.setOnClickListener(v -> {
             if (type == FragmentListProjects.NORMAL) {
@@ -238,7 +246,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         make_offer.setOnClickListener(v -> getFragmentManager().beginTransaction()
                 .replace(R.id.frame,
                         FragmentJoinHome.setOfferId(projectId))
-                .addToBackStack("FragmentJoinHome").commit());
+                .addToBackStack(null).commit());
 
 
         like.setOnClickListener(v -> {
@@ -249,13 +257,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+                likeOffer(projectId, 1);
             } else if (likeDrawable.getConstantState()
                     .equals(getContext()
                             .getResources()
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                likeOffer(projectId);
+                likeOffer(projectId, 0);
             }
         });
 
@@ -461,7 +470,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     }
 
 
-    public static void likeOffer(int offerId) {
+    public static void likeOffer(int offerId, int like) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
@@ -469,7 +478,20 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         Call<String> call;
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
-        likeModel.setUserId(1);
+        likeModel.setUserId(userId);
+        likeModel.setStatus(like);
+        if (like == 1) {//dislike
+            realm.executeTransaction(realm1 -> {
+                LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId",offerId).findFirst();
+                l.deleteFromRealm();
+                realm1.commitTransaction();
+            });
+        } else {//like
+            realm.executeTransaction(realm1 -> {
+                realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
+                realm1.commitTransaction();
+            });
+        }
         Gson gson = new Gson();
 
 
@@ -496,6 +518,19 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         //TODO:mProjectURL = Offers.getURL();
 
         project_name.setText(Offers.getName());
+
+        realm.executeTransaction(realm1 -> {
+            RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();
+            for (int i = 0; i < Likes.size(); i++) {
+                if (Likes.get(i).getOfferId() == Offers.getId()) {
+                    like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+                    return;
+                }
+            }
+        });
+
+        ((DrawerActivity) getActivity())
+                .setTitle(Offers.getName());
         mProjectName = Offers.getName();
 
         proDetail.setText(Offers.getDescription());

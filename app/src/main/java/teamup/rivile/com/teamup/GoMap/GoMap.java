@@ -131,7 +131,6 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
         markerOptions.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_location));
         mMap.addMarker(markerOptions);
 
-        LatLng s = new LatLng(-64, 101);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.clear();
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));

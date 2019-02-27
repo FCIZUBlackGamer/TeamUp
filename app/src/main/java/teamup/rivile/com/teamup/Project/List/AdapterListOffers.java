@@ -21,6 +21,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
@@ -106,28 +107,38 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentProfileHome().setId(offersList.get(position).getUserId())).addToBackStack("FragmentProfileHome").commit();
+                    .replace(R.id.frame, FragmentProfileHome.setId(offersList.get(position).getUserId())).addToBackStack(null).commit();
         });
 
         holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack("FragmentProfileHome").commit());
+                .addToBackStack(null).commit());
 
         holder.con.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack("FragmentProfileHome").commit());
+                .addToBackStack(null).commit());
 
         holder.project_desc.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack("FragmentProfileHome").commit());
+                .addToBackStack(null).commit());
 
         holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
                 .replace(R.id.frame,
                         FragmentJoinHome.setOfferId(offersList.get(position).getId()))
-                .addToBackStack("FragmentProfileHome").commit());
+                .addToBackStack(null).commit());
+
+        realm.executeTransaction(realm1 -> {
+            RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();
+            for (int i = 0; i < Likes.size(); i++) {
+                if (Likes.get(i).getOfferId() == offersList.get(position).getId()){
+                    holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+                    return;
+                }
+            }
+        });
 
         holder.like.setOnClickListener(v -> {
             Drawable likeDrawable = holder.like.getCompoundDrawables()[2]; //right drawable
@@ -137,13 +148,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+                FragmentOfferDetails.likeOffer(offersList.get(position).getId(), 0);
             } else if (likeDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                FragmentOfferDetails.likeOffer(offersList.get(position).getId());
+                FragmentOfferDetails.likeOffer(offersList.get(position).getId(),1);
             }
 
         });

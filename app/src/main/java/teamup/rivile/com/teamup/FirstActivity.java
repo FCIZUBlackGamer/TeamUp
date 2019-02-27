@@ -12,6 +12,6 @@ public class FirstActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.first, new Login())
-                .addToBackStack("FF").commit();
+                .addToBackStack(null).commit();
     }
 }

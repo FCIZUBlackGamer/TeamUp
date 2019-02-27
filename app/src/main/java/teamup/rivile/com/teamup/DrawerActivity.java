@@ -123,7 +123,6 @@ public class DrawerActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        fragmentManager = getSupportFragmentManager();
         fab = findViewById(R.id.addOffer);
         fab.setVisibility(View.VISIBLE);
 
@@ -189,6 +188,7 @@ public class DrawerActivity extends AppCompatActivity
         navigation.setSelectedItemId(R.id.nav_home);
         navigationView.setCheckedItem(R.id.navigation_home);
 
+        fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.frame, new FragmentHome())
                 .commit();
@@ -419,5 +419,7 @@ public class DrawerActivity extends AppCompatActivity
         return true;
     }
 
-
+    public void setTitle(String name){
+        getSupportActionBar().setTitle(name);
+    }
 }

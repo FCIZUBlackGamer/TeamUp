@@ -59,7 +59,7 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame, new FragmentProfileHome().setId(userModel.getId())).addToBackStack("FragmentProfileHome").commit();
+                    .replace(R.id.frame,  FragmentProfileHome.setId(userModel.getId())).addToBackStack(null).commit();
         });
 
         //Todo: implement details Action
@@ -71,7 +71,7 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame,
                                     FragmentJoinHome.setRequirement(incomingRequirments.getOffer().getRequirments().get(i), incomingRequirments.getOffer().getId()))
-                            .addToBackStack("FragmentJoinHome").commit();
+                            .addToBackStack(null).commit();
                 }
             }
 

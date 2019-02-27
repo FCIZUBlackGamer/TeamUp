@@ -133,6 +133,8 @@ public class FragmentProfileHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Toast.makeText(getContext(), "FragmentProfileHome", Toast.LENGTH_SHORT).show();//todo
+
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
@@ -164,8 +166,6 @@ public class FragmentProfileHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Toast.makeText(getContext(), "FragmentProfileHome", Toast.LENGTH_SHORT).show();//todo
-
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).HideFab();
         ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
