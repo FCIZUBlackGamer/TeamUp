@@ -1,10 +1,13 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class CapTagCat {
     List<CapitalModel> Category;
     List<ExperienceTypeModel> Tags;
+    @SerializedName("State")
     List<CapitalModel> Capital;
     List<ExperienceTypeModel> ExperienceType;
 

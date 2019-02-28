@@ -47,4 +47,5 @@ public class API {
     public static final String PARAM_NAME_OFFER_ID = "OfferId";
     public static final String PARAM_NAME_ID = "Id";
     public static final String PARAM_NAME_USER_ID = "UserId";
+    public static final String PARAM_NAME_LOCATION = "Location";
 }

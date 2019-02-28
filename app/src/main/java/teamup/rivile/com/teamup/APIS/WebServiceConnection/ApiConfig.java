@@ -62,7 +62,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.REGISTER_URL)
-    Call<String> register(@Field("User") String User, @Field("token") String token);
+    Call<String> register(@Field("User") String User, @Field("token") String token, @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.PROFILE_URL)
@@ -125,7 +125,8 @@ public interface ApiConfig {
                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                           @Field(API.PARAM_NAME_CAPITAL) String capital,
-                          @Field(API.PARAM_NAME_TAGS) String tags);
+                          @Field(API.PARAM_NAME_TAGS) String tags,
+                           @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)

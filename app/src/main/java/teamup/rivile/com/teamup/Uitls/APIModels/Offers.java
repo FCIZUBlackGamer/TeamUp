@@ -4,122 +4,202 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Offers implements Serializable {
-    public Integer Id ;
-    public String Name ;
-    public String Description ;
-    public Integer CategoryId ;
-    public String CategoryName ;
-    public Integer ProfitType ;
-    public Integer ProfitFrom ;
-    public Integer ProfitTo ;
-    public Integer NumContributorFrom ;
-    public Integer NumContributorTo ;
-    public Integer AgeRequiredFrom ;
-    public Integer AgeRequiredTo ;
-    public Integer GenderContributor ;
-    public Integer EducationContributorLevel ;
-    public Integer UserId ;
-    public Integer NumLiks ;
-    public Integer NumJoinOffer ;
-    public List<UserModel> Users ;
-    public String Address ;
-    public String Date ;
-    public Integer Status ;
-    public List<RequirmentModel> Requirments ;
-    public List<CapitalModel> Capitals ;
-    public List<TagsModel> Tags ;
-
+    private Integer Id;
+    private String Name;
+    private String Description;
+    private Integer CategoryId;
+    private String CategoryName;
+    private Integer ProfitType;
+    private Integer ProfitFrom;
+    private Integer ProfitTo;
+    private Integer NumContributorFrom;
+    private Integer NumContributorTo;
+    private Integer AgeRequiredFrom;
+    private Integer AgeRequiredTo;
+    private Integer GenderContributor;
+    private Integer EducationContributorLevel;
+    private Integer UserId;
+    private Integer NumLiks;
+    private Integer NumJoinOffer;
+    private List<UserModel> Users;
+    private String Address;
+    private String Date;
+    private Integer Status;
+    private List<RequirmentModel> Requirments;
+    private List<CapitalModel> Capitals;
+    private List<TagsModel> Tags;
+    private Integer LocationId;
 
     public Offers() {
     }
 
-    public void setTags(List<TagsModel> tags) {
-        Tags = tags;
-    }
-
-    public List<TagsModel> getTags() {
-        return Tags;
-    }
-
-    public String getDate() {
-        return Date;
-    }
-
-    public void setDate(String date) {
-        Date = date;
-    }
-
-    public void setStatus(Integer status) {
-        Status = status;
-    }
-
-    public void setAddress(String address) {
-        Address = address;
-    }
-
-    public void setCapitals(List<CapitalModel> capitals) {
-        Capitals = capitals;
-    }
-
-    public void setRequirments(List<RequirmentModel> requirments) {
-        Requirments = requirments;
-    }
-
-    public String getAddress() {
-        return Address;
-    }
-
-    public Integer getStatus() {
-        return Status;
-    }
-
-    public List<CapitalModel> getCapitals() {
-        return Capitals;
-    }
-
-    public List<RequirmentModel> getRequirments() {
-        return Requirments;
-    }
-
-    public void setNumJoinOffer(Integer numJoinOffer) {
-        NumJoinOffer = numJoinOffer;
-    }
-
-    public void setNumLiks(Integer numLiks) {
+    public Offers(String name, String description, Integer categoryId, String categoryName, Integer profitType, Integer profitFrom, Integer profitTo, Integer numContributorFrom, Integer numContributorTo, Integer ageRequiredFrom, Integer ageRequiredTo, Integer genderContributor, Integer educationContributorLevel, Integer userId, Integer numLiks, Integer numJoinOffer, List<UserModel> users, String address, String date, Integer status, List<RequirmentModel> requirments, List<CapitalModel> capitals, List<TagsModel> tags, Integer locationId) {
+        Name = name;
+        Description = description;
+        CategoryId = categoryId;
+        CategoryName = categoryName;
+        ProfitType = profitType;
+        ProfitFrom = profitFrom;
+        ProfitTo = profitTo;
+        NumContributorFrom = numContributorFrom;
+        NumContributorTo = numContributorTo;
+        AgeRequiredFrom = ageRequiredFrom;
+        AgeRequiredTo = ageRequiredTo;
+        GenderContributor = genderContributor;
+        EducationContributorLevel = educationContributorLevel;
+        UserId = userId;
         NumLiks = numLiks;
-    }
-
-    public void setUsers(List<UserModel> users) {
+        NumJoinOffer = numJoinOffer;
         Users = users;
+        Address = address;
+        Date = date;
+        Status = status;
+        Requirments = requirments;
+        Capitals = capitals;
+        Tags = tags;
+        LocationId = locationId;
     }
 
-    public Integer getNumJoinOffer() {
-        return NumJoinOffer;
+    public Offers(Integer id, String name, String description, Integer categoryId, String categoryName, Integer profitType, Integer profitFrom, Integer profitTo, Integer numContributorFrom, Integer numContributorTo, Integer ageRequiredFrom, Integer ageRequiredTo, Integer genderContributor, Integer educationContributorLevel, Integer userId, Integer numLiks, Integer numJoinOffer, List<UserModel> users, String address, String date, Integer status, List<RequirmentModel> requirments, List<CapitalModel> capitals, List<TagsModel> tags, Integer locationId) {
+
+
+        Id = id;
+        Name = name;
+        Description = description;
+        CategoryId = categoryId;
+        CategoryName = categoryName;
+        ProfitType = profitType;
+        ProfitFrom = profitFrom;
+        ProfitTo = profitTo;
+        NumContributorFrom = numContributorFrom;
+        NumContributorTo = numContributorTo;
+        AgeRequiredFrom = ageRequiredFrom;
+        AgeRequiredTo = ageRequiredTo;
+        GenderContributor = genderContributor;
+        EducationContributorLevel = educationContributorLevel;
+        UserId = userId;
+        NumLiks = numLiks;
+        NumJoinOffer = numJoinOffer;
+        Users = users;
+        Address = address;
+        Date = date;
+        Status = status;
+        Requirments = requirments;
+        Capitals = capitals;
+        Tags = tags;
+        LocationId = locationId;
     }
 
-    public Integer getNumLiks() {
-        return NumLiks;
+    public Integer getId() {
+        return Id;
     }
 
-    public List<UserModel> getUsers() {
-        return Users;
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public Integer getCategoryId() {
+        return CategoryId;
     }
 
     public void setCategoryId(Integer categoryId) {
         CategoryId = categoryId;
     }
 
-    public void setAgeRequiredFrom(Integer ageRequiredFrom) {
-        AgeRequiredFrom = ageRequiredFrom;
+    public String getCategoryName() {
+        return CategoryName;
     }
 
     public void setCategoryName(String categoryName) {
         CategoryName = categoryName;
+    }
 
+    public Integer getProfitType() {
+        return ProfitType;
+    }
+
+    public void setProfitType(Integer profitType) {
+        ProfitType = profitType;
+    }
+
+    public Integer getProfitFrom() {
+        return ProfitFrom;
+    }
+
+    public void setProfitFrom(Integer profitFrom) {
+        ProfitFrom = profitFrom;
+    }
+
+    public Integer getProfitTo() {
+        return ProfitTo;
+    }
+
+    public void setProfitTo(Integer profitTo) {
+        ProfitTo = profitTo;
+    }
+
+    public Integer getNumContributorFrom() {
+        return NumContributorFrom;
+    }
+
+    public void setNumContributorFrom(Integer numContributorFrom) {
+        NumContributorFrom = numContributorFrom;
+    }
+
+    public Integer getNumContributorTo() {
+        return NumContributorTo;
+    }
+
+    public void setNumContributorTo(Integer numContributorTo) {
+        NumContributorTo = numContributorTo;
+    }
+
+    public Integer getAgeRequiredFrom() {
+        return AgeRequiredFrom;
+    }
+
+    public void setAgeRequiredFrom(Integer ageRequiredFrom) {
+        AgeRequiredFrom = ageRequiredFrom;
+    }
+
+    public Integer getAgeRequiredTo() {
+        return AgeRequiredTo;
     }
 
     public void setAgeRequiredTo(Integer ageRequiredTo) {
         AgeRequiredTo = ageRequiredTo;
+    }
+
+    public Integer getGenderContributor() {
+        return GenderContributor;
+    }
+
+    public void setGenderContributor(Integer genderContributor) {
+        GenderContributor = genderContributor;
+    }
+
+    public Integer getEducationContributorLevel() {
+        return EducationContributorLevel;
+    }
+
+    public void setEducationContributorLevel(Integer educationContributorLevel) {
+        EducationContributorLevel = educationContributorLevel;
     }
 
     public Integer getUserId() {
@@ -130,99 +210,83 @@ public class Offers implements Serializable {
         UserId = userId;
     }
 
-    public void setDescription(String description) {
-        Description = description;
+    public Integer getNumLiks() {
+        return NumLiks;
     }
 
-    public void setEducationContributorLevel(Integer educationContributorLevel) {
-        EducationContributorLevel = educationContributorLevel;
+    public void setNumLiks(Integer numLiks) {
+        NumLiks = numLiks;
     }
 
-    public void setGenderContributor(Integer genderContributor) {
-        GenderContributor = genderContributor;
+    public Integer getNumJoinOffer() {
+        return NumJoinOffer;
     }
 
-    public void setId(Integer id) {
-        Id = id;
+    public void setNumJoinOffer(Integer numJoinOffer) {
+        NumJoinOffer = numJoinOffer;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public List<UserModel> getUsers() {
+        return Users;
     }
 
-    public void setNumContributorFrom(Integer numContributorFrom) {
-        NumContributorFrom = numContributorFrom;
+    public void setUsers(List<UserModel> users) {
+        Users = users;
     }
 
-    public void setNumContributorTo(Integer numContributorTo) {
-        NumContributorTo = numContributorTo;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setProfitFrom(Integer profitFrom) {
-        ProfitFrom = profitFrom;
+    public void setAddress(String address) {
+        Address = address;
     }
 
-    public void setProfitTo(Integer profitTo) {
-        ProfitTo = profitTo;
+    public String getDate() {
+        return Date;
     }
 
-    public void setProfitType(Integer profitType) {
-        ProfitType = profitType;
+    public void setDate(String date) {
+        Date = date;
     }
 
-    public Integer getAgeRequiredFrom() {
-        return AgeRequiredFrom;
+    public Integer getStatus() {
+        return Status;
     }
 
-    public Integer getAgeRequiredTo() {
-        return AgeRequiredTo;
+    public void setStatus(Integer status) {
+        Status = status;
     }
 
-    public Integer getCategoryId() {
-        return CategoryId;
+    public List<RequirmentModel> getRequirments() {
+        return Requirments;
     }
 
-    public Integer getEducationContributorLevel() {
-        return EducationContributorLevel;
+    public void setRequirments(List<RequirmentModel> requirments) {
+        Requirments = requirments;
     }
 
-    public Integer getGenderContributor() {
-        return GenderContributor;
+    public List<CapitalModel> getCapitals() {
+        return Capitals;
     }
 
-    public Integer getId() {
-        return Id;
+    public void setCapitals(List<CapitalModel> capitals) {
+        Capitals = capitals;
     }
 
-    public Integer getNumContributorFrom() {
-        return NumContributorFrom;
+    public List<TagsModel> getTags() {
+        return Tags;
     }
 
-    public Integer getNumContributorTo() {
-        return NumContributorTo;
+    public void setTags(List<TagsModel> tags) {
+        Tags = tags;
     }
 
-    public Integer getProfitFrom() {
-        return ProfitFrom;
+    public Integer getLocationId() {
+        return LocationId;
     }
 
-    public Integer getProfitTo() {
-        return ProfitTo;
-    }
-
-    public Integer getProfitType() {
-        return ProfitType;
-    }
-
-    public String getCategoryName() {
-        return CategoryName;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public String getName() {
-        return Name;
+    public void setLocationId(Integer locationId) {
+        LocationId = locationId;
     }
 }
