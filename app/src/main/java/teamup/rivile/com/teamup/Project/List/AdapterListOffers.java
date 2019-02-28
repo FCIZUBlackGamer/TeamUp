@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,19 +35,21 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     private Helper mHelper;
 
-    Context context;
-    List<Offers> offersList;
-    FragmentManager fragmentManager;
-    Realm realm;
-    List<LikeModelDataBase> likeModelDataBase;
-    int ty;
+    private Context context;
+    private List<Offers> offersList;
+    private FragmentManager fragmentManager;
+    private Realm realm;
+    private List<LikeModelDataBase> likeModelDataBase;
+    private int ty;
+    private boolean mIsDeleteOrReportImageViewActionDelete;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper) {
+    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper, boolean isDeleteOrReportImageViewActionDelete) {
         this.context = context;
         this.offersList = talabats;
         ty = type;
         likeModelDataBase = likeModel;
         mHelper = helper;
+        mIsDeleteOrReportImageViewActionDelete = isDeleteOrReportImageViewActionDelete;
     }
 
     @NonNull
@@ -64,7 +65,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
         if (ty == FragmentListProjects.NORMAL) {
-            holder.delete.setVisibility(View.VISIBLE);
+            holder.deleteOrReport.setVisibility(View.VISIBLE);
         }
         for (int i = 0; i < likeModelDataBase.size(); i++) {
             if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
@@ -87,13 +88,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
-            if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()) {
+            if (offersList.get(position).getUserId().equals(offersList.get(position).getUsers().get(i).getId())) {
                 Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
             }
         }
 
-        holder.delete.setOnClickListener(v -> {
-            realm.executeTransaction(realm1 -> {
+        if (mIsDeleteOrReportImageViewActionDelete) {
+            holder.deleteOrReport.setImageResource(R.drawable.ic_cancel);
+            holder.deleteOrReport.setOnClickListener(v -> realm.executeTransaction(realm1 -> {
                 RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
                         .findAll();
                 OfferDetailsDataBase offerDetailsDataBases = loginDataBases.get(0).getOffers().get(position);
@@ -101,8 +103,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 realm1.commitTransaction();
                 offersList.remove(position);
                 notifyDataSetChanged();
-            });
-        });
+            }));
+        }else{
+            holder.deleteOrReport.setImageResource(R.drawable.ic_report);
+            //TODO: Action Report Here
+        }
 
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
@@ -133,7 +138,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         realm.executeTransaction(realm1 -> {
             RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();
             for (int i = 0; i < Likes.size(); i++) {
-                if (Likes.get(i).getOfferId() == offersList.get(position).getId()){
+                if (Likes.get(i).getOfferId() == offersList.get(position).getId()) {
                     holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
                     return;
                 }
@@ -155,7 +160,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                FragmentOfferDetails.likeOffer(offersList.get(position).getId(),1);
+                FragmentOfferDetails.likeOffer(offersList.get(position).getId(), 1);
             }
 
         });
@@ -169,7 +174,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         return offersList.size();
     }
 
-    public class Vholder extends RecyclerView.ViewHolder {
+    class Vholder extends RecyclerView.ViewHolder {
         TextView project_name, location, project_desc, project_tag;
         TextView num_likes, num_contributer;
         CircleImageView image;
@@ -177,13 +182,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         TextView like, share, make_offer;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
-        ImageView delete;
+        ImageView deleteOrReport;
 
-        public Vholder(View itemView) {
+        Vholder(View itemView) {
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
             project_tag = itemView.findViewById(R.id.project_tag);
-            delete = itemView.findViewById(R.id.delete);
+            deleteOrReport = itemView.findViewById(R.id.tv_delete_report);
             project_desc = itemView.findViewById(R.id.project_desc);
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);

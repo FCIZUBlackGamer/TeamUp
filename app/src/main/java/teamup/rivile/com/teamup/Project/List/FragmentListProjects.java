@@ -108,7 +108,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         realm = Realm.getDefaultInstance();
 
-        if (Type != -1){
+        if (Type != -1) {
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
         }
@@ -124,7 +124,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         });
 
 
-        Log.e("Type",ProType+"");
+        Log.e("Type", ProType + "");
         if (ProType == 1) {
             realm.executeTransaction(realm1 -> {
 //                Log.e("UserId offers", String.valueOf(OfferDetailsDataBase.UserId));
@@ -132,7 +132,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                         .findAll();
                 RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
 ////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-                Log.e("Size",offerDetailsDataBases.size()+"");
+                Log.e("Size", offerDetailsDataBases.size() + "");
                 if (offerDetailsDataBases.size() > 0) {
                     fillOffers(convertList(offerDetailsDataBases), MINE);
                 } else {
@@ -193,7 +193,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         List<Offers> offers = new ArrayList<>();
         Offers offersItem = new Offers();
         offersItem.setId(offerDetailsDataBases.get(0).getId());
-        Log.e("rrrrrrrrrrrr", offerDetailsDataBases.get(0).getEducationContributorLevel()+" gg");
+        Log.e("rrrrrrrrrrrr", offerDetailsDataBases.get(0).getEducationContributorLevel() + " gg");
         offersItem.setEducationContributorLevel(offerDetailsDataBases.get(0).getEducationContributorLevel());
         offersItem.setNumContributorTo(offerDetailsDataBases.get(0).getNumContributorTo());
         offersItem.setNumContributorFrom(offerDetailsDataBases.get(0).getNumContributorFrom());
@@ -396,8 +396,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
         Call<Offer> call;
 
-            call = getOffers.searchOffer(type, word, API.URL_TOKEN);
-
+        call = getOffers.searchOffer(type, word, API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
             @Override
@@ -419,8 +418,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     private void fillOffers(Offer offers, int type) {
-        if (likeModelDataBase != null){
-            adapter = new AdapterListOffers(getActivity(), offers.getOffersList(), likeModelDataBase, type, this);
+        if (likeModelDataBase != null) {
+            adapter = new AdapterListOffers(getActivity(),
+                    offers.getOffersList(),
+                    likeModelDataBase,
+                    type,
+                    this,
+                    type == 1);
+
             recyclerView.setAdapter(adapter);
         }
     }
