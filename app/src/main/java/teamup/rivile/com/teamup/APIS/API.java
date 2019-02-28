@@ -41,7 +41,7 @@ public class API {
     public static final String PARAM_NAME_OFFER = "Offer";
     public static final String PARAM_NAME_REQUIREMENT = "Requirement";
     public static final String PARAM_NAME_ATTACHMENT = "Attachment";
-    public static final String PARAM_NAME_CAPITAL = "Capital";
+    public static final String PARAM_NAME_CAPITAL = "State";
     public static final String PARAM_NAME_TAGS = "Tags";
     public static final String FILE_NAME = "";
     public static final String PARAM_NAME_OFFER_ID = "OfferId";

@@ -1,5 +1,7 @@
 package teamup.rivile.com.teamup.Project.Details;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,32 +10,33 @@ import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class OfferDetails implements Serializable {
-    public Integer Id;
-    public String Name;
-    public String Description;
-    public Integer CategoryId;
-    public String CategoryName;
-    public Integer ProfitType;
-    public Integer ProfitFrom;
-    public Integer ProfitTo;
-    public Integer NumContributorFrom;
-    public Integer NumContributorTo;
-    public Integer AgeRequiredFrom;
-    public Integer AgeRequiredTo;
-    public Integer GenderContributor;
-    public Integer EducationContributorLevel;
-    public Integer UserId;
-    public Integer NumLiks;
-    public Integer NumJoinOffer;
-    public List<UserModel> Users;
-    public String Address;
-    public String Date;
-    public Integer Status;
-    public Boolean Block;
-    public Boolean IsDelete;
-    public List<OfferDetailsRequirment> Requirments;
-    public List<CapitalModel> Capitals;
-    public List<ExperienceTypeModel> Tags;
+    private Integer Id;
+    private String Name;
+    private String Description;
+    private Integer CategoryId;
+    private String CategoryName;
+    private Integer ProfitType;
+    private Integer ProfitFrom;
+    private Integer ProfitTo;
+    private Integer NumContributorFrom;
+    private Integer NumContributorTo;
+    private Integer AgeRequiredFrom;
+    private Integer AgeRequiredTo;
+    private Integer GenderContributor;
+    private Integer EducationContributorLevel;
+    private Integer UserId;
+    private Integer NumLiks;
+    private Integer NumJoinOffer;
+    private List<UserModel> Users;
+    private String Address;
+    private String Date;
+    private Integer Status;
+    private Boolean Block;
+    private Boolean IsDelete;
+    private List<OfferDetailsRequirment> Requirments;
+    @SerializedName("State")
+    private List<CapitalModel> Capitals;
+    private List<ExperienceTypeModel> Tags;
 
 
     public String getDate() {
