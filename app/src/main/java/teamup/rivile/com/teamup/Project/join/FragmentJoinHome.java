@@ -295,7 +295,7 @@ public class FragmentJoinHome extends Fragment {
         viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
 
-        delete = view.findViewById(R.id.delete);
+        delete = view.findViewById(R.id.tv_delete_report);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);

@@ -60,7 +60,6 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.Realm;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -189,7 +188,7 @@ public class FragmentOffer3 extends Fragment {
         image = view.findViewById(R.id.image);
         viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
-        delete = view.findViewById(R.id.delete);
+        delete = view.findViewById(R.id.tv_delete_report);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);

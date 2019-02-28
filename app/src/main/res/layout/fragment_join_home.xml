@@ -816,7 +816,7 @@
                             android:src="@drawable/ic_stairs" />
 
                         <ImageView
-                            android:id="@+id/delete"
+                            android:id="@+id/tv_delete_report"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@android:drawable/ic_menu_close_clear_cancel" />
