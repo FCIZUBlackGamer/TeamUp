@@ -1150,8 +1150,9 @@ public class FragmentOffer3 extends Fragment {
         }
 
         if (offerDetailsDataBase == null) {
+            //TODO: Set location instead of null here
             response = retrofitService.addOffer(API.URL_TOKEN,
-                    offerString, requirementString, attachmentString, capitalString, tagsString);
+                    offerString, requirementString, attachmentString, capitalString, tagsString, null);
         } else {
             response = retrofitService.editOffer(API.URL_TOKEN,
                     offerString, requirementString, attachmentString, capitalString, tagsString);

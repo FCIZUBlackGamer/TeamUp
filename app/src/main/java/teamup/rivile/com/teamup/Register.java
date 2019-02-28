@@ -23,6 +23,7 @@ public class Register extends AppCompatActivity {
     EditText ed_full_name, ed_email, ed_password;
     Button btn_save;
     TextView tv_login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                startActivity(new Intent(Register.this,Login.class));
+                startActivity(new Intent(Register.this, Login.class));
             }
         });
 
@@ -66,16 +67,17 @@ public class Register extends AppCompatActivity {
         // Parsing any Media type file
 
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN);
+        //TODO: Set location instead of null here
+        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN, null);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String serverResponse = response.body();
                 if (serverResponse.equals("\"Success\"")) {
-                   finish();
-                   startActivity(new Intent(Register.this,Login.class));
+                    finish();
+                    startActivity(new Intent(Register.this, Login.class));
                 } else {
-                    Toast.makeText(Register.this,serverResponse,Toast.LENGTH_LONG).show();
+                    Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
                 }
             }
 
