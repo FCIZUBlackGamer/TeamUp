@@ -4,7 +4,7 @@ public class API {
     final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
-    final public static String REGISTER_URL = BASE_URL + "Register/Register";
+    final public static String REGISTER_URL = BASE_URL + "Register/Add";
     final public static String LOGIN_URL = BASE_URL + "Register/Login";
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";

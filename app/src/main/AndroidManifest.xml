@@ -29,6 +29,9 @@
             <!-- TODO: Make this as Launcher Activity -->
         </activity>
         <activity android:name=".FirstActivity">
+
+        </activity>
+        <activity android:name=".Register">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

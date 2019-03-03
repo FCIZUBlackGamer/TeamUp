@@ -1,11 +1,15 @@
 package teamup.rivile.com.teamup.ForgetPassword;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +59,28 @@ public class FragmentSendCode extends Fragment {
     public void onStart() {
         super.onStart();
         email.setText(em);
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isEmailValid(email.getText().toString())) {
+                    recover.setEnabled(true);
+                    recover.setBackgroundResource(R.drawable.rounded_corner_button_blue);
+                }else {
+                    recover.setEnabled(false);
+                    recover.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+                }
+            }
+        });
         back.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
@@ -60,8 +89,19 @@ public class FragmentSendCode extends Fragment {
         });
         recover.setOnClickListener(v -> {
             /** API */
-            forgetPassword(email.getText().toString());
+            if (isEmailValid(email.getText().toString())) {
+                forgetPassword(email.getText().toString());
+            }else {
+                Snackbar.make(view, R.string.wrongEmailPattern, Snackbar.LENGTH_LONG).show();
+            }
         });
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void forgetPassword(String mail) {
@@ -77,10 +117,18 @@ public class FragmentSendCode extends Fragment {
                 Integer serverResponse = response.body();
                 if (serverResponse != null) {
                     Log.i("Response",serverResponse+"");
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-                    transaction.replace(R.id.first, FragmentConfirmCode.setId(serverResponse, mail));//Get Id from API
-                    transaction.commit();
+                    if (serverResponse == 1) {
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                        transaction.replace(R.id.first, FragmentConfirmCode.setId(serverResponse, mail));//Get Id from API
+                        transaction.commit();
+                    }else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(getString(R.string.canotFindEmail))
+                                .setIcon(R.drawable.broken_connection)
+                                .setCancelable(true)
+                                .create().show();
+                    }
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err","Empty");

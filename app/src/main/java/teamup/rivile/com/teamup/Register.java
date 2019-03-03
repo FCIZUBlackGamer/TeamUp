@@ -3,6 +3,7 @@ package teamup.rivile.com.teamup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,8 +34,8 @@ public class Register extends AppCompatActivity {
         tv_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                startActivity(new Intent(Register.this, Login.class));
+                //finish();
+                startActivity(new Intent(Register.this, FirstActivity.class));
             }
         });
 
@@ -61,29 +62,37 @@ public class Register extends AppCompatActivity {
 
     private void register(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.REGISTER_URL);
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
 
         // Parsing any Media type file
 
+        Log.e("RegisterModel", gson.toJson(userModel));
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
         //TODO: Set location instead of null here
-        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN, null);
+        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String serverResponse = response.body();
-                if (serverResponse.equals("\"Success\"")) {
-                    finish();
-                    startActivity(new Intent(Register.this, Login.class));
-                } else {
-                    Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
+                if (serverResponse != null){
+                    Log.v("Re",serverResponse);
+                    if (serverResponse.equals("\"Success\"")) {
+                        finish();
+                        startActivity(new Intent(Register.this, Login.class));
+                    } else {
+                        Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
+                    }
+                }else {
+                    Log.v("Re",response.message());
                 }
+
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
+                Log.v("Re",t.getMessage());
             }
         });
     }

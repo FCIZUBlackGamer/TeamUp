@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.ForgetPassword;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,14 +9,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -177,9 +176,14 @@ public class FragmentConfirmCode extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-               if(s.toString().length() == 2){
-                    n6.setText(s.toString().substring(1));
-                }
+               if(s.toString().length() == 1){
+                   //n6.setText(s.toString().substring(1));
+                   confirm.setEnabled(true);
+                   confirm.setBackgroundResource(R.drawable.rounded_corner_button_blue);
+                }else {
+                   confirm.setEnabled(false);
+                   confirm.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+               }
             }
         });
 
@@ -215,10 +219,18 @@ public class FragmentConfirmCode extends Fragment {
                 Integer serverResponse = response.body();
                 if (serverResponse != null) {
                     Log.i("Response", serverResponse + "");
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-                    transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
-                    transaction.commit();
+                    if (serverResponse == 1) {
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                        transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
+                        transaction.commit();
+                    }else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(getString(R.string.wrongCode))
+                                .setIcon(R.drawable.broken_connection)
+                                .setCancelable(true)
+                                .create().show();
+                    }
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");

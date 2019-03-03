@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +63,51 @@ public class FragmentResetPassword extends Fragment {
             transaction.replace(R.id.first, new Login());
             transaction.commit();
         });
+        ed_pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isDidicated(ed_pass.getText().toString(),ed_conPass.getText().toString() )){
+                    reset.setEnabled(true);
+                    reset.setBackgroundResource(R.drawable.rounded_corner_button_blue);
+                }else {
+                    reset.setEnabled(false);
+                    reset.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+                }
+            }
+        });
+
+        ed_conPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isDidicated(ed_pass.getText().toString(),ed_conPass.getText().toString() )){
+                    reset.setEnabled(true);
+                    reset.setBackgroundResource(R.drawable.rounded_corner_button_blue);
+                }else {
+                    reset.setEnabled(false);
+                    reset.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+                }
+            }
+        });
         reset.setOnClickListener(v -> {
             /**Connect To API with id*/
             if (ed_conPass.getText().toString().equals(ed_pass.getText().toString())){
@@ -71,6 +118,13 @@ public class FragmentResetPassword extends Fragment {
         });
     }
 
+    private boolean isDidicated(String f, String s){
+        boolean res = false;
+        if (f.equals(s)){
+            res = true;
+        }
+        return res;
+    }
     private void login(int id, String password) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
