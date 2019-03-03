@@ -221,21 +221,44 @@
             </RadioGroup>
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/address"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_corner_edit_text"
+            android:layout_marginEnd="10dp"
             android:fontFamily="@font/medium"
-            android:gravity="start"
-            android:hint="@string/address"
-            android:padding="10dp"
+            android:text="@string/place"
+            android:id="@+id/state"
+            android:textColor="#000"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contributorsSection" />
+            app:layout_constraintTop_toBottomOf="@+id/contributorsSection"  />
+
+        <LinearLayout
+            android:id="@+id/stateSection"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/egypt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:text="@string/egypt"
+                app:buttonTint="@color/backgroundDarkGreen" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recCapitals"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView27"
@@ -252,7 +275,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            app:layout_constraintTop_toBottomOf="@+id/stateSection" />
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:id="@+id/ageSeekbar"

@@ -1,6 +1,8 @@
 package teamup.rivile.com.teamup.Project.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +23,6 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
@@ -29,7 +30,6 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
@@ -41,15 +41,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private Realm realm;
     private List<LikeModelDataBase> likeModelDataBase;
     private int ty;
-    private boolean mIsDeleteOrReportImageViewActionDelete;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper, boolean isDeleteOrReportImageViewActionDelete) {
+    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper) {
         this.context = context;
         this.offersList = talabats;
         ty = type;
         likeModelDataBase = likeModel;
         mHelper = helper;
-        mIsDeleteOrReportImageViewActionDelete = isDeleteOrReportImageViewActionDelete;
     }
 
     @NonNull
@@ -64,9 +62,30 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
+        holder.deleteOrReport.setVisibility(View.VISIBLE);
+
         if (ty == FragmentListProjects.NORMAL) {
-            holder.deleteOrReport.setVisibility(View.VISIBLE);
+            holder.deleteOrReport.setImageResource(R.drawable.ic_report);
+
+        } else if (ty == FragmentListProjects.MINE) {
+            holder.deleteOrReport.setImageResource(R.drawable.ic_cancel);
+
         }
+        holder.deleteOrReport.setOnClickListener(v -> {
+
+            final Bitmap bmap = ((BitmapDrawable) holder.deleteOrReport.getDrawable()).getBitmap();
+            Drawable myDrawable = context.getResources().getDrawable(R.drawable.ic_cancel);
+            final Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
+            if (bmap.sameAs(myLogo)) {
+                FragmentOfferDetails.deleteOffer(offersList.get(position).getId());
+                notifyDataSetChanged();
+            }else {
+                //TODO: Action Report Here
+
+            }
+
+        });
+
         for (int i = 0; i < likeModelDataBase.size(); i++) {
             if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
@@ -77,10 +96,15 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
         holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
         holder.location.setText(offersList.get(position).getAddress());
-        holder.project_desc.setText(offersList.get(position).getDescription());
+        if (offersList.get(position).getDescription().length() > 500) {//Check Description length
+            String newDesc = offersList.get(position).getDescription().substring(0, 500) + context.getString(R.string.seeMore);
+            holder.project_desc.setText(newDesc);
+        } else {
+            holder.project_desc.setText(offersList.get(position).getDescription());
+        }
         if (offersList.get(position).getTags() != null) {
             for (int i = 0; i < offersList.get(position).getTags().size(); i++) {
-                holder.project_tag.append("\n#" + offersList.get(position).getTags().get(i).getName());
+                holder.project_tag.append("#" + offersList.get(position).getTags().get(i).getName() + "\n");
             }
         }
 
@@ -93,21 +117,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             }
         }
 
-        if (mIsDeleteOrReportImageViewActionDelete) {
-            holder.deleteOrReport.setImageResource(R.drawable.ic_cancel);
-            holder.deleteOrReport.setOnClickListener(v -> realm.executeTransaction(realm1 -> {
-                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
-                        .findAll();
-                OfferDetailsDataBase offerDetailsDataBases = loginDataBases.get(0).getOffers().get(position);
-                offerDetailsDataBases.deleteFromRealm();
-                realm1.commitTransaction();
-                offersList.remove(position);
-                notifyDataSetChanged();
-            }));
-        }else{
-            holder.deleteOrReport.setImageResource(R.drawable.ic_report);
-            //TODO: Action Report Here
-        }
 
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */

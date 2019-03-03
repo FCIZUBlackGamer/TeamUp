@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +98,7 @@ public class FragmentProfileHome extends Fragment {
     EditText ed_name, ed_address, ed_job, ed_email, ed_national_id, ed_password, ed_bio, ed_phone;
     TextView tv_birth_date;
     RadioGroup rb_gender;
+    RadioButton male, female;
     ImageView iv_national_image, iv_cancel;
     CircleImageView civ_user_image, civ_edit, civ_edit2;
     Button btn_save;
@@ -206,6 +208,8 @@ public class FragmentProfileHome extends Fragment {
             ed_password = edit_data.findViewById(R.id.ed_password);
             tv_birth_date = edit_data.findViewById(R.id.tv_birth_date);
             rb_gender = edit_data.findViewById(R.id.rb_gender);
+            male = edit_data.findViewById(R.id.male);
+            female = edit_data.findViewById(R.id.female);
             iv_national_image = edit_data.findViewById(R.id.iv_national_image);
             civ_user_image = edit_data.findViewById(R.id.civ_user_image);
             civ_edit = edit_data.findViewById(R.id.civ_edit);
@@ -237,9 +241,9 @@ public class FragmentProfileHome extends Fragment {
             ed_password.setText(profObject.getPassword());
             tv_birth_date.setText(profObject.getDateOfBirth());
             if (profObject.getGender())
-                ed_email.setText(getResources().getString(R.string.male));
+                male.setChecked(true);
             else
-                ed_email.setText(getResources().getString(R.string.female));
+                female.setChecked(true);
             /**
              * replace code with one which get Image from phone if exist
              * */
@@ -287,6 +291,11 @@ public class FragmentProfileHome extends Fragment {
                     model.setBio(ed_bio.getText().toString());
                     model.setMail(ed_email.getText().toString());
                     model.setPassword(ed_password.getText().toString());
+                    if (rb_gender.getCheckedRadioButtonId() == R.id.male) {
+                        model.setGender(true);
+                    } else {
+                        model.setGender(false);
+                    }
 
                     /**
                      * upload userImage

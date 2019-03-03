@@ -16,7 +16,6 @@ import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
-import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
@@ -53,6 +52,10 @@ public interface ApiConfig {
     Call<Offer> searchOffer(@Field("Type") int Type, @Field("Name") String Name, @Field("token") String token);
 
     @FormUrlEncoded
+    @POST(API.FILTTER_SEARCH_URL)
+    Call<Offer> filterSearchOffer(@Field("Filter") String Filter, @Field("token") String token);
+
+    @FormUrlEncoded
     @POST(API.LOGIN_URL)
     Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token);
 
@@ -63,6 +66,10 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.REGISTER_URL)
     Call<String> register(@Field("User") String User, @Field("token") String token, @Field(API.PARAM_NAME_LOCATION) String location);
+
+    @FormUrlEncoded
+    @POST(API.REPORT_URL)
+    Call<String> reportOffer(@Field("report") String report, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.PROFILE_URL)
@@ -103,6 +110,10 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.REFUSE_JOIN_OFFER_URL)
     Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("RequirementId") int RequirementId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.DELETE_OFFER_URL)
+    Call<String> deleteOffer(@Field("Id") int Id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.SelectOffer_URL)

@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,12 +17,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,7 +53,9 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
@@ -59,6 +66,7 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
+import teamup.rivile.com.teamup.Uitls.APIModels.ReportModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
@@ -221,8 +229,30 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     public void onStart() {
         super.onStart();
 
+        if (type == FragmentListProjects.NORMAL) {
+            report.setImageResource(R.drawable.ic_report);
+
+        } else if (type == FragmentListProjects.MINE) {
+            report.setImageResource(R.drawable.ic_cancel);
+
+        }
 
         report.setOnClickListener(v -> {
+            final Bitmap bmap = ((BitmapDrawable) report.getDrawable()).getBitmap();
+            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_cancel);
+            final Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
+            if (bmap.sameAs(myLogo)) {
+                deleteOffer(projectId);
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame, new FragmentHome());
+                fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
+
+            } else {
+                //TODO: Action Report Here
+
+                makeReport(projectId, userId);
+            }
+
             if (type == FragmentListProjects.NORMAL) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 EditText textReport = new EditText(getActivity());
@@ -439,6 +469,65 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     }
 
+    private void makeReport(int projectId, int userId) {
+        final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View message = inflater.inflate(R.layout.popup_report, null);
+
+        EditText message_type = message.findViewById(R.id.editText);
+        FloatingActionButton confirm = message.findViewById(R.id.confirm);
+        ImageView close = message.findViewById(R.id.close);
+
+        confirm.setOnClickListener(v -> {
+            if (!message_type.getText().toString().isEmpty()) {
+                reportOffer(userId, projectId, message_type.getText().toString());
+            }
+        });
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false)
+                .setView(message)
+                .setNegativeButton("اغلاق", (dialog, which) -> {
+                    // Do Nothing
+                    dialog.dismiss();
+                });
+        final AlertDialog dialog2 = builder.create();
+        dialog2.show();
+
+        close.setOnClickListener(v ->
+                dialog2.dismiss()
+        );
+    }
+
+    private void reportOffer(int userId, int projectId, String desc) {
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call;
+        ReportModel model = new ReportModel();
+        model.setOfferId(projectId);
+        model.setUserId(userId);
+        model.setDescripation(desc);
+        Gson gson = new Gson();
+
+        call = getOffers.reportOffer(gson.toJson(model), API.URL_TOKEN);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String res = response.body();
+                Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadOfferDetails(int Id) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
@@ -502,6 +591,34 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String Offers = response.body();
                 Log.e("Like", Offers);
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+            }
+        });
+    }
+
+    public static void deleteOffer(int offerId) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String Offers = response.body();
+                if (Offers.equals("\"Success\"")) {
+                    realm.executeTransaction(realm1 -> {
+                        OfferDetailsDataBase l = realm1.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("OfferId", offerId).findFirst();
+                        l.deleteFromRealm();
+                        realm1.commitTransaction();
+                    });
+                }
 
             }
 

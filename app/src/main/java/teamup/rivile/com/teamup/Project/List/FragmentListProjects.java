@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
@@ -61,6 +63,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     static int ProType = -1;
     static String Word;
     static int Type = -1;
+    static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
 
@@ -77,6 +80,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
      */
     public static FragmentListProjects setType(int id) {
         ProType = id;
+        return new FragmentListProjects();
+    }
+
+    /**
+     * @param filter refers to my filtered projects from FilterSearchFragment
+     * */
+    public static FragmentListProjects setFilteredOffers(FilterModel filter) {
+        filterModel = filter;
         return new FragmentListProjects();
     }
 
@@ -114,6 +125,10 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         }
         if (DepId != -1) {
             loadOffers(DepId);
+        }
+
+        if (filterModel != null){
+            loadOffers(filterModel);
         }
 
 
@@ -389,14 +404,13 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         });
     }
 
-    private void loadOffers(int type, String word) {
+    private void loadOffers(FilterModel filterModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.HOME_URL);
 
+        Gson gson = new Gson();
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
-        Call<Offer> call;
-
-        call = getOffers.searchOffer(type, word, API.URL_TOKEN);
+        Call<Offer> call = getOffers.filterSearchOffer(gson.toJson(filterModel), API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
             @Override
@@ -417,14 +431,48 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         });
     }
 
+    private void loadOffers(int type, String word) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.HOME_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<Offer> call;
+
+        call = getOffers.searchOffer(type, word, API.URL_TOKEN);
+
+        call.enqueue(new Callback<Offer>() {
+            @Override
+            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+                Offer serverResponse = response.body();
+                if (serverResponse != null) {
+                    if (serverResponse.getOffersList().size() > 0) {
+                        fillOffers(serverResponse, NORMAL);
+                    }else {
+                        ((DrawerActivity) getActivity()).Hide();
+                        //Todo: Show Empty view
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame, new FragmentEmpty()).commit();
+                    }
+                } else {
+                    Log.d("DABUGG", "serverResponse = null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Offer> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Log.d("DABUGG", t.getMessage());
+            }
+        });
+    }
+
     private void fillOffers(Offer offers, int type) {
         if (likeModelDataBase != null) {
             adapter = new AdapterListOffers(getActivity(),
                     offers.getOffersList(),
                     likeModelDataBase,
                     type,
-                    this,
-                    type == 1);
+                    this);
 
             recyclerView.setAdapter(adapter);
         }

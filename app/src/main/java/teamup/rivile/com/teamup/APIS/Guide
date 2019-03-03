@@ -7,8 +7,8 @@ Offer {
     }
 
     GenderContributor{
-        Male: 0
-        Female: 1
+        Male: 1
+        Female: 0
         Both: 2
     }
 

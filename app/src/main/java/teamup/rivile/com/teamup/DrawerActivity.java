@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +37,7 @@ import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
+import teamup.rivile.com.teamup.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
@@ -183,6 +184,22 @@ public class DrawerActivity extends AppCompatActivity
             }
         });
 
+        /**
+         * handel Action press on (image, name, numProjects) in navigator
+         * **/
+        header.setOnClickListener(v -> {
+            realm.executeTransaction(realm1 -> {
+                LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
+                        .findFirst();
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame,
+                        FragmentProfileHome.setId(loginDataBases.getUser().getId()));
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
+            });
+        });
+
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.nav_home);
@@ -317,27 +334,29 @@ public class DrawerActivity extends AppCompatActivity
     }
 
     //Todo: active it and setup settings
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.drawer, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.drawer, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_advanced_search) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame, new FilterSearchFragment()).addToBackStack(FilterSearchFragment.class.getSimpleName()).commit();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
