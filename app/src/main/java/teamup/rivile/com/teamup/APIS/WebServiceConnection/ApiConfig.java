@@ -57,7 +57,8 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.LOGIN_URL)
-    Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token);
+    Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token,
+                              @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.SOCIAL_LOGIN_URL)
