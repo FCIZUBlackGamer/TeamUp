@@ -50,13 +50,13 @@
         app:layout_constraintEnd_toStartOf="@+id/im"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/person_name"
-        tools:text="Data" />
+        android:text="الوقت غير متوفر" />
 
     <Button
         android:id="@+id/details"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/medium"

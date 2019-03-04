@@ -46,7 +46,10 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
         UserModel userModel = incomingRequirments.getOffer().getUsers().get(0);
         holder.person_name.setText(userModel.getFullName());
-        holder.sent_time.setText(incomingRequirments.getOffer().getDate());
+
+        String date = incomingRequirments.getOffer().getDate();
+        if (date != null && !date.isEmpty())
+            holder.sent_time.setText(date);
 
         if (userModel.getImage() != null && !userModel.getImage().isEmpty()) {
             try {
@@ -59,10 +62,9 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame,  FragmentProfileHome.setId(userModel.getId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
+                    .replace(R.id.frame, FragmentProfileHome.setId(userModel.getId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
         });
 
-        //Todo: implement details Action
         holder.details.setOnClickListener(v -> {
             for (int i = 0; i < incomingRequirments.getOffer().getRequirments().size(); i++) {
                 if (incomingRequirments.getOffer().getRequirments().get(i).getUserId() == incomingRequirments.getOffer().getUsers().get(position).getId()) {
@@ -74,9 +76,7 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
                             .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit();
                 }
             }
-
         });
-
     }
 
     @Override
