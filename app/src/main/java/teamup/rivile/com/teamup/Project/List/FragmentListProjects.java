@@ -85,7 +85,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     /**
      * @param filter refers to my filtered projects from FilterSearchFragment
-     * */
+     */
     public static FragmentListProjects setFilteredOffers(FilterModel filter) {
         filterModel = filter;
         return new FragmentListProjects();
@@ -127,7 +127,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             loadOffers(DepId);
         }
 
-        if (filterModel != null){
+        if (filterModel != null) {
             loadOffers(filterModel);
         }
 
@@ -447,7 +447,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
                         fillOffers(serverResponse, NORMAL);
-                    }else {
+                    } else {
                         ((DrawerActivity) getActivity()).Hide();
                         //Todo: Show Empty view
                         getActivity().getSupportFragmentManager().beginTransaction()
@@ -468,13 +468,19 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void fillOffers(Offer offers, int type) {
         if (likeModelDataBase != null) {
-            adapter = new AdapterListOffers(getActivity(),
-                    offers.getOffersList(),
-                    likeModelDataBase,
-                    type,
-                    this);
+            if (offers.getOffersList() != null && !offers.getOffersList().isEmpty()) {
+                adapter = new AdapterListOffers(getActivity(),
+                        offers.getOffersList(),
+                        likeModelDataBase,
+                        type,
+                        this);
 
-            recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
+            } else{
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new FragmentEmpty())
+                        .addToBackStack(FragmentEmpty.class.getSimpleName()).commit();
+            }
         }
     }
 
