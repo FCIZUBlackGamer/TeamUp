@@ -89,7 +89,7 @@ public class FragmentProfileHome extends Fragment {
     FragmentManager fragmentManager;
     //    ViewPager viewPager = null;
     static int Id = -1;
-    CollapsingToolbarLayout ctl ;
+    //    CollapsingToolbarLayout ctl ;
     Realm realm;
     View edit_data;
     /**
@@ -149,7 +149,7 @@ public class FragmentProfileHome extends Fragment {
         fab_edit = view.findViewById(R.id.edit);
         cir_user_image = view.findViewById(R.id.user_image);
         txt_num_projects = view.findViewById(R.id.num_projects);
-        ctl = view.findViewById(R.id.collapsing_toolbar);
+//        ctl = view.findViewById(R.id.collapsing_toolbar);
 
         recyclerView.setLayoutManager(layoutManager);
         offersList = new ArrayList<>();
@@ -169,8 +169,8 @@ public class FragmentProfileHome extends Fragment {
         super.onStart();
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).hideFab();
-        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
-        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
+//        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
+//        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
 
 //        viewPager.setAdapter(new pager(fragmentManager));
         adapter = new AdapterProfileProject(getActivity(), offersList);
@@ -182,7 +182,7 @@ public class FragmentProfileHome extends Fragment {
             if (Id != loginDataBases.getUser().getId()) {
                 loadProfile(Id);
                 fab_edit.setVisibility(View.GONE);
-            }else {
+            } else {
                 fab_edit.setVisibility(View.VISIBLE);
                 loadProfileFromDB(loginDataBases);
             }
@@ -328,67 +328,67 @@ public class FragmentProfileHome extends Fragment {
 //                final String displayName = cursor.getString(
 //                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
 
-                if (copyFileToProjectDirectory(model, "fee")) {
-                    //Load New File Location
-                    uri = model.getFileUri();
-                    Log.v("NewFileUri", uri.getPath());
+            if (copyFileToProjectDirectory(model, "fee")) {
+                //Load New File Location
+                uri = model.getFileUri();
+                Log.v("NewFileUri", uri.getPath());
 
-                    // Map is used to multipart the file using okhttp3.RequestBody
-                    File file = new File(uri.getPath());
-                    AppConfig appConfig = new AppConfig(API.BASE_URL);
+                // Map is used to multipart the file using okhttp3.RequestBody
+                File file = new File(uri.getPath());
+                AppConfig appConfig = new AppConfig(API.BASE_URL);
 
-                    // Parsing any Media type file
-                    final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-                    RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+                // Parsing any Media type file
+                final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-                    ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
-                    Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
-                    call.enqueue(new Callback<List<String>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
-                            List<String> serverResponse = response.body();
-                            if (serverResponse != null) {
-                                if (!serverResponse.isEmpty()) {
-                                    String url = serverResponse.get(0);//get file url
-                                    if (type == USER_IMAGE) {
-                                        user = new AttachmentModel(
-                                                "fee",
-                                                url,
-                                                false
-                                        );
-                                        profObject.setImage(url);
-                                        Log.v("getImage", profObject.getImage());
-                                    } else {
-                                        ssn = new AttachmentModel(
-                                                "fee",
-                                                url,
-                                                false
-                                        );
-                                        profObject.setIdentityImage(url);
-                                        Log.v("getIdentityImage", profObject.getIdentityImage());
-                                    }
-
-                                    Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+                ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
+                call.enqueue(new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
+                        List<String> serverResponse = response.body();
+                        if (serverResponse != null) {
+                            if (!serverResponse.isEmpty()) {
+                                String url = serverResponse.get(0);//get file url
+                                if (type == USER_IMAGE) {
+                                    user = new AttachmentModel(
+                                            "fee",
+                                            url,
+                                            false
+                                    );
+                                    profObject.setImage(url);
+                                    Log.v("getImage", profObject.getImage());
                                 } else {
-                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
+                                    ssn = new AttachmentModel(
+                                            "fee",
+                                            url,
+                                            false
+                                    );
+                                    profObject.setIdentityImage(url);
+                                    Log.v("getIdentityImage", profObject.getIdentityImage());
                                 }
+
+                                Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                            //textView.setText(t.getMessage());
-                            Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    @Override
+                    public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
+                        //textView.setText(t.getMessage());
+                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
 
-                }
+            }
 //            }
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
             Log.v("getIdentityImage", "bug");
         }
@@ -541,7 +541,7 @@ public class FragmentProfileHome extends Fragment {
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
 
-        Call<String> response = retrofitService.editProfile(gson.toJson(userModel) ,API.URL_TOKEN);
+        Call<String> response = retrofitService.editProfile(gson.toJson(userModel), API.URL_TOKEN);
 
         response.enqueue(new Callback<String>() {
             @Override
@@ -579,8 +579,8 @@ public class FragmentProfileHome extends Fragment {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
         Gson gson = gsonBuilder.create();
-        Log.i("Gson",gson.toJson(offerDetailsDataBase.toString()));
-        List<Offers> offers =  new ArrayList<>();
+        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
+        List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBase.size(); i++) {
             Offers offers1 = new Offers();
             OfferDetailsDataBase base = offerDetailsDataBase.get(i);
@@ -604,7 +604,7 @@ public class FragmentProfileHome extends Fragment {
 //            offers1.setProfitTo(base.getProfitTo());
 //            offers1.setProfitType(base.getProfitType());
             offers1.setStatus(base.getStatus());
-            if (offers1.getUsers()!= null && offers1.getUsers().size()> 0) {
+            if (offers1.getUsers() != null && offers1.getUsers().size() > 0) {
                 List<UserModel> userModels = new ArrayList<>();
                 for (int j = 0; j < offers1.getUsers().size(); j++) {
                     UserModel userModel = new UserModel();
@@ -689,15 +689,30 @@ public class FragmentProfileHome extends Fragment {
     }
 
     private void fillProfData(UserModel user) {
-        ctl.setTitle(user.getFullName());
+//        ctl.setTitle(user.getFullName());
         txt_name.setText(user.getFullName());
-        txt_job_title.setText(user.getJobtitle());
-        txt_location.setText(user.getAddress());
-        txt_bio.setText(user.getBio());
-        txt_dateOfBirth.setText(user.getDateOfBirth());
-        txt_email.setText(user.getMail());
-        txt_phone.setText(user.getPhone());
-        txt_num_projects.setText(String.valueOf(user.getNumProject()));
+
+        if (user.getJobtitle() != null && !user.getJobtitle().isEmpty())
+            txt_job_title.setText(user.getJobtitle());
+
+        if (user.getAddress() != null && !user.getAddress().isEmpty())
+            txt_location.setText(user.getAddress());
+
+        if (user.getBio() != null && !user.getBio().isEmpty())
+            txt_bio.setText(user.getBio());
+
+        if (user.getDateOfBirth() != null && !user.getDateOfBirth().isEmpty())
+            txt_dateOfBirth.setText(user.getDateOfBirth());
+
+        if (user.getMail() != null && !user.getMail().isEmpty())
+            txt_email.setText(user.getMail());
+
+        if (user.getPhone() != null && !user.getPhone().isEmpty())
+            txt_phone.setText(user.getPhone());
+
+        if (user.getNumProject() != null)
+            txt_num_projects.setText(String.valueOf(user.getNumProject()));
+
         if (user.getImage() != null && !user.getImage().isEmpty() && user.getImage() != null) {
             Picasso.get().load(user.getImage()).into(cir_user_image);
         }
@@ -745,7 +760,7 @@ public class FragmentProfileHome extends Fragment {
                             bitmap = getResizedBitmap(bitmap, 65);
                             if (imageType == USER_IMAGE) {
                                 civ_user_image.setImageBitmap(bitmap);
-                            } else if (imageType == USER_SSN){
+                            } else if (imageType == USER_SSN) {
                                 iv_national_image.setImageBitmap(bitmap);
                             }
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
@@ -759,7 +774,7 @@ public class FragmentProfileHome extends Fragment {
                     bitmap = getResizedBitmap(bitmap, 65);
                     if (imageType == USER_IMAGE) {
                         civ_user_image.setImageBitmap(bitmap);
-                    } else if (imageType == USER_SSN){
+                    } else if (imageType == USER_SSN) {
                         iv_national_image.setImageBitmap(bitmap);
                     }
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
