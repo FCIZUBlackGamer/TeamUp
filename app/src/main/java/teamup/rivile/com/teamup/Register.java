@@ -12,24 +12,38 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class Register extends AppCompatActivity {
 
     EditText ed_full_name, ed_email, ed_password;
     Button btn_save;
     TextView tv_login;
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initViews();
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
+            if (results.size() > 0){
+                Gson gson = new Gson();
+                Log.e("results", results.get(0).getUser().getId()+"");
+                startActivity(new Intent(Register.this, DrawerActivity.class));
+                finish();
+            }
+        });
 
         tv_login.setOnClickListener(new View.OnClickListener() {
             @Override
