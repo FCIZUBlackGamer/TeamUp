@@ -141,10 +141,12 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                         FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
                 .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
 
-        holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
-                .replace(R.id.frame,
-                        FragmentJoinHome.setOfferId(offersList.get(position).getId()))
-                .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit());
+        if (ty != 1 && ty != 2)
+            holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
+                    .replace(R.id.frame,
+                            FragmentJoinHome.setOfferId(offersList.get(position).getId()))
+                    .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit());
+        else holder.make_offer.setEnabled(false);
 
         realm.executeTransaction(realm1 -> {
             RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();
