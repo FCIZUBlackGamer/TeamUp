@@ -208,7 +208,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         recFiles.setLayoutManager(layoutManager1);
         filesModels = new ArrayList<>();
         imagesModels = new ArrayList<>();
-        realm = Realm.getDefaultInstance();
+//        realm = Realm.getDefaultInstance();
 
         return view;
     }
@@ -218,6 +218,8 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         super.onCreate(savedInstanceState);
 //        registerReceiver(onComplete,
 //                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        realm = Realm.getDefaultInstance();
 
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();

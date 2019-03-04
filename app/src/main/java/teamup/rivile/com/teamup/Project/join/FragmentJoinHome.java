@@ -111,7 +111,7 @@ public class FragmentJoinHome extends Fragment {
 
     RadioButton placeRadioButton, placeKindRadioButton, placeStateRadioButton, exRadioButton;
     EditText experienceEditText, exDesc;
-    RecyclerView exRec;
+//    RecyclerView exRec;
     FloatingActionButton arrowPlace, arrowExperience;
 
     View map;
@@ -271,7 +271,7 @@ public class FragmentJoinHome extends Fragment {
         experienceEditText = view.findViewById(R.id.ed_experience);
         exDesc = view.findViewById(R.id.exDesc);
 
-        exRec = view.findViewById(R.id.exRec);
+//        exRec = view.findViewById(R.id.exRec);
         map = view.findViewById(R.id.map);
 
         /************************************************/

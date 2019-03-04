@@ -52,15 +52,15 @@ public class FragmentOffer2 extends Fragment {
     RadioGroup placeGroup, placeKindGroup, placeStateGroup, exGroup;
     RadioButton avail, notAvail, owned, rent;
     EditText placeDesc, exDesc, exDep, experienceFrom, experienceTo;
-    RecyclerView exRec, exRecUserAdd;
+//    RecyclerView exRec, exRecUserAdd;
     RangeSeekBar exRequiredSeekbar;
     FloatingActionButton arrowPlace, arrowExperience;
 
     View map;
-
-    ChipsAdapter mExRecUserAdapter;
-    LoadedChipsAdapter mExRecLoadedAdapter;
-    static MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedExperienceTypes = new MutableLiveData<>();
+//
+//    ChipsAdapter mExRecUserAdapter;
+//    LoadedChipsAdapter mExRecLoadedAdapter;
+//    static MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedExperienceTypes = new MutableLiveData<>();
 
     private int minExperienceNeeded = 0, maxExperienceNeeded = 15;
     static ViewPager pager;
@@ -73,7 +73,7 @@ public class FragmentOffer2 extends Fragment {
                                    MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
         pager = viewPager;
         pagerAdapter = pagerAdapte;
-        mLoadedExperienceTypes = loadedExperienceTypes;
+//        mLoadedExperienceTypes = loadedExperienceTypes;
         mLoadedProjectWithAllDataLiveData = loadedProjectWithAllDataLiveData;
         return new FragmentOffer2();
     }
@@ -104,7 +104,6 @@ public class FragmentOffer2 extends Fragment {
         checkedId = placeKindGroup.getCheckedRadioButtonId();
         RequirmentModel.setNeedPlaceType(checkedId == R.id.rent);
 
-
         placeStateGroup = view.findViewById(R.id.placeStateGroup);
         checkedId = placeStateGroup.getCheckedRadioButtonId();
         RequirmentModel.setNeedPlaceType(checkedId == R.id.avail);
@@ -122,11 +121,11 @@ public class FragmentOffer2 extends Fragment {
         RequirmentModel.setExperienceFrom(minExperienceNeeded);
         RequirmentModel.setExperienceTo(maxExperienceNeeded);
 
-        exRec = view.findViewById(R.id.exRec);
+//        exRec = view.findViewById(R.id.exRec);
         exDep = view.findViewById(R.id.exDep);
         map = view.findViewById(R.id.map);
 
-        exRecUserAdd = view.findViewById(R.id.exRecUserAdd);
+//        exRecUserAdd = view.findViewById(R.id.exRecUserAdd);
 
         return view;
     }
@@ -136,25 +135,19 @@ public class FragmentOffer2 extends Fragment {
     public void onStart() {
         super.onStart();
 
-        placeKindGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rent) {
-                    RequirmentModel.setNeedPlaceType(true);
-                } else if (checkedId == R.id.owned) {
-                    RequirmentModel.setNeedPlaceType(false);
-                }
+        placeKindGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rent) {
+                RequirmentModel.setNeedPlaceType(true);
+            } else if (checkedId == R.id.owned) {
+                RequirmentModel.setNeedPlaceType(false);
             }
         });
 
-        placeStateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.avail) {
-                    RequirmentModel.setNeedPlaceType(true);
-                } else if (checkedId == R.id.notAvail) {
-                    RequirmentModel.setNeedPlaceType(false);
-                }
+        placeStateGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.avail) {
+                RequirmentModel.setNeedPlaceType(true);
+            } else if (checkedId == R.id.notAvail) {
+                RequirmentModel.setNeedPlaceType(false);
             }
         });
 
@@ -206,7 +199,7 @@ public class FragmentOffer2 extends Fragment {
         setUpProjectExperienceNeedViewsVisibility();
         setUpSeekBarViews(minExperienceNeeded, maxExperienceNeeded, experienceFrom, experienceTo, exRequiredSeekbar);
 
-        setUpExpDepViews();
+//        setUpExpDepViews();
 
         //region Shrink And Expand
 
@@ -259,81 +252,81 @@ public class FragmentOffer2 extends Fragment {
         }
     }
 
-    private void setUpExpDepViews() {
-        exRec.setLayoutManager(new StaggeredGridLayoutManager(3,
-                StaggeredGridLayoutManager.HORIZONTAL));
-
-        mExRecLoadedAdapter = new LoadedChipsAdapter(null, mExRecUserAdapter);
-        exRec.setAdapter(mExRecLoadedAdapter);
-        mLoadedExperienceTypes.observe(this, new Observer<ArrayList<ExperienceTypeModel>>() {
-            @Override
-            public void onChanged(@Nullable ArrayList<ExperienceTypeModel> experienceTypeModels) {
-                mExRecLoadedAdapter.swapData(experienceTypeModels);
-            }
-        });
-
-        exRecUserAdd.setLayoutManager(new StaggeredGridLayoutManager(3,
-                StaggeredGridLayoutManager.HORIZONTAL));
-        mExRecUserAdapter = new ChipsAdapter(null, mExRecLoadedAdapter);
-        exRecUserAdd.setAdapter(mExRecUserAdapter);
-
-        exDep.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String text = s.toString();
-                boolean addText = false;
-                if (!text.isEmpty()) {
-                    for (int i = text.length() - 1; i >= 0; --i) {
-                        if (text.charAt(i) != SPACE && text.charAt(i) != NEW_LINE)
-                            addText = true;
-                    }
-
-                    addText = addText && (text.charAt(text.length() - 1) == SPACE ||
-                            text.charAt(text.length() - 1) == NEW_LINE);
-
-                    if (addText) {
-                        //if user added this before
-                        List<ExperienceTypeModel> userAddedExperienceTypes =
-                                mExRecUserAdapter.getSelectedTypeModels();
-                        for (int i = userAddedExperienceTypes.size() - 1; i >= 0; --i) {
-                            if (userAddedExperienceTypes.get(i).getName().equals(text)) {
-                                return;
-                            }
-                        }
-
-                        //else if user typed something exists int loaded list
-                        ArrayList<ExperienceTypeModel> experienceTypeModels = mLoadedExperienceTypes.getValue();
-                        if (experienceTypeModels != null)
-                            for (int i = experienceTypeModels.size() - 1; i >= 0; --i) {
-                                ExperienceTypeModel typeModel = experienceTypeModels.get(i);
-                                if (typeModel.getName().equals(text)) {
-                                    mExRecLoadedAdapter.removeTypeModel(typeModel);
-                                    mExRecUserAdapter.addTypeModel(typeModel);
-                                    return;
-                                }
-                            }
-
-                        //else
-                        ExperienceTypeModel typeModel = new ExperienceTypeModel();
-                        typeModel.setId(0);
-                        typeModel.setName(text);
-                        mExRecUserAdapter.addTypeModel(typeModel);
-
-                        //clear EditText
-                        exDep.setText("");
-                    }
-                }
-            }
-        });
-    }
+//    private void setUpExpDepViews() {
+//        exRec.setLayoutManager(new StaggeredGridLayoutManager(3,
+//                StaggeredGridLayoutManager.HORIZONTAL));
+//
+//        mExRecLoadedAdapter = new LoadedChipsAdapter(null, mExRecUserAdapter);
+//        exRec.setAdapter(mExRecLoadedAdapter);
+//        mLoadedExperienceTypes.observe(this, new Observer<ArrayList<ExperienceTypeModel>>() {
+//            @Override
+//            public void onChanged(@Nullable ArrayList<ExperienceTypeModel> experienceTypeModels) {
+//                mExRecLoadedAdapter.swapData(experienceTypeModels);
+//            }
+//        });
+//
+//        exRecUserAdd.setLayoutManager(new StaggeredGridLayoutManager(3,
+//                StaggeredGridLayoutManager.HORIZONTAL));
+//        mExRecUserAdapter = new ChipsAdapter(null, mExRecLoadedAdapter);
+//        exRecUserAdd.setAdapter(mExRecUserAdapter);
+//
+//        exDep.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String text = s.toString();
+//                boolean addText = false;
+//                if (!text.isEmpty()) {
+//                    for (int i = text.length() - 1; i >= 0; --i) {
+//                        if (text.charAt(i) != SPACE && text.charAt(i) != NEW_LINE)
+//                            addText = true;
+//                    }
+//
+//                    addText = addText && (text.charAt(text.length() - 1) == SPACE ||
+//                            text.charAt(text.length() - 1) == NEW_LINE);
+//
+//                    if (addText) {
+//                        //if user added this before
+//                        List<ExperienceTypeModel> userAddedExperienceTypes =
+//                                mExRecUserAdapter.getSelectedTypeModels();
+//                        for (int i = userAddedExperienceTypes.size() - 1; i >= 0; --i) {
+//                            if (userAddedExperienceTypes.get(i).getName().equals(text)) {
+//                                return;
+//                            }
+//                        }
+//
+//                        //else if user typed something exists int loaded list
+//                        ArrayList<ExperienceTypeModel> experienceTypeModels = mLoadedExperienceTypes.getValue();
+//                        if (experienceTypeModels != null)
+//                            for (int i = experienceTypeModels.size() - 1; i >= 0; --i) {
+//                                ExperienceTypeModel typeModel = experienceTypeModels.get(i);
+//                                if (typeModel.getName().equals(text)) {
+//                                    mExRecLoadedAdapter.removeTypeModel(typeModel);
+//                                    mExRecUserAdapter.addTypeModel(typeModel);
+//                                    return;
+//                                }
+//                            }
+//
+//                        //else
+//                        ExperienceTypeModel typeModel = new ExperienceTypeModel();
+//                        typeModel.setId(0);
+//                        typeModel.setName(text);
+//                        mExRecUserAdapter.addTypeModel(typeModel);
+//
+//                        //clear EditText
+//                        exDep.setText("");
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     private boolean validate() {
         boolean res = true;
@@ -420,7 +413,7 @@ public class FragmentOffer2 extends Fragment {
         exGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.y) {
                 exDesc.setEnabled(true);
-                exRec.setEnabled(true);
+//                exRec.setEnabled(true);
                 exRequiredSeekbar.setEnabled(true);
                 experienceFrom.setEnabled(true);
                 experienceTo.setEnabled(true);
@@ -428,7 +421,7 @@ public class FragmentOffer2 extends Fragment {
                 RequirmentModel.setNeedExperience(true);
             } else if (checkedId == R.id.n) {
                 exDesc.setEnabled(false);
-                exRec.setEnabled(false);
+//                exRec.setEnabled(false);
                 exRequiredSeekbar.setEnabled(false);
                 experienceFrom.setEnabled(false);
                 experienceTo.setEnabled(false);

@@ -49,7 +49,6 @@ public class FilterSearchFragment extends Fragment {
     private Button mGoButton;
 
     private DepartmentsAdapter mDepartmentsAdapter;
-    private CapitalsRecyclerViewAdapter capitalsRecyclerViewAdapter;
     private List<Department> mLoadedDepartments = new ArrayList<>();
     private List<CapitalModel> mLoadedCapitals = new ArrayList<>();
     private List<Department> mSelectedDepartments = null;
@@ -105,8 +104,8 @@ public class FilterSearchFragment extends Fragment {
         mDepartmentsAdapter = new DepartmentsAdapter(null, (ArrayList<Department>) mSelectedDepartments);
         mDepartmentsRecyclerView.setAdapter(mDepartmentsAdapter);
 
-        capitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
-        mCapitalsRecyclerView.setAdapter(capitalsRecyclerViewAdapter);
+        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
+        mCapitalsRecyclerView.setAdapter(mCapitalsRecyclerViewAdapter);
 
         mGoButton.setOnClickListener(v -> {
             mSelectedDepartments = mDepartmentsAdapter.getSelectedDepartments();

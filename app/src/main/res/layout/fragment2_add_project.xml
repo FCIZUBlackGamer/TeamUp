@@ -389,54 +389,55 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/medium"
-                    android:text="@string/exDep"
-                    android:textColor="#000"
-                    android:textSize="20sp" />
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginEnd="10dp"-->
+                    <!--android:fontFamily="@font/medium"-->
+                    <!--android:text="@string/exDep"-->
+                    <!--android:textColor="#000"-->
+                    <!--android:textSize="20sp" />-->
 
-                <EditText
-                    android:id="@+id/exDep"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginStart="8dp"
+                <!--<EditText-->
+                    <!--android:id="@+id/exDep"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="end"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:background="@drawable/rounded_corner_edit_text"-->
+                    <!--android:fontFamily="@font/medium"-->
+                    <!--android:gravity="end"-->
+                    <!--android:hint="@string/exDep"-->
+                    <!--android:lines="3"-->
+                    <!--android:padding="10dp" />-->
+
+                <!--<android.support.v7.widget.RecyclerView-->
+                    <!--android:id="@+id/exRecUserAdd"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="200dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:background="@drawable/rounded_corner_edit_text"-->
+                    <!--android:padding="8dp">-->
+
+                <!--</android.support.v7.widget.RecyclerView>-->
+
+                <!--&lt;!&ndash; GridView &ndash;&gt;-->
+                <!--<android.support.v7.widget.RecyclerView-->
+                    <!--android:id="@+id/exRec"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="200dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:background="@drawable/rounded_corner_edit_text">-->
+
+                <!--</android.support.v7.widget.RecyclerView>-->
+
+                <TextView
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_corner_edit_text"
-                    android:fontFamily="@font/medium"
-                    android:gravity="end"
-                    android:hint="@string/exDep"
-                    android:lines="3"
-                    android:padding="10dp" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/exRecUserAdd"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_corner_edit_text"
-                    android:padding="8dp">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <!-- GridView -->
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/exRec"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/rounded_corner_edit_text">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
@@ -449,7 +450,6 @@
                     android:id="@+id/exRequiredSeekbar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
                     rsb:absoluteMaxValue="100"
                     rsb:absoluteMinValue="0" />
