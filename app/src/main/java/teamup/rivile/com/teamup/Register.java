@@ -34,6 +34,8 @@ public class Register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().hide();
+
         initViews();
         Realm.init(this);
         RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
@@ -49,23 +51,17 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        tv_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //finish();
-                startActivity(new Intent(Register.this, FirstActivity.class));
-            }
+        tv_login.setOnClickListener(v -> {
+            //finish();
+            startActivity(new Intent(Register.this, FirstActivity.class));
         });
 
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserModel userModel = new UserModel();
-                userModel.setFullName(ed_full_name.getText().toString());
-                userModel.setMail(ed_email.getText().toString());
-                userModel.setPassword(ed_password.getText().toString());
-                register(userModel);
-            }
+        btn_save.setOnClickListener(v -> {
+            UserModel userModel = new UserModel();
+            userModel.setFullName(ed_full_name.getText().toString());
+            userModel.setMail(ed_email.getText().toString());
+            userModel.setPassword(ed_password.getText().toString());
+            register(userModel);
         });
     }
 

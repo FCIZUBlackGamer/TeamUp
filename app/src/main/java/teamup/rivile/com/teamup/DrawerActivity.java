@@ -115,14 +115,15 @@ public class DrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        toolbar = findViewById(R.id.toolbar);
-        searchView = findViewById(R.id.search);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        searchView = findViewById(R.id.search);
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
-        setSupportActionBar(toolbar);
 
         fab = findViewById(R.id.addOffer);
         fab.setVisibility(View.VISIBLE);
