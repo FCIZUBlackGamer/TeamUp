@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,9 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initViews();
+        Realm.init(this);
+        RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(configuration);
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();

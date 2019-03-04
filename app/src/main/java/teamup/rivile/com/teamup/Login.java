@@ -84,9 +84,6 @@ public class Login extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Realm.init(getActivity());
-        RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
-        Realm.setDefaultConfiguration(configuration);
 
         realm = Realm.getDefaultInstance();
 
