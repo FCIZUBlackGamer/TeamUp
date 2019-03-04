@@ -179,7 +179,7 @@
                     android:layout_margin="8dp"
                     android:background="@drawable/rounded_corner_edit_text"
                     android:fontFamily="@font/medium"
-                    android:gravity="end"
+                    android:gravity="right"
                     android:hint="@string/placeDetail"
                     android:lines="3"
                     android:padding="10dp" />
