@@ -141,6 +141,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         Log.e("Type", ProType + "");
         if (ProType == 1) {
+            ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
+
             realm.executeTransaction(realm1 -> {
 //                Log.e("UserId offers", String.valueOf(OfferDetailsDataBase.UserId));
                 RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
@@ -158,6 +160,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 }
             });
         } else if (ProType == 2) {
+            ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
+
             realm.executeTransaction(realm1 -> {
                 RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
                         .findAll();

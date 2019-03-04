@@ -63,9 +63,9 @@ public class FragmentHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
         ((DrawerActivity) getActivity()).Show("Home");
         ((DrawerActivity) getActivity()).hideFab();
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
         loadOffers();
     }
 

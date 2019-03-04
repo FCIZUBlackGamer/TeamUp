@@ -117,6 +117,7 @@ public class DrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_drawer);
 
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.home));
         setSupportActionBar(toolbar);
 
         searchView = findViewById(R.id.search);
@@ -453,6 +454,6 @@ public class DrawerActivity extends AppCompatActivity
     }
 
     public void setTitle(String name) {
-        getSupportActionBar().setTitle(name);
+        toolbar.setTitle(name);
     }
 }

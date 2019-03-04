@@ -62,7 +62,7 @@ public class FragmentIncommingRequirement extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.perposedOffers));
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).hideFab();
         realm = Realm.getDefaultInstance();

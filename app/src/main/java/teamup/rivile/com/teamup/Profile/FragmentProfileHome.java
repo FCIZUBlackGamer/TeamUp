@@ -167,6 +167,7 @@ public class FragmentProfileHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.profileSettings));
         ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).hideFab();
 //        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
