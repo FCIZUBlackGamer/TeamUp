@@ -65,6 +65,7 @@ public class FragmentHome extends Fragment {
         super.onStart();
 
         ((DrawerActivity) getActivity()).Show("Home");
+        ((DrawerActivity) getActivity()).hideFab();
         loadOffers();
     }
 
