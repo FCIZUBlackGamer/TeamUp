@@ -521,7 +521,7 @@ public class FragmentJoinHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((DrawerActivity) getActivity()).HideFab();
+        ((DrawerActivity) getActivity()).hideFab();
 
         setUpRecyclerViews();
 

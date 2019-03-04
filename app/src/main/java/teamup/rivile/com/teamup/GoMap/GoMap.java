@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -78,7 +77,7 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
 
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).Hide();
-        ((DrawerActivity) getActivity()).HideFab();
+        ((DrawerActivity) getActivity()).hideFab();
         CustomAdapter mCustomAdapter = new CustomAdapter(getActivity(), imageArray);
         mCustomAdapter.setDropDownViewResource(R.layout.custom_spinner_row);
 

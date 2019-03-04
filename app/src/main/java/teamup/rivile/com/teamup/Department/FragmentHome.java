@@ -62,12 +62,10 @@ public class FragmentHome extends Fragment {
 
     @Override
     public void onStart() {
-
         super.onStart();
-        ((DrawerActivity) getActivity()).Show("Home");
-        ((DrawerActivity) getActivity()).ShowFab();
-        loadOffers();
 
+        ((DrawerActivity) getActivity()).Show("Home");
+        loadOffers();
     }
 
     private void loadOffers() {

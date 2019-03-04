@@ -318,7 +318,7 @@ public class DrawerActivity extends AppCompatActivity
         Whome = whome;
     }
 
-    public static void HideFab() {
+    public static void hideFab() {
         fab.setVisibility(View.GONE);
     }
 
