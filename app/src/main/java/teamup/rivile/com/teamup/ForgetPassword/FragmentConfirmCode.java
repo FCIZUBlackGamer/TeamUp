@@ -219,7 +219,7 @@ public class FragmentConfirmCode extends Fragment {
                 Integer serverResponse = response.body();
                 if (serverResponse != null) {
                     Log.i("Response", serverResponse + "");
-                    if (serverResponse == 1) {
+                    if (serverResponse != 0) {
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
                         transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
