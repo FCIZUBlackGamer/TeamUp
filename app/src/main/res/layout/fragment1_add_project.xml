@@ -63,7 +63,7 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:fontFamily="@font/medium"
-                android:gravity="end"
+                android:gravity="right"
                 android:hint="@string/projectDesc"
                 android:lines="4"
                 android:padding="10dp" />
