@@ -349,6 +349,7 @@ public class FragmentOffer2 extends Fragment {
         final MaxTextWatcher maxTextWatcher = new MaxTextWatcher(toEditText, maxVal, seekBar);
         toEditText.addTextChangedListener(maxTextWatcher);
 
+        seekBar.setNotifyWhileDragging(true);
         seekBar.setRangeValues(minVal, maxVal);
         seekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
             fromEditText.removeTextChangedListener(minTextWatcher);
@@ -381,30 +382,27 @@ public class FragmentOffer2 extends Fragment {
     }
 
     private void setUpProjectPlaceNeedViewsVisibility() {
-        placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.yes) {
-                    map.setEnabled(true);
-                    placeDesc.setEnabled(true);
+        placeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.yes) {
+                map.setEnabled(true);
+                placeDesc.setEnabled(true);
 
-                    avail.setEnabled(true);
-                    notAvail.setEnabled(true);
-                    owned.setEnabled(true);
-                    rent.setEnabled(true);
-                    avail.setEnabled(false);
-                    notAvail.setEnabled(false);
+                avail.setEnabled(true);
+                notAvail.setEnabled(true);
+                owned.setEnabled(true);
+                rent.setEnabled(true);
+                avail.setEnabled(false);
+                notAvail.setEnabled(false);
 
-                    RequirmentModel.setNeedPlace(true);
-                } else if (checkedId == R.id.no) {
-                    map.setEnabled(false);
-                    placeDesc.setEnabled(false);
+                RequirmentModel.setNeedPlace(true);
+            } else if (checkedId == R.id.no) {
+                map.setEnabled(false);
+                placeDesc.setEnabled(false);
 
-                    owned.setEnabled(false);
-                    rent.setEnabled(false);
+                owned.setEnabled(false);
+                rent.setEnabled(false);
 
-                    RequirmentModel.setNeedPlace(false);
-                }
+                RequirmentModel.setNeedPlace(false);
             }
         });
     }

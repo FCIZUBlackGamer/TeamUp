@@ -348,72 +348,61 @@ public class FragmentOffer1 extends Fragment {
         final MaxTextWatcher maxTextWatcher = new MaxTextWatcher(toEditText, maxVal, seekBar);
         toEditText.addTextChangedListener(maxTextWatcher);
 
+        seekBar.setNotifyWhileDragging(true);
         seekBar.setRangeValues(minVal, maxVal);
-        seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                fromEditText.removeTextChangedListener(minTextWatcher);
-                fromEditText.setText(minValue.toString());
-                fromEditText.addTextChangedListener(minTextWatcher);
+        seekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            fromEditText.removeTextChangedListener(minTextWatcher);
+            fromEditText.setText(minValue.toString());
+            fromEditText.addTextChangedListener(minTextWatcher);
 
-                toEditText.removeTextChangedListener(maxTextWatcher);
-                toEditText.setText(maxValue.toString());
-                toEditText.addTextChangedListener(maxTextWatcher);
+            toEditText.removeTextChangedListener(maxTextWatcher);
+            toEditText.setText(maxValue.toString());
+            toEditText.addTextChangedListener(maxTextWatcher);
 
-                if (seekBarOrder == 1) {
-                    Offers.setProfitFrom(minVal);
-                    Offers.setProfitTo(maxVal);
-                } else if (seekBarOrder == 2) {
-                    RequirmentModel.setMoneyFrom(minVal);
-                    RequirmentModel.setMoneyTo(maxVal);
-                } else if (seekBarOrder == 3) {
-                    Offers.setNumContributorFrom(minVal);
-                    Offers.setNumContributorTo(maxVal);
-                }
+            if (seekBarOrder == 1) {
+                Offers.setProfitFrom(minVal);
+                Offers.setProfitTo(maxVal);
+            } else if (seekBarOrder == 2) {
+                RequirmentModel.setMoneyFrom(minVal);
+                RequirmentModel.setMoneyTo(maxVal);
+            } else if (seekBarOrder == 3) {
+                Offers.setNumContributorFrom(minVal);
+                Offers.setNumContributorTo(maxVal);
             }
         });
 
 //        fromEditText.setText(String.valueOf(minVal));
-        fromEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (fromEditText.getText().toString().isEmpty())
-                    fromEditText.setText(String.valueOf(minVal));
-                if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
-                    fromEditText.setText(toEditText.getText().toString());
-            }
+        fromEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (fromEditText.getText().toString().isEmpty())
+                fromEditText.setText(String.valueOf(minVal));
+            if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
+                fromEditText.setText(toEditText.getText().toString());
         });
 
 //        toEditText.setText(String.valueOf(maxVal));
-        toEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (toEditText.getText().toString().isEmpty())
-                    toEditText.setText(String.valueOf(maxVal));
-                if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
-                    toEditText.setText(fromEditText.getText().toString());
-            }
+        toEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (toEditText.getText().toString().isEmpty())
+                toEditText.setText(String.valueOf(maxVal));
+            if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
+                toEditText.setText(fromEditText.getText().toString());
         });
     }
 
 
     private void setUpProjectMoneyAvailabilityViewsVisibility() {
-        availGroupMoney.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.avail) {
-                    moneyRequiredSeekbar.setEnabled(true);
-                    moneyInFrom.setEnabled(true);
-                    moneyInTo.setEnabled(true);
+        availGroupMoney.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.avail) {
+                moneyRequiredSeekbar.setEnabled(true);
+                moneyInFrom.setEnabled(true);
+                moneyInTo.setEnabled(true);
 
-                    RequirmentModel.setNeedMoney(true);
-                } else if (checkedId == R.id.notAvail) {
-                    moneyRequiredSeekbar.setEnabled(false);
-                    moneyInFrom.setEnabled(false);
-                    moneyInTo.setEnabled(false);
+                RequirmentModel.setNeedMoney(true);
+            } else if (checkedId == R.id.notAvail) {
+                moneyRequiredSeekbar.setEnabled(false);
+                moneyInFrom.setEnabled(false);
+                moneyInTo.setEnabled(false);
 
-                    RequirmentModel.setNeedMoney(false);
-                }
+                RequirmentModel.setNeedMoney(false);
             }
         });
     }

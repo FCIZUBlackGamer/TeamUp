@@ -77,6 +77,7 @@ public class FilterSearchFragment extends Fragment {
         mGenderRadioGroup = view.findViewById(R.id.genderGroup);
 //        mAddressEditText = view.findViewById(R.id.address);
         mAgeRangeSeekBar = view.findViewById(R.id.ageSeekbar);
+        mAgeRangeSeekBar.setNotifyWhileDragging(true);
 
         mDepartmentsRecyclerView = view.findViewById(R.id.recDep);
         mDepartmentsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -85,8 +86,14 @@ public class FilterSearchFragment extends Fragment {
         mCapitalsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mProjectCostRangeSeekBar = view.findViewById(R.id.costSeekbar);
+        mProjectCostRangeSeekBar.setNotifyWhileDragging(true);
+
         mContributorsNumberRangeSeekBar = view.findViewById(R.id.numberContributersSeekbar);
+        mContributorsNumberRangeSeekBar.setNotifyWhileDragging(true);
+
         mContributorExperienceRangeSeekBar = view.findViewById(R.id.experienceSeekbar);
+        mContributorExperienceRangeSeekBar.setNotifyWhileDragging(true);
+
         mGoButton = view.findViewById(R.id.go);
         if (filterModel == null) {
             filterModel = new FilterModel();
