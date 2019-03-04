@@ -79,7 +79,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             if (bmap.sameAs(myLogo)) {
                 FragmentOfferDetails.deleteOffer(offersList.get(position).getId());
                 notifyDataSetChanged();
-            }else {
+            } else {
                 //TODO: Action Report Here
 
             }
@@ -100,7 +100,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             String newDesc = offersList.get(position).getDescription().substring(0, 500) + context.getString(R.string.seeMore);
             holder.project_desc.setText(newDesc);
         } else {
-            holder.project_desc.setText(offersList.get(position).getDescription());
+            holder.project_desc.setText(offersList.get(position).getDescription() + '\n' + context.getString(R.string.seeMore));
         }
         if (offersList.get(position).getTags() != null) {
             for (int i = 0; i < offersList.get(position).getTags().size(); i++) {
