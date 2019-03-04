@@ -479,7 +479,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             } else{
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frame, new FragmentEmpty())
-                        .addToBackStack(FragmentEmpty.class.getSimpleName()).commit();
+                        .commit();
             }
         }
     }

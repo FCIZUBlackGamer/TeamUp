@@ -113,7 +113,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
             if (offersList.get(position).getUserId().equals(offersList.get(position).getUsers().get(i).getId())) {
-                Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
+                String imageUrl = offersList.get(position).getUsers().get(i).getImage();
+                if (imageUrl != null && !imageUrl.isEmpty())
+                    Picasso.get().load(imageUrl).into(holder.image);
             }
         }
 
