@@ -153,23 +153,29 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                <LinearLayout
+                    android:id="@+id/placeHideOrVis"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-
-                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:tools="http://schemas.android.com/tools"
-                        android:id="@+id/map"
+                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        tools:context=".Chart.FinishChart" />
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp">
 
 
-                </RelativeLayout>
+                        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
+                            android:id="@+id/map"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            tools:context=".Chart.FinishChart" />
+
+
+                    </RelativeLayout>
 
                 <EditText
                     android:id="@+id/placeDesc"
@@ -185,104 +191,105 @@
                     android:padding="10dp" />
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <RadioGroup
-                        android:id="@+id/placeStateGroup"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/notAvail"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        <RadioGroup
+                            android:id="@+id/placeStateGroup"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/notAvail"
-                            app:buttonTint="@color/backgroundDarkGreen" />
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/avail"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                            <RadioButton
+                                android:id="@+id/notAvail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/notAvail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                            <RadioButton
+                                android:id="@+id/avail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/avail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                        </RadioGroup>
+
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:checked="true"
                             android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/avail"
-                            app:buttonTint="@color/backgroundDarkGreen" />
+                            android:gravity="center"
+                            android:text="@string/placeStatus"
+                            android:textColor="#000"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
-                    </RadioGroup>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/medium"
-                        android:gravity="center"
-                        android:text="@string/placeStatus"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioGroup
-                        android:id="@+id/placeKindGroup"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
                         android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/rent"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                        <RadioGroup
+                            android:id="@+id/placeKindGroup"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/rent"
-                            app:buttonTint="@color/backgroundDarkGreen" />
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/owned"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                            <RadioButton
+                                android:id="@+id/rent"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/rent"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                            <RadioButton
+                                android:id="@+id/owned"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/owned"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                        </RadioGroup>
+
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:checked="true"
                             android:fontFamily="@font/medium"
-                            android:gravity="end|center_vertical"
-                            android:text="@string/owned"
-                            app:buttonTint="@color/backgroundDarkGreen" />
-
-                    </RadioGroup>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/medium"
-                        android:gravity="center"
-                        android:text="@string/placeKind"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
+                            android:gravity="center"
+                            android:text="@string/placeKind"
+                            android:textColor="#000"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
 

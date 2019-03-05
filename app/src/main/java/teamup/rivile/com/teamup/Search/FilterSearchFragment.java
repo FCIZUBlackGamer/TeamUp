@@ -1,13 +1,12 @@
 package teamup.rivile.com.teamup.Search;
 
-import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,21 +56,12 @@ public class FilterSearchFragment extends Fragment {
     CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
     private FilterModel filterModel;
     FragmentManager fragmentManager;
-
-    public FilterSearchFragment() {
-        // Required empty public constructor
-    }
+    View view;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_filter_search, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+        view = inflater.inflate(R.layout.fragment_filter_search, container, false);
         mProjectNameEditText = view.findViewById(R.id.project_name);
         mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
         mGenderRadioGroup = view.findViewById(R.id.genderGroup);
@@ -99,11 +89,14 @@ public class FilterSearchFragment extends Fragment {
             filterModel = new FilterModel();
         }
         fragmentManager = getFragmentManager();
+        return view;
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.e("Search", "R");
 
         loadCategoriesAndCapitals();
 
@@ -152,8 +145,8 @@ public class FilterSearchFragment extends Fragment {
                 filterModel.setCategoryId(deps);
             }
 
+            fragmentManager.beginTransaction().replace(R.id.frame, FragmentListProjects.setFilteredOffers(filterModel)).commit();
         });
-        fragmentManager.beginTransaction().replace(R.id.frame, FragmentListProjects.setFilteredOffers(filterModel)).commit();
 
     }
 

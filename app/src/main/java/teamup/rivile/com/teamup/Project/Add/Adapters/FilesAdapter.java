@@ -32,9 +32,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
         this.context = context;
         this.filesModels = filesModels;
         this.listener = listener;
-        if (this.filesModels == null) {
-            this.filesModels = new ArrayList<>();
-        }
     }
 
     @NonNull
@@ -52,7 +49,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.Vholder> {
         try {Log.e("Files", "Here");
             Log.e("Files", filesModels.get(position).getFileName());
             fileUri = filesModels.get(position).getFileUri();
-            if (filesModels.get(position).getFileName().isEmpty()){
+            if (!filesModels.get(position).getFileName().isEmpty()){
                 holder.fileName.setText(filesModels.get(position).getFileName());
             }else {
                 holder.fileName.setText(filesModels.get(position).getServerFileName());

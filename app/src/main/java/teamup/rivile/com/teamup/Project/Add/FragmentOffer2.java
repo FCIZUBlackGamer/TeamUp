@@ -47,7 +47,7 @@ public class FragmentOffer2 extends Fragment {
 
     View view;
     RelativeLayout place, experience;
-    LinearLayout placeSection, experienceSection;
+    LinearLayout placeSection, experienceSection, placeHideOrVis;
 
     RadioGroup placeGroup, placeKindGroup, placeStateGroup, exGroup;
     RadioButton avail, notAvail, owned, rent;
@@ -86,6 +86,7 @@ public class FragmentOffer2 extends Fragment {
         place = view.findViewById(R.id.place);
         experience = view.findViewById(R.id.experience);
         placeSection = view.findViewById(R.id.placeSection);
+        placeHideOrVis = view.findViewById(R.id.placeHideOrVis);
         experienceSection = view.findViewById(R.id.experienceSection);
         arrowPlace = view.findViewById(R.id.arrowPlace);
         arrowExperience = view.findViewById(R.id.arrowExperiance);
@@ -382,27 +383,32 @@ public class FragmentOffer2 extends Fragment {
     }
 
     private void setUpProjectPlaceNeedViewsVisibility() {
-        placeGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.yes) {
-                map.setEnabled(true);
-                placeDesc.setEnabled(true);
+        placeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.yes) {
+                    map.setEnabled(true);
+                    placeDesc.setEnabled(true);
 
-                avail.setEnabled(true);
-                notAvail.setEnabled(true);
-                owned.setEnabled(true);
-                rent.setEnabled(true);
-                avail.setEnabled(false);
-                notAvail.setEnabled(false);
+                    avail.setEnabled(true);
+                    notAvail.setEnabled(true);
+                    owned.setEnabled(true);
+                    rent.setEnabled(true);
+                    avail.setEnabled(false);
+                    notAvail.setEnabled(false);
 
-                RequirmentModel.setNeedPlace(true);
-            } else if (checkedId == R.id.no) {
-                map.setEnabled(false);
-                placeDesc.setEnabled(false);
+                    RequirmentModel.setNeedPlace(true);
+                    placeHideOrVis.setVisibility(View.VISIBLE);
+                } else if (checkedId == R.id.no) {
+                    map.setEnabled(false);
+                    placeDesc.setEnabled(false);
 
-                owned.setEnabled(false);
-                rent.setEnabled(false);
+                    owned.setEnabled(false);
+                    rent.setEnabled(false);
 
-                RequirmentModel.setNeedPlace(false);
+                    RequirmentModel.setNeedPlace(false);
+                    placeHideOrVis.setVisibility(View.GONE);
+                }
             }
         });
     }

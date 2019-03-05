@@ -87,15 +87,15 @@ public class Login extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-        realm.executeTransaction(realm1 -> {
-            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
-            if (results.size() > 0){
-                Gson gson = new Gson();
-                Log.e("results", results.get(0).getUser().getId()+"");
-                startActivity(new Intent(getActivity(), DrawerActivity.class));
-                getActivity().finish();
-            }
-        });
+//        realm.executeTransaction(realm1 -> {
+//            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
+//            if (results.size() > 0){
+//                Gson gson = new Gson();
+//                Log.e("results", results.get(0).getUser().getId()+"");
+//                startActivity(new Intent(getActivity(), DrawerActivity.class));
+//                getActivity().finish();
+//            }
+//        });
 
         userModel = new UserModel();
         signInButton.setOnClickListener(v -> {

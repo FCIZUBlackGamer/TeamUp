@@ -70,15 +70,15 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
     public void addTypeModel(@NonNull ExperienceTypeModel typeModel) {
         mTypeModels.add(typeModel);
 
-        notifyItemInserted(mTypeModels.size() - 1);
-//        notifyDataSetChanged();
+//        notifyItemInserted(mTypeModels.size() - 1);
+        notifyDataSetChanged();
     }
 
     public void removeTypeModel(@NonNull ExperienceTypeModel typeModel) {
         mTypeModels.remove(typeModel);
 
-        notifyItemRemoved(mTypeModels.size() - 1);
-//        notifyDataSetChanged();
+//        notifyItemRemoved(mTypeModels.size() - 1);
+        notifyDataSetChanged();
     }
 
     @NonNull

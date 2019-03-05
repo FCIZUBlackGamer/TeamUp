@@ -44,6 +44,7 @@ public class Register extends AppCompatActivity {
         realm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
             if (results.size() > 0){
+//                Log.i("REalm", results.get)
                 Gson gson = new Gson();
                 Log.e("results", results.get(0).getUser().getId()+"");
                 startActivity(new Intent(Register.this, DrawerActivity.class));

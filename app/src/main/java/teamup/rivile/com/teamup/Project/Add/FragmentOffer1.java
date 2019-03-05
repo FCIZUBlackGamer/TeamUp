@@ -22,20 +22,26 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.badoualy.stepperindicator.StepperIndicator;
+import com.squareup.picasso.Picasso;
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.MaxTextWatcher;
 import teamup.rivile.com.teamup.Uitls.MinTextWatcher;
 
 public class FragmentOffer1 extends Fragment {
     View view;
+    CircleImageView user_image;
     RelativeLayout money, contributors;
     LinearLayout moneySection, contributorsSection;
 
@@ -57,6 +63,7 @@ public class FragmentOffer1 extends Fragment {
 
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
+    Realm realm;
 
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
 
@@ -71,6 +78,7 @@ public class FragmentOffer1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment1_add_project, container, false);
+        realm = Realm.getDefaultInstance();
         /** Shrink and Expand Views */
         money = view.findViewById(R.id.money);
         contributors = view.findViewById(R.id.contributors);
@@ -96,6 +104,7 @@ public class FragmentOffer1 extends Fragment {
             Offers.setProfitType(3);
         }
 
+        user_image = view.findViewById(R.id.user_image);
         genderGroup = view.findViewById(R.id.genderGroup);
         checkedId = genderGroup.getCheckedRadioButtonId();
         if (checkedId == R.id.male) {
@@ -149,6 +158,15 @@ public class FragmentOffer1 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        realm.executeTransaction( realm1 -> {
+            String image = realm1.where(LoginDataBase.class).findFirst().getUser().getImage();
+            if (false){ // founded in device
+
+            }else {
+                Picasso.get().load(API.BASE_URL+image).into(user_image);
+            }
+        });
 
         proDetail.addTextChangedListener(new TextWatcher() {
             @Override

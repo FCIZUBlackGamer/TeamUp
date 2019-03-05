@@ -120,7 +120,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     static int projectId = 50;
     DownloadManager downloadManager;
     ImageView report;
-    static Realm realm;
+    Realm realm;
     static int userId;
 
     public static FragmentOfferDetails setProjectId(int proId, int ty, int pos) {
@@ -221,6 +221,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         realm = Realm.getDefaultInstance();
 
+
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
         });
@@ -252,7 +253,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             } else {
                 //TODO: Action Report Here
 
-                makeReport(projectId, userId);
+                makeReport(projectId, userId, getActivity());
             }
 
             if (type == FragmentListProjects.NORMAL) {
@@ -289,14 +290,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                likeOffer(projectId, 1);
+                likeOffer(projectId, userId,  1);
             } else if (likeDrawable.getConstantState()
                     .equals(getContext()
                             .getResources()
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                likeOffer(projectId, 0);
+                likeOffer(projectId, userId, 0);
             }
         });
 
@@ -471,8 +472,8 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     }
 
-    private void makeReport(int projectId, int userId) {
-        final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public static void makeReport(int projectId, int userId, Context context) {
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View message = inflater.inflate(R.layout.popup_report, null);
 
@@ -480,14 +481,10 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         FloatingActionButton confirm = message.findViewById(R.id.confirm);
         ImageView close = message.findViewById(R.id.close);
 
-        confirm.setOnClickListener(v -> {
-            if (!message_type.getText().toString().isEmpty()) {
-                reportOffer(userId, projectId, message_type.getText().toString());
-            }
-        });
 
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false)
                 .setView(message)
                 .setNegativeButton("اغلاق", (dialog, which) -> {
@@ -500,9 +497,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         close.setOnClickListener(v ->
                 dialog2.dismiss()
         );
+        confirm.setOnClickListener(v -> {
+            if (!message_type.getText().toString().isEmpty()) {
+                reportOffer(userId, projectId, message_type.getText().toString(), context, dialog2);
+            }
+        });
     }
 
-    private void reportOffer(int userId, int projectId, String desc) {
+    public static void reportOffer(int userId, int projectId, String desc, Context context, AlertDialog dialog2) {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
@@ -519,13 +521,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String res = response.body();
-                Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, res, Toast.LENGTH_SHORT).show();
+                dialog2.dismiss();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -561,7 +564,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     }
 
 
-    public static void likeOffer(int offerId, int like) {
+    public void likeOffer(int offerId, int userId, int like) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
@@ -570,6 +573,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
         likeModel.setUserId(userId);
+        Log.v("offerId", offerId+"");
+        Log.v("userId", userId+"");
+        Log.v("Like", like+"");
         likeModel.setStatus(like);
         if (like == 1) {//dislike
             realm.executeTransaction(realm1 -> {
@@ -584,10 +590,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             });
         }
         Gson gson = new Gson();
-
-
         call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
-
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
@@ -603,7 +606,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         });
     }
 
-    public static void deleteOffer(int offerId) {
+    public void deleteOffer(int offerId) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
@@ -629,6 +632,32 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 //textView.setText(t.getMessage());
             }
         });
+    }
+    public void exportDatabase() {
+
+        File exportRealmFile = null;
+        // get or create an "export.realm" file
+        exportRealmFile = new File(getActivity().getExternalCacheDir(), "export.realm");
+
+        // if "export.realm" already exists, delete
+        exportRealmFile.delete();
+
+        // copy current realm to "export.realm"
+        realm.writeCopyTo(exportRealmFile);
+
+        realm.close();
+
+        // init email intent and add export.realm as attachment
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, "YOUR MAIL");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "YOUR SUBJECT");
+        intent.putExtra(Intent.EXTRA_TEXT, "YOUR TEXT");
+        Uri u = Uri.fromFile(exportRealmFile);
+        intent.putExtra(Intent.EXTRA_STREAM, u);
+
+        // start email intent
+        startActivity(Intent.createChooser(intent, "YOUR CHOOSER TITLE"));
     }
 
     @SuppressLint("ResourceType")
