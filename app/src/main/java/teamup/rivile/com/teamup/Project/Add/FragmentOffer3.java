@@ -76,6 +76,7 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
@@ -1377,6 +1378,9 @@ public class FragmentOffer3 extends Fragment {
                             realm1.insertOrUpdate(offerDetailsDataBase);
                             realm1.commitTransaction();
                         });
+
+                        getFragmentManager().beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
+                        getFragmentManager().popBackStack();
 
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
