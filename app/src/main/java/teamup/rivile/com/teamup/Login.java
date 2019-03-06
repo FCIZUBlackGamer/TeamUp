@@ -376,10 +376,6 @@ public class Login extends Fragment {
         Log.e("Here", gson.toJson(userModel));
         // Parsing any Media type file
 
-        realm.executeTransaction(realm1 -> {
-            realm1.deleteAll();
-        });
-
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
         Call<LoginDataBase> call = reg.loginFb(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<LoginDataBase>() {
@@ -389,8 +385,17 @@ public class Login extends Fragment {
                 if (serverResponse != null) {
                     Log.i("Response", gson.toJson(serverResponse));
                     realm.executeTransaction(realm1 -> {
+                        realm1.deleteAll();
+                    });
+
+                    realm.executeTransaction(realm1 -> {
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
+                        Log.e("size", serverResponse.getOffers().size()+"");
+                        for (int i = 0; i < serverResponse.getOffers().size(); i++) {
+                            Log.e("Offer Name "+serverResponse.getOffers().get(i).getId(),
+                                    serverResponse.getOffers().get(i).getName()+"");
+                        }
                         startActivity(new Intent(getActivity(), DrawerActivity.class));
                         getActivity().finish();
                     });

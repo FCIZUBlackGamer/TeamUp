@@ -42,6 +42,8 @@ import teamup.rivile.com.teamup.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
+import static teamup.rivile.com.teamup.Project.List.FragmentListProjects.MINE;
+
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -90,7 +92,7 @@ public class DrawerActivity extends AppCompatActivity
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_saved_project);
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, new FragmentListProjects())
+                            .replace(R.id.frame, new FragmentListProjects().setType(MINE))
                             .commit();
                     return true;
                 case R.id.navigation_favourite_projects:
@@ -219,6 +221,19 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        realm.executeTransaction(realm1 -> {
+            LoginDataBase loginDataBase = realm1.where(LoginDataBase.class).findFirst();
+
+            Log.e("results", loginDataBase.getUser().getId()+"");
+            Log.e("size", loginDataBase.getOffers().size()+"");
+            for (int i = 0; i < loginDataBase.getOffers().size(); i++) {
+                Log.e("Offer Name "+loginDataBase.getOffers().get(i).getId(),
+                        loginDataBase.getOffers().get(i).getName()+"");
+            }
+
+        });
+
         fab.setOnClickListener(view -> {
             /** Half Pizza Animation */
             Hide();
@@ -393,14 +408,14 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame, FragmentListProjects.setType(1));
+                fragmentTransaction.replace(R.id.frame, new teamup.rivile.com.teamup.Project.MyProjects.FragmentListProjects());
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
 
             case R.id.nav_requirement: // internal db
                 showToolbar();
-                navigation.setSelectedItemId(R.id.navigation_saved_project);
+//                navigation.setSelectedItemId(R.id.navigation_saved_project);
 
                 fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
                 if (mIsCurrentFragmentIsHomeFragment)

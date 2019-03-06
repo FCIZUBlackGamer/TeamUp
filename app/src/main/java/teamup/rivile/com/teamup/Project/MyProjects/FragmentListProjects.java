@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.Project.List;
+package teamup.rivile.com.teamup.Project.MyProjects;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +32,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
+import teamup.rivile.com.teamup.Project.List.AdapterListOffers;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
@@ -59,45 +60,17 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     View view;
-    static int DepId = -1;
     static int ProType = -1;
-    static String Word;
-    static int Type = -1;
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
 
-    /**
-     * @param id refers to Department Id from Home Page
-     */
-    public static FragmentListProjects setDepId(int id) {
-        DepId = id;
-        return new FragmentListProjects();
-    }
 
     /**
-     * @param id refers to favourite projects(2) or all projects(0)
+     * @param id refers to my projects(1), favourite projects(2) or all projects(-1)
      */
     public static FragmentListProjects setType(int id) {
         ProType = id;
-        return new FragmentListProjects();
-    }
-
-    /**
-     * @param filter refers to my filtered projects from FilterSearchFragment
-     */
-    public static FragmentListProjects setFilteredOffers(FilterModel filter) {
-        filterModel = filter;
-        return new FragmentListProjects();
-    }
-
-    /**
-     * @param word refers to my projects(1), favourite projects(2) or all projects(-1)
-     * @param type {2: UserName, 1: ProjectName, 0: Tag}
-     */
-    public static FragmentListProjects setWord(int type, String word) {
-        Word = word;//Todo: Make Action
-        Type = type;
         return new FragmentListProjects();
     }
 
@@ -130,92 +103,72 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         likeModelDataBase = loginData.getLikes();
         Log.e("UserId", loginData.getUser().getId() + "");
-//        Log.e("Type", ProType + "");
+        Log.e("Type", ProType + "");
 
-        if (DepId != -1) {
-//            ProType = -1;
-            Type = -1;
-            loadOffers(DepId);
-        }
-//        if (ProType != -1) {
-//            DepId = -1;
-//            Type = -1;
-//            if (ProType == 1) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
-//
-//////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                Log.e("Size", offerDetailsDataBases.size() + "");
-//                if (offerDetailsDataBases.size() > 0) {
-//                    Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
-//
-//                    Offer offers = convertList(offerDetailsDataBases);
-//                    fillOffers(offers, MINE);
-//                } else {
-//
-//                    ((DrawerActivity) getActivity()).Hide();
-//                    //Todo: Show Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty());
-//                }
-//
-//            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-//                if (favouriteDataBases.size() > 0) {
-//                    /**
-//                     * get offer ids from favouriteDataBases
-//                     *
-//                     * and fetch them from OfferDetailsDataBase
-//                     *
-//                     * */
-//                    List<Integer> offerIds = new ArrayList<>();
-//                    for (int i = 0; i < favouriteDataBases.size(); i++) {
-//                        offerIds.add(favouriteDataBases.get(i).getOfferId());
-//                    }
-//
-//                    RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-//                    for (int i = 0; i < offerIds.size(); i++) {
-//                        offerDetailsDataBases.add(realm.where(OfferDetailsDataBase.class)
-//                                .equalTo("Id", offerIds.get(i))
-//                                .findFirst());
-//                    }
-//
+        if (ProType == 1) {
+            ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
+
+            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
+                    .findAll();
+            RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
+
 ////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                    if (offerDetailsDataBases.size() > 0) {
-//                        fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-//                    } else {
-//                        ((DrawerActivity) getActivity()).Hide();
-//                        //Todo: Show Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-//
-//
-//                } else {
-//                    ((DrawerActivity) getActivity()).Hide();
-//                    //Todo: Show Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty()).commit();
-//                }
-//            }
-//        }
+            Log.e("Size", offerDetailsDataBases.size() + "");
+            if (offerDetailsDataBases.size() > 0) {
+                Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
 
-        else if (Type != -1) {
-//            ProType =-1;
-            DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
-            loadOffers(Type, Word);
-        }else if (filterModel != null) {
-//            ProType = -1;
-            Type = -1;
-            DepId = -1;
-            loadOffers(filterModel);
+                Offer offers = convertList(offerDetailsDataBases);
+                fillOffers(offers, MINE);
+            } else {
+
+                ((DrawerActivity) getActivity()).Hide();
+                //Todo: Show Empty view
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new FragmentEmpty());
+            }
+
+        } else if (ProType == 2) {
+            ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
+
+            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
+                    .findAll();
+            RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
+            if (favouriteDataBases.size() > 0) {
+                /**
+                 * get offer ids from favouriteDataBases
+                 *
+                 * and fetch them from OfferDetailsDataBase
+                 *
+                 * */
+                List<Integer> offerIds = new ArrayList<>();
+                for (int i = 0; i < favouriteDataBases.size(); i++) {
+                    offerIds.add(favouriteDataBases.get(i).getOfferId());
+                }
+
+                RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
+                for (int i = 0; i < offerIds.size(); i++) {
+                    offerDetailsDataBases.add(realm.where(OfferDetailsDataBase.class)
+                            .equalTo("Id", offerIds.get(i))
+                            .findFirst());
+                }
+
+//                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
+                if (offerDetailsDataBases.size() > 0) {
+                    fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
+                } else {
+                    ((DrawerActivity) getActivity()).Hide();
+                    //Todo: Show Empty view
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame, new FragmentEmpty()).commit();
+                }
+
+
+            } else {
+                ((DrawerActivity) getActivity()).Hide();
+                //Todo: Show Empty view
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame, new FragmentEmpty()).commit();
+            }
         }
 
 
@@ -541,7 +494,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
-                        fillOffers(serverResponse, NORMAL);
+                        fillOffers(serverResponse, ProType);
                     } else {
                         ((DrawerActivity) getActivity()).Hide();
                         //Todo: Show Empty view

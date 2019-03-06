@@ -3,7 +3,6 @@ package teamup.rivile.com.teamup.Project.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -27,6 +25,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
@@ -38,7 +37,6 @@ import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.ReportModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
@@ -72,6 +70,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
         });
+        Log.e("Internal Offer Size", offersList.size() + "");
         return new Vholder(view);
     }
 
@@ -95,7 +94,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
             final Bitmap myLogo = getBitmap(myDrawable);
             if (bmap.sameAs(myLogo)) {
-                deleteOffer(offersList.get(position).getId());
+                deleteOffer(offersList.get(position).getId(), position);
                 notifyDataSetChanged();
             } else {
                 //TODO: Action Report Here
@@ -270,37 +269,43 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
         likeModel.setUserId(userId);
-        Log.v("offerId", offerId+"");
-        Log.v("userId", userId+"");
-        Log.v("Like", like+"");
         likeModel.setStatus(like);
-        if (like == 1) {//dislike
-            realm.executeTransaction(realm1 -> {
-                if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
-                    LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findFirst();
-                    Log.v("IdR", l.getId() + "");
-                    Log.v("IdRR", l.getOfferId() + "");
-                    Log.v("IdRRR", l.getUserId() + "");
-                    Log.v("IdRRRR", l.getStatus() + "");
-                    l.deleteFromRealm();
-//                    realm1.commitTransaction();
-                }else {
-                    Log.v("Status", "Not Found");
-                }
-            });
-        } else {//like
-            realm.executeTransaction(realm1 -> {
-                realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
-                //realm1.commitTransaction();
-            });
-        }
         Gson gson = new Gson();
+        Log.e("Like Model", gson.toJson(likeModel));
         call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String Offers = response.body();
                 Log.e("Like", Offers);
+                if (Offers.equals("Success")) {
+                    if (like == 1) {//dislike
+                        realm.executeTransaction(realm1 -> {
+                            if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
+                                RealmResults<LikeModelDataBase> l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findAll();
+                                for (int i = 0; i < l.size(); i++) {
+                                    Log.v("IdR", l.get(i).getId() + "");
+                                    Log.v("IdRR", l.get(i).getOfferId() + "");
+                                    Log.v("IdRRR", l.get(i).getUserId() + "");
+                                    Log.v("IdRRRR", l.get(i).getStatus() + "");
+                                }
+
+                                l.deleteAllFromRealm();
+//                    realm1.commitTransaction();
+                            } else {
+                                Log.v("Status", "Not Found");
+                            }
+                        });
+                    } else {//like
+                        realm.executeTransaction(realm1 -> {
+                            realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
+                            //realm1.commitTransaction();
+                        });
+                    }
+                } else {
+
+                }
+
 
             }
 
@@ -311,10 +316,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         });
     }
 
-    public void deleteOffer(int offerId) {
+    public void deleteOffer(int offerId, int position) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
+        Log.e("OfferId", offerId + "");
         ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
         Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
 
@@ -322,12 +328,15 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String Offers = response.body();
-                if (Offers.equals("\"Success\"")) {
-                    realm.executeTransaction(realm1 -> {
-                        OfferDetailsDataBase l = realm1.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("OfferId", offerId).findFirst();
-                        l.deleteFromRealm();
-                        realm1.commitTransaction();
-                    });
+                if (Offers.equals("Success")) {
+                    realm.beginTransaction();
+                    OfferDetailsDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
+                    l.deleteFromRealm();
+                    realm.commitTransaction();
+                    offersList.remove(position);
+                    notifyDataSetChanged();
+                } else {
+                    Log.e("Er", Offers);
                 }
 
             }
@@ -335,6 +344,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
+                Log.e("Erro", t.getMessage());
             }
         });
     }

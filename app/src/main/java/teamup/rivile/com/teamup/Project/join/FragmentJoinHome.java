@@ -69,6 +69,7 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
@@ -151,7 +152,6 @@ public class FragmentJoinHome extends Fragment {
     Button accept, reject;
 
     private static int mOfferId = -1;
-    private static OfferDetails mRequirementDetails = null;
     private static int mUserId = 1;
 
     private static ProgressDialog mProgressDialog;
@@ -164,15 +164,8 @@ public class FragmentJoinHome extends Fragment {
 
     //endregion variable declarations
 
-    public static FragmentJoinHome openForEdit(OfferDetails requirementDetails, int offerId) {
-        mRequirementDetails = requirementDetails;
-        mOfferId = offerId;
-        return new FragmentJoinHome();
-    }
-
     public static FragmentJoinHome setOfferId(int offerId) {
         mOfferId = offerId;
-
         return new FragmentJoinHome();
     }
 
@@ -208,17 +201,28 @@ public class FragmentJoinHome extends Fragment {
         });
     }
 
+    private void disableViews() {
+        profitTypeRadioButton.setEnabled(false);
+        availMoneyRadioButton.setEnabled(false);
+        genderRadioButton.setEnabled(false);
+        educationLevel.setEnabled(false);
+        moneyInEditText.setEnabled(false);
+        placeRadioButton.setEnabled(false);
+        placeKindRadioButton.setEnabled(false);
+        placeStateRadioButton.setEnabled(false);
+        exRadioButton.setEnabled(false);
+        experienceEditText.setEnabled(false);
+        exDesc.setEnabled(false);
+        egypt.setEnabled(false);
+//        tagsInput.setEnabled(false);
+        exDesc.setEnabled(false);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (requirmentModel == null && mRequirementDetails == null && mOfferId != -1) {
+        if (requirmentModel == null && mOfferId != -1) {
             loadOffer();
-        }
-
-        if (mRequirementDetails != null) {
-            mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setMessage("جاري التجميل...");
         }
 
         view = inflater.inflate(R.layout.fragment_join_home, container, false);
@@ -337,18 +341,27 @@ public class FragmentJoinHome extends Fragment {
             DepSection.setVisibility(View.GONE);
             tagSection.setVisibility(View.GONE);
             cap.setVisibility(View.GONE);
+            disableViews();
             accept_reject.setVisibility(View.VISIBLE);
             delete_req.setVisibility(View.VISIBLE);
 
             accept.setOnClickListener(v -> {
+                accept.setEnabled(false);
+                reject.setEnabled(false);
+                delete_req.setEnabled(false);
                 acceptOrReject(mOfferId, requirmentModel.getId(), true);
             });
 
             reject.setOnClickListener(v -> {
+                accept.setEnabled(false);
+                reject.setEnabled(false);
+                delete_req.setEnabled(false);
                 acceptOrReject(mOfferId, requirmentModel.getId(), false);
             });
 
-            delete_req.setOnClickListener(v -> {
+            delete_req.setOnClickListener(v -> {accept.setEnabled(false);
+                reject.setEnabled(false);
+                delete_req.setEnabled(false);
                 delete(requirmentModel.getId());
             });
 
@@ -437,8 +450,6 @@ public class FragmentJoinHome extends Fragment {
                 }
             });
         }
-
-
 //        API.BASE_URL
         if (requirmentModel != null)
             for (int i = 0; i < requirmentModel.getAttachmentModels().size(); i++) {
@@ -456,13 +467,13 @@ public class FragmentJoinHome extends Fragment {
 
     }
 
-    private void acceptOrReject(int offerId, int requirementId, boolean accept) {
+    private void acceptOrReject(int offerId, int requirementId, boolean accep) {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         // Parsing any Media type file
 
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
         Call<String> call;
-        if (accept) {
+        if (accep) {
             call = reg.acceptRequirement(offerId, requirementId, API.URL_TOKEN);
         } else {
             call = reg.rejectRequirement(offerId, requirementId, API.URL_TOKEN);
@@ -473,10 +484,13 @@ public class FragmentJoinHome extends Fragment {
                 String serverResponse = response.body();
                 if (serverResponse != null) {
                     Toast.makeText(getActivity(), serverResponse, Toast.LENGTH_LONG).show();
-
+                    leaveFragmentBitch();
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    accept.setEnabled(true);
+                    reject.setEnabled(true);
+                    delete_req.setEnabled(true);
                 }
             }
 
@@ -484,8 +498,19 @@ public class FragmentJoinHome extends Fragment {
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
+                accept.setEnabled(true);
+                reject.setEnabled(true);
+                delete_req.setEnabled(true);
             }
         });
+    }
+
+    private void leaveFragmentBitch() {
+        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frame, new FragmentHome())
+                .addToBackStack(FragmentHome.class.getName())
+                .commit();
     }
 
     private void delete(int requirementId) {
@@ -503,10 +528,13 @@ public class FragmentJoinHome extends Fragment {
                 String serverResponse = response.body();
                 if (serverResponse != null) {
                     Toast.makeText(getActivity(), serverResponse, Toast.LENGTH_LONG).show();
-
+                    leaveFragmentBitch();
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    accept.setEnabled(true);
+                    reject.setEnabled(true);
+                    delete_req.setEnabled(true);
                 }
             }
 
@@ -784,7 +812,8 @@ public class FragmentJoinHome extends Fragment {
 
         recImages.setAdapter(imagesAdapter);
 
-        Incoming(requirmentModel);
+        if (requirmentModel != null)
+            Incoming(requirmentModel);
 
         if (imagesArrayUri.size() > 0) {
             viewPreview.setVisibility(View.VISIBLE);
@@ -828,9 +857,13 @@ public class FragmentJoinHome extends Fragment {
                     model.setFileName(fileArrayUri.get(i).getFileName());
                     filesModels.add(model);
                 }
-                if (!filesModels.isEmpty())
+                if (!filesModels.isEmpty()) {
+                    Join.setEnabled(false);
                     copyFilesUploadFilesJoinOffer();
-                else joinOffer();
+                } else {
+                    Join.setEnabled(false);
+                    joinOffer();
+                }
             }
         }));
 
@@ -885,8 +918,8 @@ public class FragmentJoinHome extends Fragment {
             });
         });
 
-        if (mRequirementDetails != null)
-            loadDataFroEdit(mRequirementDetails);
+//        if (requirmentModel != null)
+//            loadDataFroEdit(mRequirementDetails);
     }
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
@@ -1268,13 +1301,16 @@ public class FragmentJoinHome extends Fragment {
                     if (response.body() != null) {
                         Log.v("DABUGG", response.body());
                         Toast.makeText(getContext(), response.body(), Toast.LENGTH_SHORT).show();
+                        leaveFragmentBitch();
                     } else {
                         Log.v("DABUGG", "RESPONSE ERROR!");
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_SHORT).show();
+                        Join.setEnabled(true);
                     }
                 } else {
                     Log.v("DABUGG", response.errorBody().toString());
                     Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_SHORT).show();
+                    Join.setEnabled(true);
                 }
             }
 
@@ -1293,73 +1329,73 @@ public class FragmentJoinHome extends Fragment {
         recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
     }
 
-    private void loadDataFroEdit(@NonNull OfferDetails offerDetails) {
-
-        project_name.setText(offerDetails.getName());
-
-        switch (offerDetails.getProfitType()) {
-            case 0:
-                profitTypeRadioButton.setText(getString(R.string.day));
-                break;
-            case 1:
-                profitTypeRadioButton.setText(getString(R.string.month));
-                break;
-            case 2:
-                profitTypeRadioButton.setText(getString(R.string.year));
-                break;
-            case 3:
-                profitTypeRadioButton.setText(getString(R.string.anotherKind));
-                break;
-        }
-
-        switch (offerDetails.getGenderContributor()) {
-            case 0:
-                genderRadioButton.setText(getString(R.string.male));
-                break;
-            case 1:
-                genderRadioButton.setText(getString(R.string.female));
-                break;
-            case 2:
-                genderRadioButton.setText(getString(R.string.both));
-                break;
-        }
-
-        numCon.setText(offerDetails.getNumContributorFrom());
-
-        educationLevel.setCurrentStep(offerDetails.getEducationContributorLevel());
-
-        categoryTextView.setText(offerDetails.getCategoryName());
-
-        List<CapitalModel> capitalModels = offerDetails.getCapitals();
-        if (capitalModels != null && !capitalModels.isEmpty()) {
-            mCapitalsRecyclerViewAdapter.swapData(capitalModels);
-        }
-
-        List<OfferDetailsRequirment> requirments = offerDetails.getRequirments();
-        if (requirments != null && !requirments.isEmpty()) {
-            OfferDetailsRequirment requirment = requirments.get(0);
-
-            availMoneyRadioButton.setText(
-                    getString(requirment.isNeedMoney() ? R.string.yes : R.string.no));
-
-            moneyInEditText.setText(String.valueOf(requirment.getMoneyFrom()));
-
-            placeRadioButton.setText(requirment.isNeedPlace() ? R.string.yes : R.string.no);
-
-            placeStateRadioButton.setText(requirment.isNeedPlaceStatus() ? R.string.avail : R.string.notAvail);
-
-            placeKindRadioButton.setText(requirment.isNeedPlaceType() ? R.string.owned : R.string.rent);
-
-            exRadioButton.setText(requirment.isNeedExperience() ? R.string.yes : R.string.no);
-
-            experienceEditText.setText(String.valueOf(requirment.getExperienceFrom()));
-
-            exDesc.setText(requirment.getExperienceDescriptions());
-
-            List<AttachmentModel> attachmentModels = requirment.getAttachmentModels();
-            if (attachmentModels != null && attachmentModels.isEmpty()) {
-                //TODO: Load Attachment Here...
-            }
-        }
-    }
+//    private void loadDataFroEdit(@NonNull OfferDetails offerDetails) {
+//
+//        project_name.setText(offerDetails.getName());
+//
+//        switch (offerDetails.getProfitType()) {
+//            case 0:
+//                profitTypeRadioButton.setText(getString(R.string.day));
+//                break;
+//            case 1:
+//                profitTypeRadioButton.setText(getString(R.string.month));
+//                break;
+//            case 2:
+//                profitTypeRadioButton.setText(getString(R.string.year));
+//                break;
+//            case 3:
+//                profitTypeRadioButton.setText(getString(R.string.anotherKind));
+//                break;
+//        }
+//
+//        switch (offerDetails.getGenderContributor()) {
+//            case 0:
+//                genderRadioButton.setText(getString(R.string.male));
+//                break;
+//            case 1:
+//                genderRadioButton.setText(getString(R.string.female));
+//                break;
+//            case 2:
+//                genderRadioButton.setText(getString(R.string.both));
+//                break;
+//        }
+//
+//        numCon.setText(offerDetails.getNumContributorFrom());
+//
+//        educationLevel.setCurrentStep(offerDetails.getEducationContributorLevel());
+//
+//        categoryTextView.setText(offerDetails.getCategoryName());
+//
+//        List<CapitalModel> capitalModels = offerDetails.getCapitals();
+//        if (capitalModels != null && !capitalModels.isEmpty()) {
+//            mCapitalsRecyclerViewAdapter.swapData(capitalModels);
+//        }
+//
+//        List<OfferDetailsRequirment> requirments = offerDetails.getRequirments();
+//        if (requirments != null && !requirments.isEmpty()) {
+//            OfferDetailsRequirment requirment = requirments.get(0);
+//
+//            availMoneyRadioButton.setText(
+//                    getString(requirment.isNeedMoney() ? R.string.yes : R.string.no));
+//
+//            moneyInEditText.setText(String.valueOf(requirment.getMoneyFrom()));
+//
+//            placeRadioButton.setText(requirment.isNeedPlace() ? R.string.yes : R.string.no);
+//
+//            placeStateRadioButton.setText(requirment.isNeedPlaceStatus() ? R.string.avail : R.string.notAvail);
+//
+//            placeKindRadioButton.setText(requirment.isNeedPlaceType() ? R.string.owned : R.string.rent);
+//
+//            exRadioButton.setText(requirment.isNeedExperience() ? R.string.yes : R.string.no);
+//
+//            experienceEditText.setText(String.valueOf(requirment.getExperienceFrom()));
+//
+//            exDesc.setText(requirment.getExperienceDescriptions());
+//
+//            List<AttachmentModel> attachmentModels = requirment.getAttachmentModels();
+//            if (attachmentModels != null && attachmentModels.isEmpty()) {
+//                //TODO: Load Attachment Here...
+//            }
+//        }
+//    }
 }

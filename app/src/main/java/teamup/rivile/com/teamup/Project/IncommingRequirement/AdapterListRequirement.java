@@ -72,7 +72,8 @@ public class AdapterListRequirement extends RecyclerView.Adapter<AdapterListRequ
                     Log.e("Requirement", gson.toJson(incomingRequirments.getOffer().getRequirments().get(i)));
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame,
-                                    FragmentJoinHome.setRequirement(incomingRequirments.getOffer().getRequirments().get(i), incomingRequirments.getOffer().getId()))
+                                    FragmentJoinHome.setRequirement(incomingRequirments.getOffer().getRequirments().get(i)
+                                            , incomingRequirments.getOffer().getId()))
                             .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit();
                 }
             }

@@ -162,4 +162,5 @@
     <string name="wrongEmailPattern">صيغة بريد الكترونى خاطئ</string>
     <string name="canotFindEmail">لم يتم العثور على بريدك الكترونى حاليا</string>
     <string name="wrongCode">كود تفعيل خاطئ يرجى التحقق من البريد الالكترونى</string>
+    <string name="noRequestsFound">لا توجد مقترحات للمشروع حاليا</string>
 </resources>
