@@ -109,7 +109,8 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
                 android:gravity="start"
@@ -117,7 +118,7 @@
 
                 <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
                     android:id="@+id/num_contributer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_dd"
@@ -130,7 +131,7 @@
 
                 <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
                     android:id="@+id/num_likes"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_like"
@@ -164,7 +165,7 @@
                     android:id="@+id/rec"
                     android:layoutDirection="rtl"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 
@@ -202,8 +203,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/lin"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -216,7 +217,7 @@
                 android:drawableRight="@drawable/ic_share"
                 android:drawablePadding="10dp"
                 android:fontFamily="@font/medium"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:text="المشاركة" />
 
             <TextView
@@ -224,10 +225,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginLeft="8dp"
                 android:drawableRight="@drawable/ic_chat"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:text="ارسال عرض" />
 
             <TextView
@@ -238,7 +240,7 @@
                 android:drawableRight="@drawable/ic_favorite_border_black_24dp"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:text="الإعجاب" />
         </LinearLayout>
     </LinearLayout>
