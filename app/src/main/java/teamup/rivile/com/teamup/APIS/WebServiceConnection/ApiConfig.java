@@ -123,7 +123,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.EDIT_PROFILE_URL)
-    Call<String> editProfile(@Field("User") String User, @Field("token") String token);
+    Call<String> editProfile(@Field("User") String User, @Field("Location") String Location, @Field("token") String token);
 
 
     @FormUrlEncoded

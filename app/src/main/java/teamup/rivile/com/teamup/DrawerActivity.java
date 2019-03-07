@@ -39,6 +39,7 @@ import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRe
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.Search.FilterSearchFragment;
+import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
@@ -65,6 +66,13 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView locs;
     RecyclerView.Adapter adapter;
     Realm realm;
+    int userId = 0;
+    /**
+     * nav views
+     */
+    CircleImageView user_image;
+    TextView user_name;
+    TextView user_num_projects;
 
     private boolean mIsCurrentFragmentIsHomeFragment = false;
 
@@ -175,17 +183,49 @@ public class DrawerActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        CircleImageView user_image = header.findViewById(R.id.imageView);
-        TextView user_name = header.findViewById(R.id.user_name);
-        TextView user_num_projects = header.findViewById(R.id.num_projects);
+        user_image = header.findViewById(R.id.imageView);
+        user_name = header.findViewById(R.id.user_name);
+        user_num_projects = header.findViewById(R.id.num_projects);
 
         realm.executeTransaction(realm1 -> {
             UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
-            user_num_projects.setText(User.getNumProject() + " " + getResources().getString(R.string.nav_header_subtitle));
+            user_num_projects.setText(" " + getResources().getString(R.string.nav_header_subtitle) + " " + User.getNumProject());
+            userId = User.getId();
             String[] name = User.getFullName().split(" ");
             user_name.setText(name[0]);
             if (User.getImage() != null && !User.getImage().isEmpty()) {
                 Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
+            }
+        });
+
+        user_image.setOnClickListener(v -> {
+            if (userId != 0) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame,
+                        FragmentProfileHome.setId(userId)).commit();
+                controlNavDrawer();
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
+            }
+        });
+        user_name.setOnClickListener(v -> {
+            if (userId != 0) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame,
+                        FragmentProfileHome.setId(userId)).commit();
+                controlNavDrawer();
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
+            }
+        });
+        user_num_projects.setOnClickListener(v -> {
+            if (userId != 0) {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame,
+                        FragmentProfileHome.setId(userId)).commit();
+                controlNavDrawer();
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
             }
         });
 
@@ -303,6 +343,13 @@ public class DrawerActivity extends AppCompatActivity
         } else {
             drawer.openDrawer(GravityCompat.END);
 
+        }
+    }
+
+    public void controlNavDrawer() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         }
     }
 
@@ -472,5 +519,17 @@ public class DrawerActivity extends AppCompatActivity
 
     public void setTitle(String name) {
         toolbar.setTitle(name);
+    }
+
+    public void updateNavData(UserModel userModel) {
+        if (userModel != null) {
+            if (userModel.getImage() != null && !userModel.getImage().isEmpty()) {
+                Picasso.get().load(API.BASE_URL + userModel.getImage()).into(user_image);
+            }
+
+            String[] name = userModel.getFullName().split(" ");
+            user_name.setText(name[0]);
+
+        }
     }
 }

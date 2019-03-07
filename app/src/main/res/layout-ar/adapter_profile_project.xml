@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:padding="5dp">
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/colorPrimary">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
+        android:layout_margin="8dp"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="2dp">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="#fff">
+            android:layout_margin="8dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <LinearLayout
                 android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="13dp"
-                android:layout_toStartOf="@id/user_image"
+                android:layout_toEndOf="@id/user_image"
+                android:gravity="start"
                 android:orientation="vertical">
 
                 <TextView
@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:maxLength="40"
+                    android:fontFamily="@font/medium"
                     android:maxLines="1"
                     android:text="مشروع مزرعه دواجن "
                     android:textColor="#000"
@@ -48,96 +49,93 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="4dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_weight="3"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableEnd="@drawable/ic_placeholder"
-                                android:gravity="center_vertical"
-                                android:maxLength="50"
-                                android:id="@+id/location"
-                                android:text="مصر - الشرقيه - الزقازيق"
-                                android:textSize="10sp" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:maxLength="50"
-                                android:text="المشاركين فى المشروع"
-                                android:textColor="#000"
-                                android:textSize="16sp" />
-
-
-                        </LinearLayout>
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rec"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        </android.support.v7.widget.RecyclerView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:orientation="vertical">
-
-                        <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:drawableStart="@drawable/ic_dd"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:maxLength="6"
-                            android:text="150"
-                            android:id="@+id/num_contributer"
-                            android:textSize="15sp" />
-
-                        <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:drawableStart="@drawable/ic_like"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:maxLength="6"
-                            android:id="@+id/num_likes"
-                            android:text="150"
-                            android:textSize="15sp" />
-                    </LinearLayout>
-
+                        android:drawableStart="@drawable/ic_placeholder"
+                        android:gravity="center_vertical"
+                        android:maxLength="50"
+                        android:fontFamily="@font/medium"
+                        android:text="مصر - الشرقيه - الزقازيق"
+                        android:textSize="12sp" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:maxLength="50"
+                    android:paddingStart="10dp"
+                    android:fontFamily="@font/medium"
+                    android:text="المشاركين فى المشروع"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rec"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:layout_marginEnd="4dp"
+                android:orientation="vertical">
+
+                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                    android:id="@+id/num_contributer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:drawableEnd="@drawable/ic_dd"
+                    android:gravity="center"
+                    android:maxLength="6"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:text="150"
+                    android:fontFamily="@font/medium"
+                    android:textSize="15sp" />
+
+                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                    android:id="@+id/num_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:drawableEnd="@drawable/ic_like"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:fontFamily="@font/medium"
+                    android:maxLength="6"
+                    android:text="150"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

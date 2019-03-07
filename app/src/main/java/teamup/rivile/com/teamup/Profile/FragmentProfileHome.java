@@ -20,7 +20,6 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -180,6 +179,7 @@ public class FragmentProfileHome extends Fragment {
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
+            Log.i("Name", loginDataBases.getUser().getFullName());
             if (Id != loginDataBases.getUser().getId()) {
                 loadProfile(Id);
                 fab_edit.setVisibility(View.GONE);
@@ -203,10 +203,10 @@ public class FragmentProfileHome extends Fragment {
             ed_bio = edit_data.findViewById(R.id.ed_bio);
             ed_address = edit_data.findViewById(R.id.ed_address);
             ed_job = edit_data.findViewById(R.id.ed_job);
-            ed_email = edit_data.findViewById(R.id.ed_email);
+//            ed_email = edit_data.findViewById(R.id.ed_email);
             ed_phone = edit_data.findViewById(R.id.ed_phone);
             ed_national_id = edit_data.findViewById(R.id.ed_national_id);
-            ed_password = edit_data.findViewById(R.id.ed_password);
+//            ed_password = edit_data.findViewById(R.id.ed_password);
             tv_birth_date = edit_data.findViewById(R.id.tv_birth_date);
             rb_gender = edit_data.findViewById(R.id.rb_gender);
             male = edit_data.findViewById(R.id.male);
@@ -236,10 +236,10 @@ public class FragmentProfileHome extends Fragment {
             ed_bio.setText(profObject.getBio());
             ed_address.setText(profObject.getAddress());
             ed_job.setText(profObject.getJobtitle());
-            ed_email.setText(profObject.getMail());
+//            ed_email.setText(profObject.getMail());
             ed_phone.setText(profObject.getPhone());
             ed_national_id.setText(profObject.getIdentityNum());
-            ed_password.setText(profObject.getPassword());
+//            ed_password.setText(profObject.getPassword());
             tv_birth_date.setText(profObject.getDateOfBirth());
             if (profObject.getGender())
                 male.setChecked(true);
@@ -290,8 +290,8 @@ public class FragmentProfileHome extends Fragment {
                     model.setJobtitle(ed_job.getText().toString());
                     model.setIdentityNum(ed_national_id.getText().toString());
                     model.setBio(ed_bio.getText().toString());
-                    model.setMail(ed_email.getText().toString());
-                    model.setPassword(ed_password.getText().toString());
+//                    model.setMail(ed_email.getText().toString());
+//                    model.setPassword(ed_password.getText().toString());
                     if (rb_gender.getCheckedRadioButtonId() == R.id.male) {
                         model.setGender(true);
                     } else {
@@ -311,7 +311,6 @@ public class FragmentProfileHome extends Fragment {
                     dialog.dismiss();
                 }
             });
-
 
         });
 
@@ -541,8 +540,9 @@ public class FragmentProfileHome extends Fragment {
         Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
 
         ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+        Log.e("Request Model", gson.toJson(userModel));
 
-        Call<String> response = retrofitService.editProfile(gson.toJson(userModel), API.URL_TOKEN);
+        Call<String> response = retrofitService.editProfile(gson.toJson(userModel), "null", API.URL_TOKEN);
 
         response.enqueue(new Callback<String>() {
             @Override
@@ -550,6 +550,7 @@ public class FragmentProfileHome extends Fragment {
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body().equals("Success")) {
                         Toast.makeText(getContext(), "Profile # Successfully.", Toast.LENGTH_SHORT).show();
+                        updateUserDB(userModel);
                     } else
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else {
@@ -567,12 +568,35 @@ public class FragmentProfileHome extends Fragment {
 
     }
 
+    private void updateUserDB(UserModel userModel) {
+        realm.beginTransaction();
+        UserDataBase userDataBase = realm.where(LoginDataBase.class).findFirst().getUser();
+        if (userDataBase != null) {
+            userDataBase.setFullName(userModel.getFullName());
+            userDataBase.setAddress(userModel.getAddress());
+            userDataBase.setBio(userModel.getBio());
+            userDataBase.setDateOfBirth(userModel.getDateOfBirth());
+            userDataBase.setGender(userModel.getGender());
+            userDataBase.setJobtitle(userModel.getJobtitle());
+            userDataBase.setPhone(userModel.getPhone());
+            userDataBase.setImage(userModel.getImage());
+            userDataBase.setIdentityImage(userModel.getIdentityImage());
+            userDataBase.setSocialId(userModel.getSocialId());
+        }
+        realm.commitTransaction();
+        /** Reload profile data */
+        profObject = loadUser(userDataBase);
+        fillProfData(profObject);
+    }
+
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
         UserDataBase userDataBase = loginDataBases.getUser();
         List<OfferDetailsDataBase> offerDetailsDataBase = loginDataBases.getOffers();
         profObject = loadUser(userDataBase);
         List<Offers> offers = loadOffers(offerDetailsDataBase);
         fillProfData(profObject);
+        Gson gson = new Gson();
+        Log.e("Gson", gson.toJson(offers));
         fillProfOffersData(offers);
     }
 
@@ -580,7 +604,7 @@ public class FragmentProfileHome extends Fragment {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
         Gson gson = gsonBuilder.create();
-        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
+//        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
         List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBase.size(); i++) {
             Offers offers1 = new Offers();
@@ -619,6 +643,7 @@ public class FragmentProfileHome extends Fragment {
                 offers1.setUsers(userModels);
                 offers.add(offers1);
             }
+            offers.add(offers1);
 //            List<RequirmentModel> rec = new ArrayList<>();
 //            for (int j = 0; j < base.getRequirments().size(); j++) {
 //                RequirmentModel requirmentModel = new RequirmentModel();
@@ -670,6 +695,8 @@ public class FragmentProfileHome extends Fragment {
                 ProfileResponse allData = response.body();
                 UserModel profObject = allData.getUserDetails();
                 List<Offers> offers = allData.getListOffer();
+                Gson gson = new Gson();
+                Log.e("GS", gson.toJson(profObject));
                 fillProfData(profObject);
                 fillProfOffersData(offers);
             }
@@ -683,10 +710,9 @@ public class FragmentProfileHome extends Fragment {
 
     private void fillProfOffersData(List<Offers> offers) {
         txt_num_projects.setText(String.valueOf(offers.size()));
-        offersList = new ArrayList<>();
+//        offersList = new ArrayList<>();
         offersList.addAll(offers);
         adapter.notifyDataSetChanged();
-
     }
 
     private void fillProfData(UserModel user) {

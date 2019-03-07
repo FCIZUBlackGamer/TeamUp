@@ -54,7 +54,6 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
         holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
         holder.recyclerView.setAdapter(holder.adapter);
-        //Todo: Load userImage From internal database
 
         holder.image.setOnClickListener(v -> {
             /** Move To Profile fragment */
