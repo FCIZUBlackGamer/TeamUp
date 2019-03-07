@@ -180,6 +180,7 @@ public class FragmentProfileHome extends Fragment {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
             Log.i("Name", loginDataBases.getUser().getFullName());
+            Log.i("Num Users", loginDataBases.getOffers().get(0).getUsers().size()+"");
             if (Id != loginDataBases.getUser().getId()) {
                 loadProfile(Id);
                 fab_edit.setVisibility(View.GONE);
@@ -587,6 +588,7 @@ public class FragmentProfileHome extends Fragment {
         /** Reload profile data */
         profObject = loadUser(userDataBase);
         fillProfData(profObject);
+        ((DrawerActivity) getActivity()).updateNavData(userModel);
     }
 
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
@@ -629,9 +631,9 @@ public class FragmentProfileHome extends Fragment {
 //            offers1.setProfitTo(base.getProfitTo());
 //            offers1.setProfitType(base.getProfitType());
             offers1.setStatus(base.getStatus());
-            if (offers1.getUsers() != null && offers1.getUsers().size() > 0) {
+            if (base.getUsers() != null && base.getUsers().size() > 0) {
                 List<UserModel> userModels = new ArrayList<>();
-                for (int j = 0; j < offers1.getUsers().size(); j++) {
+                for (int j = 0; j < base.getUsers().size(); j++) {
                     UserModel userModel = new UserModel();
                     UserDataBase base1 = base.getUsers().get(j);
                     userModel.setId(base1.getId());
@@ -641,7 +643,6 @@ public class FragmentProfileHome extends Fragment {
                     userModels.add(userModel);
                 }
                 offers1.setUsers(userModels);
-                offers.add(offers1);
             }
             offers.add(offers1);
 //            List<RequirmentModel> rec = new ArrayList<>();

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
         if (offersList.get(position).getUsers() != null)
             for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
+                Log.i("Id", offersList.get(position).getId() + "");
                 if (offersList.get(position).getUserId() == offersList.get(position).getUsers().get(i).getId()) {
                     holder.location.setText(offersList.get(position).getUsers().get(i).getAddress());
                 }
