@@ -90,7 +90,7 @@ public interface ApiConfig {
     Call<Integer> CheakCode(@Field("Code") String Code, @Field("token") String token);
 
     @FormUrlEncoded
-    @POST(API.CheakCode_URL)
+    @POST(API.SavePasswordLogin_URL)
     Call<LoginDataBase> SavePasswordLogin(@Field("Id") int Id, @Field("Password") String Password, @Field("token") String token);
 
     @FormUrlEncoded

@@ -180,7 +180,7 @@ public class FragmentProfileHome extends Fragment {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
             Log.i("Name", loginDataBases.getUser().getFullName());
-            Log.i("Num Users", loginDataBases.getOffers().get(0).getUsers().size()+"");
+//            Log.i("Num Users", loginDataBases.getOffers().get(0).getUsers().size()+"");
             if (Id != loginDataBases.getUser().getId()) {
                 loadProfile(Id);
                 fab_edit.setVisibility(View.GONE);

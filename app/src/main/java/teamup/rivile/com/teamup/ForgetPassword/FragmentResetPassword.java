@@ -9,12 +9,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -146,11 +148,17 @@ public class FragmentResetPassword extends Fragment {
                     realm.executeTransaction(realm1 -> {
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
+
                         startActivity(new Intent(getActivity(), DrawerActivity.class));
                     });
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    Toast toast = new Toast(getActivity());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM,0,0);
+                    toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
+                    toast.show();
                 }
             }
 
@@ -158,6 +166,11 @@ public class FragmentResetPassword extends Fragment {
             public void onFailure(Call<LoginDataBase> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
+                Toast toast = new Toast(getActivity());
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM,0,0);
+                toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
+                toast.show();
             }
         });
     }
