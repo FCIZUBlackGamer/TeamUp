@@ -130,7 +130,6 @@ public interface ApiConfig {
     @POST(API.LIKE_URL)
     Call<String> likeOffer(@Field("Like") String Like, @Field("token") String token);
 
-
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)
     Call<Integer> addOffer(@Field(API.PARAM_NAME_TOKEN) String token,
@@ -142,17 +141,13 @@ public interface ApiConfig {
                            @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
-    @POST(API.ADD_OFFER_URL)
+    @POST(API.EDIT_OFFER_URL)
     Call<Integer> editOffer(@Field(API.PARAM_NAME_TOKEN) String token,
                           @Field(API.PARAM_NAME_OFFER) String offer,
                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                           @Field(API.PARAM_NAME_CAPITAL) String capital,
                           @Field(API.PARAM_NAME_TAGS) String tags);
-
-    @POST("{file_name}")
-    @Streaming
-    void download(@Path("file_name") String fileName, Callback<AttachmentModel> callback);
 
     @FormUrlEncoded
     @POST(API.JOIN_OFFER_URL)
