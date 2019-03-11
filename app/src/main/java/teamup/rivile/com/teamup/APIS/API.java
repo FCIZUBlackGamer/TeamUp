@@ -34,6 +34,9 @@ public class API {
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "Offer/Refuse";
     final public static String DeleteRequirement_URL = BASE_URL + "Offer/DeleteRequirement";
     final public static String REPORT_URL = BASE_URL + "Offer/Report";
+    public final static String ACCOUNT_SETTINGS_URL = BASE_URL + "Register/AccountSetting";
+    public final static String RESET_MAIL_URL = BASE_URL + "Register/MailReset";
+    public final static String RESET_MAIL_CHECK_CODE_MAIL = BASE_URL + "Register/CheakCodeMail";
 
     public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
 
@@ -48,4 +51,8 @@ public class API {
     public static final String PARAM_NAME_ID = "Id";
     public static final String PARAM_NAME_USER_ID = "UserId";
     public static final String PARAM_NAME_LOCATION = "Location";
+    public static final String PARAM_NAME_CURRENT_PASSWORD = "CurrentPassword";
+    public static final String PARAM_NAME_USER = "User";
+    public static final String PARAM_NAME_MAIL = "Mail";
+    public static final String PARAM_NAME_CODE = "Code";
 }

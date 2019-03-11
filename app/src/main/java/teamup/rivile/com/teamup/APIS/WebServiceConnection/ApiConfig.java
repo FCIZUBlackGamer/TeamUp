@@ -46,7 +46,7 @@ public interface ApiConfig {
 
     /**
      * @param Type {2: UserName, 1: ProjectName, 0: Tag}
-     * */
+     */
     @FormUrlEncoded
     @POST(API.GENERAL_SEARCH_URL)
     Call<Offer> searchOffer(@Field("Type") int Type, @Field("Name") String Name, @Field("token") String token);
@@ -133,21 +133,21 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)
     Call<Integer> addOffer(@Field(API.PARAM_NAME_TOKEN) String token,
-                          @Field(API.PARAM_NAME_OFFER) String offer,
-                          @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
-                          @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
-                          @Field(API.PARAM_NAME_CAPITAL) String capital,
-                          @Field(API.PARAM_NAME_TAGS) String tags,
+                           @Field(API.PARAM_NAME_OFFER) String offer,
+                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
+                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+                           @Field(API.PARAM_NAME_CAPITAL) String capital,
+                           @Field(API.PARAM_NAME_TAGS) String tags,
                            @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.EDIT_OFFER_URL)
     Call<Integer> editOffer(@Field(API.PARAM_NAME_TOKEN) String token,
-                          @Field(API.PARAM_NAME_OFFER) String offer,
-                          @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
-                          @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
-                          @Field(API.PARAM_NAME_CAPITAL) String capital,
-                          @Field(API.PARAM_NAME_TAGS) String tags);
+                            @Field(API.PARAM_NAME_OFFER) String offer,
+                            @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
+                            @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+                            @Field(API.PARAM_NAME_CAPITAL) String capital,
+                            @Field(API.PARAM_NAME_TAGS) String tags);
 
     @FormUrlEncoded
     @POST(API.JOIN_OFFER_URL)
@@ -160,4 +160,22 @@ public interface ApiConfig {
     @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
     Call<OfferDetailsJsonObject> listRequirmentByUserId(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
                                                         @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.ACCOUNT_SETTINGS_URL)
+    Call<String> accountSettings(@Field(API.PARAM_NAME_USER) String User,
+                                 @Field(API.PARAM_NAME_CURRENT_PASSWORD) String CurrentPassword,
+                                 @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.RESET_MAIL_URL)
+    Call<String> mailReset(@Field(API.PARAM_NAME_USER) String User,
+                           @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.RESET_MAIL_CHECK_CODE_MAIL)
+    Call<String> cheakCodeMail(@Field(API.PARAM_NAME_USER_ID) int UserId,
+                               @Field(API.PARAM_NAME_MAIL) String Mail,
+                               @Field(API.PARAM_NAME_CODE) String Code,
+                               @Field(API.PARAM_NAME_TOKEN) String token);
 }

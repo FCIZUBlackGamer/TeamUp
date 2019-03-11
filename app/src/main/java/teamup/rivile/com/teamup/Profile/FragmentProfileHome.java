@@ -98,8 +98,8 @@ public class FragmentProfileHome extends Fragment {
     TextView tv_birth_date;
     RadioGroup rb_gender;
     RadioButton male, female;
-    ImageView iv_national_image, iv_cancel;
-    CircleImageView civ_user_image, civ_edit, civ_edit2;
+    ImageView /*iv_national_image,*/ iv_cancel;
+    CircleImageView civ_user_image, civ_edit/*, civ_edit2*/;
     Button btn_save;
     int id = 0;
 
@@ -212,10 +212,10 @@ public class FragmentProfileHome extends Fragment {
             rb_gender = edit_data.findViewById(R.id.rb_gender);
             male = edit_data.findViewById(R.id.male);
             female = edit_data.findViewById(R.id.female);
-            iv_national_image = edit_data.findViewById(R.id.iv_national_image);
+//            iv_national_image = edit_data.findViewById(R.id.iv_national_image);
             civ_user_image = edit_data.findViewById(R.id.civ_user_image);
             civ_edit = edit_data.findViewById(R.id.civ_edit);
-            civ_edit2 = edit_data.findViewById(R.id.civ_edit2);
+//            civ_edit2 = edit_data.findViewById(R.id.civ_edit2);
             btn_save = edit_data.findViewById(R.id.btn_save);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -266,15 +266,15 @@ public class FragmentProfileHome extends Fragment {
                 addImage();
             });
 
-            iv_national_image.setOnClickListener(v1 -> {
-                imageType = USER_SSN;
-                addImage();
-            });
+//            iv_national_image.setOnClickListener(v1 -> {
+//                imageType = USER_SSN;
+//                addImage();
+//            });
 
-            civ_edit2.setOnClickListener(v1 -> {
-                imageType = USER_SSN;
-                addImage();
-            });
+//            civ_edit2.setOnClickListener(v1 -> {
+//                imageType = USER_SSN;
+//                addImage();
+//            });
 
             btn_save.setOnClickListener(v1 -> {
                 if (id != 0) {
@@ -789,7 +789,7 @@ public class FragmentProfileHome extends Fragment {
                             if (imageType == USER_IMAGE) {
                                 civ_user_image.setImageBitmap(bitmap);
                             } else if (imageType == USER_SSN) {
-                                iv_national_image.setImageBitmap(bitmap);
+//                                iv_national_image.setImageBitmap(bitmap);
                             }
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
@@ -803,7 +803,7 @@ public class FragmentProfileHome extends Fragment {
                     if (imageType == USER_IMAGE) {
                         civ_user_image.setImageBitmap(bitmap);
                     } else if (imageType == USER_SSN) {
-                        iv_national_image.setImageBitmap(bitmap);
+//                        iv_national_image.setImageBitmap(bitmap);
                     }
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP

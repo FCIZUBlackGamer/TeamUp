@@ -42,6 +42,7 @@ import teamup.rivile.com.teamup.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.account.AccountSettingsFragment;
 
 import static teamup.rivile.com.teamup.Project.List.FragmentListProjects.MINE;
 
@@ -191,8 +192,9 @@ public class DrawerActivity extends AppCompatActivity
             UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
             user_num_projects.setText(" " + getResources().getString(R.string.nav_header_subtitle) + " " + User.getNumProject());
             userId = User.getId();
-            String[] name = User.getFullName().split(" ");
-            user_name.setText(name[0]);
+//            String[] name = User.getFullName().split(" ");
+//            user_name.setText(name[0]);
+            user_name.setText(User.getFullName());
             if (User.getImage() != null && !User.getImage().isEmpty()) {
                 Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
             }
@@ -262,17 +264,17 @@ public class DrawerActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        realm.executeTransaction(realm1 -> {
-            LoginDataBase loginDataBase = realm1.where(LoginDataBase.class).findFirst();
-
-            Log.e("results", loginDataBase.getUser().getId()+"");
-            Log.e("size", loginDataBase.getOffers().size()+"");
-            for (int i = 0; i < loginDataBase.getOffers().size(); i++) {
-                Log.e("Offer Name "+loginDataBase.getOffers().get(i).getId(),
-                        loginDataBase.getOffers().get(i).getName()+"");
-            }
-
-        });
+//        realm.executeTransaction(realm1 -> {
+//            LoginDataBase loginDataBase = realm1.where(LoginDataBase.class).findFirst();
+//
+//            Log.e("results", loginDataBase.getUser().getId()+"");
+//            Log.e("size", loginDataBase.getOffers().size()+"");
+//            for (int i = 0; i < loginDataBase.getOffers().size(); i++) {
+//                Log.e("Offer Name "+loginDataBase.getOffers().get(i).getId(),
+//                        loginDataBase.getOffers().get(i).getName()+"");
+//            }
+//
+//        });
 
         fab.setOnClickListener(view -> {
             /** Half Pizza Animation */
@@ -412,12 +414,17 @@ public class DrawerActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_advanced_search) {
             Log.e("Search", "H");
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame, new FilterSearchFragment()).addToBackStack(FilterSearchFragment.class.getSimpleName()).commit();
+            return true;
+        }
+        else if(id == R.id.action_settings){
+            hideFab();
+            fragmentTransaction.replace(R.id.frame, new AccountSettingsFragment()).addToBackStack(AccountSettingsFragment.class.getSimpleName()).commit();
             return true;
         }
 
