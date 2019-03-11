@@ -265,6 +265,13 @@ public class AccountSettingsFragment extends Fragment {
                             Toast.makeText(getContext(), "تم التعديل", Toast.LENGTH_SHORT).show();
                             mNationalIdEditText.setText(userModel.getIdentityNum());
                             //TODO: update database
+                            mRealm.executeTransaction(realm -> {
+                                UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userModel.getId()).findFirst();
+                                if(userDataBase != null){
+                                    userDataBase.setIdentityNum(userModel.getIdentityNum());
+                                    userDataBase.setIdentityImage(userModel.getIdentityImage());
+                                }
+                            });
 
                         } else if (response.body().equals("IncorectPassword")) {
                             Toast.makeText(getContext(), "كلمة مرور خاطئة", Toast.LENGTH_SHORT).show();
@@ -472,6 +479,12 @@ public class AccountSettingsFragment extends Fragment {
                             Toast.makeText(getContext(), "تم التعديل", Toast.LENGTH_SHORT).show();
                             mUserEmailEditText.setText(newEmail);
                             //TODO: update database
+                            mRealm.executeTransaction(realm -> {
+                                UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userId).findFirst();
+                                if(userDataBase != null){
+                                    userDataBase.setMail(newEmail);
+                                }
+                            });
 
                         } else if (response.body().equals("0")) {
                             Toast.makeText(getContext(), "تأكد من الكود وحاول مره اخري", Toast.LENGTH_SHORT).show();
