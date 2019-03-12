@@ -188,14 +188,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                likeOffer(offersList.get(position).getId(), userId, 1);
+                likeOffer(offersList.get(position).getId(), userId, 1, holder.like);
             } else if (likeDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                likeOffer(offersList.get(position).getId(), userId, 0);
+                likeOffer(offersList.get(position).getId(), userId, 0, holder.like);
             }
 
         });
@@ -260,7 +260,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         }
     }
 
-    public void likeOffer(int offerId, int userId, int like) {
+    public void likeOffer(int offerId, int userId, int like, TextView likeHolder) {
         // Map is used to multipart the file using okhttp3.RequestBody
         AppConfig appConfig = new AppConfig(API.BASE_URL);
 
@@ -280,6 +280,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
                     if (like == 1) {//dislike
+                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        likeHolder.setText(String.valueOf(ll - 1));
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
                                 RealmResults<LikeModelDataBase> l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findAll();
@@ -297,6 +299,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             }
                         });
                     } else {//like
+                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        likeHolder.setText(String.valueOf(ll + 1));
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
                             //realm1.commitTransaction();

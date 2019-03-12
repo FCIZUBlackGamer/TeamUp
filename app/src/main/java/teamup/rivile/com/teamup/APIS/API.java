@@ -28,7 +28,7 @@ public class API {
     final public static String LOAD_FAVOURITE_URL = BASE_URL + "Offer/ListbyIds";
     final public static String LIKE_URL = BASE_URL + "Offer/Like";
     final public static String ForgetPassword_URL = BASE_URL + "Register/ForgetPassword";
-    final public static String CheakCode_URL = BASE_URL + "Register/CheakCode";
+    final public static String CheakCode_URL = BASE_URL + "Register/CheakCodePassword";
     final public static String SavePasswordLogin_URL = BASE_URL + "Register/SavePasswordLogin";
     final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "Offer/Accept";
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "Offer/Refuse";

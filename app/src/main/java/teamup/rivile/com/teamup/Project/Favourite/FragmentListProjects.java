@@ -88,8 +88,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public void onStart() {
         super.onStart();
-        ((DrawerActivity) getActivity()).Show("ListProjects");
-        ((DrawerActivity) getActivity()).ShowFab();
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
 
 //        likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){

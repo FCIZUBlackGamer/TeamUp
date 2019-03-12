@@ -30,6 +30,7 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -134,6 +135,13 @@ public class AccountSettingsFragment extends Fragment {
 
             mProgressDialog.hide();
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
     }
 
     private void setUpClickListeners() {

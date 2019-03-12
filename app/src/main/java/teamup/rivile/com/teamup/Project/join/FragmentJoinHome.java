@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,6 +72,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Project.join.Adapters.CapitalsRecyclerViewAdapter;
@@ -100,8 +102,10 @@ public class FragmentJoinHome extends Fragment {
     TextView project_name, numCon;
     RadioButton profitTypeRadioButton, availMoneyRadioButton, genderRadioButton;
     StepperIndicator educationLevel;
-
-    EditText moneyInEditText;
+    RangeSeekBar moneyRequiredSeekbar;
+    EditText moneyInFrom, moneyInTo;
+    EditText moneyDesc;
+//    EditText moneyInEditText;
 
     FloatingActionButton arrowContributors, arrowMoney;
 
@@ -206,7 +210,7 @@ public class FragmentJoinHome extends Fragment {
         availMoneyRadioButton.setEnabled(false);
         genderRadioButton.setEnabled(false);
         educationLevel.setEnabled(false);
-        moneyInEditText.setEnabled(false);
+//        moneyInEditText.setEnabled(false);
         placeRadioButton.setEnabled(false);
         placeKindRadioButton.setEnabled(false);
         placeStateRadioButton.setEnabled(false);
@@ -239,6 +243,7 @@ public class FragmentJoinHome extends Fragment {
         accept_reject = view.findViewById(R.id.accept_reject);
         accept = view.findViewById(R.id.accept);
         reject = view.findViewById(R.id.reject);
+        moneyDesc = view.findViewById(R.id.moneyDesc);
         offerPref = view.findViewById(R.id.offerPref);
         project_name = view.findViewById(R.id.project_name);
 
@@ -250,7 +255,9 @@ public class FragmentJoinHome extends Fragment {
 
         numCon = view.findViewById(R.id.tv_con);
 
-        moneyInEditText = view.findViewById(R.id.ed_moneyIn);
+        moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
+        moneyInFrom = view.findViewById(R.id.moneyInFrom);
+        moneyInTo = view.findViewById(R.id.moneyInTo);
 
         userImage = view.findViewById(R.id.user_image);
 
@@ -370,8 +377,9 @@ public class FragmentJoinHome extends Fragment {
             availMoneyRadioButton.setText(availMoney);
 
             if (model.isNeedMoney()) {
-                moneyInEditText.setEnabled(true);
-                moneyInEditText.addTextChangedListener(new TextWatcher() {
+                moneyRequiredSeekbar.setSelectedMaxValue(model.getMoneyTo());
+                moneyRequiredSeekbar.setSelectedMinValue(model.getMoneyFrom());
+                moneyInTo.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -387,18 +395,43 @@ public class FragmentJoinHome extends Fragment {
                         if (!s.toString().isEmpty()) {
                             mRequirementModel.setMoneyTo(Integer.valueOf(s.toString()));
                         } else {
-                            moneyInEditText.setText("0");
+                            moneyInTo.setText("0");
                             mRequirementModel.setMoneyTo(0);
                         }
                     }
                 });
-            } else moneyInEditText.setEnabled(false);
+                moneyInFrom.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (!s.toString().isEmpty()) {
+                            mRequirementModel.setMoneyFrom(Integer.valueOf(s.toString()));
+                        } else {
+                            moneyInFrom.setText("0");
+                            mRequirementModel.setMoneyFrom(0);
+                        }
+                    }
+                });
+            } else {
+                moneySection.setVisibility(View.GONE);
+                money.setVisibility(View.GONE);
+            }
 
             placeRadioButton.setText(model.isNeedPlace() ?
                     getString(R.string.yes) : getString(R.string.no));
 
-            if (!model.isNeedPlace() || model.isNeedPlaceStatus()) {
+            if (!model.isNeedPlace()) {
                 placeSection.setVisibility(View.GONE);
+                place.setVisibility(View.GONE);
             } else {
                 mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
             }
@@ -412,6 +445,10 @@ public class FragmentJoinHome extends Fragment {
             exRadioButton.setText(model.isNeedExperience() ?
                     getString(R.string.yes) : getString(R.string.no));
 
+            if (!model.isNeedExperience()){
+                experience.setVisibility(View.GONE);
+                experienceSection.setVisibility(View.GONE);
+            }
             experienceEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -549,9 +586,28 @@ public class FragmentJoinHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((DrawerActivity) getActivity()).Hide();
         ((DrawerActivity) getActivity()).hideFab();
 
         setUpRecyclerViews();
+
+        moneyDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mRequirementModel.setMoneyDescriptions(moneyDesc.getText().toString());
+                Log.e("Data", Offers.getDescription());
+            }
+        });
 
         mOffer.observe(this, offerDetailsJsonObject -> {
             if (offerDetailsJsonObject != null) {
@@ -572,8 +628,9 @@ public class FragmentJoinHome extends Fragment {
                     availMoneyRadioButton.setText(availMoney);
 
                     if (details.getRequirments().get(0).isNeedMoney()) {
-                        moneyInEditText.setEnabled(true);
-                        moneyInEditText.addTextChangedListener(new TextWatcher() {
+                        moneyRequiredSeekbar.setSelectedMaxValue(details.getRequirments().get(0).getMoneyTo());
+                        moneyRequiredSeekbar.setSelectedMinValue(details.getRequirments().get(0).getMoneyFrom());
+                        moneyInTo.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -589,12 +646,36 @@ public class FragmentJoinHome extends Fragment {
                                 if (!s.toString().isEmpty()) {
                                     mRequirementModel.setMoneyTo(Integer.valueOf(s.toString()));
                                 } else {
-                                    moneyInEditText.setText("0");
+                                    moneyInTo.setText("0");
                                     mRequirementModel.setMoneyTo(0);
                                 }
                             }
                         });
-                    } else moneyInEditText.setEnabled(false);
+                        moneyInFrom.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                if (!s.toString().isEmpty()) {
+                                    mRequirementModel.setMoneyFrom(Integer.valueOf(s.toString()));
+                                } else {
+                                    moneyInFrom.setText("0");
+                                    mRequirementModel.setMoneyFrom(0);
+                                }
+                            }
+                        });
+                    } else {
+                        moneySection.setVisibility(View.GONE);
+                        money.setVisibility(View.GONE);
+                    }
                 }
 
                 String gender = null;
@@ -619,8 +700,9 @@ public class FragmentJoinHome extends Fragment {
                     placeRadioButton.setText(requirementModel.isNeedPlace() ?
                             getString(R.string.yes) : getString(R.string.no));
 
-                    if (!requirementModel.isNeedPlace() || requirementModel.isNeedPlaceStatus()) {
+                    if (!requirementModel.isNeedPlace()) {
                         placeSection.setVisibility(View.GONE);
+                        place.setVisibility(View.GONE);
                     } else {
                         mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
                     }

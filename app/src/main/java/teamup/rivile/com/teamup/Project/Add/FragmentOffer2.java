@@ -30,6 +30,7 @@ import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 import java.util.ArrayList;
 import java.util.List;
 
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
@@ -135,6 +136,8 @@ public class FragmentOffer2 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
 
         placeKindGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rent) {

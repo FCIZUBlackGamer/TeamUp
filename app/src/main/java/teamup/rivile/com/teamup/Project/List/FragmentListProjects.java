@@ -61,7 +61,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     View view;
     static int DepId = -1;
     static int ProType = -1;
-    static String Word;
+    static String Word = null;
     static int Type = -1;
     static FilterModel filterModel;
     Realm realm;
@@ -72,6 +72,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
      */
     public static FragmentListProjects setDepId(int id) {
         DepId = id;
+        Word = null;
         return new FragmentListProjects();
     }
 
@@ -80,6 +81,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
      */
     public static FragmentListProjects setType(int id) {
         ProType = id;
+        DepId = -1;
         return new FragmentListProjects();
     }
 
@@ -98,6 +100,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     public static FragmentListProjects setWord(int type, String word) {
         Word = word;//Todo: Make Action
         Type = type;
+        DepId = -1;
         return new FragmentListProjects();
     }
 
@@ -135,6 +138,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         if (DepId != -1) {
 //            ProType = -1;
             Type = -1;
+            Word = null;
             loadOffers(DepId);
         }
 //        if (ProType != -1) {
@@ -207,13 +211,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            }
 //        }
 
-        else if (Type != -1) {
+        else if (Word != null) {
 //            ProType =-1;
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
-        }else if (filterModel != null) {
+        }
+
+        else if (filterModel != null) {
 //            ProType = -1;
             Type = -1;
+            Word = null;
             DepId = -1;
             loadOffers(filterModel);
         }

@@ -27,6 +27,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.Department;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
@@ -97,9 +98,10 @@ public class FilterSearchFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.e("Search", "R");
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
 
         loadCategoriesAndCapitals();
-
 
         mDepartmentsAdapter = new DepartmentsAdapter(null, (ArrayList<Department>) mSelectedDepartments);
         mDepartmentsRecyclerView.setAdapter(mDepartmentsAdapter);

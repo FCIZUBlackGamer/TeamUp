@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,22 +56,18 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     private String mProjectName = "";
     public static int MINE = 1;
     public static int FAVOURITE = 2;
+    static String Word = null;
     public static int NORMAL = 0;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     View view;
-    static int ProType = -1;
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
 
-
-    /**
-     * @param id refers to my projects(1), favourite projects(2) or all projects(-1)
-     */
-    public static FragmentListProjects setType(int id) {
-        ProType = id;
+    public static FragmentListProjects setWord(String word) {
+        Word = word;//Todo: Make Action
         return new FragmentListProjects();
     }
 
@@ -88,8 +85,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public void onStart() {
         super.onStart();
-        ((DrawerActivity) getActivity()).Show("ListProjects");
-        ((DrawerActivity) getActivity()).ShowFab();
+        ((DrawerActivity) getActivity()).Show("MyProjects");
+        ((DrawerActivity) getActivity()).hideFab();
 
 
 //        likeModelDataBase = new ArrayList<>();
@@ -103,72 +100,29 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         likeModelDataBase = loginData.getLikes();
         Log.e("UserId", loginData.getUser().getId() + "");
-        Log.e("Type", ProType + "");
 
-        if (ProType == 1) {
-            ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
 
-            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-                    .findAll();
-            RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
+        RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
+                .findAll();
+        RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
 
 ////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-            Log.e("Size", offerDetailsDataBases.size() + "");
-            if (offerDetailsDataBases.size() > 0) {
-                Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
+        Log.e("Size", offerDetailsDataBases.size() + "");
+        if (offerDetailsDataBases.size() > 0) {
+            //Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
 
-                Offer offers = convertList(offerDetailsDataBases);
+            if (Word != null) {
+                RealmResults<OfferDetailsDataBase> filltered = loginDataBases.get(0).getOffers().where().contains("Name", Word).findAll();
+                Offer offers = convertResult(filltered);
                 fillOffers(offers, MINE);
-            } else {
-
-                ((DrawerActivity) getActivity()).Hide();
-                //Todo: Show Empty view
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty());
             }
+        } else {
 
-        } else if (ProType == 2) {
-            ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
-
-            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-                    .findAll();
-            RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-            if (favouriteDataBases.size() > 0) {
-                /**
-                 * get offer ids from favouriteDataBases
-                 *
-                 * and fetch them from OfferDetailsDataBase
-                 *
-                 * */
-                List<Integer> offerIds = new ArrayList<>();
-                for (int i = 0; i < favouriteDataBases.size(); i++) {
-                    offerIds.add(favouriteDataBases.get(i).getOfferId());
-                }
-
-                RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-                for (int i = 0; i < offerIds.size(); i++) {
-                    offerDetailsDataBases.add(realm.where(OfferDetailsDataBase.class)
-                            .equalTo("Id", offerIds.get(i))
-                            .findFirst());
-                }
-
-//                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-                if (offerDetailsDataBases.size() > 0) {
-                    fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-                } else {
-                    ((DrawerActivity) getActivity()).Hide();
-                    //Todo: Show Empty view
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).commit();
-                }
-
-
-            } else {
-                ((DrawerActivity) getActivity()).Hide();
-                //Todo: Show Empty view
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty()).commit();
-            }
+            ((DrawerActivity) getActivity()).Hide();
+            //Todo: Show Empty view
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.frame, new FragmentEmpty());
         }
 
 
@@ -339,85 +293,61 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private Offer convertResult(RealmResults<OfferDetailsDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.serializeNulls();
+        Gson gson = gsonBuilder.create();
+//        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
         List<Offers> offers = new ArrayList<>();
-        Offers offersItem = new Offers();
-        offersItem.setId(offerDetailsDataBases.get(0).getId());
-        offersItem.setEducationContributorLevel(offerDetailsDataBases.get(0).getEducationContributorLevel());
-        offersItem.setNumContributorTo(offerDetailsDataBases.get(0).getNumContributorTo());
-        offersItem.setNumContributorFrom(offerDetailsDataBases.get(0).getNumContributorFrom());
-        offersItem.setGenderContributor(offerDetailsDataBases.get(0).getGenderContributor());
-        offersItem.setProfitFrom(offerDetailsDataBases.get(0).getProfitFrom());
-        offersItem.setProfitType(offerDetailsDataBases.get(0).getProfitType());
-        offersItem.setName(offerDetailsDataBases.get(0).getName());
-        offersItem.setDescription(offerDetailsDataBases.get(0).getDescription());
-        offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(0).getAgeRequiredFrom());
-        offersItem.setAgeRequiredTo(offerDetailsDataBases.get(0).getAgeRequiredTo());
-        offersItem.setCategoryId(offerDetailsDataBases.get(0).getCategoryId());
-        offersItem.setCategoryName(offerDetailsDataBases.get(0).getCategoryName());
-        offersItem.setNumJoinOffer(offerDetailsDataBases.get(0).getNumJoinOffer());
-        offersItem.setNumLiks(offerDetailsDataBases.get(0).getNumLiks());
-        offersItem.setStatus(offerDetailsDataBases.get(0).getStatus());
-        offersItem.setUserId(offerDetailsDataBases.get(0).getUserId());
-
-        List<UserModel> userModels = new ArrayList<>();
-        for (int i = 0; i < offerDetailsDataBases.get(0).getUsers().size(); i++) {
-            UserModel userModel = new UserModel();
-            UserDataBase userDataBase = offerDetailsDataBases.get(0).getUsers().get(i);
-            userModel.setId(userDataBase.getId());
-            userModel.setFullName(userDataBase.getFullName());
-            userModel.setPassword(userDataBase.getPassword());
-            userModel.setGender(userDataBase.getGender());
-            userModel.setDateOfBirth(userDataBase.getDateOfBirth());
-            userModel.setPhone(userDataBase.getPhone());
-            userModel.setAddress(userDataBase.getAddress());
-            userModel.setImage(userDataBase.getImage());
-            userModel.setJobtitle(userDataBase.getJobtitle());
-            userModel.setStatus(userDataBase.getStatus());
-            userModel.setBio(userDataBase.getBio());
-            userModel.setMail(userDataBase.getMail());
-            userModel.setNumProject(userDataBase.getNumProject());
-            userModel.setCapitalId(userDataBase.getCapitalId());
-            userModel.setIdentityNum(userDataBase.getIdentityNum());
-            userModel.setSocialId(userDataBase.getSocialId());
-            userModel.setIdentityImage(userDataBase.getIdentityImage());
-            userModels.add(userModel);
+        for (int i = 0; i < offerDetailsDataBases.size(); i++) {
+            Offers offers1 = new Offers();
+            OfferDetailsDataBase base = offerDetailsDataBases.get(i);
+            offers1.setUserId(base.getUserId());
+            offers1.setId(base.getId());
+//            offers1.setCategoryId(base.getCategoryId());
+//            offers1.setCategoryName(base.getCategoryName());
+            offers1.setDescription(base.getDescription());
+            offers1.setName(base.getName());
+            offers1.setAddress(base.getAddress());
+//            offers1.setAgeRequiredFrom(base.getAgeRequiredFrom());
+//            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
+            offers1.setDate(base.getDate());
+//            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
+            offers1.setNumContributorFrom(base.getNumContributorFrom());
+            offers1.setNumContributorTo(base.getNumContributorTo());
+            offers1.setGenderContributor(base.getGenderContributor());
+            offers1.setNumJoinOffer(base.getNumJoinOffer());
+            offers1.setNumLiks(base.getNumLiks());
+//            offers1.setProfitFrom(base.getProfitFrom());
+//            offers1.setProfitTo(base.getProfitTo());
+//            offers1.setProfitType(base.getProfitType());
+            offers1.setStatus(base.getStatus());
+            if (base.getUsers() != null && base.getUsers().size() > 0) {
+                List<UserModel> userModels = new ArrayList<>();
+                for (int j = 0; j < base.getUsers().size(); j++) {
+                    UserModel userModel = new UserModel();
+                    UserDataBase base1 = base.getUsers().get(j);
+                    userModel.setId(base1.getId());
+                    userModel.setFullName(base1.getFullName());
+                    userModel.setImage(base1.getImage());
+                    userModel.setId(base1.getId());
+                    userModels.add(userModel);
+                }
+                offers1.setUsers(userModels);
+            }
+            offers.add(offers1);
+//            List<RequirmentModel> rec = new ArrayList<>();
+//            for (int j = 0; j < base.getRequirments().size(); j++) {
+//                RequirmentModel requirmentModel = new RequirmentModel();
+//                OfferDetailsRequirmentDataBase re = base.getRequirments().get(j);
+//                requirmentModel.setExperienceDescriptions(re.getExperienceDescriptions());
+//                requirmentModel.setNeedExperience(re.isNeedExperience());
+//                requirmentModel.setNeedPlaceType(re.isNeedPlaceType());
+//                requirmentModel.setNeedPlace(re.isNeedPlace());
+//                requirmentModel.setNeedMoney(re.isNeedMoney());
+//                requirmentModel.setPlaceAddress(re.getPlaceAddress());
+//                requirmentModel.setNeedPlaceStatus(re.isNeedPlaceStatus());
+//            }
         }
-        offersItem.setUsers(userModels);
-
-        List<CapitalModel> capitalModels = new ArrayList<>();
-        for (int i = 0; i < offerDetailsDataBases.get(0).getCapitals().size(); i++) {
-            CapitalModel capitalModel = new CapitalModel();
-            CapitalModelDataBase capitalDataBase = offerDetailsDataBases.get(0).getCapitals().get(i);
-            capitalModel.setId(capitalDataBase.getId());
-            capitalModel.setName(capitalDataBase.getName());
-            capitalModels.add(capitalModel);
-        }
-        offersItem.setCapitals(capitalModels);
-
-        List<RequirmentModel> requirmentModels = new ArrayList<>();
-        for (int i = 0; i < offerDetailsDataBases.get(0).getRequirments().size(); i++) {
-            RequirmentModel requirmentModel = new RequirmentModel();
-            OfferDetailsRequirmentDataBase capitalDataBase = offerDetailsDataBases.get(0).getRequirments().get(i);
-            requirmentModel.setId(capitalDataBase.getId());
-            requirmentModel.setPlaceAddress(capitalDataBase.getPlaceAddress());
-            requirmentModel.setPlaceDescriptions(capitalDataBase.getPlaceDescriptions());
-            requirmentModel.setMoneyDescriptions(capitalDataBase.getMoneyDescriptions());
-            requirmentModel.setExperienceDescriptions(capitalDataBase.getExperienceDescriptions());
-            requirmentModel.setExperienceTypeId(capitalDataBase.getExperienceTypeId());
-            requirmentModel.setNeedPlaceStatus(capitalDataBase.isNeedPlaceStatus());
-            requirmentModel.setNeedPlaceType(capitalDataBase.isNeedPlaceType());
-            requirmentModel.setNeedPlace(capitalDataBase.isNeedPlace());
-            requirmentModel.setNeedMoney(capitalDataBase.isNeedMoney());
-            requirmentModel.setNeedExperience(capitalDataBase.isNeedExperience());
-            requirmentModel.setMoneyFrom(capitalDataBase.getMoneyFrom());
-            requirmentModel.setMoneyTo(capitalDataBase.getMoneyTo());
-            requirmentModel.setExperienceFrom(capitalDataBase.getExperienceFrom());
-            requirmentModel.setExperienceTo(capitalDataBase.getExperienceTo());
-            requirmentModel.setUserId(capitalDataBase.getUserId());
-            requirmentModels.add(requirmentModel);
-        }
-        offersItem.setRequirments(requirmentModels);
-        offers.add(offersItem);
         offer.setOffersList(offers);
         return offer;
     }
@@ -494,7 +424,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
-                        fillOffers(serverResponse, ProType);
+                        fillOffers(serverResponse, MINE);
                     } else {
                         ((DrawerActivity) getActivity()).Hide();
                         //Todo: Show Empty view

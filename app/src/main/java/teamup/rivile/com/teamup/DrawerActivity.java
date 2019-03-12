@@ -164,6 +164,15 @@ public class DrawerActivity extends AppCompatActivity
                                 .replace(R.id.frame, FragmentListProjects.setWord(1, s))
                                 .commit();
                     }
+                } else if (Whome.equals("MyProjects")) {/** Means Current fragment is MyProjects*/
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, teamup.rivile.com.teamup.Project.MyProjects.FragmentListProjects.setWord(s))
+                            .commit();
+
+                } else if (Whome.equals("Favourite")) {/** Means Current fragment is Favourite*/
+//                    fragmentManager.beginTransaction()
+//                            .replace(R.id.frame, teamup.rivile.com.teamup.Project.Favourite.FragmentListProjects.setWord(s))
+//                            .commit();
                 }
                 return false;
             }
@@ -400,7 +409,6 @@ public class DrawerActivity extends AppCompatActivity
         toolbar.setVisibility(View.VISIBLE);
     }
 
-    //Todo: active it and setup settings
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
