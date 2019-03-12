@@ -42,6 +42,7 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
 
         holder.chip.setText(department.getName());
 
+        holder.chip.setOnCheckedChangeListener(null);
         holder.chip.setChecked(mSelectedDepartments.contains(department));
 
         holder.chip.setOnCheckedChangeListener((buttonView, isChecked) -> {

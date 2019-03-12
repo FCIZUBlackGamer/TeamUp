@@ -40,6 +40,8 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
         final CapitalModel model = mCategoryModels.get(i);
         holder.checkBox.setText(model.getName());
 
+        holder.checkBox.setOnCheckedChangeListener(null);
+
         if (mSelectedCategoryModels != null && mSelectedCategoryModels.getId().equals(model.getId())) {
             holder.checkBox.setChecked(true);
             mLastCheckedCheckBox = holder.checkBox;

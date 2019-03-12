@@ -38,6 +38,8 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         final CapitalModel model = mCapitalModels.get(i);
         holder.checkBox.setText(model.getName());
 
+        holder.checkBox.setOnCheckedChangeListener(null);
+
         if (selected(model)) holder.checkBox.setChecked(true);
         else holder.checkBox.setChecked(false);
 
@@ -80,7 +82,7 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
 
     private boolean selected(CapitalModel model) {
         for (int i = 0; i < mSelectedCapitalModels.size(); ++i) {
-            if (mSelectedCapitalModels.get(i).getId().equals(model.getId())) return true;
+            if (mSelectedCapitalModels.get(i).getName().equals(model.getName())) return true;
         }
         return false;
     }
