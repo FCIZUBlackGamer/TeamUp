@@ -74,6 +74,11 @@ public class UserDataBase extends RealmObject {
     public UserDataBase() {
     }
 
+
+    public void updateNumProject(){
+        NumProject++;
+    }
+
     public void setId(int id) {
         Id = id;
     }

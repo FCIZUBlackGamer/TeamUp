@@ -151,7 +151,8 @@ public interface ApiConfig {
                             @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                             @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                             @Field(API.PARAM_NAME_CAPITAL) String capital,
-                            @Field(API.PARAM_NAME_TAGS) String tags);
+                            @Field(API.PARAM_NAME_TAGS) String tags,
+                            @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.JOIN_OFFER_URL)

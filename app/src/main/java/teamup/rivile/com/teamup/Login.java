@@ -120,7 +120,7 @@ public class Login extends Fragment {
 
 
         loginButton.setReadPermissions(Arrays.asList(
-                "public_profile", "email", "user_birthday", "user_friends"));
+                "public_profile", "email"));
         loginButton.setFragment(this);
         // If you are using in a fragment, call loginButton.setFragment(this);
 
@@ -162,11 +162,11 @@ public class Login extends Fragment {
                                             String lastName = object.getString("last_name");
                                             String email = object.getString("email");
 //                                            String gender = object.getString("link");
-                                            String birthday = object.getString("birthday"); // 01/31/1980 format
+//                                            String birthday = object.getString("birthday"); // 01/31/1980 format
                                             userModel.setSocialId(id);
                                             userModel.setMail(email);
                                             userModel.setFullName(firstName + " " + lastName);
-                                            userModel.setDateOfBirth(birthday);
+//                                            userModel.setDateOfBirth(birthday);
 //                                            if (gender.equals("male")) {
 //                                                userModel.setGender(true);
 //                                            } else if (gender.equals("female")) {
@@ -183,7 +183,7 @@ public class Login extends Fragment {
 
                                 });
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "hometown,first_name,last_name,email,birthday");
+                        parameters.putString("fields", "hometown,first_name,last_name,email");
                         request.setParameters(parameters);
                         request.executeAsync();
 

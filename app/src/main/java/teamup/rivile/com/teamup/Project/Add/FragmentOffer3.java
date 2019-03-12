@@ -30,6 +30,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -139,7 +140,7 @@ public class FragmentOffer3 extends Fragment {
 
     FilesModel currentFileModel;
     Realm realm;
-    OfferDetailsDataBase offerDetailsDataBase;
+    OfferDetailsDataBase offerDetailsDataBase, offerDetailsDataBaseIN;
 
     ChipsAdapter mTagsRecUserAdapter;
     LoadedChipsAdapter mTagsRecLoadedAdapter;
@@ -154,6 +155,7 @@ public class FragmentOffer3 extends Fragment {
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
+    FragmentManager fragmentManager;
 
     static FragmentOffer3 setPager(
             ViewPager viewPager, FragmentPagerAdapter pagerAdapter,
@@ -225,6 +227,7 @@ public class FragmentOffer3 extends Fragment {
         tagsRec = view.findViewById(R.id.tagsRec);
 
         realm = Realm.getDefaultInstance();
+        fragmentManager = getFragmentManager();
         return view;
     }
 
@@ -1261,6 +1264,28 @@ public class FragmentOffer3 extends Fragment {
             offerDetailsDataBase.setAddress(Offers.getAddress());
             offerDetailsDataBase.setUserId(Offers.getUserId());
             offerDetailsDataBase.setAddress(Offers.getAddress());
+            offerDetailsDataBaseIN = offerDetailsDataBase;
+        }else {
+            offerDetailsDataBaseIN = new OfferDetailsDataBase();
+            offerDetailsDataBaseIN.setName(Offers.getName());
+            offerDetailsDataBaseIN.setDescription(Offers.getDescription());
+            offerDetailsDataBaseIN.setCategoryId(Offers.getCategoryId());
+            offerDetailsDataBaseIN.setCategoryName(Offers.getCategoryName());
+            offerDetailsDataBaseIN.setProfitType(Offers.getProfitType());
+            offerDetailsDataBaseIN.setProfitFrom(Offers.getProfitFrom());
+            offerDetailsDataBaseIN.setProfitTo(Offers.getProfitTo());
+            offerDetailsDataBaseIN.setNumContributorFrom(Offers.getNumContributorFrom());
+            offerDetailsDataBaseIN.setNumContributorTo(Offers.getNumContributorTo());
+            offerDetailsDataBaseIN.setAgeRequiredFrom(Offers.getAgeRequiredFrom());
+            offerDetailsDataBaseIN.setAgeRequiredTo(Offers.getAgeRequiredTo());
+            offerDetailsDataBaseIN.setGenderContributor(Offers.getGenderContributor());
+            offerDetailsDataBaseIN.setEducationContributorLevel(Offers.getEducationContributorLevel());
+            offerDetailsDataBaseIN.setUserId(Offers.getUserId());
+            offerDetailsDataBaseIN.setNumLiks(Offers.getNumLiks());
+            offerDetailsDataBaseIN.setNumJoinOffer(Offers.getNumJoinOffer());
+            offerDetailsDataBaseIN.setAddress(Offers.getAddress());
+            offerDetailsDataBaseIN.setUserId(Offers.getUserId());
+            offerDetailsDataBaseIN.setAddress(Offers.getAddress());
         }
         return offers;
     }
@@ -1322,7 +1347,7 @@ public class FragmentOffer3 extends Fragment {
         Offers.setAddress("address avoiding null");
         String offerString = gson.toJson(bindOffers());
 
-        RequirmentModel.setId(0);
+        RequirmentModel.setUserId(mUserId);
 //        RequirmentModel.setExperienceTypeId(null);
         String requirementString = gson.toJson(bindRequirementModel());
 
@@ -1360,10 +1385,10 @@ public class FragmentOffer3 extends Fragment {
         if (offerDetailsDataBase == null) {
             //TODO: Set location instead of null here
             response = retrofitService.addOffer(API.URL_TOKEN,
-                    offerString, requirementString, attachmentString, capitalString, tagsString, null);
+                    offerString, requirementString, attachmentString, capitalString, tagsString, "null");
         } else {
             response = retrofitService.editOffer(API.URL_TOKEN,
-                    offerString, requirementString, attachmentString, capitalString, tagsString);
+                    offerString, requirementString, attachmentString, capitalString, tagsString, "null");
         }
 
         response.enqueue(new Callback<Integer>() {
@@ -1371,16 +1396,20 @@ public class FragmentOffer3 extends Fragment {
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body() != 0) {
+                        Log.e("OfferId", response.body()+"");
                         Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_LONG).show();
-                        offerDetailsDataBase.setId(response.body());
-                        offerDetailsDataBase.updateNumProject();
+                        offerDetailsDataBaseIN.setId(response.body());
+                        realm.beginTransaction();
+                        UserDataBase userDataBase = realm.where(LoginDataBase.class).findFirst().getUser();
+                        userDataBase.updateNumProject();
+                        realm.insertOrUpdate(userDataBase);
+                        realm.commitTransaction();
                         realm.executeTransaction(realm1 -> {
-                            realm1.insertOrUpdate(offerDetailsDataBase);
-                            realm1.commitTransaction();
+                            realm1.insertOrUpdate(offerDetailsDataBaseIN);
                         });
 
-                        getFragmentManager().beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
-                        getFragmentManager().popBackStack();
+//                        fragmentManager.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
+//                        getFragmentManager().popBackStack();
 
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
