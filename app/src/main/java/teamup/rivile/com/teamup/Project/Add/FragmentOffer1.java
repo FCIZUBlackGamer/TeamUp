@@ -160,7 +160,7 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
-        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
 
         realm.executeTransaction( realm1 -> {
