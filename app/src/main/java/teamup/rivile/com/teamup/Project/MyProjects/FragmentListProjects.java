@@ -126,50 +126,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     .replace(R.id.frame, new FragmentEmpty());
         }
 
-        } else if (ProType == 2) {
-            ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
-
-            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-                    .findAll();
-            RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-            if (favouriteDataBases.size() > 0) {
-                /**
-                 * get offer ids from favouriteDataBases
-                 *
-                 * and fetch them from OfferDetailsDataBase
-                 *
-                 * */
-                List<Integer> offerIds = new ArrayList<>();
-                for (int i = 0; i < favouriteDataBases.size(); i++) {
-                    offerIds.add(favouriteDataBases.get(i).getOfferId());
-                }
-
-                RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-                for (int i = 0; i < offerIds.size(); i++) {
-                    offerDetailsDataBases.add(realm.where(OfferDetailsDataBase.class)
-                            .equalTo("Id", offerIds.get(i))
-                            .findFirst());
-                }
-
-//                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-                if (offerDetailsDataBases.size() > 0) {
-                    fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-                } else {
-                    ((DrawerActivity) getActivity()).hideSearchBar();
-                    //Todo: showSearchBar Empty view
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame, new FragmentEmpty()).commit();
-                }
-
-
-            } else {
-                ((DrawerActivity) getActivity()).hideSearchBar();
-                //Todo: showSearchBar Empty view
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty()).commit();
-            }
-        }
-
+    }
 
 //        realm.executeTransaction(realm1 -> {
 ////            LoginDataBase loginData = realm1.where(LoginDataBase.class)
@@ -243,8 +200,6 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            }
 //        });
 
-
-    }
 
     public static Offer convertList(RealmList<OfferDetailsDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();
@@ -331,7 +286,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             offersItem.setRequirments(requirmentModels);
             offers.add(offersItem);
         }
-        
+
         offer.setOffersList(offers);
         return offer;
     }
@@ -492,19 +447,19 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
         Log.e("A Size", offers.getOffersList().size() + "");
-            if (offers.getOffersList() != null && !offers.getOffersList().isEmpty()&& offers.getOffersList().size() > 0) {
-                adapter = new AdapterListOffers(getActivity(),
-                        offers.getOffersList(),
-                        likeModelDataBase,
-                        type,
-                        this);
+        if (offers.getOffersList() != null && !offers.getOffersList().isEmpty() && offers.getOffersList().size() > 0) {
+            adapter = new AdapterListOffers(getActivity(),
+                    offers.getOffersList(),
+                    likeModelDataBase,
+                    type,
+                    this);
 
-                recyclerView.setAdapter(adapter);
-            } else{
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty())
-                        .commit();
-            }
+            recyclerView.setAdapter(adapter);
+        } else {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.frame, new FragmentEmpty())
+                    .commit();
+        }
 //        }
     }
 
