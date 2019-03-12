@@ -378,7 +378,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             offersItem.setRequirments(requirmentModels);
             offers.add(offersItem);
         }
-        
+
         offer.setOffersList(offers);
         return offer;
     }
