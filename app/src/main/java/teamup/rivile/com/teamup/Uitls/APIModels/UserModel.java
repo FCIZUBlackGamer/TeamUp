@@ -1,8 +1,5 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class UserModel {
     private Integer Id ;
     private String FullName ;

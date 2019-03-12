@@ -480,7 +480,7 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_favourite_projects);
 
-                fragmentTransaction.replace(R.id.frame, FragmentListProjects.setType(2));
+                fragmentTransaction.replace(R.id.frame, new teamup.rivile.com.teamup.Project.Favourite.FragmentListProjects());
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;

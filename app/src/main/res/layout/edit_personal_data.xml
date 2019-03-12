@@ -246,7 +246,6 @@
                 android:gravity="start"
                 android:text="@string/gender"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_job" />
 
@@ -355,6 +354,7 @@
                 android:layout_marginEnd="24dp"
                 android:gravity="start"
                 android:text="الرقم القومي"
+                android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ed_phone" />
@@ -371,6 +371,7 @@
                 android:layout_width="0dp"
                 android:maxLines="1"
                 android:padding="8dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19"

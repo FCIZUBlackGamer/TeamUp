@@ -270,6 +270,7 @@ public class AccountSettingsFragment extends Fragment {
                                 if(userDataBase != null){
                                     userDataBase.setIdentityNum(userModel.getIdentityNum());
                                     userDataBase.setIdentityImage(userModel.getIdentityImage());
+                                    realm.insertOrUpdate(userDataBase);
                                 }
                             });
 
@@ -479,10 +480,11 @@ public class AccountSettingsFragment extends Fragment {
                             Toast.makeText(getContext(), "تم التعديل", Toast.LENGTH_SHORT).show();
                             mUserEmailEditText.setText(newEmail);
                             //TODO: update database
-                            mRealm.executeTransaction(realm -> {
+                            mRealm.executeTransactionAsync(realm -> {
                                 UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userId).findFirst();
                                 if(userDataBase != null){
                                     userDataBase.setMail(newEmail);
+                                    realm.insertOrUpdate(userDataBase);
                                 }
                             });
 

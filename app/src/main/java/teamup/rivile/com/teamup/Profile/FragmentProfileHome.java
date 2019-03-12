@@ -4,12 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -51,6 +55,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -118,6 +123,8 @@ public class FragmentProfileHome extends Fragment {
     final int USER_SSN = 1;
     private FilesModel userImageFile, userSSNCode;
     private AttachmentModel user, ssn;
+    DatePickerDialog.OnDateSetListener datePicker;
+    DatePickerDialog.OnDateSetListener DatePicker1;
 
     /**
      * to get data from realm and initialize it to popup edit views
@@ -206,7 +213,7 @@ public class FragmentProfileHome extends Fragment {
             ed_job = edit_data.findViewById(R.id.ed_job);
 //            ed_email = edit_data.findViewById(R.id.ed_email);
             ed_phone = edit_data.findViewById(R.id.ed_phone);
-            ed_national_id = edit_data.findViewById(R.id.ed_national_id);
+//            ed_national_id = edit_data.findViewById(R.id.ed_national_id);
 //            ed_password = edit_data.findViewById(R.id.ed_password);
             tv_birth_date = edit_data.findViewById(R.id.tv_birth_date);
             rb_gender = edit_data.findViewById(R.id.rb_gender);
@@ -239,7 +246,7 @@ public class FragmentProfileHome extends Fragment {
             ed_job.setText(profObject.getJobtitle());
 //            ed_email.setText(profObject.getMail());
             ed_phone.setText(profObject.getPhone());
-            ed_national_id.setText(profObject.getIdentityNum());
+//            ed_national_id.setText(profObject.getIdentityNum());
 //            ed_password.setText(profObject.getPassword());
             tv_birth_date.setText(profObject.getDateOfBirth());
             if (profObject.getGender())
@@ -252,9 +259,9 @@ public class FragmentProfileHome extends Fragment {
             if (profObject.getImage() != null && !profObject.getImage().isEmpty())
                 Picasso.get().load(profObject.getImage()).into(civ_user_image);
 
-
-            if (profObject.getIdentityImage() != null && !profObject.getIdentityImage().isEmpty())
-                Picasso.get().load(profObject.getIdentityImage()).into(cir_user_image);
+//
+//            if (profObject.getIdentityImage() != null && !profObject.getIdentityImage().isEmpty())
+//                Picasso.get().load(profObject.getIdentityImage()).into(cir_user_image);
 
             civ_user_image.setOnClickListener(v1 -> {
                 imageType = USER_IMAGE;
@@ -270,18 +277,38 @@ public class FragmentProfileHome extends Fragment {
 //                imageType = USER_SSN;
 //                addImage();
 //            });
-
+//
 //            civ_edit2.setOnClickListener(v1 -> {
 //                imageType = USER_SSN;
 //                addImage();
 //            });
+
+            tv_birth_date.setOnClickListener(v1 -> {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                DatePickerDialog d = new DatePickerDialog(
+                        getContext(),
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth
+                        , DatePicker1
+                        , year, month, day);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                d.show();
+            });
+
+            DatePicker1 = (view, year, month, dayOfMonth) -> {
+                month = month + 1;
+                String dateTo = month + "/" + dayOfMonth + "/" + year;
+                tv_birth_date.setText(dateTo);
+            };
 
             btn_save.setOnClickListener(v1 -> {
                 if (id != 0) {
                     /** Validation **/
 
                     copyFilesUploadFilesAddOffer(userImageFile, USER_IMAGE);
-                    copyFilesUploadFilesAddOffer(userSSNCode, USER_SSN);
+//                    copyFilesUploadFilesAddOffer(userSSNCode, USER_SSN);
 
                     UserModel model = new UserModel();
 
@@ -289,8 +316,10 @@ public class FragmentProfileHome extends Fragment {
                     model.setFullName(ed_name.getText().toString());
                     model.setPhone(ed_phone.getText().toString());
                     model.setJobtitle(ed_job.getText().toString());
-                    model.setIdentityNum(ed_national_id.getText().toString());
+//                    model.setIdentityNum(ed_national_id.getText().toString());
                     model.setBio(ed_bio.getText().toString());
+                    model.setDateOfBirth(tv_birth_date.getText().toString());
+                    model.setAddress(ed_address.getText().toString());
 //                    model.setMail(ed_email.getText().toString());
 //                    model.setPassword(ed_password.getText().toString());
                     if (rb_gender.getCheckedRadioButtonId() == R.id.male) {
@@ -301,12 +330,12 @@ public class FragmentProfileHome extends Fragment {
 
                     /**
                      * upload userImage
-                     * upload user SSN image
+                     * //upload user SSN image (Not Here) in settings page
                      * */
 
                     model.setImage(profObject.getImage());
 
-                    model.setIdentityImage(profObject.getIdentityImage());
+//                    model.setIdentityImage(profObject.getIdentityImage());
 
                     editAction(model);
                     dialog.dismiss();
@@ -360,15 +389,16 @@ public class FragmentProfileHome extends Fragment {
                                     );
                                     profObject.setImage(url);
                                     Log.v("getImage", profObject.getImage());
-                                } else {
-                                    ssn = new AttachmentModel(
-                                            "fee",
-                                            url,
-                                            false
-                                    );
-                                    profObject.setIdentityImage(url);
-                                    Log.v("getIdentityImage", profObject.getIdentityImage());
                                 }
+//                                else {
+//                                    ssn = new AttachmentModel(
+//                                            "fee",
+//                                            url,
+//                                            false
+//                                    );
+//                                    profObject.setIdentityImage(url);
+//                                    Log.v("getIdentityImage", profObject.getIdentityImage());
+//                                }
 
                                 Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
                             } else {
@@ -385,7 +415,6 @@ public class FragmentProfileHome extends Fragment {
                         Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-
             }
 //            }
 
@@ -770,7 +799,6 @@ public class FragmentProfileHome extends Fragment {
         }
     }
 
-
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -788,9 +816,10 @@ public class FragmentProfileHome extends Fragment {
                             bitmap = getResizedBitmap(bitmap, 65);
                             if (imageType == USER_IMAGE) {
                                 civ_user_image.setImageBitmap(bitmap);
-                            } else if (imageType == USER_SSN) {
-//                                iv_national_image.setImageBitmap(bitmap);
                             }
+//                            else if (imageType == USER_SSN) {
+//                                iv_national_image.setImageBitmap(bitmap);
+//                            }
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -802,13 +831,14 @@ public class FragmentProfileHome extends Fragment {
                     bitmap = getResizedBitmap(bitmap, 65);
                     if (imageType == USER_IMAGE) {
                         civ_user_image.setImageBitmap(bitmap);
-                    } else if (imageType == USER_SSN) {
-//                        iv_national_image.setImageBitmap(bitmap);
                     }
+//                    else if (imageType == USER_SSN) {
+//                        iv_national_image.setImageBitmap(bitmap);
+//                    }
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                         imageUri = getImageUri(getActivity(), bitmap);
-                        userSSNCode.setFileUri(imageUri);
+                        userImageFile.setFileUri(imageUri);
                     }
                 }
 
