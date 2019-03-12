@@ -233,6 +233,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         super.onStart();
 
         ((DrawerActivity) getActivity()).hideFab();
+        ((DrawerActivity) getActivity()).hideSearchBar();
 
         if (type == FragmentListProjects.NORMAL) {
             report.setImageResource(R.drawable.ic_report);

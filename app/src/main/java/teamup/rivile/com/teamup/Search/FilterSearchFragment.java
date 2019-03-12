@@ -145,6 +145,8 @@ public class FilterSearchFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.e("Search", "R");
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
 
         loadCategoriesAndCapitals();
 

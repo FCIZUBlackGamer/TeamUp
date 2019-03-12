@@ -60,7 +60,7 @@
                         android:layout_marginBottom="8dp"
                         android:fontFamily="@font/medium"
                         android:gravity="start"
-                        android:maxLength="40"
+                        android:maxLength="20"
                         android:maxLines="1"
                         android:text="مشروع مزرعه دواجن "
                         android:textColor="#000"

@@ -30,6 +30,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
@@ -46,7 +47,7 @@ public class FragmentOffer1 extends Fragment {
     LinearLayout moneySection, contributorsSection;
 
     TextInputEditText project_name;
-    EditText proDetail/*, moneyDesc*/;
+    EditText proDetail, moneyDesc;
     RadioGroup moneyGroup, availGroupMoney, genderGroup;
     RangeSeekBar moneySeekbar, moneyRequiredSeekbar, contributorSeekbar;
     StepperIndicator educationLevel;
@@ -90,7 +91,7 @@ public class FragmentOffer1 extends Fragment {
 
         project_name = view.findViewById(R.id.project_name);
         proDetail = view.findViewById(R.id.proDetail);
-//        moneyDesc = view.findViewById(R.id.moneyDesc);
+        moneyDesc = view.findViewById(R.id.moneyDesc);
 
         moneyGroup = view.findViewById(R.id.moneyGroup);
         int checkedId = moneyGroup.getCheckedRadioButtonId();
@@ -159,6 +160,9 @@ public class FragmentOffer1 extends Fragment {
     public void onStart() {
         super.onStart();
 
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
+
         realm.executeTransaction( realm1 -> {
             String image = realm1.where(LoginDataBase.class).findFirst().getUser().getImage();
             if (false){ // founded in device
@@ -182,6 +186,24 @@ public class FragmentOffer1 extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 Offers.setDescription(proDetail.getText().toString());
+                Log.e("Data", Offers.getDescription());
+            }
+        });
+
+        moneyDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
                 Log.e("Data", Offers.getDescription());
             }
         });

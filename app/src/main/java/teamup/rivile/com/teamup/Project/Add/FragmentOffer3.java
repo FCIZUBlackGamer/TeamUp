@@ -254,6 +254,9 @@ public class FragmentOffer3 extends Fragment {
     public void onStart() {
         super.onStart();
 
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
+
         realm.executeTransaction(realm1 -> {
             mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
         });

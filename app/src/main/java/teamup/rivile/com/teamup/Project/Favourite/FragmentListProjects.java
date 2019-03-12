@@ -90,6 +90,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
         ((DrawerActivity) getActivity()).showFab();
+        ((DrawerActivity) getActivity()).hideFab();
 
 //        likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){

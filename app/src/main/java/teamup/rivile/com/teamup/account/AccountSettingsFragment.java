@@ -141,6 +141,13 @@ public class AccountSettingsFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideFab();
+    }
+
     private void setUpClickListeners() {
         mEditUserEmail.setOnClickListener(v -> showEditDialog(true));
         mNationalIdEditText.setOnClickListener(v -> showEditDialog(false));
