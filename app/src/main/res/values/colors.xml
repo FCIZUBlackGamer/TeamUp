@@ -16,6 +16,8 @@
     <color name="textColorGray">#8D8D8D</color>
     <color name="textColorBlack">#000000</color>
 
+    <color name="gray">#E6E6E6</color>
+
     <color name="buttonColorGreen">#88B337</color>
     <color name="buttonColorBlue">#3083C9</color>
 

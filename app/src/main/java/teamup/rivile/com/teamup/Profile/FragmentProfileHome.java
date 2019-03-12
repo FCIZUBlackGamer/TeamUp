@@ -36,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -174,7 +173,7 @@ public class FragmentProfileHome extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.profileSettings));
-        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
 //        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);

@@ -70,7 +70,7 @@ public class FragmentIncommingRequirement extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.perposedOffers));
-        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
@@ -113,7 +113,7 @@ public class FragmentIncommingRequirement extends Fragment {
                 noReqFound.setVisibility(View.VISIBLE);
             }
         }else {
-            ((DrawerActivity) getActivity()).Hide();
+            ((DrawerActivity) getActivity()).hideSearchBar();
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame, new FragmentEmpty()).commit();
             project_requests.setVisibility(View.GONE);
@@ -146,14 +146,14 @@ public class FragmentIncommingRequirement extends Fragment {
             });
 //                fillOffers(FragmentListProjects.convertList(offerDetailsDataBases));
         } else {
-            //Todo: Show Empty view (You haven't make offers yet)
+            //Todo: showSearchBar Empty view (You haven't make offers yet)
 //                FragmentManager manager = getActivity().getSupportFragmentManager();
 //                FragmentTransaction trans = manager.beginTransaction();
 //                trans.remove(myFrag);
 //                trans.commit();
 //                manager.popBackStack();
 
-            ((DrawerActivity) getActivity()).Hide();
+            ((DrawerActivity) getActivity()).hideSearchBar();
             ((DrawerActivity) getActivity()).hideFab();
             try {
                 ((DrawerActivity) getActivity()).getSupportFragmentManager().beginTransaction()

@@ -8,6 +8,7 @@
     android:background="@color/colorPrimary">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -222,26 +223,26 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/medium"
             android:text="@string/place"
-            android:id="@+id/state"
             android:textColor="#000"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contributorsSection"  />
+            app:layout_constraintTop_toBottomOf="@+id/contributorsSection" />
 
         <LinearLayout
             android:id="@+id/stateSection"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/state">
 
             <CheckBox
                 android:id="@+id/egypt"
@@ -286,9 +287,25 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView27"
-            rsb:absoluteMaxValue="1000000"
-            rsb:absoluteMinValue="0" />
+            app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+        <TextView
+            android:id="@+id/tv_ageMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="0"
+            app:layout_constraintLeft_toLeftOf="@id/ageSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/ageSeekbar" />
+
+        <TextView
+            android:id="@+id/tv_ageMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="80"
+            app:layout_constraintRight_toRightOf="@id/ageSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/ageSeekbar" />
 
         <TextView
             android:id="@+id/textView28"
@@ -346,9 +363,25 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView29"
-            rsb:absoluteMaxValue="1000000"
-            rsb:absoluteMinValue="0" />
+            app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+        <TextView
+            android:id="@+id/tv_costMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="0"
+            app:layout_constraintLeft_toLeftOf="@id/costSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/costSeekbar" />
+
+        <TextView
+            android:id="@+id/tv_costMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="100000"
+            app:layout_constraintRight_toRightOf="@id/costSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/costSeekbar" />
 
         <TextView
             android:id="@+id/textView30"
@@ -376,10 +409,25 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView30"
-            rsb:absoluteMaxValue="1000000"
-            rsb:absoluteMinValue="0" />
+            app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
+        <TextView
+            android:id="@+id/tv_numberContributerMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="0"
+            app:layout_constraintLeft_toLeftOf="@id/numberContributersSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />
+
+        <TextView
+            android:id="@+id/tv_numberContributerMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="15"
+            app:layout_constraintRight_toRightOf="@id/numberContributersSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />
 
         <TextView
             android:id="@+id/textView31"
@@ -408,9 +456,25 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView31"
-            rsb:absoluteMaxValue="1000000"
-            rsb:absoluteMinValue="0" />
+            app:layout_constraintTop_toBottomOf="@+id/textView31" />
+
+        <TextView
+            android:id="@+id/tv_experienceMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="0"
+            app:layout_constraintLeft_toLeftOf="@id/experienceSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
+
+        <TextView
+            android:id="@+id/tv_experienceMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="65"
+            app:layout_constraintRight_toRightOf="@id/experienceSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
 
         <Button
             android:id="@+id/go"
@@ -429,5 +493,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
+
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

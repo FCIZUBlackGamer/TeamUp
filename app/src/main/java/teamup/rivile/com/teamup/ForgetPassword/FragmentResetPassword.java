@@ -115,7 +115,7 @@ public class FragmentResetPassword extends Fragment {
             if (ed_conPass.getText().toString().equals(ed_pass.getText().toString())){
                 login(id, ed_conPass.getText().toString());
             }else {
-                //Todo: Show Error Password
+                //Todo: showSearchBar Error Password
             }
         });
     }

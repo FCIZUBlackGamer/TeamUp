@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoualy.stepperindicator.StepperIndicator;
@@ -27,6 +28,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.Department;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
@@ -38,13 +40,25 @@ public class FilterSearchFragment extends Fragment {
     private EditText mProjectNameEditText;
     private StepperIndicator mEducationLevelStepperIndicator;
     private RadioGroup mGenderRadioGroup;
-//    private EditText mAddressEditText;
+    //    private EditText mAddressEditText;
     private RangeSeekBar mAgeRangeSeekBar;
+    private TextView mAgeRangeSeekBarMin;
+    private TextView mAgeRangeSeekBarMax;
+
     private RecyclerView mDepartmentsRecyclerView;
     private RecyclerView mCapitalsRecyclerView;
     private RangeSeekBar mProjectCostRangeSeekBar;
+    private TextView mProjectCostRangeSeekBarMin;
+    private TextView mProjectCostRangeSeekBarMax;
+
     private RangeSeekBar mContributorsNumberRangeSeekBar;
+    private TextView mContributorsNumberRangeSeekBarMin;
+    private TextView mContributorsNumberRangeSeekBarMax;
+
     private RangeSeekBar mContributorExperienceRangeSeekBar;
+    private TextView mContributorExperienceRangeSeekBarMin;
+    private TextView mContributorExperienceRangeSeekBarMax;
+
     private Button mGoButton;
 
     private DepartmentsAdapter mDepartmentsAdapter;
@@ -63,11 +77,22 @@ public class FilterSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_search, container, false);
         mProjectNameEditText = view.findViewById(R.id.project_name);
+
         mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
+        mEducationLevelStepperIndicator.addOnStepClickListener(step -> mEducationLevelStepperIndicator.setCurrentStep(step));
+
         mGenderRadioGroup = view.findViewById(R.id.genderGroup);
 //        mAddressEditText = view.findViewById(R.id.address);
+
         mAgeRangeSeekBar = view.findViewById(R.id.ageSeekbar);
+        mAgeRangeSeekBar.setRangeValues(18,80);
         mAgeRangeSeekBar.setNotifyWhileDragging(true);
+        mAgeRangeSeekBarMin = view.findViewById(R.id.tv_ageMin);
+        mAgeRangeSeekBarMax = view.findViewById(R.id.tv_ageMax);
+        mAgeRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            mAgeRangeSeekBarMin.setText(String.valueOf(minValue));
+            mAgeRangeSeekBarMax.setText(String.valueOf(maxValue));
+        });
 
         mDepartmentsRecyclerView = view.findViewById(R.id.recDep);
         mDepartmentsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -76,13 +101,36 @@ public class FilterSearchFragment extends Fragment {
         mCapitalsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mProjectCostRangeSeekBar = view.findViewById(R.id.costSeekbar);
+        mProjectCostRangeSeekBar.setRangeValues(0,100000);
         mProjectCostRangeSeekBar.setNotifyWhileDragging(true);
+        mProjectCostRangeSeekBarMin = view.findViewById(R.id.tv_costMin);
+        mProjectCostRangeSeekBarMax = view.findViewById(R.id.tv_costMax);
+        mProjectCostRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            mProjectCostRangeSeekBarMin.setText(String.valueOf(minValue));
+            mProjectCostRangeSeekBarMax.setText(String.valueOf(maxValue));
+        });
 
         mContributorsNumberRangeSeekBar = view.findViewById(R.id.numberContributersSeekbar);
+        mContributorsNumberRangeSeekBar.setRangeValues(1,15);
         mContributorsNumberRangeSeekBar.setNotifyWhileDragging(true);
+        mContributorsNumberRangeSeekBarMin = view.findViewById(R.id.tv_numberContributerMin);
+        mContributorsNumberRangeSeekBarMax = view.findViewById(R.id.tv_numberContributerMax);
+        mContributorsNumberRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            mContributorsNumberRangeSeekBarMin.setText(String.valueOf(minValue));
+            mContributorsNumberRangeSeekBarMax.setText(String.valueOf(maxValue));
+        });
+
 
         mContributorExperienceRangeSeekBar = view.findViewById(R.id.experienceSeekbar);
+        mContributorExperienceRangeSeekBar.setRangeValues(0,65);
         mContributorExperienceRangeSeekBar.setNotifyWhileDragging(true);
+        mContributorExperienceRangeSeekBarMin = view.findViewById(R.id.tv_experienceMin);
+        mContributorExperienceRangeSeekBarMax = view.findViewById(R.id.tv_experienceMax);
+        mContributorExperienceRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            mContributorExperienceRangeSeekBarMin.setText(String.valueOf(minValue));
+            mContributorExperienceRangeSeekBarMax.setText(String.valueOf(maxValue));
+        });
+
 
         mGoButton = view.findViewById(R.id.go);
         if (filterModel == null) {
@@ -100,12 +148,15 @@ public class FilterSearchFragment extends Fragment {
 
         loadCategoriesAndCapitals();
 
+        ((DrawerActivity) getActivity()).hideFab();
+        ((DrawerActivity) getActivity()).hideSearchBar();
 
         mDepartmentsAdapter = new DepartmentsAdapter(null, (ArrayList<Department>) mSelectedDepartments);
         mDepartmentsRecyclerView.setAdapter(mDepartmentsAdapter);
 
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
         mCapitalsRecyclerView.setAdapter(mCapitalsRecyclerViewAdapter);
+
 
         mGoButton.setOnClickListener(v -> {
             mSelectedDepartments = mDepartmentsAdapter.getSelectedDepartments();
@@ -126,15 +177,15 @@ public class FilterSearchFragment extends Fragment {
             filterModel.setExperienceFrom((int) mContributorExperienceRangeSeekBar.getSelectedMinValue());
             filterModel.setExperienceTo((int) mContributorExperienceRangeSeekBar.getSelectedMaxValue());
             filterModel.setEducationContributorLevel(mEducationLevelStepperIndicator.getCurrentStep());
-            filterModel.setNumContributorFrom((int) mContributorsNumberRangeSeekBar.getSelectedMaxValue());
-            filterModel.setNumContributorTo((int) mContributorsNumberRangeSeekBar.getSelectedMinValue());
-            filterModel.setMoneyFrom((int) mProjectCostRangeSeekBar.getSelectedMaxValue());
-            filterModel.setMoneyTo((int) mProjectCostRangeSeekBar.getSelectedMinValue());
+            filterModel.setNumContributorFrom((int) mContributorsNumberRangeSeekBar.getSelectedMinValue());
+            filterModel.setNumContributorTo((int) mContributorsNumberRangeSeekBar.getSelectedMaxValue());
+            filterModel.setMoneyFrom((int) mProjectCostRangeSeekBar.getSelectedMinValue());
+            filterModel.setMoneyTo((int) mProjectCostRangeSeekBar.getSelectedMaxValue());
             if (mGenderRadioGroup.getCheckedRadioButtonId() == R.id.male) {
                 filterModel.setGenderContributor(1);
             } else if (mGenderRadioGroup.getCheckedRadioButtonId() == R.id.female) {
                 filterModel.setGenderContributor(0);
-            }else {
+            } else {
                 filterModel.setGenderContributor(2);
             }
             if (mSelectedDepartments.size() > 0) {

@@ -25,6 +25,7 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
@@ -35,7 +36,6 @@ import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 
 public class FragmentAddHome extends Fragment {
-
     private MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedTagsLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<ExperienceTypeModel>> mExperienceTypesLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitalLiveData = new MutableLiveData<>();

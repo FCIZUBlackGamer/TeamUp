@@ -30,6 +30,7 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -110,6 +111,10 @@ public class AccountSettingsFragment extends Fragment {
             Toast.makeText(getContext(), "فشل تحميل بيانات المستخدم!", Toast.LENGTH_SHORT).show();
             getActivity().onBackPressed();
         }
+
+        ((DrawerActivity) getActivity()).hideFab();
+        ((DrawerActivity) getActivity()).hideSearchBar();
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.edit_account_settings));
 
         return view;
     }

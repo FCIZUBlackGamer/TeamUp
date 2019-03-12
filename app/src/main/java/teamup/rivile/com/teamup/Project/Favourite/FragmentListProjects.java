@@ -88,8 +88,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public void onStart() {
         super.onStart();
-        ((DrawerActivity) getActivity()).Show("ListProjects");
-        ((DrawerActivity) getActivity()).ShowFab();
+        ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
+        ((DrawerActivity) getActivity()).showFab();
 
 //        likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){
@@ -136,16 +136,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                        list.add(offerDetailsDataBases.get(i).ge);
 //                    }
 //                } else {
-//                    ((DrawerActivity) getActivity()).Hide();
-//                    //Todo: Show Empty view
+//                    ((DrawerActivity) getActivity()).hideSearchBar();
+//                    //Todo: showSearchBar Empty view
 //                    getActivity().getSupportFragmentManager().beginTransaction()
 //                            .replace(R.id.frame, new FragmentEmpty()).commit();
 //                }
 
 
         } else {
-            ((DrawerActivity) getActivity()).Hide();
-            //Todo: Show Empty view
+            ((DrawerActivity) getActivity()).hideSearchBar();
+            //Todo: showSearchBar Empty view
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.frame, new FragmentEmpty()).commit();
         }
@@ -166,8 +166,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                fillOffers(offers, MINE);
 //            } else {
 //
-//                ((DrawerActivity) getActivity()).Hide();
-//                //Todo: Show Empty view
+//                ((DrawerActivity) getActivity()).hideSearchBar();
+//                //Todo: showSearchBar Empty view
 //                getActivity().getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.frame, new FragmentEmpty());
 //            }
@@ -205,16 +205,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 ////                        list.add(offerDetailsDataBases.get(i).ge);
 ////                    }
 ////                } else {
-////                    ((DrawerActivity) getActivity()).Hide();
-////                    //Todo: Show Empty view
+////                    ((DrawerActivity) getActivity()).hideSearchBar();
+////                    //Todo: showSearchBar Empty view
 ////                    getActivity().getSupportFragmentManager().beginTransaction()
 ////                            .replace(R.id.frame, new FragmentEmpty()).commit();
 ////                }
 //
 //
 //            } else {
-//                ((DrawerActivity) getActivity()).Hide();
-//                //Todo: Show Empty view
+//                ((DrawerActivity) getActivity()).hideSearchBar();
+//                //Todo: showSearchBar Empty view
 //                getActivity().getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.frame, new FragmentEmpty()).commit();
 //            }
@@ -242,8 +242,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                    fillOffers(convertList(offerDetailsDataBases), MINE);
 //                } else {
 //
-//                    ((DrawerActivity) getActivity()).Hide();
-//                    //Todo: Show Empty view
+//                    ((DrawerActivity) getActivity()).hideSearchBar();
+//                    //Todo: showSearchBar Empty view
 //                    getActivity().getSupportFragmentManager().beginTransaction()
 //                            .replace(R.id.frame, new FragmentEmpty());
 //                }
@@ -277,16 +277,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                    if (offerDetailsDataBases.size() > 0) {
 //                        fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
 //                    } else {
-//                        ((DrawerActivity) getActivity()).Hide();
-//                        //Todo: Show Empty view
+//                        ((DrawerActivity) getActivity()).hideSearchBar();
+//                        //Todo: showSearchBar Empty view
 //                        getActivity().getSupportFragmentManager().beginTransaction()
 //                                .replace(R.id.frame, new FragmentEmpty()).commit();
 //                    }
 //
 //
 //                } else {
-//                    ((DrawerActivity) getActivity()).Hide();
-//                    //Todo: Show Empty view
+//                    ((DrawerActivity) getActivity()).hideSearchBar();
+//                    //Todo: showSearchBar Empty view
 //                    getActivity().getSupportFragmentManager().beginTransaction()
 //                            .replace(R.id.frame, new FragmentEmpty()).commit();
 //                }
@@ -546,8 +546,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     if (serverResponse.getOffersList().size() > 0) {
                         fillOffers(serverResponse, ProType);
                     } else {
-                        ((DrawerActivity) getActivity()).Hide();
-                        //Todo: Show Empty view
+                        ((DrawerActivity) getActivity()).hideSearchBar();
+                        //Todo: showSearchBar Empty view
                         getActivity().getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.frame, new FragmentEmpty()).commit();
                     }

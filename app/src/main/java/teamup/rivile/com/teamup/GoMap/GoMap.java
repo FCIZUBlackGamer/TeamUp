@@ -76,7 +76,7 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
         super.onStart();
 
         // mapView.getMapAsync(this);
-        ((DrawerActivity) getActivity()).Hide();
+        ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
         CustomAdapter mCustomAdapter = new CustomAdapter(getActivity(), imageArray);
         mCustomAdapter.setDropDownViewResource(R.layout.custom_spinner_row);

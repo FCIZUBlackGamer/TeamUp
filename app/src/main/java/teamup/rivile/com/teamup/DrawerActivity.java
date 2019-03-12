@@ -278,7 +278,7 @@ public class DrawerActivity extends AppCompatActivity
 
         fab.setOnClickListener(view -> {
             /** Half Pizza Animation */
-            Hide();
+            hideSearchBar();
             fab.setVisibility(View.GONE);
             fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
                     .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
@@ -375,11 +375,11 @@ public class DrawerActivity extends AppCompatActivity
         }
     }
 
-    public static void Hide() {
+    public static void hideSearchBar() {
         searchView.setVisibility(View.GONE);
     }
 
-    public static void Show(String whome) {
+    public static void showSearchBar(String whome) {
         searchView.setVisibility(View.VISIBLE);
         Whome = whome;
     }
@@ -388,7 +388,7 @@ public class DrawerActivity extends AppCompatActivity
         fab.setVisibility(View.GONE);
     }
 
-    public static void ShowFab() {
+    public static void showFab() {
         fab.setVisibility(View.VISIBLE);
     }
 

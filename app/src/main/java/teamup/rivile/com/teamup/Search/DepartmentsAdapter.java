@@ -46,10 +46,10 @@ public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.
 
         holder.chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                holder.chip.setChipBackgroundColorResource(R.color.colorPrimaryDark);
+                holder.chip.setChipBackgroundColorResource(R.color.colorPrimary);
                 mSelectedDepartments.add(department);
             } else {
-                holder.chip.setChipBackgroundColorResource(R.color.colorPrimary);
+                holder.chip.setChipBackgroundColorResource(R.color.gray);
                 mSelectedDepartments.remove(department);
             }
         });

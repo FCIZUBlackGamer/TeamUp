@@ -384,7 +384,6 @@ public class FragmentOffer3 extends Fragment {
         });
 
         go.setOnClickListener(v -> {
-            go.setEnabled(false);
             RequirmentModel.setExperienceTypeId(1);
             mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
 
@@ -406,6 +405,7 @@ public class FragmentOffer3 extends Fragment {
             } else {
 
                 if (mUserId != -1) {
+                    go.setEnabled(false);
                     Offers.setUserId(mUserId);
                 } else {
                     Toast.makeText(getContext(), "User Id is not set yet", Toast.LENGTH_SHORT).show();
@@ -1410,6 +1410,8 @@ public class FragmentOffer3 extends Fragment {
 
 //                        fragmentManager.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
 //                        getFragmentManager().popBackStack();
+
+                        getActivity().onBackPressed();
 
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();

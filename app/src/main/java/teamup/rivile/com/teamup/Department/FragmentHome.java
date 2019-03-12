@@ -22,7 +22,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 
 
 public class FragmentHome extends Fragment {
@@ -63,7 +62,7 @@ public class FragmentHome extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((DrawerActivity) getActivity()).Show("Home");
+        ((DrawerActivity) getActivity()).showSearchBar("Home");
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
         loadOffers();
