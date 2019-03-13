@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +23,13 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
     Context context;
     List<UserModel> deals;
 
+    TextView mEmptyView;
 
-    public ContributerImages(Context context, List<UserModel> talabats) {
+    public ContributerImages(Context context, List<UserModel> talabats, TextView emptyView) {
         this.context = context;
         this.deals = talabats;
+
+        mEmptyView = emptyView;
     }
 
     @NonNull
@@ -53,12 +57,26 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
         holder.image.setContentDescription(deals.get(position).getFullName());
 
         holder.image.setOnClickListener(v -> ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame,  FragmentProfileHome.setId(deals.get(position).getId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit());
+                .replace(R.id.frame, FragmentProfileHome.setId(deals.get(position).getId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit());
     }
 
     @Override
     public int getItemCount() {
-        return deals != null ? deals.size() : 0;
+        if (deals != null && deals.size() > 0) {
+            hideEmptyView();
+            return deals.size();
+        } else {
+            showEmptyView();
+            return 0;
+        }
+    }
+
+    private void showEmptyView() {
+        mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyView() {
+        mEmptyView.setVisibility(View.GONE);
     }
 
     public class Vholder extends RecyclerView.ViewHolder {

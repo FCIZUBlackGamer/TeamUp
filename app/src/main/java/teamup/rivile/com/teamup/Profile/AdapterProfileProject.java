@@ -54,7 +54,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
                 }
             }
 
-        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
+        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers(),holder.emptyView);
         holder.recyclerView.setAdapter(holder.adapter);
 
         holder.image.setOnClickListener(v -> {
@@ -77,6 +77,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
         LinearLayout linearLayout;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
+        TextView emptyView;
 
         public Vholder(View itemView) {
             super(itemView);
@@ -89,6 +90,8 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.rec);
             recyclerView.setLayoutManager(layoutManager);
+
+            emptyView = itemView.findViewById(R.id.tv_empty_view);
         }
 
     }

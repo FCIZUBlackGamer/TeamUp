@@ -109,6 +109,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     RecyclerView.Adapter imagesAdapter, filesAdapter;
     List<FilesModel> filesModels, imagesModels;
     ImageView preview;
+    TextView mEmptyView;
 
     RecyclerView recCont;
     RecyclerView.Adapter conAdapter;
@@ -199,6 +200,8 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCont = view.findViewById(R.id.rec);
+
+        mEmptyView = view.findViewById(R.id.tv_empty_view);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -689,7 +692,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         nun_contributor.setText(String.valueOf(Offers.getNumContributorTo()));
         if (Offers.getUsers() != null && Offers.getUsers().size() > 1) {
             Log.e("U", Offers.getUsers().get(0).getImage() + " WWWWWw");
-            conAdapter = new ContributerImages(getActivity(), Offers.getUsers());
+            conAdapter = new ContributerImages(getActivity(), Offers.getUsers(), mEmptyView);
             recCont.setAdapter(conAdapter);
         }
 

@@ -130,7 +130,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         }
 
 
-        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers());
+        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers(), holder.emptyView);
         holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
             if (offersList.get(position).getUserId().equals(offersList.get(position).getUsers().get(i).getId())) {
@@ -218,6 +218,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
         ImageView deleteOrReport;
+        TextView emptyView;
 
         Vholder(View itemView) {
             super(itemView);
@@ -237,6 +238,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             recyclerView = itemView.findViewById(R.id.rec);
             recyclerView.setLayoutManager(layoutManager);
+
+            emptyView = itemView.findViewById(R.id.tv_empty_view);
         }
     }
 
@@ -271,13 +274,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         likeModel.setUserId(userId);
         likeModel.setStatus(like);
         Gson gson = new Gson();
-        Log.e("Like Model", gson.toJson(likeModel));
+        Log.e("LikeModel", gson.toJson(likeModel));
         call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String Offers = response.body();
-                Log.e("Like", Offers);
+//                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
                     if (like == 1) {//dislike
                         int ll= Integer.parseInt(likeHolder.getText().toString());

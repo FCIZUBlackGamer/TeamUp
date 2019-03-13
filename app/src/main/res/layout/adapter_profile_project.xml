@@ -135,7 +135,13 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rec"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="لا يوجد مشتركين حاليا"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -116,7 +116,7 @@ public class FragmentJoinHome extends Fragment {
 
     RadioButton placeRadioButton, placeKindRadioButton, placeStateRadioButton, exRadioButton;
     EditText experienceEditText, exDesc;
-//    RecyclerView exRec;
+    //    RecyclerView exRec;
     FloatingActionButton arrowPlace, arrowExperience;
 
     View map;
@@ -256,8 +256,30 @@ public class FragmentJoinHome extends Fragment {
         numCon = view.findViewById(R.id.tv_con);
 
         moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
+        moneyRequiredSeekbar.setRangeValues(0, 100000);
+        moneyRequiredSeekbar.setSelectedMinValue(0);
+        moneyRequiredSeekbar.setSelectedMaxValue(100000);
+        moneyRequiredSeekbar.setNotifyWhileDragging(true);
         moneyInFrom = view.findViewById(R.id.moneyInFrom);
         moneyInTo = view.findViewById(R.id.moneyInTo);
+        moneyRequiredSeekbar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+            moneyInFrom.setText(String.valueOf(minValue));
+            moneyInTo.setText(String.valueOf(maxValue));
+        });
+        moneyInFrom.setOnFocusChangeListener((v, hasFocus) -> {
+            if (moneyInFrom.getText().toString().isEmpty())
+                moneyInFrom.setText(String.valueOf(moneyRequiredSeekbar.getSelectedMinValue()));
+            if (Integer.valueOf(moneyInFrom.getText().toString()) > Integer.valueOf(moneyInTo.getText().toString()))
+                moneyInFrom.setText(moneyInTo.getText().toString());
+        });
+
+//        toEditText.setText(String.valueOf(maxVal));
+        moneyInTo.setOnFocusChangeListener((v, hasFocus) -> {
+            if (moneyInTo.getText().toString().isEmpty())
+                moneyInTo.setText(String.valueOf(moneyRequiredSeekbar.getSelectedMaxValue()));
+            if (Integer.valueOf(moneyInTo.getText().toString()) < Integer.valueOf(moneyInFrom.getText().toString()))
+                moneyInTo.setText(moneyInFrom.getText().toString());
+        });
 
         userImage = view.findViewById(R.id.user_image);
 
@@ -366,7 +388,8 @@ public class FragmentJoinHome extends Fragment {
                 acceptOrReject(mOfferId, requirmentModel.getId(), false);
             });
 
-            delete_req.setOnClickListener(v -> {accept.setEnabled(false);
+            delete_req.setOnClickListener(v -> {
+                accept.setEnabled(false);
                 reject.setEnabled(false);
                 delete_req.setEnabled(false);
                 delete(requirmentModel.getId());
@@ -445,7 +468,7 @@ public class FragmentJoinHome extends Fragment {
             exRadioButton.setText(model.isNeedExperience() ?
                     getString(R.string.yes) : getString(R.string.no));
 
-            if (!model.isNeedExperience()){
+            if (!model.isNeedExperience()) {
                 experience.setVisibility(View.GONE);
                 experienceSection.setVisibility(View.GONE);
             }
@@ -553,7 +576,6 @@ public class FragmentJoinHome extends Fragment {
     private void delete(int requirementId) {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         // Parsing any Media type file
-
 
         ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
         Call<String> call;
@@ -1001,7 +1023,6 @@ public class FragmentJoinHome extends Fragment {
 
             });
         });
-
 //        if (requirmentModel != null)
 //            loadDataFroEdit(mRequirementDetails);
     }
@@ -1412,7 +1433,6 @@ public class FragmentJoinHome extends Fragment {
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null);
         recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
     }
-
 //    private void loadDataFroEdit(@NonNull OfferDetails offerDetails) {
 //
 //        project_name.setText(offerDetails.getName());

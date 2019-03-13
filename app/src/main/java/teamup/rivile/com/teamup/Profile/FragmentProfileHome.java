@@ -185,7 +185,7 @@ public class FragmentProfileHome extends Fragment {
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
-            Log.i("Name", loginDataBases.getUser().getFullName());
+//            Log.i("Name", loginDataBases.getUser().getFullName());
 //            Log.i("Num Users", loginDataBases.getOffers().get(0).getUsers().size()+"");
             if (Id != loginDataBases.getUser().getId()) {
                 loadProfile(Id);

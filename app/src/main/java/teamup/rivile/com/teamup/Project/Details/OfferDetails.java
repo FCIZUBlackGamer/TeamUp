@@ -34,7 +34,7 @@ public class OfferDetails implements Serializable {
     private Boolean Block;
     private Boolean IsDelete;
     private List<OfferDetailsRequirment> Requirments;
-    @SerializedName("State")
+    @SerializedName("States")
     private List<CapitalModel> Capitals;
     private List<ExperienceTypeModel> Tags;
 
