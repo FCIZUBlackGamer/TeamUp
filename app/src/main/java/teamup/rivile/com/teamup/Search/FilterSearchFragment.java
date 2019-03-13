@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -66,6 +67,7 @@ public class FilterSearchFragment extends Fragment {
     private List<CapitalModel> mLoadedCapitals = new ArrayList<>();
     private List<Department> mSelectedDepartments = null;
 
+    private CheckBox mEgyptCheckBox;
     ArrayList<CapitalModel> mSelectedCapitalModels = new ArrayList<>();
     CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
     private FilterModel filterModel;
@@ -99,6 +101,7 @@ public class FilterSearchFragment extends Fragment {
 
         mCapitalsRecyclerView = view.findViewById(R.id.recCapitals);
         mCapitalsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mEgyptCheckBox = view.findViewById(R.id.egypt);
 
         mProjectCostRangeSeekBar = view.findViewById(R.id.costSeekbar);
         mProjectCostRangeSeekBar.setRangeValues(0,100000);
@@ -140,25 +143,32 @@ public class FilterSearchFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
         Log.e("Search", "R");
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
+        ((DrawerActivity) getActivity()).setTitle(getString(R.string.advancedSearch));
 
         loadCategoriesAndCapitals();
-
-        ((DrawerActivity) getActivity()).hideFab();
-        ((DrawerActivity) getActivity()).hideSearchBar();
 
         mDepartmentsAdapter = new DepartmentsAdapter(null, (ArrayList<Department>) mSelectedDepartments);
         mDepartmentsRecyclerView.setAdapter(mDepartmentsAdapter);
 
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
         mCapitalsRecyclerView.setAdapter(mCapitalsRecyclerViewAdapter);
-
+        mEgyptCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (mLoadedCapitals != null) {
+                    mSelectedCapitalModels.addAll(mLoadedCapitals);
+                    mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(mSelectedCapitalModels);
+                }
+            } else {
+                mSelectedCapitalModels.clear();
+                mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(new ArrayList<>());
+            }
+        });
 
         mGoButton.setOnClickListener(v -> {
             mSelectedDepartments = mDepartmentsAdapter.getSelectedDepartments();
@@ -200,7 +210,6 @@ public class FilterSearchFragment extends Fragment {
 
             fragmentManager.beginTransaction().replace(R.id.frame, FragmentListProjects.setFilteredOffers(filterModel)).commit();
         });
-
     }
 
     private void loadCategoriesAndCapitals() {
@@ -222,7 +231,8 @@ public class FilterSearchFragment extends Fragment {
                         }
                         mDepartmentsAdapter.swapData(departments);
 
-                        mCapitalsRecyclerViewAdapter.swapData(response.body().getCapital());
+                        mLoadedCapitals.addAll(response.body().getCapital());
+                        mCapitalsRecyclerViewAdapter.swapData(mLoadedCapitals);
                     } else {
                         Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
                     }
