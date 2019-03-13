@@ -49,6 +49,9 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             }
         }
+
+        holder.image.setContentDescription(deals.get(position).getFullName());
+
         holder.image.setOnClickListener(v -> ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame,  FragmentProfileHome.setId(deals.get(position).getId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit());
     }
