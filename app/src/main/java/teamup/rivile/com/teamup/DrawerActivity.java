@@ -68,6 +68,7 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView.Adapter adapter;
     Realm realm;
     int userId = 0;
+    TextView image_name;
     /**
      * nav views
      */
@@ -194,6 +195,7 @@ public class DrawerActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         user_image = header.findViewById(R.id.imageView);
+        image_name = header.findViewById(R.id.image_name);
         user_name = header.findViewById(R.id.user_name);
         user_num_projects = header.findViewById(R.id.num_projects);
 
@@ -201,11 +203,34 @@ public class DrawerActivity extends AppCompatActivity
             UserDataBase User = realm1.where(LoginDataBase.class).findFirst().getUser();
             user_num_projects.setText(" " + getResources().getString(R.string.nav_header_subtitle) + " " + User.getNumProject());
             userId = User.getId();
-//            String[] name = User.getFullName().split(" ");
-//            user_name.setText(name[0]);
-            user_name.setText(User.getFullName());
+            String[] name = User.getFullName().split(" ");
+            user_name.setText(name[0]);
+//            user_name.setText(User.getFullName());
             if (User.getImage() != null && !User.getImage().isEmpty()) {
-                Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
+                try {
+                    if (User.getSocialId() != null){
+                        Picasso.get().load(User.getImage()).into(user_image);
+                    }else {
+                        Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
+                    }
+                    Log.e("EImage", User.getImage());
+                    Log.e("LOLImage", API.BASE_URL + User.getImage());
+                    image_name.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    image_name.setVisibility(View.VISIBLE);
+                    String[] sp = User.getFullName().split(" ");
+                    if (!User.getFullName().contains(" ")){
+                        image_name.setText(User.getFullName().charAt(0));
+                    }else if (sp.length > 0 && sp.length <= 2) {
+                        for (int j = 0; j < sp.length; j++) {
+                            image_name.append(sp[j]);
+                        }
+                    }else if (sp.length > 2){
+                        for (int j = 0; j < 2; j++) {
+                            image_name.append(sp[j]);
+                        }
+                    }
+                }
             }
         });
 
