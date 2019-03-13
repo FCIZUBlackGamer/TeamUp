@@ -703,7 +703,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             moneyProfitType.setText(getResources().getString(R.string.anotherKind));
         }
 
-        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedPlace()) {
+        if (Offers.getRequirments() != null && !Offers.getRequirments().isEmpty() && Offers.getRequirments().get(0).isNeedPlace()) {
             if (Offers.getRequirments().get(0).isNeedPlaceType()) {
                 placeType.setText(getResources().getString(R.string.avail));
             } else if (Offers.getProfitType() == 1) {
@@ -734,7 +734,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         }
 
         depName.setText(Offers.getCategoryName());
-        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedExperience()) {
+        if (Offers.getRequirments() != null && !Offers.getRequirments().isEmpty() && Offers.getRequirments().get(0).isNeedExperience()) {
             //Todo: load Data From Experience Model and load it to (exDep)
             experienceFrom.setText(String.valueOf(Offers.getRequirments().get(0).getExperienceFrom()));
             experienceTo.setText(String.valueOf(Offers.getRequirments().get(0).getExperienceTo()));
@@ -743,7 +743,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             experience.setVisibility(View.GONE);
             experienceSection.setVisibility(View.GONE);
         }
-        if (Offers.getRequirments() != null && Offers.getRequirments().get(0).isNeedMoney()) {
+        if (Offers.getRequirments() != null && !Offers.getRequirments().isEmpty() && Offers.getRequirments().get(0).isNeedMoney()) {
             moneyOutFrom.setText(String.valueOf(Offers.getProfitFrom()));
             moneyOutTo.setText(String.valueOf(Offers.getProfitTo()));
             moneyInFrom.setText(String.valueOf(Offers.getRequirments().get(0).getMoneyFrom()));
@@ -775,7 +775,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             }
         }
 
-        if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
+        if (!Offers.getRequirments().isEmpty() && Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
             for (int i = 0; i < Offers.getRequirments().get(0).getAttachmentModels().size(); i++) {
                 AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
                 Gson gson = new Gson();

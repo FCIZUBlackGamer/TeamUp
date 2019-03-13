@@ -188,14 +188,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                likeOffer(offersList.get(position).getId(), userId, 1, holder.like);
+                likeOffer(offersList.get(position).getId(), userId, 1, holder.num_likes);
             } else if (likeDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                likeOffer(offersList.get(position).getId(), userId, 0, holder.like);
+                likeOffer(offersList.get(position).getId(), userId, 0, holder.num_likes);
             }
 
         });

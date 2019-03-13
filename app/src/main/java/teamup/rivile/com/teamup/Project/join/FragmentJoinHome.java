@@ -695,7 +695,9 @@ public class FragmentJoinHome extends Fragment {
 
             if (offerDetailsJsonObject != null) {
                 OfferDetails details = offerDetailsJsonObject.getOffer();
-                OfferDetailsRequirment requirementModel = details.getRequirments().get(0);
+                OfferDetailsRequirment requirementModel = null;
+                if (!details.getRequirments().isEmpty())
+                    requirementModel = details.getRequirments().get(0);
                 if (requirementModel != null) {
                     placeRadioButton.setText(requirementModel.isNeedPlace() ?
                             getString(R.string.yes) : getString(R.string.no));
