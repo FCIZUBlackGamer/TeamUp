@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -52,6 +53,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private List<LikeModelDataBase> likeModelDataBase;
     private int ty;
     private int userId;
+    private int userState;
 
     public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper) {
         this.context = context;
@@ -69,6 +71,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+            userState = realm1.where(LoginDataBase.class).findFirst().getUser().getStatus();
         });
         Log.e("Internal Offer Size", offersList.size() + "");
         return new Vholder(view);
@@ -164,10 +167,17 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
 
         if (ty != 1 && ty != 2)
-            holder.make_offer.setOnClickListener(v -> fragmentManager.beginTransaction()
-                    .replace(R.id.frame,
-                            FragmentJoinHome.setOfferId(offersList.get(position).getId()))
-                    .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit());
+            holder.make_offer.setOnClickListener(v -> {
+                if (userState != 1) {
+                    //TODO: Show user alert dialog of what's happening here
+                    Toast.makeText(context, "لم يتم تفعيل حسابك بشكل كامل بعد.", Toast.LENGTH_SHORT).show();
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame,
+                                    FragmentJoinHome.setOfferId(offersList.get(position).getId()))
+                            .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit();
+                }
+            });
         else holder.make_offer.setEnabled(false);
 
         realm.executeTransaction(realm1 -> {
@@ -247,7 +257,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         void shareUrl(String url, String projectName);
     }
 
-    Bitmap getBitmap(Drawable drawable){
+    Bitmap getBitmap(Drawable drawable) {
         try {
             Bitmap bitmap;
 
@@ -283,7 +293,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
                     if (like == 1) {//dislike
-                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        int ll = Integer.parseInt(likeHolder.getText().toString());
                         likeHolder.setText(String.valueOf(ll - 1));
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
@@ -302,7 +312,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             }
                         });
                     } else {//like
-                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        int ll = Integer.parseInt(likeHolder.getText().toString());
                         likeHolder.setText(String.valueOf(ll + 1));
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
