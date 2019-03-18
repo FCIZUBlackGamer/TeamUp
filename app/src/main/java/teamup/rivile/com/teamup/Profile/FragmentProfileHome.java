@@ -311,6 +311,10 @@ public class FragmentProfileHome extends Fragment {
 
                     UserModel model = new UserModel();
 
+                    realm.executeTransaction(realm1 -> {
+                        model.setSocialId(realm1.where(LoginDataBase.class).findFirst().getUser().getSocialId());
+                    });
+
                     model.setId(id);
                     model.setFullName(ed_name.getText().toString());
                     model.setPhone(ed_phone.getText().toString());

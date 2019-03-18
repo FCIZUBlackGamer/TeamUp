@@ -26,6 +26,7 @@ public class API {
     final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "Offer/ListCat/";
     final public static String LOAD_ListOfCapTagCat_URL = BASE_URL + "Offer/ListOfCapTagCat/";
     final public static String LOAD_FAVOURITE_URL = BASE_URL + "Offer/ListbyIds";
+    final public static String FAVOURITE_URL = BASE_URL + "Offer/Favorite";
     final public static String LIKE_URL = BASE_URL + "Offer/Like";
     final public static String ForgetPassword_URL = BASE_URL + "Register/ForgetPassword";
     final public static String CheakCode_URL = BASE_URL + "Register/CheakCodePassword";

@@ -9,14 +9,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="5dp">
+        android:background="@color/colorPrimary">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            app:cardCornerRadius="5dp"
+            android:layout_margin="6dp"
+            app:cardCornerRadius="8dp"
             app:cardElevation="2dp">
 
             <RelativeLayout
@@ -74,22 +73,36 @@
                         android:layout_margin="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:src="@drawable/ic_dashboard_black_24dp"
+                        android:src="@drawable/color_image"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints" />
 
                     <ImageView
-                        android:id="@+id/report"
+                        android:id="@+id/offerOptions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:background="@color/colorAccent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@android:drawable/ic_dialog_alert" />
+                        android:src="@drawable/ic_option_menu" />
+
+                    <TextView
+                        android:id="@+id/image_name"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@android:color/white"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                 </android.support.constraint.ConstraintLayout>
@@ -108,38 +121,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="start"
-                            android:orientation="vertical">
-
-                            <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                                android:id="@+id/num_contributer"
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:drawableStart="@drawable/ic_dd"
-                                android:drawablePadding="5dp"
-                                android:gravity="center"
-                                android:maxLength="6"
-                                android:text="150"
-                                android:textSize="15sp" />
-
-                            <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                                android:id="@+id/num_likes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:drawableStart="@drawable/ic_like"
-                                android:drawablePadding="5dp"
-                                android:gravity="center"
-                                android:maxLength="6"
-                                android:text="150"
-                                android:textSize="15sp" />
-                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -212,10 +193,44 @@
 
 
                 <LinearLayout
+                    android:id="@+id/LIKECON"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/lin"
+                    android:layout_margin="10dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                        android:id="@+id/num_contributer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:drawableStart="@drawable/ic_dd"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:maxLength="6"
+                        android:text="150"
+                        android:textSize="15sp" />
+
+                    <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                        android:id="@+id/num_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawableStart="@drawable/ic_like"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:maxLength="6"
+                        android:text="150"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:id="@+id/s"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/lin"
+                    android:layout_below="@id/LIKECON"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -755,7 +770,7 @@
                             android:layout_margin="8dp"
                             android:background="@drawable/rounded_corner_edit_text"
                             android:fontFamily="@font/medium"
-                            android:gravity="end"
+                            android:gravity="start"
                             android:lines="3"
                             android:padding="10dp"
                             android:text="@string/placeDetail" />
@@ -778,7 +793,7 @@
                             android:layout_margin="8dp"
                             android:background="@drawable/rounded_corner_edit_text"
                             android:fontFamily="@font/medium"
-                            android:gravity="end"
+                            android:gravity="start"
                             android:lines="3"
                             android:padding="10dp"
                             android:text="@string/address" />
@@ -786,62 +801,63 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
                             android:layout_marginTop="10dp">
 
-                            <CheckBox
+                            <TextView
                                 android:id="@+id/placeState"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_gravity="end"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
                                 android:layout_marginEnd="20dp"
-                                android:editable="false"
+                                android:layout_toLeftOf="@id/tr"
                                 android:fontFamily="@font/medium"
-                                android:gravity="end|center_vertical"
+                                android:gravity="center"
                                 android:text="@string/male"
-                                android:checked="true"
-                                app:buttonTint="@color/backgroundDarkGreen" />
+                                android:textSize="18sp" />
 
                             <TextView
+                                android:id="@+id/tr"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentEnd="true"
-                                android:layout_gravity="center"
+                                android:layout_gravity="bottom"
                                 android:fontFamily="@font/medium"
-                                android:gravity="center"
+                                android:gravity="bottom"
                                 android:text="@string/placeStatus"
+                                android:textAlignment="gravity"
                                 android:textColor="#000"
-                                android:checked="true"
                                 android:textSize="16sp" />
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <CheckBox
-                                android:id="@+id/placeType"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_gravity="end"
-                                android:layout_marginEnd="20dp"
-                                android:editable="false"
-                                android:fontFamily="@font/medium"
-                                android:gravity="end|center_vertical"
-                                android:text="@string/male"
-                                android:checked="true"
-                                app:buttonTint="@color/backgroundDarkGreen" />
+                            android:orientation="horizontal"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp">
 
                             <TextView
+                                android:id="@+id/placeType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="20dp"
+                                android:layout_toLeftOf="@id/kk"
+                                android:fontFamily="@font/medium"
+                                android:gravity="center"
+                                android:text="@string/male"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/kk"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentEnd="true"
-                                android:layout_gravity="center"
+                                android:layout_gravity="bottom"
                                 android:fontFamily="@font/medium"
-                                android:gravity="center"
+                                android:gravity="bottom"
                                 android:text="@string/placeKind"
                                 android:textColor="#000"
                                 android:textSize="16sp" />
@@ -1015,7 +1031,7 @@
                         android:layout_margin="8dp"
                         android:background="@drawable/rounded_corner_edit_text"
                         android:fontFamily="@font/medium"
-                        android:gravity="end"
+                        android:gravity="start"
                         android:lines="3"
                         android:padding="10dp"
                         android:text="@string/exDes" />

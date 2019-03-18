@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,20 +48,24 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             if (deals.get(position) != null && deals.get(position).getImage() != null && !deals.get(position).getImage().isEmpty()) {
                 try {
-                    Picasso.get().load(API.BASE_URL + deals.get(position).getImage()).into(holder.image);
+                    if (deals.get(position).getSocialId() != null){
+                        Picasso.get().load(deals.get(position).getImage()).into(holder.image);
+                    }else {
+                        Picasso.get().load(API.BASE_URL + deals.get(position).getImage()).into(holder.image);
+                    }
                     holder.image_name.setVisibility(View.GONE);
                 } catch (Exception e) {
                     holder.image_name.setVisibility(View.VISIBLE);
                     String[] sp = deals.get(position).getFullName().split(" ");
                     if (sp.length == 1){
-                        holder.image_name.setText(deals.get(position).getFullName().charAt(0));
+                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
                     }else if (sp.length > 0 && sp.length <= 2) {
                         for (int j = 0; j < sp.length; j++) {
-                            holder.image_name.setText(sp[j]);
+                            holder.image_name.append(sp[j]+"");
                         }
                     }else if (sp.length > 2){
                         for (int j = 0; j < 2; j++) {
-                            holder.image_name.setText(sp[j]);
+                            holder.image_name.append(sp[j]+"");
                         }
                     }
                 }
@@ -69,14 +74,16 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
                     holder.image_name.setVisibility(View.VISIBLE);
                     String[] sp = deals.get(position).getFullName().split(" ");
                     if (!deals.get(position).getFullName().contains(" ")){
-                        holder.image_name.setText(deals.get(position).getFullName().charAt(0));
+                        Log.e("IIIII",deals.get(position).getFullName().charAt(0)+"");
+                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
+
                     }else if (sp.length > 0 && sp.length <= 2) {
                         for (int j = 0; j < sp.length; j++) {
-                            holder.image_name.append(sp[j]);
+                            holder.image_name.append(sp[j]+"");
                         }
                     }else if (sp.length > 2){
                         for (int j = 0; j < 2; j++) {
-                            holder.image_name.append(sp[j]);
+                            holder.image_name.append(sp[j]+"");
                         }
                     }
                 } catch (Exception e) {

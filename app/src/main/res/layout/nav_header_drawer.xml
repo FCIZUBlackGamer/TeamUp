@@ -35,7 +35,7 @@
             android:fontFamily="@font/medium"
             android:gravity="center"
             android:paddingTop="8dp"
-            android:text="T V"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 

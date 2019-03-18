@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="5dp"
         android:background="@android:color/white"
         android:orientation="vertical">
 
@@ -21,19 +21,43 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_image"
+            <RelativeLayout
                 android:layout_width="60dp"
+                android:id="@+id/rel"
                 android:layout_height="60dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_dashboard_black_24dp" />
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="start"
+                android:layout_alignParentRight="true">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/nav_header_desc"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    android:src="@drawable/color_image" />
+
+
+                <TextView
+                    android:id="@+id/image_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/medium"
+                    android:gravity="center"
+                    android:paddingTop="8dp"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/lin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_toStartOf="@id/user_image"
+                android:layout_toStartOf="@id/rel"
                 android:gravity="end"
                 android:orientation="vertical">
 
@@ -42,17 +66,16 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/tv_delete_report"
+                        android:id="@+id/tv_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:visibility="invisible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@drawable/ic_cancel" />
+                        tools:src="@drawable/ic_option_menu" />
 
                     <TextView
                         android:id="@+id/project_name"
@@ -72,7 +95,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/tv_delete_report" />
+                        app:layout_constraintStart_toEndOf="@+id/tv_options" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -108,46 +131,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="4dp"
-                android:gravity="start"
-                android:orientation="vertical">
-
-                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                    android:id="@+id/num_contributer"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_dd"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center"
-                    android:maxLength="6"
-                    android:text="150"
-                    android:textSize="15sp" />
-
-                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                    android:id="@+id/num_likes"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_like"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center"
-                    android:maxLength="6"
-                    android:text="150"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/con"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_weight="5"
                 android:orientation="vertical">
 
                 <TextView
@@ -204,6 +191,40 @@
             android:textSize="18sp" />
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                android:id="@+id/num_contributer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_dd"
+                android:drawablePadding="5dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:maxLength="6"
+                android:text="150"
+                android:textSize="15sp" />
+
+            <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                android:id="@+id/num_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_like"
+                android:drawablePadding="5dp"
+                android:fontFamily="@font/medium"
+                android:gravity="center"
+                android:maxLength="6"
+                android:text="150"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/exten"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,6 +242,7 @@
                 android:layout_weight="1"
                 android:drawableRight="@drawable/ic_share"
                 android:drawablePadding="10dp"
+                android:padding="3dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center"
                 android:text="المشاركة" />
@@ -233,6 +255,7 @@
                 android:layout_marginLeft="8dp"
                 android:drawableRight="@drawable/ic_chat"
                 android:drawablePadding="5dp"
+                android:padding="3dp"
                 android:fontFamily="@font/medium"
                 android:gravity="center"
                 android:text="ارسال عرض" />
@@ -242,6 +265,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="3dp"
                 android:drawableRight="@drawable/ic_favorite_border_black_24dp"
                 android:drawablePadding="5dp"
                 android:fontFamily="@font/medium"

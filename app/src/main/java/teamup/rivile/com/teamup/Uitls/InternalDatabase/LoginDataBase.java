@@ -39,6 +39,13 @@ public class LoginDataBase extends RealmObject {
         Likes.add(l);
     }
 
+    public void addFavuriteOffer(int offerId, int userId){
+        FavouriteDataBase l = new FavouriteDataBase();
+        l.setOfferId(offerId);
+        l.setUserId(userId);
+        Favorites.add(l);
+    }
+
     public void setLikes(RealmList<LikeModelDataBase> likes) {
         Likes = likes;
     }

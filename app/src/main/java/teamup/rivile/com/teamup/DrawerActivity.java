@@ -153,7 +153,7 @@ public class DrawerActivity extends AppCompatActivity
                     if (s.startsWith("#")) {
                         String word = s.replace("#", "");
                         fragmentManager.beginTransaction()
-                                .replace(R.id.frame, FragmentListProjects.setWord(0, word))
+                                .replace(R.id.frame, FragmentListProjects.setWord(1, word))
                                 .commit();
                     } else if (s.startsWith("@")) {
                         String word = s.replace("@", "");
@@ -162,7 +162,7 @@ public class DrawerActivity extends AppCompatActivity
                                 .commit();
                     } else {
                         fragmentManager.beginTransaction()
-                                .replace(R.id.frame, FragmentListProjects.setWord(1, s))
+                                .replace(R.id.frame, FragmentListProjects.setWord(0, s))
                                 .commit();
                     }
                 } else if (Whome.equals("MyProjects")) {/** Means Current fragment is MyProjects*/
@@ -213,21 +213,19 @@ public class DrawerActivity extends AppCompatActivity
                     }else {
                         Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
                     }
-                    Log.e("EImage", User.getImage());
-                    Log.e("LOLImage", API.BASE_URL + User.getImage());
                     image_name.setVisibility(View.GONE);
                 } catch (Exception e) {
                     image_name.setVisibility(View.VISIBLE);
                     String[] sp = User.getFullName().split(" ");
                     if (!User.getFullName().contains(" ")){
-                        image_name.setText(User.getFullName().charAt(0));
+                        image_name.setText(User.getFullName().charAt(0)+"");
                     }else if (sp.length > 0 && sp.length <= 2) {
                         for (int j = 0; j < sp.length; j++) {
-                            image_name.append(sp[j]);
+                            image_name.append(sp[j]+"");
                         }
                     }else if (sp.length > 2){
                         for (int j = 0; j < 2; j++) {
-                            image_name.append(sp[j]);
+                            image_name.append(sp[j]+"");
                         }
                     }
                 }

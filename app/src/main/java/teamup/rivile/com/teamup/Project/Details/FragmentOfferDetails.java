@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,11 +23,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,11 +63,13 @@ import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.FavouriteModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.ReportModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
@@ -92,7 +93,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     CircleImageView user_image;
     TextView project_name, user_name;
-    TextView proDetail/*, moneyDesc*/;
+    TextView proDetail/*, moneyDesc*/, image_name;
     CheckBox moneyProfitType, genderRequired, placeState, placeType;
     StepperIndicator educationLevel;
 
@@ -120,7 +121,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     static int projectId = 50;
     DownloadManager downloadManager;
-    ImageView report;
+    ImageView offerOptions;
     Realm realm;
     static int userId;
 
@@ -145,6 +146,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         moneySection = view.findViewById(R.id.moneySection);
         contributorsSection = view.findViewById(R.id.contributorsSection);
         place = view.findViewById(R.id.place);
+        image_name = view.findViewById(R.id.image_name);
         experience = view.findViewById(R.id.experience);
         placeSection = view.findViewById(R.id.placeSection);
         experienceSection = view.findViewById(R.id.experienceSection);
@@ -157,7 +159,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         tagSection = view.findViewById(R.id.tagSection);
         /** Input Views */
 
-        report = view.findViewById(R.id.report);
+        offerOptions = view.findViewById(R.id.offerOptions);
         user_image = view.findViewById(R.id.user_image);
         preview = view.findViewById(R.id.preview);
         project_name = view.findViewById(R.id.project_name);
@@ -238,16 +240,17 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).hideSearchBar();
 
-        if (type == FragmentListProjects.NORMAL) {
-            report.setImageResource(R.drawable.ic_report);
+//        if (type == FragmentListProjects.NORMAL) {
+//            offerOptions.setImageResource(R.drawable.ic_report);
+//
+//        } else if (type == FragmentListProjects.MINE) {
+//            offerOptions.setImageResource(R.drawable.ic_cancel);
+//
+//        }
 
-        } else if (type == FragmentListProjects.MINE) {
-            report.setImageResource(R.drawable.ic_cancel);
+        offerOptions.setOnClickListener(v -> {
 
-        }
-
-        report.setOnClickListener(v -> {
-            final Bitmap bmap = ((BitmapDrawable) report.getDrawable()).getBitmap();
+            final Bitmap bmap = ((BitmapDrawable) offerOptions.getDrawable()).getBitmap();
             Drawable myDrawable = getResources().getDrawable(R.drawable.ic_cancel);
             final Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
             if (bmap.sameAs(myLogo)) {
@@ -257,12 +260,12 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
 
             } else {
-                //TODO: Action Report Here
-
+                //TODO: Action Report Here`
                 makeReport(projectId, userId, getActivity());
             }
 
             if (type == FragmentListProjects.NORMAL) {
+                showNormalMenu(offerOptions, projectId);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 EditText textReport = new EditText(getActivity());
                 textReport.setHint(getString(R.string.reportText));
@@ -270,6 +273,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             } else if (type == FragmentListProjects.FAVOURITE) {
 
             } else if (type == FragmentListProjects.MINE) {
+                showMyMenu(offerOptions, projectId);
                 realm.executeTransaction(realm1 -> {
                     RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
                             .findAll();
@@ -478,6 +482,170 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     }
 
+    private void showNormalMenu(ImageView op) {
+        //creating a popup menu
+        PopupMenu popup = new PopupMenu(getActivity(), op);
+        //inflating menu from xml resource
+        popup.inflate(R.menu.normal_offer_option);
+        //adding click listener
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_add_to_favourite:
+                    //handle action_add_to_favourite click
+                    Drawable likeDrawable = op.getDrawable();
+                    if (likeDrawable.getConstantState()
+                            .equals(getActivity()
+                                    .getResources()
+                                    .getDrawable(R.drawable.ic_star_full)
+                                    .getConstantState())) {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(projectId, userId, 1);
+                    } else if (likeDrawable.getConstantState()
+                            .equals(getActivity()
+                                    .getResources()
+                                    .getDrawable(R.drawable.ic_star_empty)
+                                    .getConstantState())) {
+                        item.setIcon(R.drawable.ic_star_full);
+                        markFavourite(projectId, userId, 0);
+                    }
+                    break;
+                case R.id.action_alert:
+                    //handle action_alert click
+                    makeReport(projectId, userId, getActivity());
+                    break;
+            }
+            return false;
+        });
+        //displaying the popup
+        popup.show();
+    }
+
+    public void markFavourite(int offerId, int userId, int fav) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call;
+        FavouriteModel favouriteModel = new FavouriteModel();
+        favouriteModel.setOfferId(offerId);
+        favouriteModel.setUserId(userId);
+        favouriteModel.setStatus(fav);
+        Gson gson = new Gson();
+        Log.e("FavModel", gson.toJson(favouriteModel));
+        call = getOffers.favouriteOffer(gson.toJson(favouriteModel), API.URL_TOKEN);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String Offers = response.body();
+//                Log.e("Like", Offers);
+                if (Offers.equals("Success")) {
+                    if (fav == 1) {//remove favourite
+                        realm.executeTransaction(realm1 -> {
+                            if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
+                                RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
+                                for (int i = 0; i < l.size(); i++) {
+                                    Log.v("IdR", l.get(i).getId() + "");
+                                    Log.v("IdRR", l.get(i).getOfferId() + "");
+                                    Log.v("IdRRR", l.get(i).getUserId() + "");
+                                }
+
+                                l.deleteAllFromRealm();
+//                    realm1.commitTransaction();
+                            } else {
+                                Log.v("Status", "Not Found");
+                            }
+                        });
+                    } else {//mark favourite
+                        realm.executeTransaction(realm1 -> {
+                            realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
+                            //realm1.commitTransaction();
+                        });
+                    }
+                } else {
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+            }
+        });
+    }
+
+    public void deleteOffer(int offerId, int position) {
+        // Map is used to multipart the file using okhttp3.RequestBody
+        AppConfig appConfig = new AppConfig(API.BASE_URL);
+
+        Log.e("OfferId", offerId + "");
+        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                String Offers = response.body();
+                if (Offers.equals("Success")) {
+                    realm.beginTransaction();
+                    OfferDetailsDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
+                    l.deleteFromRealm();
+                    realm.commitTransaction();
+                    offersList.remove(position);
+                    notifyDataSetChanged();
+                } else {
+                    Log.e("Er", Offers);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                //textView.setText(t.getMessage());
+                Log.e("Erro", t.getMessage());
+            }
+        });
+    }
+
+    private void showMyMenu(ImageView op, int position) {
+        //creating a popup menu
+        PopupMenu popup = new PopupMenu(getActivity(), op);
+        //inflating menu from xml resource
+        popup.inflate(R.menu.my_offer_option_list);
+        //adding click listener
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_add_to_favourite:
+                    //handle action_add_to_favourite click
+                    Drawable likeDrawable = op.getDrawable();
+                    if (likeDrawable.getConstantState()
+                            .equals(getActivity()
+                                    .getResources()
+                                    .getDrawable(R.drawable.ic_star_full)
+                                    .getConstantState())) {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(offersList.get(position).getId(), userId, 1);
+                    } else if (likeDrawable.getConstantState()
+                            .equals(context
+                                    .getResources()
+                                    .getDrawable(R.drawable.ic_star_empty)
+                                    .getConstantState())) {
+                        item.setIcon(R.drawable.ic_star_full);
+                        markFavourite(offersList.get(position).getId(), userId, 0);
+                    }
+                    break;
+                case R.id.action_delete:
+                    //handle action_delete click
+                    reportOrDelete(op, position);
+                    break;
+            }
+            return false;
+        });
+        //displaying the popup
+        popup.show();
+    }
+
     public static void makeReport(int projectId, int userId, Context context) {
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -486,8 +654,6 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         EditText message_type = message.findViewById(R.id.editText);
         FloatingActionButton confirm = message.findViewById(R.id.confirm);
         ImageView close = message.findViewById(R.id.close);
-
-
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -771,8 +937,37 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             for (int i = 0; i < Offers.getUsers().size(); i++) {
                 if (Offers.getUserId().equals(Offers.getUsers().get(i).getId())) {
                     if (Offers.getUsers().get(i).getImage() != null && !Offers.getUsers().get(i).getImage().isEmpty()) {
-                        user_name.setText(Offers.getUsers().get(i).getFullName());
-                        Picasso.get().load(API.BASE_URL + Offers.getUsers().get(i).getImage()).into(user_image);
+//                        user_name.setText(Offers.getUsers().get(i).getFullName());
+//                        Picasso.get().load(API.BASE_URL + Offers.getUsers().get(i).getImage()).into(user_image);
+
+                        String[] name = Offers.getUsers().get(i).getFullName().split(" ");
+                        user_name.setText(name[0]);
+//            user_name.setText(User.getFullName());
+                        if (Offers.getUsers().get(i).getImage() != null && !Offers.getUsers().get(i).getImage().isEmpty()) {
+                            try {
+                                if (Offers.getUsers().get(i).getSocialId() != null) {
+                                    Picasso.get().load(Offers.getUsers().get(i).getImage()).into(user_image);
+                                } else {
+                                    Picasso.get().load(API.BASE_URL + Offers.getUsers().get(i).getImage()).into(user_image);
+                                }
+                                image_name.setVisibility(View.GONE);
+                            } catch (Exception e) {
+                                image_name.setVisibility(View.VISIBLE);
+                                String[] sp = Offers.getUsers().get(i).getFullName().split(" ");
+                                if (!Offers.getUsers().get(i).getFullName().contains(" ")) {
+                                    image_name.setText(Offers.getUsers().get(i).getFullName().charAt(0) + "");
+                                } else if (sp.length > 0 && sp.length <= 2) {
+                                    for (int j = 0; j < sp.length; j++) {
+                                        image_name.append(sp[j] + "");
+                                    }
+                                } else if (sp.length > 2) {
+                                    for (int j = 0; j < 2; j++) {
+                                        image_name.append(sp[j] + "");
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }

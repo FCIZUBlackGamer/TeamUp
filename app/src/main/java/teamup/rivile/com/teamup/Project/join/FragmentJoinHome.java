@@ -220,8 +220,8 @@ public class FragmentJoinHome extends Fragment {
         educationLevel.setEnabled(false);
 //        moneyInEditText.setEnabled(false);
         placeRadioButton.setEnabled(false);
-        placeKindRadioButton.setEnabled(false);
-        placeStateRadioButton.setEnabled(false);
+//        placeKindRadioButton.setEnabled(false);
+//        placeStateRadioButton.setEnabled(false);
         exRadioButton.setEnabled(false);
         experienceEditText.setEnabled(false);
         exDesc.setEnabled(false);
@@ -343,7 +343,7 @@ public class FragmentJoinHome extends Fragment {
         viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
 
-        delete = view.findViewById(R.id.tv_delete_report);
+        delete = view.findViewById(R.id.tv_options);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);
@@ -386,6 +386,8 @@ public class FragmentJoinHome extends Fragment {
             DepSection.setVisibility(View.GONE);
             tagSection.setVisibility(View.GONE);
             cap.setVisibility(View.GONE);
+            doc.setVisibility(View.GONE);
+            image.setVisibility(View.GONE);
             disableViews();
             accept_reject.setVisibility(View.VISIBLE);
             delete_req.setVisibility(View.VISIBLE);
@@ -475,11 +477,11 @@ public class FragmentJoinHome extends Fragment {
                 mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
             }
 
-            placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
-                    getString(R.string.avail) : getString(R.string.notAvail));
+//            placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
+//                    getString(R.string.avail) : getString(R.string.notAvail));
 
-            placeKindRadioButton.setText(model.isNeedPlaceType() ?
-                    getString(R.string.owned) : getString(R.string.rent));
+//            placeKindRadioButton.setText(model.isNeedPlaceType() ?
+//                    getString(R.string.owned) : getString(R.string.rent));
 
             exRadioButton.setText(model.isNeedExperience() ?
                     getString(R.string.yes) : getString(R.string.no));
@@ -797,11 +799,11 @@ public class FragmentJoinHome extends Fragment {
                         mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
                     }
 
-                    placeStateRadioButton.setText(requirementModel.isNeedPlaceStatus() ?
-                            getString(R.string.avail) : getString(R.string.notAvail));
+//                    placeStateRadioButton.setText(requirementModel.isNeedPlaceStatus() ?
+//                            getString(R.string.avail) : getString(R.string.notAvail));
 
-                    placeKindRadioButton.setText(requirementModel.isNeedPlaceType() ?
-                            getString(R.string.owned) : getString(R.string.rent));
+//                    placeKindRadioButton.setText(requirementModel.isNeedPlaceType() ?
+//                            getString(R.string.owned) : getString(R.string.rent));
 
                     exRadioButton.setText(requirementModel.isNeedExperience() ?
                             getString(R.string.yes) : getString(R.string.no));
