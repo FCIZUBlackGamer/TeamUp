@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -237,26 +238,21 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             switch (item.getItemId()) {
                 case R.id.action_add_to_favourite:
                     //handle action_add_to_favourite click
-                    Drawable likeDrawable = op.getDrawable();
-                    if (likeDrawable.getConstantState()
-                            .equals(context
-                                    .getResources()
-                                    .getDrawable(R.drawable.ic_star_full)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(offersList.get(position).getId(), userId, 1);
-                    } else if (likeDrawable.getConstantState()
-                            .equals(context
-                                    .getResources()
+                    if (item.getIcon()
+                            .getConstantState()
+                            .equals(context.getResources()
                                     .getDrawable(R.drawable.ic_star_empty)
                                     .getConstantState())) {
                         item.setIcon(R.drawable.ic_star_full);
                         markFavourite(offersList.get(position).getId(), userId, 0);
+                    } else {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(offersList.get(position).getId(), userId, 1);
                     }
                     break;
                 case R.id.action_alert:
                     //handle action_alert click
-                    reportOrDelete(op, position);
+                    reportOrDelete(item, position);
                     break;
             }
             return false;
@@ -275,26 +271,21 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             switch (item.getItemId()) {
                 case R.id.action_add_to_favourite:
                     //handle action_add_to_favourite click
-                    Drawable likeDrawable = op.getDrawable();
-                    if (likeDrawable.getConstantState()
-                            .equals(context
-                                    .getResources()
-                                    .getDrawable(R.drawable.ic_star_full)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(offersList.get(position).getId(), userId, 1);
-                    } else if (likeDrawable.getConstantState()
-                            .equals(context
-                                    .getResources()
+                    if (item.getIcon()
+                            .getConstantState()
+                            .equals(context.getResources()
                                     .getDrawable(R.drawable.ic_star_empty)
                                     .getConstantState())) {
                         item.setIcon(R.drawable.ic_star_full);
                         markFavourite(offersList.get(position).getId(), userId, 0);
+                    } else {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(offersList.get(position).getId(), userId, 1);
                     }
                     break;
                 case R.id.action_delete:
                     //handle action_delete click
-                    reportOrDelete(op, position);
+                    reportOrDelete(item, position);
                     break;
             }
             return false;
@@ -303,16 +294,15 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         popup.show();
     }
 
-    private void reportOrDelete(ImageView op, int position) {
-        //final Bitmap bmap = ((BitmapDrawable) holder.option_menu.getDrawable()).getBitmap();
-        Drawable myDrawable = context.getResources().getDrawable(R.drawable.ic_cancel);
-        Bitmap bmap = getBitmap(op.getDrawable());
-
-        final Bitmap myLogo = getBitmap(myDrawable);
-        if (bmap.sameAs(myLogo)) {
+    private void reportOrDelete(MenuItem op, int position) {
+        if (op.getIcon()
+                .getConstantState()
+                .equals(context.getResources()
+                        .getDrawable(R.drawable.ic_cancel)
+                        .getConstantState())) {//means delete action
             deleteOffer(offersList.get(position).getId(), position);
             notifyDataSetChanged();
-        } else {
+        } else {//make report
             //TODO: Action Report Here
             realm.executeTransaction(realm1 -> {
                 int userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
@@ -366,7 +356,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         void shareUrl(String url, String projectName);
     }
 
-    Bitmap getBitmap(Drawable drawable){
+    Bitmap getBitmap(Drawable drawable) {
         try {
             Bitmap bitmap;
 
@@ -402,7 +392,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
                     if (like == 1) {//dislike
-                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        int ll = Integer.parseInt(likeHolder.getText().toString());
                         likeHolder.setText(String.valueOf(ll - 1));
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
@@ -421,7 +411,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             }
                         });
                     } else {//like
-                        int ll= Integer.parseInt(likeHolder.getText().toString());
+                        int ll = Integer.parseInt(likeHolder.getText().toString());
                         likeHolder.setText(String.valueOf(ll + 1));
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);

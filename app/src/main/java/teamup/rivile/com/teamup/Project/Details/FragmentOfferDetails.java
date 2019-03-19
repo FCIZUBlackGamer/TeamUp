@@ -21,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -77,6 +78,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 public class FragmentOfferDetails extends Fragment implements ShareDialogFragment.Helper {
     private String mProjectURL = "";
     private String mProjectName = "";
+    private OfferDetailsJsonObject offerDetailsJsonObject = null;
 
     View view;
     RelativeLayout money, contributors;
@@ -265,7 +267,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             }
 
             if (type == FragmentListProjects.NORMAL) {
-                showNormalMenu(offerOptions, projectId);
+                showNormalMenu(offerOptions);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 EditText textReport = new EditText(getActivity());
                 textReport.setHint(getString(R.string.reportText));
@@ -492,21 +494,16 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             switch (item.getItemId()) {
                 case R.id.action_add_to_favourite:
                     //handle action_add_to_favourite click
-                    Drawable likeDrawable = op.getDrawable();
-                    if (likeDrawable.getConstantState()
-                            .equals(getActivity()
-                                    .getResources()
-                                    .getDrawable(R.drawable.ic_star_full)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(projectId, userId, 1);
-                    } else if (likeDrawable.getConstantState()
-                            .equals(getActivity()
-                                    .getResources()
+                    if (item.getIcon()
+                            .getConstantState()
+                            .equals(getActivity().getResources()
                                     .getDrawable(R.drawable.ic_star_empty)
                                     .getConstantState())) {
                         item.setIcon(R.drawable.ic_star_full);
                         markFavourite(projectId, userId, 0);
+                    } else {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(projectId, userId, 1);
                     }
                     break;
                 case R.id.action_alert:
@@ -592,8 +589,6 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     OfferDetailsDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
                     l.deleteFromRealm();
                     realm.commitTransaction();
-                    offersList.remove(position);
-                    notifyDataSetChanged();
                 } else {
                     Log.e("Er", Offers);
                 }
@@ -612,38 +607,64 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         //creating a popup menu
         PopupMenu popup = new PopupMenu(getActivity(), op);
         //inflating menu from xml resource
-        popup.inflate(R.menu.my_offer_option_list);
+        popup.inflate(R.menu.my_offer_option_detail);
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_add_to_favourite:
                     //handle action_add_to_favourite click
-                    Drawable likeDrawable = op.getDrawable();
-                    if (likeDrawable.getConstantState()
-                            .equals(getActivity()
-                                    .getResources()
-                                    .getDrawable(R.drawable.ic_star_full)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(offersList.get(position).getId(), userId, 1);
-                    } else if (likeDrawable.getConstantState()
-                            .equals(context
-                                    .getResources()
+                    if (item.getIcon()
+                            .getConstantState()
+                            .equals(getActivity().getResources()
                                     .getDrawable(R.drawable.ic_star_empty)
                                     .getConstantState())) {
                         item.setIcon(R.drawable.ic_star_full);
-                        markFavourite(offersList.get(position).getId(), userId, 0);
+                        markFavourite(projectId, userId, 0);
+                    } else {
+                        item.setIcon(R.drawable.ic_star_empty);
+                        markFavourite(projectId, userId, 1);
                     }
                     break;
                 case R.id.action_delete:
                     //handle action_delete click
-                    reportOrDelete(op, position);
+                    realm.executeTransaction(realm1 -> {
+                        int userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+                        FragmentOfferDetails.makeReport(projectId, userId, getActivity());
+                    });
+//                    reportOrDelete(item, position);
+                    break;
+                case R.id.action_edit_offer:
+                    if (offerDetailsJsonObject != null
+                            && offerDetailsJsonObject.getOffer() != null && offerDetailsJsonObject.getOffer().getRequirments() != null){
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.frame, FragmentJoinHome.setRequirement(offerDetailsJsonObject.getOffer().getRequirments().get(0), projectId))
+                                .addToBackStack(FragmentOfferDetails.class.getName())
+                                .commit();
+                    }
                     break;
             }
             return false;
         });
         //displaying the popup
         popup.show();
+    }
+
+    private void reportOrDelete(MenuItem op, int position) {
+        if (op.getIcon()
+                .getConstantState()
+                .equals(getActivity().getResources()
+                        .getDrawable(R.drawable.ic_cancel)
+                        .getConstantState())) {//means delete action
+            deleteOffer(projectId, position);
+
+        } else {//make report
+            //TODO: Action Report Here
+            realm.executeTransaction(realm1 -> {
+                int userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+                makeReport(projectId, userId, getActivity());
+            });
+
+        }
     }
 
     public static void makeReport(int projectId, int userId, Context context) {
@@ -723,6 +744,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     Gson gson = new Gson();
                     Log.e("GSON", gson.toJson(Offers.getOffer()));
                     fillOffers(Offers.getOffer());
+                    offerDetailsJsonObject = Offers;
                 } else {
 
                 }
