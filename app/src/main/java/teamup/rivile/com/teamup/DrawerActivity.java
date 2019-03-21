@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -68,7 +69,8 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView.Adapter adapter;
     Realm realm;
     int userId = 0;
-    TextView image_name;
+    TextView image_name
+    int userState = 0;
     /**
      * nav views
      */
@@ -308,12 +310,21 @@ public class DrawerActivity extends AppCompatActivity
 //
 //        });
 
+        realm.executeTransaction(realm1 -> {
+            userState = realm1.where(LoginDataBase.class).findFirst().getUser().getStatus();
+        });
+
         fab.setOnClickListener(view -> {
-            /** Half Pizza Animation */
-            hideSearchBar();
-            fab.setVisibility(View.GONE);
-            fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
-                    .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
+            if (userState != 1) {
+                //TODO: Show user alert dialog of what's happening here
+                Toast.makeText(this, "لم يتم تفعيل حسابك بشكل كامل بعد.", Toast.LENGTH_SHORT).show();
+            } else {
+                /** Half Pizza Animation */
+                hideSearchBar();
+                fab.setVisibility(View.GONE);
+                fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
+                        .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
+            }
         });
     }
 
@@ -452,8 +463,7 @@ public class DrawerActivity extends AppCompatActivity
             Log.e("Search", "H");
             fragmentTransaction.replace(R.id.frame, new FilterSearchFragment()).addToBackStack(FilterSearchFragment.class.getSimpleName()).commit();
             return true;
-        }
-        else if(id == R.id.action_settings){
+        } else if (id == R.id.action_settings) {
             hideFab();
             fragmentTransaction.replace(R.id.frame, new AccountSettingsFragment()).addToBackStack(AccountSettingsFragment.class.getSimpleName()).commit();
             return true;
