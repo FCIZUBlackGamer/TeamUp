@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +36,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
@@ -55,15 +58,17 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private FragmentManager fragmentManager;
     private Realm realm;
     private List<LikeModelDataBase> likeModelDataBase;
+    private List<FavouriteDataBase> favouriteDataBases;
     private int ty;
     private int userId;
     private int userState;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, int type, Helper helper) {
+    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, List<FavouriteDataBase> favouriteModel, int type, Helper helper) {
         this.context = context;
         this.offersList = talabats;
         ty = type;
         likeModelDataBase = likeModel;
+        favouriteDataBases = favouriteModel;
         mHelper = helper;
     }
 
@@ -81,6 +86,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         return new Vholder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
@@ -94,8 +100,39 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //
 //        }
 
+        holder.favourite.setOnClickListener(v -> {
+            Drawable favDrawable = holder.favourite.getDrawable(); //right drawable
+            if (favDrawable.getConstantState()
+                    .equals(context
+                            .getResources()
+                            .getDrawable(R.drawable.ic_star_full)
+                            .getConstantState())) {
+                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_empty));
+                markFavourite(offersList.get(position).getId(), userId, 1);
+                if (ty == FragmentListProjects.FAVOURITE){
+                    offersList.remove(position);
+                    notifyDataSetChanged();
+                    if (offersList.size() == 0){
+
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame, new FragmentEmpty())
+                                .commit();
+
+                    }
+                }
+            } else if (favDrawable.getConstantState()
+                    .equals(context
+                            .getResources()
+                            .getDrawable(R.drawable.ic_star_empty)
+                            .getConstantState())) {
+                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_full));
+                markFavourite(offersList.get(position).getId(), userId, 0);
+            }
+
+        });
+
         holder.option_menu.setOnClickListener(v -> {
-            if (ty == FragmentListProjects.NORMAL) {
+            if (ty == FragmentListProjects.NORMAL || ty == FragmentListProjects.FAVOURITE) {
                 showNormalMenu(holder.option_menu, position);
 
             } else if (ty == FragmentListProjects.MINE) {
@@ -105,7 +142,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         for (int i = 0; i < likeModelDataBase.size(); i++) {
             if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
-                holder.like.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+            }
+        }
+
+        for (int i = 0; i < favouriteDataBases.size(); i++) {
+            if (offersList.get(position).getId() == favouriteDataBases.get(i).getOfferId()) {
+                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_full));
             }
         }
 
@@ -140,9 +183,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             Log.e("GD", gson.toJson(offersList.get(position).getUsers().get(i)));
             Log.e("SGD", gson.toJson(offersList.get(position).getUsers()));
             if (offersList.get(position).getUserId().equals(offersList.get(position).getUsers().get(i).getId())) {
-                Log.i("ImageState", "Yes");
+
                 String imageUrl = offersList.get(position).getUsers().get(i).getImage();
                 if (imageUrl != null && !imageUrl.isEmpty()) {
+                    Log.i("ImageState", "YYY");
+                    Log.i("ImageState", offersList.get(position).getUsers().get(i).getImage());
                     if (offersList.get(position).getUsers().get(i).getSocialId() != null) {
                         Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
                     } else {
@@ -150,6 +195,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     }
                     holder.image_name.setVisibility(View.GONE);
                 } else {
+                    Log.i("ImageState", "NNN");
                     holder.image_name.setVisibility(View.VISIBLE);
                     String[] sp = offersList.get(position).getUsers().get(i).getFullName().split(" ");
                     if (!offersList.get(position).getUsers().get(i).getFullName().contains(" ")) {
@@ -246,20 +292,20 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.action_add_to_favourite:
-                    //handle action_add_to_favourite click
-                    if (item.getIcon()
-                            .getConstantState()
-                            .equals(context.getResources()
-                                    .getDrawable(R.drawable.ic_star_empty)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_full);
-                        markFavourite(offersList.get(position).getId(), userId, 0);
-                    } else {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(offersList.get(position).getId(), userId, 1);
-                    }
-                    break;
+//                case R.id.action_add_to_favourite:
+//                    //handle action_add_to_favourite click
+//                    if (item.getIcon()
+//                            .getConstantState()
+//                            .equals(context.getResources()
+//                                    .getDrawable(R.drawable.ic_star_empty)
+//                                    .getConstantState())) {
+//                        item.setIcon(R.drawable.ic_star_full);
+//                        markFavourite(offersList.get(position).getId(), userId, 0);
+//                    } else {
+//                        item.setIcon(R.drawable.ic_star_empty);
+//                        markFavourite(offersList.get(position).getId(), userId, 1);
+//                    }
+//                    break;
                 case R.id.action_alert:
                     //handle action_alert click
                     reportOrDelete(item, position);
@@ -279,20 +325,20 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.action_add_to_favourite:
-                    //handle action_add_to_favourite click
-                    if (item.getIcon()
-                            .getConstantState()
-                            .equals(context.getResources()
-                                    .getDrawable(R.drawable.ic_star_empty)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_full);
-                        markFavourite(offersList.get(position).getId(), userId, 0);
-                    } else {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(offersList.get(position).getId(), userId, 1);
-                    }
-                    break;
+//                case R.id.action_add_to_favourite:
+//                    //handle action_add_to_favourite click
+//                    if (item.getIcon()
+//                            .getConstantState()
+//                            .equals(context.getResources()
+//                                    .getDrawable(R.drawable.ic_star_empty)
+//                                    .getConstantState())) {
+//                        item.setIcon(R.drawable.ic_star_full);
+//                        markFavourite(offersList.get(position).getId(), userId, 0);
+//                    } else {
+//                        item.setIcon(R.drawable.ic_star_empty);
+//                        markFavourite(offersList.get(position).getId(), userId, 1);
+//                    }
+//                    break;
                 case R.id.action_delete:
                     //handle action_delete click
                     reportOrDelete(item, position);
@@ -335,7 +381,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         TextView like, share, make_offer, image_name;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
-        ImageView option_menu;
+        ImageView option_menu, favourite;
         TextView emptyView;
 
         Vholder(View itemView) {
@@ -343,6 +389,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             project_name = itemView.findViewById(R.id.project_name);
             project_tag = itemView.findViewById(R.id.project_tag);
             option_menu = itemView.findViewById(R.id.tv_options);
+            favourite = itemView.findViewById(R.id.favourite);
             project_desc = itemView.findViewById(R.id.project_desc);
             location = itemView.findViewById(R.id.location);
             image = itemView.findViewById(R.id.user_image);
@@ -472,6 +519,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                                 }
 
                                 l.deleteAllFromRealm();
+                                Log.i("Fav", "rem");
 //                    realm1.commitTransaction();
                             } else {
                                 Log.v("Status", "Not Found");
@@ -480,6 +528,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     } else {//mark favourite
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
+                            Log.i("Fav", "Done");
                             //realm1.commitTransaction();
                         });
                     }

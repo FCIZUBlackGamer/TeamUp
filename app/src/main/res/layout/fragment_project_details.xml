@@ -89,6 +89,16 @@
                         app:layout_constraintTop_toTopOf="parent"
                         android:src="@drawable/ic_option_menu" />
 
+                    <ImageView
+                        android:id="@+id/favourite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toEndOf="@id/offerOptions"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:src="@drawable/ic_star_empty" />
+
                     <TextView
                         android:id="@+id/image_name"
                         android:layout_width="60dp"
@@ -97,6 +107,7 @@
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/medium"
                         android:gravity="center"
+                        android:maxLength="16"
                         android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="24sp"

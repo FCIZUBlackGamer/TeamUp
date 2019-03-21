@@ -41,6 +41,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.CapitalModelDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
@@ -65,6 +66,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
+    List<FavouriteDataBase> favouriteDataBases;
 
     /**
      * @param id refers to Department Id from Home Page
@@ -131,6 +133,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 .findFirst();
 
         likeModelDataBase = loginData.getLikes();
+        favouriteDataBases = loginData.getFavorites();
         Log.e("UserId", loginData.getUser().getId() + "");
 //        Log.e("Type", ProType + "");
 
@@ -574,6 +577,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 adapter = new AdapterListOffers(getActivity(),
                         offers.getOffersList(),
                         likeModelDataBase,
+                        favouriteDataBases,
                         type,
                         this);
 

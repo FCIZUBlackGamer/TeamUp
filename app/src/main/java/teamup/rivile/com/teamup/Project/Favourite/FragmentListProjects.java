@@ -64,6 +64,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
+    List<FavouriteDataBase> favouriteDataBases;
 
 
     /**
@@ -102,8 +103,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 .findFirst();
 
         likeModelDataBase = loginData.getLikes();
+        favouriteDataBases = loginData.getFavorites();
         Log.e("UserId", loginData.getUser().getId() + "");
-        Log.e("Type", ProType + "");
+        Log.e("Type", FAVOURITE + "");
 
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
 
@@ -545,7 +547,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
-                        fillOffers(serverResponse, ProType);
+                        fillOffers(serverResponse, FAVOURITE);
                     } else {
                         ((DrawerActivity) getActivity()).hideSearchBar();
                         //Todo: showSearchBar Empty view
@@ -572,6 +574,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             adapter = new AdapterListOffers(getActivity(),
                     offers.getOffersList(),
                     likeModelDataBase,
+                    favouriteDataBases,
                     type,
                     this);
 

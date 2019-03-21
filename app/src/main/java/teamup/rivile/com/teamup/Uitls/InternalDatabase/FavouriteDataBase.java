@@ -7,6 +7,7 @@ public class FavouriteDataBase extends RealmObject {
     public int Id ;
     public int OfferId ;
     public int UserId ;
+    public int Status ;
 
     public FavouriteDataBase() {
     }
@@ -15,6 +16,14 @@ public class FavouriteDataBase extends RealmObject {
         Id = id;
         OfferId = offerId;
         UserId = userId;
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
+
+    public int getStatus() {
+        return Status;
     }
 
     public int getId() {

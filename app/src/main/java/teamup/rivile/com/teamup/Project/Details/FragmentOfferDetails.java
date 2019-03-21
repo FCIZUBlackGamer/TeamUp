@@ -10,10 +10,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -123,7 +125,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     static int projectId = 50;
     DownloadManager downloadManager;
-    ImageView offerOptions;
+    ImageView offerOptions, favourite;
     Realm realm;
     static int userId;
 
@@ -162,6 +164,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         /** Input Views */
 
         offerOptions = view.findViewById(R.id.offerOptions);
+        favourite = view.findViewById(R.id.favourite);
         user_image = view.findViewById(R.id.user_image);
         preview = view.findViewById(R.id.preview);
         project_name = view.findViewById(R.id.project_name);
@@ -231,10 +234,14 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+
         });
+
+
         loadOfferDetails(projectId);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onStart() {
         super.onStart();
@@ -242,6 +249,26 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).hideSearchBar();
 
+        realm.executeTransactionAsync(realm1 -> {
+            if(realm1.where(LoginDataBase.class)
+                    .findFirst()
+                    .getLikes()
+                    .where().equalTo("OfferId",projectId)
+                    .findAll().size() > 0){
+                Log.i("Like","d");
+                like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+            }
+
+            if(realm1.where(LoginDataBase.class)
+                    .findFirst()
+                    .getFavorites()
+                    .where().equalTo("OfferId",projectId)
+                    .findAll().size() > 0){
+                Log.i("Fav","g");
+                favourite.setImageDrawable(getActivity().getDrawable(R.drawable.ic_star_full));
+            }
+
+        });
 //        if (type == FragmentListProjects.NORMAL) {
 //            offerOptions.setImageResource(R.drawable.ic_report);
 //
@@ -268,9 +295,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
             if (type == FragmentListProjects.NORMAL) {
                 showNormalMenu(offerOptions);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                EditText textReport = new EditText(getActivity());
-                textReport.setHint(getString(R.string.reportText));
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                EditText textReport = new EditText(getActivity());
+//                textReport.setHint(getString(R.string.reportText));
                 //Todo: Report Action (view, inflate, webservice)
             } else if (type == FragmentListProjects.FAVOURITE) {
 
@@ -284,7 +311,25 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     realm1.commitTransaction();
                 });
             }
+        });
 
+        favourite.setOnClickListener(v -> {
+            Drawable favDrawable = favourite.getDrawable(); //right drawable
+            if (favDrawable.getConstantState()
+                    .equals(getActivity()
+                            .getResources()
+                            .getDrawable(R.drawable.ic_star_full)
+                            .getConstantState())) {
+                favourite.setImageDrawable(getActivity().getDrawable(R.drawable.ic_star_empty));
+                markFavourite(projectId, userId, 0);
+            } else if (favDrawable.getConstantState()
+                    .equals(getActivity()
+                            .getResources()
+                            .getDrawable(R.drawable.ic_star_empty)
+                            .getConstantState())) {
+                favourite.setImageDrawable(getActivity().getDrawable(R.drawable.ic_star_full));
+                markFavourite(projectId, userId, 1);
+            }
 
         });
 
@@ -367,7 +412,6 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             }
         });
 
-
         recFiles.setAdapter(filesAdapter);
 
         recImages.setAdapter(imagesAdapter);
@@ -399,7 +443,6 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             }
 
         });
-
 
         place.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,6 +496,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 }
             }
         });
+
         dep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -467,6 +511,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 }
             }
         });
+
         tags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -492,20 +537,20 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.action_add_to_favourite:
-                    //handle action_add_to_favourite click
-                    if (item.getIcon()
-                            .getConstantState()
-                            .equals(getActivity().getResources()
-                                    .getDrawable(R.drawable.ic_star_empty)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_full);
-                        markFavourite(projectId, userId, 0);
-                    } else {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(projectId, userId, 1);
-                    }
-                    break;
+//                case R.id.action_add_to_favourite:
+//                    //handle action_add_to_favourite click
+//                    if (item.getIcon()
+//                            .getConstantState()
+//                            .equals(getActivity().getResources()
+//                                    .getDrawable(R.drawable.ic_star_empty)
+//                                    .getConstantState())) {
+//                        item.setIcon(R.drawable.ic_star_full);
+//                        markFavourite(projectId, userId, 0);
+//                    } else {
+//                        item.setIcon(R.drawable.ic_star_empty);
+//                        markFavourite(projectId, userId, 1);
+//                    }
+//                    break;
                 case R.id.action_alert:
                     //handle action_alert click
                     makeReport(projectId, userId, getActivity());
@@ -536,7 +581,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 String Offers = response.body();
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
-                    if (fav == 1) {//remove favourite
+                    if (fav == 1) { //remove favourite
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
                                 RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
@@ -547,6 +592,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                                 }
 
                                 l.deleteAllFromRealm();
+                                Log.i("Fav", "rem");
 //                    realm1.commitTransaction();
                             } else {
                                 Log.v("Status", "Not Found");
@@ -555,13 +601,13 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     } else {//mark favourite
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
+                            Log.i("Fav", "Done");
                             //realm1.commitTransaction();
                         });
                     }
                 } else {
 
                 }
-
 
             }
 
@@ -611,20 +657,20 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.action_add_to_favourite:
-                    //handle action_add_to_favourite click
-                    if (item.getIcon()
-                            .getConstantState()
-                            .equals(getActivity().getResources()
-                                    .getDrawable(R.drawable.ic_star_empty)
-                                    .getConstantState())) {
-                        item.setIcon(R.drawable.ic_star_full);
-                        markFavourite(projectId, userId, 0);
-                    } else {
-                        item.setIcon(R.drawable.ic_star_empty);
-                        markFavourite(projectId, userId, 1);
-                    }
-                    break;
+//                case R.id.action_add_to_favourite:
+//                    //handle action_add_to_favourite click
+//                    if (item.getIcon()
+//                            .getConstantState()
+//                            .equals(getActivity().getResources()
+//                                    .getDrawable(R.drawable.ic_star_empty)
+//                                    .getConstantState())) {
+//                        item.setIcon(R.drawable.ic_star_full);
+//                        markFavourite(projectId, userId, 0);
+//                    } else {
+//                        item.setIcon(R.drawable.ic_star_empty);
+//                        markFavourite(projectId, userId, 1);
+//                    }
+//                    break;
                 case R.id.action_delete:
                     //handle action_delete click
                     realm.executeTransaction(realm1 -> {
@@ -772,7 +818,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         Log.v("Like", like+"");
         likeModel.setStatus(like);
         if (like == 1) {//dislike
-            realm.executeTransaction(realm1 -> {
+            realm.executeTransactionAsync(realm1 -> {
                 LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId",offerId).findFirst();
                 l.deleteFromRealm();
 //                realm1.commitTransaction();

@@ -75,6 +75,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <ImageView
+                        android:id="@+id/favourite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_star_empty"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_options"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:id="@+id/project_name"
                         android:layout_width="wrap_content"
@@ -83,7 +93,7 @@
                         android:layout_marginBottom="8dp"
                         android:fontFamily="@font/medium"
                         android:gravity="start"
-                        android:maxLength="20"
+                        android:maxLength="16"
                         android:maxLines="1"
                         android:text="مشروع مزرعه دواجن "
                         android:textColor="#000"

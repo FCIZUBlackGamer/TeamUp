@@ -65,6 +65,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
+    List<FavouriteDataBase> favouriteDataBases;
 
     public static FragmentListProjects setWord(String word) {
         Word = word;//Todo: Make Action
@@ -100,6 +101,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 .findFirst();
 
         likeModelDataBase = loginData.getLikes();
+        favouriteDataBases = loginData.getFavorites();
         Log.e("UserId", loginData.getUser().getId() + "");
 
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
@@ -116,6 +118,10 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             if (Word != null) {
                 RealmResults<OfferDetailsDataBase> filltered = loginDataBases.get(0).getOffers().where().contains("Name", Word).findAll();
                 Offer offers = convertResult(filltered);
+                fillOffers(offers, MINE);
+            }else {
+//                RealmResults<OfferDetailsDataBase> filltered = loginDataBases.get(0).getOffers();
+                Offer offers = convertList(loginDataBases.get(0).getOffers());
                 fillOffers(offers, MINE);
             }
         } else {
@@ -206,85 +212,42 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         List<Offers> offers = new ArrayList<>();
 
         for (int j = 0; j < offerDetailsDataBases.size(); j++) {
-            Offers offersItem = new Offers();
-            offersItem.setId(offerDetailsDataBases.get(j).getId());
-            Log.e("rrrrrrrrrrrr", offerDetailsDataBases.get(j).getEducationContributorLevel() + " gg");
-            offersItem.setEducationContributorLevel(offerDetailsDataBases.get(j).getEducationContributorLevel());
-            offersItem.setNumContributorTo(offerDetailsDataBases.get(j).getNumContributorTo());
-            offersItem.setNumContributorFrom(offerDetailsDataBases.get(j).getNumContributorFrom());
-            offersItem.setGenderContributor(offerDetailsDataBases.get(j).getGenderContributor());
-            offersItem.setProfitFrom(offerDetailsDataBases.get(j).getProfitFrom());
-            offersItem.setProfitType(offerDetailsDataBases.get(j).getProfitType());
-            offersItem.setName(offerDetailsDataBases.get(j).getName());
-            offersItem.setDescription(offerDetailsDataBases.get(j).getDescription());
-            offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(j).getAgeRequiredFrom());
-            offersItem.setAgeRequiredTo(offerDetailsDataBases.get(j).getAgeRequiredTo());
-            offersItem.setCategoryId(offerDetailsDataBases.get(j).getCategoryId());
-            offersItem.setCategoryName(offerDetailsDataBases.get(j).getCategoryName());
-            offersItem.setNumJoinOffer(offerDetailsDataBases.get(j).getNumJoinOffer());
-            offersItem.setNumLiks(offerDetailsDataBases.get(j).getNumLiks());
-            offersItem.setStatus(offerDetailsDataBases.get(j).getStatus());
-            offersItem.setUserId(offerDetailsDataBases.get(j).getUserId());
-
-            List<UserModel> userModels = new ArrayList<>();
-            for (int i = 0; i < offerDetailsDataBases.get(j).getUsers().size(); i++) {
-                UserModel userModel = new UserModel();
-                UserDataBase userDataBase = offerDetailsDataBases.get(j).getUsers().get(i);
-                userModel.setId(userDataBase.getId());
-                userModel.setFullName(userDataBase.getFullName());
-                userModel.setPassword(userDataBase.getPassword());
-                userModel.setGender(userDataBase.getGender());
-                userModel.setDateOfBirth(userDataBase.getDateOfBirth());
-                userModel.setPhone(userDataBase.getPhone());
-                userModel.setAddress(userDataBase.getAddress());
-                userModel.setImage(userDataBase.getImage());
-                userModel.setJobtitle(userDataBase.getJobtitle());
-                userModel.setStatus(userDataBase.getStatus());
-                userModel.setBio(userDataBase.getBio());
-                userModel.setMail(userDataBase.getMail());
-                userModel.setNumProject(userDataBase.getNumProject());
-                userModel.setCapitalId(userDataBase.getCapitalId());
-                userModel.setIdentityNum(userDataBase.getIdentityNum());
-                userModel.setSocialId(userDataBase.getSocialId());
-                userModel.setIdentityImage(userDataBase.getIdentityImage());
-                userModels.add(userModel);
+            Offers offers1 = new Offers();
+            OfferDetailsDataBase base = offerDetailsDataBases.get(j);
+            offers1.setUserId(base.getUserId());
+            offers1.setId(base.getId());
+//            offers1.setCategoryId(base.getCategoryId());
+//            offers1.setCategoryName(base.getCategoryName());
+            offers1.setDescription(base.getDescription());
+            offers1.setName(base.getName());
+            offers1.setAddress(base.getAddress());
+//            offers1.setAgeRequiredFrom(base.getAgeRequiredFrom());
+//            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
+            offers1.setDate(base.getDate());
+//            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
+            offers1.setNumContributorFrom(base.getNumContributorFrom());
+            offers1.setNumContributorTo(base.getNumContributorTo());
+            offers1.setGenderContributor(base.getGenderContributor());
+            offers1.setNumJoinOffer(base.getNumJoinOffer());
+            offers1.setNumLiks(base.getNumLiks());
+//            offers1.setProfitFrom(base.getProfitFrom());
+//            offers1.setProfitTo(base.getProfitTo());
+//            offers1.setProfitType(base.getProfitType());
+            offers1.setStatus(base.getStatus());
+            if (base.getUsers() != null && base.getUsers().size() > 0) {
+                List<UserModel> userModels = new ArrayList<>();
+                for (int i = 0; i < base.getUsers().size(); i++) {
+                    UserModel userModel = new UserModel();
+                    UserDataBase base1 = base.getUsers().get(i);
+                    userModel.setId(base1.getId());
+                    userModel.setFullName(base1.getFullName());
+                    userModel.setImage(base1.getImage());
+                    userModel.setId(base1.getId());
+                    userModels.add(userModel);
+                }
+                offers1.setUsers(userModels);
             }
-            offersItem.setUsers(userModels);
-
-            List<CapitalModel> capitalModels = new ArrayList<>();
-            for (int i = 0; i < offerDetailsDataBases.get(j).getCapitals().size(); i++) {
-                CapitalModel capitalModel = new CapitalModel();
-                CapitalModelDataBase capitalDataBase = offerDetailsDataBases.get(j).getCapitals().get(i);
-                capitalModel.setId(capitalDataBase.getId());
-                capitalModel.setName(capitalDataBase.getName());
-                capitalModels.add(capitalModel);
-            }
-            offersItem.setCapitals(capitalModels);
-
-            List<RequirmentModel> requirmentModels = new ArrayList<>();
-            for (int i = 0; i < offerDetailsDataBases.get(j).getRequirments().size(); i++) {
-                RequirmentModel requirmentModel = new RequirmentModel();
-                OfferDetailsRequirmentDataBase capitalDataBase = offerDetailsDataBases.get(j).getRequirments().get(i);
-                requirmentModel.setId(capitalDataBase.getId());
-                requirmentModel.setPlaceAddress(capitalDataBase.getPlaceAddress());
-                requirmentModel.setPlaceDescriptions(capitalDataBase.getPlaceDescriptions());
-                requirmentModel.setMoneyDescriptions(capitalDataBase.getMoneyDescriptions());
-                requirmentModel.setExperienceDescriptions(capitalDataBase.getExperienceDescriptions());
-                requirmentModel.setExperienceTypeId(capitalDataBase.getExperienceTypeId());
-                requirmentModel.setNeedPlaceStatus(capitalDataBase.isNeedPlaceStatus());
-                requirmentModel.setNeedPlaceType(capitalDataBase.isNeedPlaceType());
-                requirmentModel.setNeedPlace(capitalDataBase.isNeedPlace());
-                requirmentModel.setNeedMoney(capitalDataBase.isNeedMoney());
-                requirmentModel.setNeedExperience(capitalDataBase.isNeedExperience());
-                requirmentModel.setMoneyFrom(capitalDataBase.getMoneyFrom());
-                requirmentModel.setMoneyTo(capitalDataBase.getMoneyTo());
-                requirmentModel.setExperienceFrom(capitalDataBase.getExperienceFrom());
-                requirmentModel.setExperienceTo(capitalDataBase.getExperienceTo());
-                requirmentModel.setUserId(capitalDataBase.getUserId());
-                requirmentModels.add(requirmentModel);
-            }
-            offersItem.setRequirments(requirmentModels);
-            offers.add(offersItem);
+            offers.add(offers1);
         }
 
         offer.setOffersList(offers);
@@ -293,9 +256,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private Offer convertResult(RealmResults<OfferDetailsDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.serializeNulls();
-        Gson gson = gsonBuilder.create();
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        gsonBuilder.serializeNulls();
+//        Gson gson = gsonBuilder.create();
 //        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
         List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBases.size(); i++) {
@@ -451,6 +414,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             adapter = new AdapterListOffers(getActivity(),
                     offers.getOffersList(),
                     likeModelDataBase,
+                    favouriteDataBases,
                     type,
                     this);
 

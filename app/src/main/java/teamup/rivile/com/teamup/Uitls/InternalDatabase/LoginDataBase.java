@@ -43,6 +43,7 @@ public class LoginDataBase extends RealmObject {
         FavouriteDataBase l = new FavouriteDataBase();
         l.setOfferId(offerId);
         l.setUserId(userId);
+        l.setStatus(0);
         Favorites.add(l);
     }
 

@@ -30,7 +30,6 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
     public ContributerImages(Context context, List<UserModel> talabats, TextView emptyView) {
         this.context = context;
         this.deals = talabats;
-
         mEmptyView = emptyView;
     }
 
@@ -101,10 +100,10 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
     @Override
     public int getItemCount() {
         if (deals != null && deals.size() > 0) {
-            hideEmptyView();
+//            hideEmptyView();
             return deals.size();
         } else {
-            showEmptyView();
+//            showEmptyView();
             return 0;
         }
     }
