@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -345,7 +346,7 @@ public class Login extends Fragment {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
-                if (serverResponse != null) {
+                if (serverResponse != null && serverResponse.getUser().getId() != 0) {
                     Log.i("Response", gson.toJson(serverResponse));
                     realm.executeTransaction(realm1 -> {
                         realm1.insertOrUpdate(serverResponse);
@@ -356,6 +357,7 @@ public class Login extends Fragment {
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
                 }
                 activateViews();
             }

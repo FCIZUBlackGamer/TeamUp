@@ -171,4 +171,5 @@
     <string name="report">ابلاغ</string>
     <string name="delete_offer">حذف</string>
     <string name="edit_offer">تعديل</string>
+    <string name="login_failed_try_again">فشل تسجيل الدخول ، حاول مرة اخري.</string>
 </resources>
