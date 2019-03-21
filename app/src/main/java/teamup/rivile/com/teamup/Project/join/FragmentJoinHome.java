@@ -41,6 +41,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -85,6 +87,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentJoinHome extends Fragment {
 
@@ -105,6 +108,7 @@ public class FragmentJoinHome extends Fragment {
     RangeSeekBar moneyRequiredSeekbar;
     EditText moneyInFrom, moneyInTo;
     EditText moneyDesc;
+    EditText placeDesc;
 //    EditText moneyInEditText;
 
     FloatingActionButton arrowContributors, arrowMoney;
@@ -115,7 +119,9 @@ public class FragmentJoinHome extends Fragment {
     LinearLayout placeSection, experienceSection;
 
     RadioButton placeRadioButton, placeKindRadioButton, placeStateRadioButton, exRadioButton;
+    RadioGroup placeKindGroup, placeStateGroup;
     EditText experienceEditText, exDesc;
+    RadioButton avail, notAvail, owned, rent;
     //    RecyclerView exRec;
     FloatingActionButton arrowPlace, arrowExperience;
 
@@ -144,6 +150,7 @@ public class FragmentJoinHome extends Fragment {
     List<FilesModel> filesModels;
 
     TextView categoryTextView;
+    TextView image_name;
 
     FloatingActionButton arrowAttachments, arrowCapitals, arrowDepartments, arrowTags;
     RelativeLayout viewPreview;
@@ -157,6 +164,7 @@ public class FragmentJoinHome extends Fragment {
 
     private static int mOfferId = -1;
     private static int mUserId = 1;
+    Realm realm;
 
     private static ProgressDialog mProgressDialog;
 
@@ -212,8 +220,8 @@ public class FragmentJoinHome extends Fragment {
         educationLevel.setEnabled(false);
 //        moneyInEditText.setEnabled(false);
         placeRadioButton.setEnabled(false);
-        placeKindRadioButton.setEnabled(false);
-        placeStateRadioButton.setEnabled(false);
+//        placeKindRadioButton.setEnabled(false);
+//        placeStateRadioButton.setEnabled(false);
         exRadioButton.setEnabled(false);
         experienceEditText.setEnabled(false);
         exDesc.setEnabled(false);
@@ -246,6 +254,12 @@ public class FragmentJoinHome extends Fragment {
         moneyDesc = view.findViewById(R.id.moneyDesc);
         offerPref = view.findViewById(R.id.offerPref);
         project_name = view.findViewById(R.id.project_name);
+
+        avail = view.findViewById(R.id.avail);
+        notAvail = view.findViewById(R.id.notAvail);
+        owned = view.findViewById(R.id.owned);
+        rent = view.findViewById(R.id.rent);
+        image_name = view.findViewById(R.id.image_name);
 
         genderRadioButton = view.findViewById(R.id.rb_gender);
         profitTypeRadioButton = view.findViewById(R.id.rb_profit_type);
@@ -294,10 +308,11 @@ public class FragmentJoinHome extends Fragment {
         /** Input Views */
 
         placeRadioButton = view.findViewById(R.id.rb_place);
+        placeDesc = view.findViewById(R.id.placeDesc);
 
-        placeKindRadioButton = view.findViewById(R.id.rb_placeKind);
+        placeKindGroup = view.findViewById(R.id.placeKindGroup);
 
-        placeStateRadioButton = view.findViewById(R.id.rb_placeState);
+        placeStateGroup = view.findViewById(R.id.placeStateGroup);
 
         exRadioButton = view.findViewById(R.id.rb_ex);
 
@@ -328,7 +343,7 @@ public class FragmentJoinHome extends Fragment {
         viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
 
-        delete = view.findViewById(R.id.tv_delete_report);
+        delete = view.findViewById(R.id.tv_options);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);
@@ -355,6 +370,7 @@ public class FragmentJoinHome extends Fragment {
         tagsRec = view.findViewById(R.id.tagsRec);
 
         categoryTextView = view.findViewById(R.id.tv_category);
+        realm = Realm.getDefaultInstance();
 
         return view;
     }
@@ -370,6 +386,8 @@ public class FragmentJoinHome extends Fragment {
             DepSection.setVisibility(View.GONE);
             tagSection.setVisibility(View.GONE);
             cap.setVisibility(View.GONE);
+            doc.setVisibility(View.GONE);
+            image.setVisibility(View.GONE);
             disableViews();
             accept_reject.setVisibility(View.VISIBLE);
             delete_req.setVisibility(View.VISIBLE);
@@ -459,11 +477,11 @@ public class FragmentJoinHome extends Fragment {
                 mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
             }
 
-            placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
-                    getString(R.string.avail) : getString(R.string.notAvail));
+//            placeStateRadioButton.setText(model.isNeedPlaceStatus() ?
+//                    getString(R.string.avail) : getString(R.string.notAvail));
 
-            placeKindRadioButton.setText(model.isNeedPlaceType() ?
-                    getString(R.string.owned) : getString(R.string.rent));
+//            placeKindRadioButton.setText(model.isNeedPlaceType() ?
+//                    getString(R.string.owned) : getString(R.string.rent));
 
             exRadioButton.setText(model.isNeedExperience() ?
                     getString(R.string.yes) : getString(R.string.no));
@@ -611,6 +629,13 @@ public class FragmentJoinHome extends Fragment {
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
 
+        realm.executeTransaction(realm1 -> {
+            mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+            Log.e("UserIdDDDdDDD1", mUserId + "");
+        });
+
+        Log.e("UserIdDDDdDDD2", mUserId + "");
+
         setUpRecyclerViews();
 
         moneyDesc.addTextChangedListener(new TextWatcher() {
@@ -627,7 +652,7 @@ public class FragmentJoinHome extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 mRequirementModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                Log.e("Data", Offers.getDescription());
+//                Log.e("Data", Offers.getDescription());
             }
         });
 
@@ -636,6 +661,26 @@ public class FragmentJoinHome extends Fragment {
 
                 OfferDetails details = offerDetailsJsonObject.getOffer();
                 project_name.setText(details.getName());
+                if (details.getUsers() != null && !details.getUsers().isEmpty()) {
+                    try {
+                        Picasso.get().load(API.BASE_URL + details.getUsers().get(0).getImage()).into(userImage);
+                        image_name.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        image_name.setVisibility(View.VISIBLE);
+                        String[] sp = details.getUsers().get(0).getFullName().split(" ");
+                        if (!details.getUsers().get(0).getFullName().contains(" ")){
+                            image_name.setText(details.getUsers().get(0).getFullName().charAt(0));
+                        }else if (sp.length > 0 && sp.length <= 2) {
+                            for (int j = 0; j < sp.length; j++) {
+                                image_name.append(sp[j]);
+                            }
+                        }else if (sp.length > 2){
+                            for (int j = 0; j < 2; j++) {
+                                image_name.append(sp[j]);
+                            }
+                        }
+                    }
+                }
 
                 String profitType = null;
                 if (details.getProfitType() == 0) profitType = getString(R.string.day);
@@ -652,6 +697,7 @@ public class FragmentJoinHome extends Fragment {
                     if (details.getRequirments().get(0).isNeedMoney()) {
                         moneyRequiredSeekbar.setSelectedMaxValue(details.getRequirments().get(0).getMoneyTo());
                         moneyRequiredSeekbar.setSelectedMinValue(details.getRequirments().get(0).getMoneyFrom());
+                        moneyDesc.setText(details.getRequirments().get(0).getMoneyDescriptions());
                         moneyInTo.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -667,9 +713,11 @@ public class FragmentJoinHome extends Fragment {
                             public void afterTextChanged(Editable s) {
                                 if (!s.toString().isEmpty()) {
                                     mRequirementModel.setMoneyTo(Integer.valueOf(s.toString()));
+                                    moneyRequiredSeekbar.setSelectedMaxValue(Integer.valueOf(s.toString()));
                                 } else {
                                     moneyInTo.setText("0");
                                     mRequirementModel.setMoneyTo(0);
+                                    moneyRequiredSeekbar.setSelectedMaxValue(0);
                                 }
                             }
                         });
@@ -688,12 +736,32 @@ public class FragmentJoinHome extends Fragment {
                             public void afterTextChanged(Editable s) {
                                 if (!s.toString().isEmpty()) {
                                     mRequirementModel.setMoneyFrom(Integer.valueOf(s.toString()));
+                                    moneyRequiredSeekbar.setSelectedMinValue(Integer.valueOf(s.toString()));
                                 } else {
                                     moneyInFrom.setText("0");
                                     mRequirementModel.setMoneyFrom(0);
+                                    moneyRequiredSeekbar.setSelectedMinValue(0);
                                 }
                             }
                         });
+
+                        moneyDesc.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                mRequirementModel.setMoneyDescriptions(s.toString());
+                            }
+                        });
+
                     } else {
                         moneySection.setVisibility(View.GONE);
                         money.setVisibility(View.GONE);
@@ -731,11 +799,11 @@ public class FragmentJoinHome extends Fragment {
                         mRequirementModel.setPlaceAddress("Address Avoiding Null, Added From Join Offer");
                     }
 
-                    placeStateRadioButton.setText(requirementModel.isNeedPlaceStatus() ?
-                            getString(R.string.avail) : getString(R.string.notAvail));
+//                    placeStateRadioButton.setText(requirementModel.isNeedPlaceStatus() ?
+//                            getString(R.string.avail) : getString(R.string.notAvail));
 
-                    placeKindRadioButton.setText(requirementModel.isNeedPlaceType() ?
-                            getString(R.string.owned) : getString(R.string.rent));
+//                    placeKindRadioButton.setText(requirementModel.isNeedPlaceType() ?
+//                            getString(R.string.owned) : getString(R.string.rent));
 
                     exRadioButton.setText(requirementModel.isNeedExperience() ?
                             getString(R.string.yes) : getString(R.string.no));
@@ -759,6 +827,24 @@ public class FragmentJoinHome extends Fragment {
                                 experienceEditText.setText("0");
                                 mRequirementModel.setExperienceTo(0);
                             }
+                        }
+                    });
+                    placeDesc.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            mRequirementModel.setPlaceDescriptions(s.toString());
+
                         }
                     });
                     exDesc.addTextChangedListener(new TextWatcher() {
@@ -844,6 +930,44 @@ public class FragmentJoinHome extends Fragment {
         });
 
         // endregion
+
+        placeKindGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rent) {
+                mRequirementModel.setNeedPlaceType(true);
+            } else if (checkedId == R.id.owned) {
+                mRequirementModel.setNeedPlaceType(false);
+            }
+        });
+
+        placeStateGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.avail) {
+                mRequirementModel.setNeedPlaceType(true);
+            } else if (checkedId == R.id.notAvail) {
+                mRequirementModel.setNeedPlaceType(false);
+            }
+        });
+
+        placeDesc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+//                Log.e("ttt", teamup.rivile.com.teamup.Project.Add.StaticShit.Offers.getDescription());
+                mRequirementModel.setPlaceDescriptions(placeDesc.getText().toString());
+
+//                Log.e("r", mRequirementModel.getPlaceDescriptions());
+//                Toast.makeText(getActivity(), "dgjvhds", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //region Shrink And Expand
 

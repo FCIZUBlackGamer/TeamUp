@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Department;
 
 import android.content.Context;
+import android.support.design.card.MaterialCardView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -58,7 +59,7 @@ public class DepartmentAdapter extends BaseAdapter {
 
             final TextView name = (TextView) convertView.findViewById(R.id.dep_name);
             final ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            final RelativeLayout action = (RelativeLayout ) convertView.findViewById(R.id.action);
+            final MaterialCardView action = (MaterialCardView ) convertView.findViewById(R.id.action);
 
             final ViewHolder viewHolder = new ViewHolder(name, imageView, action);
             convertView.setTag(viewHolder);
@@ -89,10 +90,11 @@ public class DepartmentAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView name;
 //        TextView numProjects;
-        RelativeLayout action;
+//        RelativeLayout action;
         ImageView image;
+        MaterialCardView action;
 
-        public ViewHolder(TextView name, ImageView image, RelativeLayout action) {
+        public ViewHolder(TextView name, ImageView image, MaterialCardView action) {
             this.name = name;
             this.image = image;
             this.action = action;

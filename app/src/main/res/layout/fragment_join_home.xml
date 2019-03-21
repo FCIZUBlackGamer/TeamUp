@@ -30,7 +30,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_dashboard_black_24dp" />
+                    android:src="@drawable/color_image" />
 
                 <TextView
                     android:id="@+id/project_name"
@@ -55,6 +55,17 @@
                     android:background="@color/backgroundBlue"
                     android:visibility="gone"
                     app:srcCompat="@android:drawable/ic_menu_delete" />
+
+                <TextView
+                    android:id="@+id/image_name"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text=""
+                    android:textSize="24sp"
+                    android:fontFamily="@font/medium"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
 
@@ -575,68 +586,118 @@
                             tools:context=".Chart.FinishChart" />
                     </RelativeLayout>
 
+                    <EditText
+                        android:id="@+id/placeDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/rounded_corner_edit_text"
+                        android:fontFamily="@font/medium"
+                        android:gravity="right"
+                        android:hint="@string/placeDetail"
+                        android:lines="3"
+                        android:padding="10dp" />
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layoutDirection="rtl"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <RadioGroup
+                            android:id="@+id/placeStateGroup"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/notAvail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/notAvail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                            <RadioButton
+                                android:id="@+id/avail"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/avail"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                        </RadioGroup>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_margin="4dp"
+                            android:layout_weight="1"
                             android:fontFamily="@font/medium"
+                            android:gravity="center"
                             android:text="@string/placeStatus"
                             android:textColor="#000"
                             android:textSize="16sp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_placeState"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:layout_marginBottom="8dp"
-                            android:checked="true"
-                            android:enabled="false"
-                            android:fontFamily="@font/medium"
-                            android:text="@string/notAvail"
-                            android:textColor="#000"
-                            app:buttonTint="@color/backgroundDarkGreen" />
-
-
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layoutDirection="rtl"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <RadioGroup
+                            android:id="@+id/placeKindGroup"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rent"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/rent"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                            <RadioButton
+                                android:id="@+id/owned"
+                                style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:fontFamily="@font/medium"
+                                android:gravity="end|center_vertical"
+                                android:text="@string/owned"
+                                app:buttonTint="@color/backgroundDarkGreen" />
+
+                        </RadioGroup>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
                             android:fontFamily="@font/medium"
+                            android:gravity="center"
                             android:text="@string/placeKind"
                             android:textColor="#000"
                             android:textSize="16sp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_placeKind"
-                            style="@style/Base.Widget.AppCompat.CompoundButton.CheckBox"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:checked="true"
-                            android:enabled="false"
-                            android:fontFamily="@font/medium"
-                            android:text="@string/rent"
-                            android:textColor="#000"
-                            app:buttonTint="@color/backgroundDarkGreen" />
-
                     </LinearLayout>
 
                 </LinearLayout>
@@ -893,7 +954,7 @@
                             android:src="@drawable/ic_stairs" />
 
                         <ImageView
-                            android:id="@+id/tv_delete_report"
+                            android:id="@+id/tv_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@android:drawable/ic_menu_close_clear_cancel" />

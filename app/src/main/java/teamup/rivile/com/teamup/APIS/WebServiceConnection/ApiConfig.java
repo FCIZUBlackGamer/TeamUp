@@ -131,6 +131,10 @@ public interface ApiConfig {
 
 
     @FormUrlEncoded
+    @POST(API.FAVOURITE_URL)
+    Call<String> favouriteOffer(@Field("favorite") String favorite, @Field("token") String token);
+
+    @FormUrlEncoded
     @POST(API.LIKE_URL)
     Call<String> likeOffer(@Field("Like") String Like, @Field("token") String token);
 

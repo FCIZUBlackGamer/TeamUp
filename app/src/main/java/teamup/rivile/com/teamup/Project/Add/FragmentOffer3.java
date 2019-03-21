@@ -77,7 +77,6 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
@@ -198,7 +197,7 @@ public class FragmentOffer3 extends Fragment {
         image = view.findViewById(R.id.image);
         viewPreview = view.findViewById(R.id.view);
         preview = view.findViewById(R.id.preview);
-        delete = view.findViewById(R.id.tv_delete_report);
+        delete = view.findViewById(R.id.tv_options);
         recFiles = view.findViewById(R.id.recFiles);
         recImages = view.findViewById(R.id.recImages);
         recCapitals = view.findViewById(R.id.recCapitals);
@@ -259,7 +258,9 @@ public class FragmentOffer3 extends Fragment {
 
         realm.executeTransaction(realm1 -> {
             mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+            Log.e("UserIdDDDdDDD1", mUserId+"");
         });
+        Log.e("UserIdDDDdDDD2", mUserId+"");
 
 
         setUpRecyclerViews();
