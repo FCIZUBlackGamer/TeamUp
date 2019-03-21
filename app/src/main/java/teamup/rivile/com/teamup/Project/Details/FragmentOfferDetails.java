@@ -96,7 +96,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     CircleImageView user_image;
     TextView project_name, user_name;
     TextView proDetail/*, moneyDesc*/, image_name;
-    CheckBox moneyProfitType, genderRequired, placeState, placeType;
+    TextView moneyProfitType, genderRequired, placeState, placeType;
     StepperIndicator educationLevel;
 
     FloatingActionButton arrowContributors, arrowMoney, arrowTag, arrowDep, arrowAttach, arrowEx, arrowPlace;
@@ -252,19 +252,19 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         offerOptions.setOnClickListener(v -> {
 
-            final Bitmap bmap = ((BitmapDrawable) offerOptions.getDrawable()).getBitmap();
-            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_cancel);
-            final Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
-            if (bmap.sameAs(myLogo)) {
-                deleteOffer(projectId);
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame, new FragmentHome());
-                fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
-
-            } else {
-                //TODO: Action Report Here`
-                makeReport(projectId, userId, getActivity());
-            }
+//            final Bitmap bmap = ((BitmapDrawable) offerOptions.getDrawable()).getBitmap();
+//            Drawable myDrawable = getResources().getDrawable(R.drawable.ic_cancel);
+//            final Bitmap myLogo = ((BitmapDrawable) myDrawable).getBitmap();
+//            if (bmap.sameAs(myLogo)) {
+//                deleteOffer(projectId);
+//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, new FragmentHome());
+//                fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
+//
+//            } else {
+//                //TODO: Action Report Here`
+//                makeReport(projectId, userId, getActivity());
+//            }
 
             if (type == FragmentListProjects.NORMAL) {
                 showNormalMenu(offerOptions);
@@ -775,12 +775,12 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             realm.executeTransaction(realm1 -> {
                 LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId",offerId).findFirst();
                 l.deleteFromRealm();
-                realm1.commitTransaction();
+//                realm1.commitTransaction();
             });
         } else {//like
             realm.executeTransaction(realm1 -> {
                 realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
-                realm1.commitTransaction();
+//                realm1.commitTransaction();
             });
         }
         Gson gson = new Gson();

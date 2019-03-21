@@ -652,7 +652,7 @@ public class FragmentJoinHome extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 mRequirementModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                Log.e("Data", Offers.getDescription());
+//                Log.e("Data", Offers.getDescription());
             }
         });
 
