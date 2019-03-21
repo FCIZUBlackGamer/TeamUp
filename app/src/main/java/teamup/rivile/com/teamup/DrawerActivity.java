@@ -69,7 +69,7 @@ public class DrawerActivity extends AppCompatActivity
     RecyclerView.Adapter adapter;
     Realm realm;
     int userId = 0;
-    TextView image_name
+    TextView image_name;
     int userState = 0;
     /**
      * nav views
