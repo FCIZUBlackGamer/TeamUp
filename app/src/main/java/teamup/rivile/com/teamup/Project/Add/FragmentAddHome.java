@@ -25,7 +25,6 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
@@ -56,7 +55,10 @@ public class FragmentAddHome extends Fragment {
     public static FragmentAddHome openForEdit(int projectId, FloatingActionButton view) {
         mProjectId = projectId;
 
-        return setFab(view);
+        if (view != null)
+            return setFab(view);
+        else
+            return new FragmentAddHome();
     }
 
     View view;

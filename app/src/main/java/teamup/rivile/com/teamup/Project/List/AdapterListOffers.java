@@ -38,6 +38,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
@@ -325,20 +326,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-//                case R.id.action_add_to_favourite:
-//                    //handle action_add_to_favourite click
-//                    if (item.getIcon()
-//                            .getConstantState()
-//                            .equals(context.getResources()
-//                                    .getDrawable(R.drawable.ic_star_empty)
-//                                    .getConstantState())) {
-//                        item.setIcon(R.drawable.ic_star_full);
-//                        markFavourite(offersList.get(position).getId(), userId, 0);
-//                    } else {
-//                        item.setIcon(R.drawable.ic_star_empty);
-//                        markFavourite(offersList.get(position).getId(), userId, 1);
-//                    }
-//                    break;
+                case R.id.action_edit:
+                    //handle action_edit click
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame, FragmentAddHome.openForEdit(offersList.get(position).getId(), null))
+                            .addToBackStack(AdapterListOffers.class.getName())
+                            .commit();
+                    break;
                 case R.id.action_delete:
                     //handle action_delete click
                     reportOrDelete(item, position);
