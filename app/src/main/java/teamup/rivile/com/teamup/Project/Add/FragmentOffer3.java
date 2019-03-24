@@ -1382,11 +1382,11 @@ public class FragmentOffer3 extends Fragment {
         Call<Integer> response;
         if (mLoadedProjectWithAllDataLiveData != null) {
             OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
-            if (o != null)
+            if (o != null && offerDetailsDataBase != null)
                 offerDetailsDataBase.setId(o.getId());
         }
 
-        if (offerDetailsDataBase == null) {
+        if (Offers.getId() == 0) {
             //TODO: Set location instead of null here
             response = retrofitService.addOffer(API.URL_TOKEN,
                     offerString, requirementString, attachmentString, capitalString, tagsString, "null");
@@ -1401,7 +1401,7 @@ public class FragmentOffer3 extends Fragment {
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body() != 0) {
                         Log.e("OfferId", response.body()+"");
-                        Toast.makeText(getContext(), "Offer Added Successfully.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Success.", Toast.LENGTH_LONG).show();
                         offerDetailsDataBaseIN.setId(response.body());
                         realm.beginTransaction();
                         UserDataBase userDataBase = realm.where(LoginDataBase.class).findFirst().getUser();

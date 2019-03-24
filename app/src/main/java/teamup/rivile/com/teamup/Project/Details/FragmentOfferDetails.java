@@ -308,7 +308,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                             .findAll();
                     OfferDetailsDataBase offerDetailsDataBases = loginDataBases.get(0).getOffers().get(position);
                     offerDetailsDataBases.deleteFromRealm();
-                    realm1.commitTransaction();
+//                    realm1.commitTransaction();
                 });
             }
         });
