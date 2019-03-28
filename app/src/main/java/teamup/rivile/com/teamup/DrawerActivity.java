@@ -42,6 +42,7 @@ import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 import teamup.rivile.com.teamup.account.AccountSettingsFragment;
 
@@ -545,6 +546,9 @@ public class DrawerActivity extends AppCompatActivity
                 realm.executeTransaction(realm1 -> {
                     RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
                     results.deleteAllFromRealm();
+
+                    Settings settings = realm.where(Settings.class).findFirst();
+                    settings.deleteFromRealm();
 //                finish();
                     startActivity(new Intent(DrawerActivity.this, FirstActivity.class));
                     this.finish();

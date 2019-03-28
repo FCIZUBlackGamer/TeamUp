@@ -47,12 +47,12 @@
             android:id="@+id/textView18"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
             android:gravity="start"
             android:text="البريد الإلكتروني"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_user_full_name" />
 
         <EditText
@@ -78,12 +78,12 @@
             android:id="@+id/textView19"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
             android:gravity="start"
             android:text="الرقم القومي"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ed_email" />
 
         <EditText
@@ -110,12 +110,12 @@
             android:id="@+id/textView20"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             android:gravity="start"
             android:text="صورة الهوية"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ed_national_id" />
 
         <ImageView
@@ -139,13 +139,12 @@
             android:id="@+id/civ_edit_national_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:background="@drawable/background_circle"
             android:padding="2dp"
             android:src="@drawable/ic_edit_white"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/iv_national_image"
-            app:layout_constraintEnd_toEndOf="@+id/iv_national_image"
-            app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="@+id/iv_national_image"
             app:layout_constraintTop_toTopOf="@+id/iv_national_image"
             app:layout_constraintVertical_bias="0.90"
@@ -155,12 +154,12 @@
             android:id="@+id/textView17"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
             android:gravity="start"
             android:text="كلمة المرور الحالية"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_national_image" />
 
         <EditText
@@ -188,30 +187,30 @@
             android:id="@+id/iv_edit_password"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:src="@drawable/ic_edit_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView17"
-            app:layout_constraintEnd_toStartOf="@+id/textView17"
+            app:layout_constraintStart_toEndOf="@+id/textView17"
             app:layout_constraintTop_toTopOf="@+id/textView17" />
 
         <ImageView
             android:id="@+id/iv_edit_email"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:src="@drawable/ic_edit_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView18"
-            app:layout_constraintEnd_toStartOf="@+id/textView18"
+            app:layout_constraintStart_toEndOf="@+id/textView18"
             app:layout_constraintTop_toTopOf="@+id/textView18" />
 
         <ImageView
             android:id="@+id/iv_edit_national_id"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:src="@drawable/ic_edit_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView19"
-            app:layout_constraintEnd_toStartOf="@+id/textView19"
+            app:layout_constraintStart_toEndOf="@+id/textView19"
             app:layout_constraintTop_toTopOf="@+id/textView19" />
 
         <Switch
@@ -221,7 +220,7 @@
             android:text="@string/notificationSettings"
             android:checked="true"
             android:fontFamily="@font/medium"
-            android:gravity="end"
+            android:gravity="start"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:paddingTop="10dp"

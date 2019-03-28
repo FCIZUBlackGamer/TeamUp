@@ -336,7 +336,7 @@ public class MyService extends Service {
                         //SystemClock.sleep(3000);
                     }
 
-
+                    realm.executeTransactionAsync(realm1 -> realm1.insertOrUpdate(notificationModel));
 
 
                 } else {

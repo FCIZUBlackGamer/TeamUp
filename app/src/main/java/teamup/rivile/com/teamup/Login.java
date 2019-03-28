@@ -56,6 +56,7 @@ import teamup.rivile.com.teamup.Loading.LoadLogin;
 import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 
 public class Login extends Fragment {
     private static final int RC_SIGN_IN = 100;
@@ -395,6 +396,11 @@ public class Login extends Fragment {
                     });
 
                     realm.executeTransaction(realm1 -> {
+
+                        Settings settings = new Settings();
+                        settings.setNotificaionStatus(true);
+                        realm1.insertOrUpdate(settings);
+
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
                         Log.e("size", serverResponse.getOffers().size()+"");

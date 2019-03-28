@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class AccountSettingsFragment extends Fragment {
@@ -55,6 +57,8 @@ public class AccountSettingsFragment extends Fragment {
     private UserModel mUserModel;
 
     private ProgressDialog mProgressDialog;
+
+    private Switch sNotification;
 
     private Realm mRealm;
 
@@ -83,6 +87,8 @@ public class AccountSettingsFragment extends Fragment {
 
         mPasswordEditText = view.findViewById(R.id.ed_current_password);
         mEditPasswordImageView = view.findViewById(R.id.iv_edit_password);
+
+        sNotification = view.findViewById(R.id.sNotification);
 
         loadCurrentUserData();
 
@@ -125,7 +131,16 @@ public class AccountSettingsFragment extends Fragment {
         mUserModel = new UserModel();
         mRealm = Realm.getDefaultInstance();
 
-        mRealm.executeTransaction(realm -> {
+        mRealm.executeTransactionAsync(realm -> {
+
+            Settings settings = realm.where(Settings.class).findFirst();
+
+            if (settings.isNotificaionStatus()){
+                sNotification.setChecked(true);
+            }else {
+                sNotification.setChecked(false);
+            }
+
             LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
             if (loginDataBase != null) {
                 UserDataBase userDataBase = loginDataBase.getUser();
@@ -146,6 +161,23 @@ public class AccountSettingsFragment extends Fragment {
         super.onStart();
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
+
+        sNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (sNotification.isChecked()){
+                mRealm.executeTransaction(realm -> {
+                    Settings settings = realm.where(Settings.class).findFirst();
+                    settings.setNotificaionStatus(true);
+                    realm.insertOrUpdate(settings);
+                });
+            }else {
+                mRealm.executeTransaction(realm -> {
+                    Settings settings = realm.where(Settings.class).findFirst();
+                    settings.setNotificaionStatus(false);
+                    realm.insertOrUpdate(settings);
+                });
+            }
+        });
+
     }
 
     private void setUpClickListeners() {

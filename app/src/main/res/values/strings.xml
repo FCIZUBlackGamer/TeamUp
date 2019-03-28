@@ -181,4 +181,5 @@
     <string name="likesUrProjects"> اعجبوا بمشاريعك </string>
     <string name="congrateForConfirmingUrProjects"> مبارك، تم قبول مشاريع </string>
     <string name="nowUCanTraceUrProject"> الآن يمكنك متابعه تقدم مشروعك </string>
+    <string name="notificationSettings">الإشعارات</string>
 </resources>
