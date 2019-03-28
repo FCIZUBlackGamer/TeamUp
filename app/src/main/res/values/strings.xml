@@ -172,4 +172,13 @@
     <string name="delete_offer">حذف</string>
     <string name="edit_offer">تعديل</string>
     <string name="login_failed_try_again">فشل تسجيل الدخول ، حاول مرة اخري.</string>
+    <string name="registerInProgress">جارى التسجيل</string>
+    <string name="noti_body">تحقق من المشاريع على تيم اب</string>
+    <string name="and"> و </string>
+    <string name="others"> اخرون </string>
+    <string name="othersSendsRequestsToJoinOffer"> ارسلوا اليك مقترحات للانضمام لمشروعك </string>
+    <string name="congrateForAcceptingUrRequirement"> مبارك، تم قبول مقترحاتك للمشاركة فى مشاريع </string>
+    <string name="likesUrProjects"> اعجبوا بمشاريعك </string>
+    <string name="congrateForConfirmingUrProjects"> مبارك، تم قبول مشاريع </string>
+    <string name="nowUCanTraceUrProject"> الآن يمكنك متابعه تقدم مشروعك </string>
 </resources>

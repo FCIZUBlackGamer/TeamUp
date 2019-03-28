@@ -29,6 +29,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
@@ -72,6 +73,7 @@ public class FragmentIncommingRequirement extends Fragment {
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.perposedOffers));
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
+        ShowSpinnerTask.getManager(getFragmentManager());
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)

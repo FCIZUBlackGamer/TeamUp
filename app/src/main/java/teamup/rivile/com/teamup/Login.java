@@ -52,6 +52,8 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.ForgetPassword.FragmentSendCode;
+import teamup.rivile.com.teamup.Loading.LoadLogin;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
@@ -331,6 +333,7 @@ public class Login extends Fragment {
 
     private void login(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
+        LoadLogin.getManager(getFragmentManager());
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
@@ -373,6 +376,7 @@ public class Login extends Fragment {
 
     private void loginFb(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
+        LoadLogin.getManager(getFragmentManager());
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));

@@ -70,6 +70,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
@@ -177,7 +178,7 @@ public class FragmentProfileHome extends Fragment {
         ((DrawerActivity) getActivity()).hideFab();
 //        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
-
+        ShowSpinnerTask.getManager(getFragmentManager());
 //        viewPager.setAdapter(new pager(fragmentManager));
         adapter = new AdapterProfileProject(getActivity(), offersList);
         recyclerView.setAdapter(adapter);
@@ -339,7 +340,7 @@ public class FragmentProfileHome extends Fragment {
                     model.setImage(profObject.getImage());
 
 //                    model.setIdentityImage(profObject.getIdentityImage());
-
+                    ShowSpinnerTask.getManager(getFragmentManager());
                     editAction(model);
                     dialog.dismiss();
                 }

@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.Department;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 
 
@@ -65,6 +67,9 @@ public class FragmentHome extends Fragment {
         ((DrawerActivity) getActivity()).showSearchBar("Home");
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
+        ShowSpinnerTask.getManager(getFragmentManager());
+//        Intent intent = new Intent(getActivity(), NotifyService.class);
+//        getActivity().startService(intent);
         loadOffers();
     }
 

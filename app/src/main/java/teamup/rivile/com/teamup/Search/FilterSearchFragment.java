@@ -30,6 +30,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.Department;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
@@ -214,7 +215,7 @@ public class FilterSearchFragment extends Fragment {
 
     private void loadCategoriesAndCapitals() {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
-
+        ShowSpinnerTask.getManager(getFragmentManager());
         ApiConfig getDepartments = appConfig.getRetrofit().create(ApiConfig.class);
         Call<CapTagCat> call = getDepartments.getCapTagCat(API.URL_TOKEN);
         call.enqueue(new Callback<CapTagCat>() {

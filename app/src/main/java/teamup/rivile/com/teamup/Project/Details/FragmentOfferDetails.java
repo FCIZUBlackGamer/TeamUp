@@ -57,6 +57,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
@@ -248,7 +249,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).hideSearchBar();
-
+        ShowSpinnerTask.getManager(getFragmentManager());
         realm.executeTransactionAsync(realm1 -> {
             if(realm1.where(LoginDataBase.class)
                     .findFirst()

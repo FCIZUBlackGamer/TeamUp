@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 
 public class GoMap extends Fragment implements OnMapReadyCallback {
@@ -78,6 +79,7 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
+        ShowSpinnerTask.getManager(getFragmentManager());
         CustomAdapter mCustomAdapter = new CustomAdapter(getActivity(), imageArray);
         mCustomAdapter.setDropDownViewResource(R.layout.custom_spinner_row);
 

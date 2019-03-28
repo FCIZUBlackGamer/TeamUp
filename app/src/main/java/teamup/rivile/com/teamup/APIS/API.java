@@ -19,7 +19,7 @@ public class API {
     final public static String DELETE_OFFER_URL = BASE_URL + "Offer/Delete";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer";
     final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/"; //VIEW_PROJECT_URL
-    final public static String LIST_OFFERS_BY_PROJECT_URL = BASE_URL + "";
+    final public static String NOTIFICATION_URL = BASE_URL + "Offer/Notification";
     final public static String LIST_OFFERS_BY_DEPARTMENT_URL = BASE_URL + "";
     final public static String GENERAL_SEARCH_URL = BASE_URL + "Offer/BasicSearch";
     final public static String FILTTER_SEARCH_URL = BASE_URL + "Offer/Filter";

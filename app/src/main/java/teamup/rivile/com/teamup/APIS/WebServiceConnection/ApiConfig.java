@@ -5,19 +5,16 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
-import retrofit2.http.Streaming;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Department.DepartmentJson;
 import teamup.rivile.com.teamup.Profile.ProfileResponse;
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
+import teamup.rivile.com.teamup.Uitls.APIModels.NotificationModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
@@ -34,7 +31,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.HOME_URL)/** Initial Test #Done */
-        Call<List<Offers>> getOffersByCatAndCapId(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+    Call<List<Offers>> getOffersByCatAndCapId(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.HOME_URL)/** Initial Test #Done */
@@ -137,6 +134,10 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.LIKE_URL)
     Call<String> likeOffer(@Field("Like") String Like, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.NOTIFICATION_URL)
+    Call<NotificationModel> getNotification(@Field("Notification") String Notification, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ADD_OFFER_URL)

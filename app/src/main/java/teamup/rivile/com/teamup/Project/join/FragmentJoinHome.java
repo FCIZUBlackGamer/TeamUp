@@ -74,6 +74,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
@@ -234,6 +235,7 @@ public class FragmentJoinHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (requirmentModel == null && mOfferId != -1) {
+            ShowSpinnerTask.getManager(getFragmentManager());
             loadOffer();
         }
 
@@ -636,6 +638,7 @@ public class FragmentJoinHome extends Fragment {
 
         Log.e("UserIdDDDdDDD2", mUserId + "");
 
+        ShowSpinnerTask.getManager(getFragmentManager());
         setUpRecyclerViews();
 
         moneyDesc.addTextChangedListener(new TextWatcher() {

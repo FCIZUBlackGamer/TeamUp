@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -77,6 +78,16 @@ public class Register extends AppCompatActivity {
 
     private void register(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
+        View parentLayout = findViewById(android.R.id.content);
+        Snackbar.make(parentLayout, R.string.registerInProgress, Snackbar.LENGTH_LONG)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                .show();
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
 

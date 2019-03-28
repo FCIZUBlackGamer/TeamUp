@@ -32,6 +32,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
+import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
@@ -122,6 +123,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
         ((DrawerActivity) getActivity()).showFab();
 
+        ShowSpinnerTask.getManager(getFragmentManager());
 
 //        likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){
