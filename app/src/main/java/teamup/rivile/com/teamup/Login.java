@@ -91,15 +91,15 @@ public class Login extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-//        realm.executeTransaction(realm1 -> {
-//            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
-//            if (results.size() > 0){
-//                Gson gson = new Gson();
-//                Log.e("results", results.get(0).getUser().getId()+"");
-//                startActivity(new Intent(getActivity(), DrawerActivity.class));
-//                getActivity().finish();
-//            }
-//        });
+        realm.executeTransaction(realm1 -> {
+            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
+            if (results.size() > 0){
+                Gson gson = new Gson();
+                Log.e("results", results.get(0).getUser().getId()+"");
+                startActivity(new Intent(getActivity(), DrawerActivity.class));
+                getActivity().finish();
+            }
+        });
 
         userModel = new UserModel();
         signInButton.setOnClickListener(v -> {
@@ -396,11 +396,6 @@ public class Login extends Fragment {
                     });
 
                     realm.executeTransaction(realm1 -> {
-
-                        Settings settings = new Settings();
-                        settings.setNotificaionStatus(true);
-                        realm1.insertOrUpdate(settings);
-
                         realm1.insertOrUpdate(serverResponse);
                         Log.e("results", serverResponse.getUser().getId()+"");
                         Log.e("size", serverResponse.getOffers().size()+"");

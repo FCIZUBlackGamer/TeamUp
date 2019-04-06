@@ -547,8 +547,8 @@ public class DrawerActivity extends AppCompatActivity
                     RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
                     results.deleteAllFromRealm();
 
-                    Settings settings = realm.where(Settings.class).findFirst();
-                    settings.deleteFromRealm();
+                    RealmResults<Settings> settings = realm.where(Settings.class).findAll();
+                    settings.deleteAllFromRealm();
 //                finish();
                     startActivity(new Intent(DrawerActivity.this, FirstActivity.class));
                     this.finish();

@@ -22,6 +22,7 @@ import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
@@ -32,6 +33,7 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Model;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 
 public class MyService extends Service {
 
@@ -43,8 +45,7 @@ public class MyService extends Service {
     public MyService() {
         //super("onCreate");
         Log.e("onCreate", "onCreate");
-        realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(realm1 -> userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId());
+//        realm = Realm.getDefaultInstance();
 
         //Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
     }
@@ -53,17 +54,11 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        while (true) {
-            try {
-                realm.executeTransactionAsync(realm1 -> {
-                    notificationModel = realm1.where(teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel.class).findFirst();
-                });
-                SystemClock.sleep(50000);
-                getNotification(convertNotiModel(notificationModel));
-            } catch (Exception e) {
+//        while (true){
+//
+//        }
 
-            }
-        }
+//        }
     }
 
     private String convertNotiModel(NotificationModel notificationModel) {
@@ -121,11 +116,67 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Intent intent1 = new Intent();
-        intent.setAction("teamup.rivile.com.teamup.MY_NOTIFICATION");
-        intent.putExtra("data", "Notice me senpai!");
-        sendBroadcast(intent1);
-        return super.onStartCommand(intent, flags, startId);
+//        Intent intent1 = new Intent();
+//        intent.setAction("teamup.rivile.com.teamup.MY_NOTIFICATION");
+//        intent.putExtra("data", "Notice me senpai!");
+//        sendBroadcast(intent1);
+
+        try {
+            if(realm == null) {
+                Realm.init(context);
+                realm = Realm.getDefaultInstance();
+            }
+            realm.executeTransaction(realm1 -> {
+                if (realm1.where(LoginDataBase.class).findFirst() != null && realm1.where(LoginDataBase.class).findFirst().getUser() != null) {
+                    userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+//                    realm.executeTransaction(realm1 -> {
+                    if (realm1.where(teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel.class).findFirst() != null){
+                        notificationModel = realm1.where(teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel.class).findFirst();
+                    }else {
+                        Log.e("GG","Not okay");
+                        RealmResults<Settings> settingsRealmList = realm1.where(Settings.class).findAll();
+                        settingsRealmList.deleteAllFromRealm();
+
+                        Settings s = new Settings();
+                        s.setNotificaionStatus(true);
+                        realm1.insertOrUpdate(s);
+                    }
+//                    });
+//                    SystemClock.sleep(50000);
+                    getNotification(convertNotiModel(notificationModel));
+                }else {
+                    Log.e("GG","So bad");
+                }
+            });
+        }catch (Exception e){
+
+        }finally {
+            if(realm != null) {
+                realm.close();
+            }
+        }
+
+
+//        while (true) {
+//        try {
+//            if(realm == null) {
+//                Realm.init(context);
+//                realm = Realm.getDefaultInstance();
+//            }
+//            realm.executeTransaction(realm1 -> {
+//                if (realm1.where(teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel.class).findFirst() != null)
+//                notificationModel = realm1.where(teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationModel.class).findFirst();
+//            });
+//            SystemClock.sleep(50000);
+//            getNotification(convertNotiModel(notificationModel));
+//        } catch (Exception e) {
+//
+//        }finally {
+//            if(realm != null) {
+//                realm.close();
+//            }
+//        }
+        return START_STICKY;
     }
 
     @Override
@@ -204,7 +255,7 @@ public class MyService extends Service {
                 teamup.rivile.com.teamup.Uitls.APIModels.NotificationModel serverResponse = response.body();
                 if (serverResponse != null) {
 
-                    if (!serverResponse.getMyProjectStatus().isEmpty()) {
+                    if ( serverResponse.getMyProjectStatus() != null && !serverResponse.getMyProjectStatus().isEmpty()) {
                         /** receive MyProjectStatus **/
                         List<Model> mMyProjectStatus = serverResponse.getMyProjectStatus();
                         String body = getString(R.string.congrateForConfirmingUrProjects);
@@ -237,7 +288,7 @@ public class MyService extends Service {
                         SystemClock.sleep(3000);
                     }
 
-                    if (!serverResponse.getLike().isEmpty()) {
+                    if ( serverResponse.getLike() != null && !serverResponse.getLike().isEmpty()) {
                         /** receive Like **/
                         List<Model> mLike = serverResponse.getLike();
                         String body = "";
@@ -270,7 +321,7 @@ public class MyService extends Service {
                         SystemClock.sleep(3000);
                     }
 
-                    if (!serverResponse.getJoinOffer().isEmpty()) {
+                    if ( serverResponse.getJoinOffer() != null && !serverResponse.getJoinOffer().isEmpty()) {
                         /** receive JoinOffer **/
                         List<Model> mJoinOffer = serverResponse.getJoinOffer();
                         String body = "";
@@ -303,7 +354,7 @@ public class MyService extends Service {
                         SystemClock.sleep(3000);
                     }
 
-                    if (!serverResponse.getAcceptJoinOffer().isEmpty()) {
+                    if ( serverResponse.getAcceptJoinOffer() != null && !serverResponse.getAcceptJoinOffer().isEmpty()) {
                         /** receive AcceptJoinOffer **/
                         List<Model> mAcceptJoinOffer = serverResponse.getAcceptJoinOffer();
                         String body = getString(R.string.congrateForAcceptingUrRequirement);
@@ -336,6 +387,7 @@ public class MyService extends Service {
                         //SystemClock.sleep(3000);
                     }
 
+                    if (notificationModel != null)
                     realm.executeTransactionAsync(realm1 -> realm1.insertOrUpdate(notificationModel));
 
 

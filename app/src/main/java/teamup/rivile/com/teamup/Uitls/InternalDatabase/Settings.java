@@ -3,7 +3,7 @@ package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 import io.realm.RealmObject;
 
 public class Settings extends RealmObject {
-    boolean notificaionStatus;
+    private boolean notificaionStatus;
 
     public void setNotificaionStatus(boolean notificaionStatus) {
         this.notificaionStatus = notificaionStatus;

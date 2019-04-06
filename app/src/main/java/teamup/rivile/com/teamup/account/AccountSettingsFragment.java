@@ -2,11 +2,13 @@ package teamup.rivile.com.teamup.account;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Services.BroadcastNotificationReceiver;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
@@ -129,16 +132,21 @@ public class AccountSettingsFragment extends Fragment {
         mProgressDialog.show();
 
         mUserModel = new UserModel();
+        Realm.init(getActivity());
         mRealm = Realm.getDefaultInstance();
 
-        mRealm.executeTransactionAsync(realm -> {
+        mRealm.executeTransaction(realm -> {
 
             Settings settings = realm.where(Settings.class).findFirst();
 
-            if (settings.isNotificaionStatus()){
-                sNotification.setChecked(true);
+            if (settings != null &&  String.valueOf(realm.where(Settings.class).findFirst().isNotificaionStatus()).equals("true")){
+                getActivity().runOnUiThread(() -> {
+                    sNotification.setChecked(true);
+                });
             }else {
-                sNotification.setChecked(false);
+                getActivity().runOnUiThread(() -> {
+                    sNotification.setChecked(false);
+                });
             }
 
             LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
@@ -166,14 +174,31 @@ public class AccountSettingsFragment extends Fragment {
             if (sNotification.isChecked()){
                 mRealm.executeTransaction(realm -> {
                     Settings settings = realm.where(Settings.class).findFirst();
-                    settings.setNotificaionStatus(true);
-                    realm.insertOrUpdate(settings);
+                    if (settings == null){
+                        Settings s = new Settings();
+                        s.setNotificaionStatus(true);
+                        realm.insertOrUpdate(s);
+                    }else {
+                        Log.e("Not",  String.valueOf(settings.isNotificaionStatus()));
+                        settings.setNotificaionStatus(true);
+                        realm.insertOrUpdate(settings);
+                    }
+
+                    Intent broadcastIntent = new Intent(getContext(), BroadcastNotificationReceiver.class);
+                    getActivity().sendBroadcast(broadcastIntent);
                 });
             }else {
                 mRealm.executeTransaction(realm -> {
                     Settings settings = realm.where(Settings.class).findFirst();
-                    settings.setNotificaionStatus(false);
-                    realm.insertOrUpdate(settings);
+                    if (settings == null){
+                        Settings s = new Settings();
+                        s.setNotificaionStatus(false);
+                        realm.insertOrUpdate(s);
+                    }else {
+                        settings.setNotificaionStatus(false);
+                        realm.insertOrUpdate(settings);
+                    }
+
                 });
             }
         });
