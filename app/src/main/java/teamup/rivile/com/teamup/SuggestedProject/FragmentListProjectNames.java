@@ -1,7 +1,5 @@
 package teamup.rivile.com.teamup.SuggestedProject;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,13 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.Switch;
 
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +28,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
-import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
@@ -51,10 +45,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 
 public class FragmentListProjectNames extends Fragment {
-    private String mProjectURL = "";
-    private String mProjectName = "";
-    public static int MINE = 1;
-    public static int FAVOURITE = 2;
+
     public static int NORMAL = 0;
 
     RecyclerView recyclerView;
@@ -67,7 +58,7 @@ public class FragmentListProjectNames extends Fragment {
     static FilterModel filterModel;
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
-    List<FavouriteDataBase> favouriteDataBases;
+    Switch sProType;
 
     /**
      * @param id refers to Department Id from Home Page
@@ -112,8 +103,8 @@ public class FragmentListProjectNames extends Fragment {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
+        sProType = view.findViewById(R.id.sProType);
         recyclerView.setLayoutManager(layoutManager);
-
         return view;
     }
 
@@ -125,35 +116,27 @@ public class FragmentListProjectNames extends Fragment {
 
         ShowSpinnerTask.getManager(getFragmentManager());
 
-//        likeModelDataBase = new ArrayList<>();
-//        if (recyclerView != null ){
-//            recyclerView.setAdapter(null);
-//        }
         realm = Realm.getDefaultInstance();
-        //realm.beginTransaction();
+
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
 
         likeModelDataBase = loginData.getLikes();
-        favouriteDataBases = loginData.getFavorites();
         Log.e("UserId", loginData.getUser().getId() + "");
-//        Log.e("Type", ProType + "");
+
 
         if (DepId != -1) {
-//            ProType = -1;
             Type = -1;
             Word = null;
             loadOffers(DepId);
         }
 
         else if (Word != null) {
-//            ProType =-1;
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
         }
 
         else if (filterModel != null) {
-//            ProType = -1;
             Type = -1;
             Word = null;
             DepId = -1;
