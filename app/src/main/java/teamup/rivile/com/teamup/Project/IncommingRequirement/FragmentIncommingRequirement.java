@@ -146,7 +146,7 @@ public class FragmentIncommingRequirement extends Fragment {
 
                 }
             });
-//                fillOffers(FragmentListProjects.convertList(offerDetailsDataBases));
+//                fillOffers(FragmentListProjectNames.convertList(offerDetailsDataBases));
         } else {
             //Todo: showSearchBar Empty view (You haven't make offers yet)
 //                FragmentManager manager = getActivity().getSupportFragmentManager();

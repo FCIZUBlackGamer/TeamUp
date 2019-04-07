@@ -175,7 +175,7 @@ public class DrawerActivity extends AppCompatActivity
 
                 } else if (Whome.equals("Favourite")) {/** Means Current fragment is Favourite*/
 //                    fragmentManager.beginTransaction()
-//                            .replace(R.id.frame, teamup.rivile.com.teamup.Project.Favourite.FragmentListProjects.setWord(s))
+//                            .replace(R.id.frame, teamup.rivile.com.teamup.Project.Favourite.FragmentListProjectNames.setWord(s))
 //                            .commit();
                 }
                 return false;

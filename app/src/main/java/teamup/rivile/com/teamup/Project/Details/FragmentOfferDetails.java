@@ -270,10 +270,10 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             }
 
         });
-//        if (type == FragmentListProjects.NORMAL) {
+//        if (type == FragmentListProjectNames.NORMAL) {
 //            offerOptions.setImageResource(R.drawable.ic_report);
 //
-//        } else if (type == FragmentListProjects.MINE) {
+//        } else if (type == FragmentListProjectNames.MINE) {
 //            offerOptions.setImageResource(R.drawable.ic_cancel);
 //
 //        }

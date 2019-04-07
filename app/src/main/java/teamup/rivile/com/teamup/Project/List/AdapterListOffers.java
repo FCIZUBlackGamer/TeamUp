@@ -93,10 +93,10 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         holder.option_menu.setVisibility(View.VISIBLE);
 
-//        if (ty == FragmentListProjects.NORMAL) {
+//        if (ty == FragmentListProjectNames.NORMAL) {
 //            holder.option_menu.setImageResource(R.drawable.ic_report);
 //
-//        } else if (ty == FragmentListProjects.MINE) {
+//        } else if (ty == FragmentListProjectNames.MINE) {
 //            holder.option_menu.setImageResource(R.drawable.ic_cancel);
 //
 //        }
