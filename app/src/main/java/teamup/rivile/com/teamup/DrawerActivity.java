@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -36,9 +35,8 @@ import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
-import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
+//import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
-import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -111,9 +109,9 @@ public class DrawerActivity extends AppCompatActivity
                 case R.id.navigation_favourite_projects:
                     toolbar.setVisibility(View.VISIBLE);
                     navigationView.setCheckedItem(R.id.nav_favourite_projects);
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame, FragmentJoinHome.setOfferId(2))
-                            .commit();
+//                    fragmentManager.beginTransaction()
+//                            .replace(R.id.frame, FragmentJoinHome.setOfferId(2))
+//                            .commit();
                     return true;
                 case R.id.navigation_profile:
                     toolbar.setVisibility(View.VISIBLE);
@@ -316,16 +314,10 @@ public class DrawerActivity extends AppCompatActivity
         });
 
         fab.setOnClickListener(view -> {
-            if (userState != 1) {
-                //TODO: Show user alert dialog of what's happening here
-                Toast.makeText(this, "لم يتم تفعيل حسابك بشكل كامل بعد.", Toast.LENGTH_SHORT).show();
-            } else {
-                /** Half Pizza Animation */
-                hideSearchBar();
-                fab.setVisibility(View.GONE);
-                fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
-                        .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
-            }
+            hideSearchBar();
+            fab.setVisibility(View.GONE);
+            fragmentManager.beginTransaction().replace(R.id.frame, FragmentAddHome.setFab(fab))
+                    .addToBackStack(FragmentAddHome.class.getSimpleName()).commit();
         });
     }
 
@@ -513,9 +505,9 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
 //                navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
-                if (mIsCurrentFragmentIsHomeFragment)
-                    fragmentTransaction.addToBackStack(FragmentIncommingRequirement.class.getSimpleName());
+//                fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
+//                if (mIsCurrentFragmentIsHomeFragment)
+//                    fragmentTransaction.addToBackStack(FragmentIncommingRequirement.class.getSimpleName());
                 break;
 
             case R.id.nav_favourite_projects: // internal db

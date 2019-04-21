@@ -41,6 +41,30 @@ public interface ApiConfig {
     @POST(API.HOME_URL)/** Initial Test #Done */
     Call<Offer> getAllOffers(@Field("token") String token);
 
+    @FormUrlEncoded
+    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+    Call<Offer> getJoinedOffer(@Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+    Call<Offer> getSuccessOffer(@Field("token") String token);
+
     /**
      * @param Type {2: UserName, 1: ProjectName, 0: Tag}
      */
@@ -104,7 +128,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.ACCEPT_JOIN_OFFER_URL)
-    Call<String> acceptRequirement(@Field("OfferId") int OfferId, @Field("RequirementId") int RequirementId, @Field("token") String token);
+    Call<String> acceptRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.DeleteRequirement_URL)
@@ -112,7 +136,7 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.REFUSE_JOIN_OFFER_URL)
-    Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("RequirementId") int RequirementId, @Field("token") String token);
+    Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.DELETE_OFFER_URL)
@@ -143,7 +167,6 @@ public interface ApiConfig {
     @POST(API.ADD_OFFER_URL)
     Call<Integer> addOffer(@Field(API.PARAM_NAME_TOKEN) String token,
                            @Field(API.PARAM_NAME_OFFER) String offer,
-                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                            @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                            @Field(API.PARAM_NAME_CAPITAL) String capital,
                            @Field(API.PARAM_NAME_TAGS) String tags,
@@ -153,7 +176,6 @@ public interface ApiConfig {
     @POST(API.EDIT_OFFER_URL)
     Call<Integer> editOffer(@Field(API.PARAM_NAME_TOKEN) String token,
                             @Field(API.PARAM_NAME_OFFER) String offer,
-                            @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                             @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                             @Field(API.PARAM_NAME_CAPITAL) String capital,
                             @Field(API.PARAM_NAME_TAGS) String tags,
@@ -162,7 +184,6 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.JOIN_OFFER_URL)
     Call<String> joinOffer(@Field(API.PARAM_NAME_TOKEN) String token,
-                           @Field(API.PARAM_NAME_REQUIREMENT) String requirement,
                            @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
                            @Field(API.PARAM_NAME_OFFER_ID) String offerId);
 

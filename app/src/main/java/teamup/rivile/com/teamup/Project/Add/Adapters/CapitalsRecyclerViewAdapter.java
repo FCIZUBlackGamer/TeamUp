@@ -6,22 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 
 public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRecyclerViewAdapter.CapitalViewHolder> {
-    private List<CapitalModel> mCapitalModels;
+    private List<StateModel> mStateModels;
 
-    private ArrayList<CapitalModel> mSelectedCapitalModels;
+    private ArrayList<StateModel> mSelectedStateModels;
 
-    public CapitalsRecyclerViewAdapter(@NonNull List<CapitalModel> capitalModels, @NonNull ArrayList<CapitalModel> selectedCapitalModels) {
-        mCapitalModels = capitalModels;
-        mSelectedCapitalModels = selectedCapitalModels;
+    public CapitalsRecyclerViewAdapter(@NonNull List<StateModel> stateModels, @NonNull ArrayList<StateModel> selectedStateModels) {
+        mStateModels = stateModels;
+        mSelectedStateModels = selectedStateModels;
     }
 
     @NonNull
@@ -35,7 +34,7 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
 
     @Override
     public void onBindViewHolder(@NonNull CapitalViewHolder holder, int i) {
-        final CapitalModel model = mCapitalModels.get(i);
+        final StateModel model = mStateModels.get(i);
         holder.checkBox.setText(model.getName());
 
         holder.checkBox.setOnCheckedChangeListener(null);
@@ -44,14 +43,14 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         else holder.checkBox.setChecked(false);
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) mSelectedCapitalModels.add(model);
-            else mSelectedCapitalModels.remove(model);
+            if (isChecked) mSelectedStateModels.add(model);
+            else mSelectedStateModels.remove(model);
         });
     }
 
     @Override
     public int getItemCount() {
-        return mCapitalModels != null ? mCapitalModels.size() : 0;
+        return mStateModels != null ? mStateModels.size() : 0;
     }
 
     class CapitalViewHolder extends RecyclerView.ViewHolder {
@@ -64,25 +63,25 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         }
     }
 
-    public ArrayList<CapitalModel> getSelectedCapitals() {
-        return mSelectedCapitalModels;
+    public ArrayList<StateModel> getSelectedCapitals() {
+        return mSelectedStateModels;
     }
 
-    public void swapData(List<CapitalModel> capitalModels) {
-        mCapitalModels = capitalModels;
+    public void swapData(List<StateModel> stateModels) {
+        mStateModels = stateModels;
 
         notifyDataSetChanged();
     }
 
-    public void setSelectedCapitalModels(ArrayList<CapitalModel> mSelectedCapitalModels) {
-        this.mSelectedCapitalModels = mSelectedCapitalModels;
+    public void setSelectedCapitalModels(ArrayList<StateModel> mSelectedStateModels) {
+        this.mSelectedStateModels = mSelectedStateModels;
 
         notifyDataSetChanged();
     }
 
-    private boolean selected(CapitalModel model) {
-        for (int i = 0; i < mSelectedCapitalModels.size(); ++i) {
-            if (mSelectedCapitalModels.get(i).getName().equals(model.getName())) return true;
+    private boolean selected(StateModel model) {
+        for (int i = 0; i < mSelectedStateModels.size(); ++i) {
+            if (mSelectedStateModels.get(i).getName().equals(model.getName())) return true;
         }
         return false;
     }

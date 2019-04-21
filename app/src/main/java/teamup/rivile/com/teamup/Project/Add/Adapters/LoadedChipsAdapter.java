@@ -12,13 +12,14 @@ import java.util.ArrayList;
 
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
 
 public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.ChipsViewHolder> {
-    private ArrayList<ExperienceTypeModel> mTypeModels;
+    private ArrayList<TagsModel> mTypeModels;
 
     private ChipsAdapter mUserAddedDataAdapter;
 
-    public LoadedChipsAdapter(@Nullable ArrayList<ExperienceTypeModel> typeModels, @Nullable ChipsAdapter userAddedDataAdapter) {
+    public LoadedChipsAdapter(@Nullable ArrayList<TagsModel> typeModels, @Nullable ChipsAdapter userAddedDataAdapter) {
         if (typeModels != null)
             mTypeModels = typeModels;
         else mTypeModels = new ArrayList<>();
@@ -37,7 +38,7 @@ public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ChipsViewHolder holder, int i) {
-        final ExperienceTypeModel typeModel = mTypeModels.get(i);
+        final TagsModel typeModel = mTypeModels.get(i);
         holder.chip.setText(typeModel.getName());
 
         holder.chip.setOnCloseIconClickListener(v -> {
@@ -61,20 +62,20 @@ public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.
         }
     }
 
-    public void swapData(ArrayList<ExperienceTypeModel> typeModels) {
+    public void swapData(ArrayList<TagsModel> typeModels) {
         mTypeModels = typeModels;
 
         notifyDataSetChanged();
     }
 
-    public void addTypeModel(@NonNull ExperienceTypeModel typeModel) {
+    public void addTypeModel(@NonNull TagsModel typeModel) {
         mTypeModels.add(typeModel);
 
         notifyItemInserted(mTypeModels.size() - 1);
 //        notifyDataSetChanged();
     }
 
-    public void removeTypeModel(@NonNull ExperienceTypeModel typeModel) {
+    public void removeTypeModel(@NonNull TagsModel typeModel) {
         mTypeModels.remove(typeModel);
 
         notifyItemRemoved(mTypeModels.size() - 1);

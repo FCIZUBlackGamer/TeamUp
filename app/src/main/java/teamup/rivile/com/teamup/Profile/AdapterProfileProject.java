@@ -44,7 +44,7 @@ public class AdapterProfileProject extends RecyclerView.Adapter<AdapterProfilePr
 
         holder.project_name.setText(offersList.get(position).getName());
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
-        holder.nun_contributor.setText(offersList.get(position).getNumContributorTo() + "");
+        holder.nun_contributor.setText(offersList.get(position).getNumContributor() + "");
 
         if (offersList.get(position).getUsers() != null)
             for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {

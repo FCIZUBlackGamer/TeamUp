@@ -1,12 +1,11 @@
 package teamup.rivile.com.teamup.Project.Details;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class OfferDetails implements Serializable {
@@ -16,14 +15,8 @@ public class OfferDetails implements Serializable {
     private Integer CategoryId;
     private String CategoryName;
     private Integer ProfitType;
-    private Integer ProfitFrom;
-    private Integer ProfitTo;
-    private Integer NumContributorFrom;
-    private Integer NumContributorTo;
-    private Integer AgeRequiredFrom;
-    private Integer AgeRequiredTo;
+    private Integer NumContributor;
     private Integer GenderContributor;
-    private Integer EducationContributorLevel;
     private Integer UserId;
     private Integer NumLiks;
     private Integer NumJoinOffer;
@@ -33,126 +26,146 @@ public class OfferDetails implements Serializable {
     private Integer Status;
     private Boolean Block;
     private Boolean IsDelete;
-    private List<OfferDetailsRequirment> Requirments;
-    @SerializedName("States")
-    private List<CapitalModel> Capitals;
-    private List<ExperienceTypeModel> Tags;
+    private List<StateModel> States;
 
+    private Float ProjectDuration;
+    private List<TagsModel> Tags;
+    private Integer LocationId;
+    private Integer MinExperience;
+    private Float ProfitMoney;
+    private Float InitialCost;
+    private Float DirectExpenses;
+    private Float IndectExpenses;
+    public boolean NeedPlace ;
+    public boolean IsJoin ;
+    public List<AttachmentModel> Attachments;
 
-    public String getDate() {
-        return Date;
+    private Integer InitialCostType;
+    private Integer DirectExpensesType;
+    private Integer IndectExpensesType;
+    private Integer ProjectDurationType;
+    private Integer ProjectType;
+    public boolean IsSuccess ;
+    public boolean IsCompleted ;
+
+    public Integer getProjectType() {
+        return ProjectType;
     }
 
-    public void setDate(String date) {
-        Date = date;
+    public void setProjectType(Integer projectType) {
+        ProjectType = projectType;
     }
 
-    public Boolean getBlock() {
-        return Block;
+    public Integer getId() {
+        return Id;
     }
 
-    public Boolean getDelete() {
-        return IsDelete;
+    public Integer getInitialCostType() {
+        return InitialCostType;
     }
 
-    public List<ExperienceTypeModel> getTags() {
-        return Tags;
+    public void setInitialCostType(Integer initialCostType) {
+        InitialCostType = initialCostType;
     }
 
-    public void setTags(List<ExperienceTypeModel> tags) {
-        Tags = tags;
+    public Integer getDirectExpensesType() {
+        return DirectExpensesType;
     }
 
-    public OfferDetails() {
+    public void setDirectExpensesType(Integer directExpensesType) {
+        DirectExpensesType = directExpensesType;
     }
 
-    public void setBlock(Boolean block) {
-        Block = block;
+    public Integer getIndectExpensesType() {
+        return IndectExpensesType;
     }
 
-    public void setDelete(Boolean delete) {
-        IsDelete = delete;
+    public void setIndectExpensesType(Integer indectExpensesType) {
+        IndectExpensesType = indectExpensesType;
     }
 
-    public Boolean isBlock() {
-        return Block;
+    public Integer getProjectDurationType() {
+        return ProjectDurationType;
     }
 
-    public Boolean isDelete() {
-        return IsDelete;
+    public void setProjectDurationType(Integer projectDurationType) {
+        ProjectDurationType = projectDurationType;
     }
 
-    public void setStatus(Integer status) {
-        Status = status;
+    public boolean isSuccess() {
+        return IsSuccess;
     }
 
-    public void setAddress(String address) {
-        Address = address;
+    public void setSuccess(boolean success) {
+        IsSuccess = success;
     }
 
-    public void setCapitals(List<CapitalModel> capitals) {
-        Capitals = capitals;
+    public boolean isCompleted() {
+        return IsCompleted;
     }
 
-    public void setRequirments(List<OfferDetailsRequirment> requirments) {
-        Requirments = requirments;
+    public void setCompleted(boolean completed) {
+        IsCompleted = completed;
     }
 
-    public String getAddress() {
-        return Address;
+    public void setId(Integer id) {
+        Id = id;
     }
 
-    public Integer getStatus() {
-        return Status;
+    public String getName() {
+        return Name;
     }
 
-    public List<CapitalModel> getCapitals() {
-        return Capitals;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public List<OfferDetailsRequirment> getRequirments() {
-        return Requirments;
+    public String getDescription() {
+        return Description;
     }
 
-    public void setNumJoinOffer(Integer numJoinOffer) {
-        NumJoinOffer = numJoinOffer;
+    public void setDescription(String description) {
+        Description = description;
     }
 
-    public void setNumLiks(Integer numLiks) {
-        NumLiks = numLiks;
-    }
-
-    public void setUsers(List<UserModel> users) {
-        Users = users;
-    }
-
-    public Integer getNumJoinOffer() {
-        return NumJoinOffer;
-    }
-
-    public Integer getNumLiks() {
-        return NumLiks;
-    }
-
-    public List<UserModel> getUsers() {
-        return Users;
+    public Integer getCategoryId() {
+        return CategoryId;
     }
 
     public void setCategoryId(Integer categoryId) {
         CategoryId = categoryId;
     }
 
-    public void setAgeRequiredFrom(Integer ageRequiredFrom) {
-        AgeRequiredFrom = ageRequiredFrom;
+    public String getCategoryName() {
+        return CategoryName;
     }
 
     public void setCategoryName(String categoryName) {
         CategoryName = categoryName;
-
     }
 
-    public void setAgeRequiredTo(Integer ageRequiredTo) {
-        AgeRequiredTo = ageRequiredTo;
+    public Integer getProfitType() {
+        return ProfitType;
+    }
+
+    public void setProfitType(Integer profitType) {
+        ProfitType = profitType;
+    }
+
+    public Integer getNumContributor() {
+        return NumContributor;
+    }
+
+    public void setNumContributor(Integer numContributor) {
+        NumContributor = numContributor;
+    }
+
+    public Integer getGenderContributor() {
+        return GenderContributor;
+    }
+
+    public void setGenderContributor(Integer genderContributor) {
+        GenderContributor = genderContributor;
     }
 
     public Integer getUserId() {
@@ -163,99 +176,163 @@ public class OfferDetails implements Serializable {
         UserId = userId;
     }
 
-    public void setDescription(String description) {
-        Description = description;
+    public Integer getNumLiks() {
+        return NumLiks;
     }
 
-    public void setEducationContributorLevel(Integer educationContributorLevel) {
-        EducationContributorLevel = educationContributorLevel;
+    public void setNumLiks(Integer numLiks) {
+        NumLiks = numLiks;
     }
 
-    public void setGenderContributor(Integer genderContributor) {
-        GenderContributor = genderContributor;
+    public Integer getNumJoinOffer() {
+        return NumJoinOffer;
     }
 
-    public void setId(Integer id) {
-        Id = id;
+    public void setNumJoinOffer(Integer numJoinOffer) {
+        NumJoinOffer = numJoinOffer;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public List<UserModel> getUsers() {
+        return Users;
     }
 
-    public void setNumContributorFrom(Integer numContributorFrom) {
-        NumContributorFrom = numContributorFrom;
+    public void setUsers(List<UserModel> users) {
+        Users = users;
     }
 
-    public void setNumContributorTo(Integer numContributorTo) {
-        NumContributorTo = numContributorTo;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setProfitFrom(Integer profitFrom) {
-        ProfitFrom = profitFrom;
+    public void setAddress(String address) {
+        Address = address;
     }
 
-    public void setProfitTo(Integer profitTo) {
-        ProfitTo = profitTo;
+    public String getDate() {
+        return Date;
     }
 
-    public void setProfitType(Integer profitType) {
-        ProfitType = profitType;
+    public void setDate(String date) {
+        Date = date;
     }
 
-    public Integer getAgeRequiredFrom() {
-        return AgeRequiredFrom;
+    public Integer getStatus() {
+        return Status;
     }
 
-    public Integer getAgeRequiredTo() {
-        return AgeRequiredTo;
+    public void setStatus(Integer status) {
+        Status = status;
     }
 
-    public Integer getCategoryId() {
-        return CategoryId;
+    public Boolean getBlock() {
+        return Block;
     }
 
-    public Integer getEducationContributorLevel() {
-        return EducationContributorLevel;
+    public void setBlock(Boolean block) {
+        Block = block;
     }
 
-    public Integer getGenderContributor() {
-        return GenderContributor;
+    public Boolean getDelete() {
+        return IsDelete;
     }
 
-    public Integer getId() {
-        return Id;
+    public void setDelete(Boolean delete) {
+        IsDelete = delete;
     }
 
-    public Integer getNumContributorFrom() {
-        return NumContributorFrom;
+    public List<StateModel> getStates() {
+        return States;
     }
 
-    public Integer getNumContributorTo() {
-        return NumContributorTo;
+    public void setStates(List<StateModel> states) {
+        States = states;
     }
 
-    public Integer getProfitFrom() {
-        return ProfitFrom;
+    public Float getProjectDuration() {
+        return ProjectDuration;
     }
 
-    public Integer getProfitTo() {
-        return ProfitTo;
+    public void setProjectDuration(Float projectDuration) {
+        ProjectDuration = projectDuration;
     }
 
-    public Integer getProfitType() {
-        return ProfitType;
+    public List<TagsModel> getTags() {
+        return Tags;
     }
 
-    public String getCategoryName() {
-        return CategoryName;
+    public void setTags(List<TagsModel> tags) {
+        Tags = tags;
     }
 
-    public String getDescription() {
-        return Description;
+    public Integer getLocationId() {
+        return LocationId;
     }
 
-    public String getName() {
-        return Name;
+    public void setLocationId(Integer locationId) {
+        LocationId = locationId;
+    }
+
+    public Integer getMinExperience() {
+        return MinExperience;
+    }
+
+    public void setMinExperience(Integer minExperience) {
+        MinExperience = minExperience;
+    }
+
+    public Float getProfitMoney() {
+        return ProfitMoney;
+    }
+
+    public void setProfitMoney(Float profitMoney) {
+        ProfitMoney = profitMoney;
+    }
+
+    public Float getInitialCost() {
+        return InitialCost;
+    }
+
+    public void setInitialCost(Float initialCost) {
+        InitialCost = initialCost;
+    }
+
+    public Float getDirectExpenses() {
+        return DirectExpenses;
+    }
+
+    public void setDirectExpenses(Float directExpenses) {
+        DirectExpenses = directExpenses;
+    }
+
+    public Float getIndectExpenses() {
+        return IndectExpenses;
+    }
+
+    public void setIndectExpenses(Float indectExpenses) {
+        IndectExpenses = indectExpenses;
+    }
+
+    public boolean isNeedPlace() {
+        return NeedPlace;
+    }
+
+    public void setNeedPlace(boolean needPlace) {
+        NeedPlace = needPlace;
+    }
+
+    public boolean isJoin() {
+        return IsJoin;
+    }
+
+    public void setJoin(boolean join) {
+        IsJoin = join;
+    }
+
+    public List<AttachmentModel> getAttachments() {
+        return Attachments;
+    }
+
+    public void setAttachments(List<AttachmentModel> attachments) {
+        Attachments = attachments;
     }
 }

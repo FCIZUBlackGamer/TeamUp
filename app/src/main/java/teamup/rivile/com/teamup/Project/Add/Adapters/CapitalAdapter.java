@@ -7,25 +7,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 
 public class CapitalAdapter extends BaseAdapter {
     private final Context mContext;
-    private final List<CapitalModel> capitalModels, choosenCapitalModels;
+    private final List<StateModel> stateModels, choosenStateModels;
 
-    public CapitalAdapter(Context mContext, List<CapitalModel> capitalModels, List<CapitalModel> choosenCapitalModels) {
+    public CapitalAdapter(Context mContext, List<StateModel> stateModels, List<StateModel> choosenStateModels) {
         this.mContext = mContext;
-        this.capitalModels = capitalModels;
-        this.choosenCapitalModels = choosenCapitalModels;
+        this.stateModels = stateModels;
+        this.choosenStateModels = choosenStateModels;
     }
 
     @Override
     public int getCount() {
-        return capitalModels.size();
+        return stateModels.size();
     }
 
     @Override
@@ -40,7 +39,7 @@ public class CapitalAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final CapitalModel product = capitalModels.get(position);
+        final StateModel product = stateModels.get(position);
 
         // view holder pattern
         if (convertView == null) {
@@ -59,13 +58,13 @@ public class CapitalAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 /** action select and deselect */
-                CapitalModel model = new CapitalModel();
+                StateModel model = new StateModel();
                 model.setId(product.getId());
                 model.setName(product.getName());
-                if (choosenCapitalModels.contains(model)){
-                    choosenCapitalModels.remove(model);
+                if (choosenStateModels.contains(model)){
+                    choosenStateModels.remove(model);
                 }else {
-                    choosenCapitalModels.add(model);
+                    choosenStateModels.add(model);
                 }
             }
         });

@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/colorPrimary"
-        android:entries="@array/test"
+        android:entries="@array/durations"
         android:paddingStart="5dp"
         android:paddingTop="3dp"
         android:paddingEnd="5dp"

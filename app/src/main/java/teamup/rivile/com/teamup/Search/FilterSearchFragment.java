@@ -35,17 +35,17 @@ import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 
 public class FilterSearchFragment extends Fragment {
     private EditText mProjectNameEditText;
-    private StepperIndicator mEducationLevelStepperIndicator;
+//    private StepperIndicator mEducationLevelStepperIndicator;
     private RadioGroup mGenderRadioGroup;
     //    private EditText mAddressEditText;
-    private RangeSeekBar mAgeRangeSeekBar;
-    private TextView mAgeRangeSeekBarMin;
-    private TextView mAgeRangeSeekBarMax;
+//    private RangeSeekBar mAgeRangeSeekBar;
+//    private TextView mAgeRangeSeekBarMin;
+//    private TextView mAgeRangeSeekBarMax;
 
     private RecyclerView mDepartmentsRecyclerView;
     private RecyclerView mCapitalsRecyclerView;
@@ -57,19 +57,19 @@ public class FilterSearchFragment extends Fragment {
     private TextView mContributorsNumberRangeSeekBarMin;
     private TextView mContributorsNumberRangeSeekBarMax;
 
-    private RangeSeekBar mContributorExperienceRangeSeekBar;
-    private TextView mContributorExperienceRangeSeekBarMin;
-    private TextView mContributorExperienceRangeSeekBarMax;
+//    private RangeSeekBar mContributorExperienceRangeSeekBar;
+//    private TextView mContributorExperienceRangeSeekBarMin;
+//    private TextView mContributorExperienceRangeSeekBarMax;
 
     private Button mGoButton;
 
     private DepartmentsAdapter mDepartmentsAdapter;
     private List<Department> mLoadedDepartments = new ArrayList<>();
-    private List<CapitalModel> mLoadedCapitals = new ArrayList<>();
+    private List<StateModel> mLoadedCapitals = new ArrayList<>();
     private List<Department> mSelectedDepartments = null;
 
     private CheckBox mEgyptCheckBox;
-    ArrayList<CapitalModel> mSelectedCapitalModels = new ArrayList<>();
+    ArrayList<StateModel> mSelectedStateModels = new ArrayList<>();
     CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
     private FilterModel filterModel;
     FragmentManager fragmentManager;
@@ -81,21 +81,21 @@ public class FilterSearchFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_filter_search, container, false);
         mProjectNameEditText = view.findViewById(R.id.project_name);
 
-        mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
-        mEducationLevelStepperIndicator.addOnStepClickListener(step -> mEducationLevelStepperIndicator.setCurrentStep(step));
+//        mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
+//        mEducationLevelStepperIndicator.addOnStepClickListener(step -> mEducationLevelStepperIndicator.setCurrentStep(step));
 
         mGenderRadioGroup = view.findViewById(R.id.genderGroup);
 //        mAddressEditText = view.findViewById(R.id.address);
 
-        mAgeRangeSeekBar = view.findViewById(R.id.ageSeekbar);
-        mAgeRangeSeekBar.setRangeValues(18,80);
-        mAgeRangeSeekBar.setNotifyWhileDragging(true);
-        mAgeRangeSeekBarMin = view.findViewById(R.id.tv_ageMin);
-        mAgeRangeSeekBarMax = view.findViewById(R.id.tv_ageMax);
-        mAgeRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
-            mAgeRangeSeekBarMin.setText(String.valueOf(minValue));
-            mAgeRangeSeekBarMax.setText(String.valueOf(maxValue));
-        });
+//        mAgeRangeSeekBar = view.findViewById(R.id.ageSeekbar);
+//        mAgeRangeSeekBar.setRangeValues(18,80);
+//        mAgeRangeSeekBar.setNotifyWhileDragging(true);
+//        mAgeRangeSeekBarMin = view.findViewById(R.id.tv_ageMin);
+//        mAgeRangeSeekBarMax = view.findViewById(R.id.tv_ageMax);
+//        mAgeRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+//            mAgeRangeSeekBarMin.setText(String.valueOf(minValue));
+//            mAgeRangeSeekBarMax.setText(String.valueOf(maxValue));
+//        });
 
         mDepartmentsRecyclerView = view.findViewById(R.id.recDep);
         mDepartmentsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -125,15 +125,15 @@ public class FilterSearchFragment extends Fragment {
         });
 
 
-        mContributorExperienceRangeSeekBar = view.findViewById(R.id.experienceSeekbar);
-        mContributorExperienceRangeSeekBar.setRangeValues(0,65);
-        mContributorExperienceRangeSeekBar.setNotifyWhileDragging(true);
-        mContributorExperienceRangeSeekBarMin = view.findViewById(R.id.tv_experienceMin);
-        mContributorExperienceRangeSeekBarMax = view.findViewById(R.id.tv_experienceMax);
-        mContributorExperienceRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
-            mContributorExperienceRangeSeekBarMin.setText(String.valueOf(minValue));
-            mContributorExperienceRangeSeekBarMax.setText(String.valueOf(maxValue));
-        });
+//        mContributorExperienceRangeSeekBar = view.findViewById(R.id.experienceSeekbar);
+//        mContributorExperienceRangeSeekBar.setRangeValues(0,65);
+//        mContributorExperienceRangeSeekBar.setNotifyWhileDragging(true);
+//        mContributorExperienceRangeSeekBarMin = view.findViewById(R.id.tv_experienceMin);
+//        mContributorExperienceRangeSeekBarMax = view.findViewById(R.id.tv_experienceMax);
+//        mContributorExperienceRangeSeekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
+//            mContributorExperienceRangeSeekBarMin.setText(String.valueOf(minValue));
+//            mContributorExperienceRangeSeekBarMax.setText(String.valueOf(maxValue));
+//        });
 
 
         mGoButton = view.findViewById(R.id.go);
@@ -157,16 +157,16 @@ public class FilterSearchFragment extends Fragment {
         mDepartmentsAdapter = new DepartmentsAdapter(null, (ArrayList<Department>) mSelectedDepartments);
         mDepartmentsRecyclerView.setAdapter(mDepartmentsAdapter);
 
-        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedCapitalModels);
+        mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedStateModels);
         mCapitalsRecyclerView.setAdapter(mCapitalsRecyclerViewAdapter);
         mEgyptCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (mLoadedCapitals != null) {
-                    mSelectedCapitalModels.addAll(mLoadedCapitals);
-                    mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(mSelectedCapitalModels);
+                    mSelectedStateModels.addAll(mLoadedCapitals);
+                    mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(mSelectedStateModels);
                 }
             } else {
-                mSelectedCapitalModels.clear();
+                mSelectedStateModels.clear();
                 mCapitalsRecyclerViewAdapter.setSelectedCapitalModels(new ArrayList<>());
             }
         });
@@ -185,11 +185,11 @@ public class FilterSearchFragment extends Fragment {
                 filterModel.setAddress(address);
             }
 
-            filterModel.setAgeRequiredFrom((int) mAgeRangeSeekBar.getSelectedMinValue());
-            filterModel.setAgeRequiredTo((int) mAgeRangeSeekBar.getSelectedMaxValue());
-            filterModel.setExperienceFrom((int) mContributorExperienceRangeSeekBar.getSelectedMinValue());
-            filterModel.setExperienceTo((int) mContributorExperienceRangeSeekBar.getSelectedMaxValue());
-            filterModel.setEducationContributorLevel(mEducationLevelStepperIndicator.getCurrentStep());
+//            filterModel.setAgeRequiredFrom((int) mAgeRangeSeekBar.getSelectedMinValue());
+//            filterModel.setAgeRequiredTo((int) mAgeRangeSeekBar.getSelectedMaxValue());
+//            filterModel.setExperienceFrom((int) mContributorExperienceRangeSeekBar.getSelectedMinValue());
+//            filterModel.setExperienceTo((int) mContributorExperienceRangeSeekBar.getSelectedMaxValue());
+//            filterModel.setEducationContributorLevel(mEducationLevelStepperIndicator.getCurrentStep());
             filterModel.setNumContributorFrom((int) mContributorsNumberRangeSeekBar.getSelectedMinValue());
             filterModel.setNumContributorTo((int) mContributorsNumberRangeSeekBar.getSelectedMaxValue());
             filterModel.setMoneyFrom((int) mProjectCostRangeSeekBar.getSelectedMinValue());

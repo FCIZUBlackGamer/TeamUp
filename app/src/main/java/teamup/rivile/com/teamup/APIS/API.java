@@ -1,7 +1,7 @@
 package teamup.rivile.com.teamup.APIS;
 
 public class API {
-    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
+    final public static String BASE_URL = "http://192.168.1.2/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
     final public static String REGISTER_URL = BASE_URL + "Register/Add";
@@ -15,7 +15,8 @@ public class API {
     final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
     final public static String EDIT_OFFER_URL = BASE_URL + "Offer/Edit";
-    final public static String EDIT_REQUIREMENT_URL = BASE_URL + "EditRequirement";
+    final public static String ListJoinedOffer_URL = BASE_URL + "Offer/ListJoinedOffer";
+    final public static String ListSuccessOffer_URL = BASE_URL + "Offer/ListSuccessOffer";
     final public static String DELETE_OFFER_URL = BASE_URL + "Offer/Delete";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer";
     final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/"; //VIEW_PROJECT_URL

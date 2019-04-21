@@ -10,14 +10,14 @@ import android.widget.Button;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 
 public class DepartmentAdapter extends BaseAdapter {
     private final Context mContext;
-    private final List<CapitalModel> depModels;
-    CapitalModel choosenDepModel;
+    private final List<StateModel> depModels;
+    StateModel choosenDepModel;
 
-    public DepartmentAdapter(Context mContext, List<CapitalModel> depModels, CapitalModel choosenDepModel) {
+    public DepartmentAdapter(Context mContext, List<StateModel> depModels, StateModel choosenDepModel) {
         this.mContext = mContext;
         this.depModels = depModels;
         this.choosenDepModel = choosenDepModel;
@@ -40,7 +40,7 @@ public class DepartmentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final CapitalModel product = depModels.get(position);
+        final StateModel product = depModels.get(position);
 
         // view holder pattern
         if (convertView == null) {
@@ -59,7 +59,7 @@ public class DepartmentAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 /** action select  */
-                choosenDepModel = new CapitalModel();
+                choosenDepModel = new StateModel();
                 choosenDepModel.setId(product.getId());
                 choosenDepModel.setName(product.getName());
             }

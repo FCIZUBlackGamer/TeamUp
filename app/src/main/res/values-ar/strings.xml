@@ -1,41 +1,198 @@
-<resources>
-    <string name="app_name">Team Up</string>
-    <string name="title_activity_drawer">DrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">مؤمن شاهين</string>
-    <string name="nav_header_subtitle"> مشاريع </string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" >تيم أب</string>
+    <string name="title_activity_drawer" >DrawerActivity</string>
+    <string name="navigation_drawer_open" >Open navigation drawer</string>
+    <string name="navigation_drawer_close" >Close navigation drawer</string>
+    <string name="nav_header_title" >مؤمن شاهين</string>
+    <string name="nav_header_subtitle" > مشاريع </string>
+    <string name="nav_header_desc" >Navigation header</string>
+    <string name="action_settings" >اﻷعدادات</string>
 
-    <string name="title_activity_bottom">BottomActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_bottom" >BottomActivity</string>
+    <string name="title_home" >Home</string>
+    <string name="title_dashboard" >Dashboard</string>
+    <string name="title_notifications" >Notifications</string>
 
-    <string name="saw_intro_preference_key" translatable="false">saw_introduction</string>
-    <string name="shared_preferences_name" translatable="false">preference</string>
-    <string name="title_activity_go_map">Map</string>
-    <string name="log_in">"تسجيل الدخول"</string>
-    <string name="already_have_an_account">"لديك حساب بالفعل ؟"</string>
+    <string-array name="durations">
+        <item>يوم</item>
+        <item>شهر</item>
+        <item>سنة</item>
+    </string-array>
 
-    <string name="join_us_now">إشترك معنا الآن</string>
-    <string name="join_us_now_1">سجل حساب الآن وابدأ بالإستثمار</string>
-    <string name="join_us_now_2">الآمن والمضمون من خلال منصتنا</string>
-    <string name="full_name">الإسم كاملا</string>
-    <string name="email">البريد الإلكتروني</string>
-    <string name="user_name">إسم المستخدم</string>
-    <string name="password">كلمة المرور</string>
-    <string name="sign_up">التسجيل</string>
-    <string name="edit_personal_data">تعديل البيانات الشخصية</string>
-    <string name="name">الإسم</string>
-    <string name="address">العنوان</string>
-    <string name="birth_date">تاريخ الميلاد</string>
-    <string name="job_title">المسمي الوظيفي</string>
-    <string name="gender">الجنس</string>
-    <string name="male">ذكر</string>
-    <string name="female">انثي</string>
-    <string name="email_address">البريد الإلكتروني</string>
-    <string name="save">الحفظ</string>
+    <string-array name="durations_time">
+        <item>ساعة</item>
+        <item>يومى</item>
+        <item>شهرى</item>
+        <item>سنوى</item>
+        <item>موسمى</item>
+        <item>دورى</item>
+    </string-array>
 
+    <string-array name="pro_type">
+        <item>دائم</item>
+        <item>موسمى</item>
+        <item>مؤقت</item>
+    </string-array>
+
+    <string name="saw_intro_preference_key" >saw_introduction</string>
+    <string name="shared_preferences_name" >preference</string>
+    <string name="title_activity_go_map" >جو ماب</string>
+    <string name="log_in" >"تسجيل الدخول"</string>
+    <string name="facebook_app_id" >424047931700835</string>
+    <string name="fb_login_protocol_scheme" >fb424047931700835</string>
+    <string name="already_have_an_account" >"لديك حساب بالفعل ؟"</string>
+    <string name="join_us_now" >إشترك معنا الآن</string>
+    <string name="join_us_now_1" >سجل حساب الآن وابدأ بالإستثمار</string>
+    <string name="join_us_now_2" >الآمن والمضمون من خلال منصتنا</string>
+    <string name="full_name" >الإسم كاملا</string>
+    <string name="email" >البريد الإلكتروني</string>
+    <string name="user_name" >إسم المستخدم</string>
+    <string name="password" >كلمة المرور</string>
+    <string name="sign_up" >التسجيل</string>
+    <string name="edit_personal_data" >تعديل البيانات الشخصية</string>
+    <string name="name" >الإسم</string>
+    <string name="address" >العنوان</string>
+    <string name="birth_date" >تاريخ الميلاد</string>
+    <string name="job_title" >المسمي الوظيفي</string>
+    <string name="gender" >الجنس</string>
+    <string name="male" >ذكر</string>
+    <string name="female" >انثي</string>
+    <string name="email_address" >البريد الإلكتروني</string>
+    <string name="save" >الحفظ</string>
+
+    <string name="pressHere" >أضغط هنا لتعديل اسم المشروع</string>
+    <string name="projectDesc" >ادخل هنا نبذه عن المشروع ...</string>
+    <string name="whatYouHaveDesc" >اكتب تفصيلياْ ما تمتلك عليه الان للمشاركه فى المشروع ...</string>
+    <string name="whatYouHaveNotDesc" >اكتب تفصيلياْ ما تحتاج اليه من المتقدمين معك فى المشروع ...</string>
+    <string name="money" >دراسة مالية تقديرية</string>
+    <string name="proDetails" >تفاصيل المشروع</string>
+    <string name="day" >يومى</string>
+    <string name="month" >شهرى</string>
+    <string name="year" >سنوى</string>
+    <string name="anotherKind" > اخر</string>
+    <string name="moneyExpected" >متوسط العائد الدورى الكلى</string>
+    <string name="whatYouHave" >الامكانيات المتوفره معك</string>
+    <string name="whatYouHaveNot" >الامكانيات المطلوبه</string>
+    <string name="contributors" >طبيعة المشتركين المطلوبين</string>
+    <string name="both" >النوعين</string>
+    <string name="numContributors" >عدد المساهمين فى المشروع"</string>
+    <string name="proBlabla" >  عشان مشروعك ينجح لازم توضح كل المتطلبات واللوازم لبناء مشروع ناجح </string>
+
+    <string name="place" > طبيعة المكان المطلوب/المتاح </string>
+    <string name="neddplace" > هل يحتاج المشروع لمكان؟ </string>
+    <string name="yes" > نعم </string>
+    <string name="no" > لا يحتاج </string>
+    <string name="proAttachment" > ملحقات المشروع </string>
+    <string name="proBla" > نجاح المشروع على أخر خطوة من خطوات سلالم النجاح أرفع ملحقات مشروعك أو تصميماتك المبدأية </string>
+    <string name="attachment" > الملحقات </string>
+    <string name="proCapital" > أماكن تسويق المشروع </string>
+    <string name="egypt" > جمهورية مصر العربية </string>
+    <string name="dep" > القسم </string>
+    <string name="tags" > الكلمات الدلالية </string>
+    <string name="go" > انطلق </string>
+    <string name="moneyType">طبيعه الربح</string>
+    <string name="depName" >أسم القسم </string>
+    <string name="advancedSearch" > البحث المتقدم للمشروعات </string>
+    <string name="searchBla" > قم بتصنيف وعرض المشاريع الأن حسب احتياجاتك بكل سهولة ويسر من خلال الأدوات المتقدمة </string>
+    <string name="proName" > أسم المشروع </string>
+    <string name="proCost" > تكلفه المشروع </string>
+    <string name="proNumCont" > عدد المساهمين فى المشروع </string>
+    <string name="search" > بحث </string>
+    <string name="dateOfBirth" > تاريخ الميلاد </string>
+    <string name="phone" > الهاتف </string>
+    <string name="from" > تقريبا </string>
+    <string name="to" > إلى </string>
+    <string name="min_val_error" >"لا يمكن ان تقل القيمة عن "</string>
+    <string name="max_error_val" >"لا يمكن ان تزيد القيمة عن "</string>
+    <string name="minExperienceNeededKey" >minExperienceNeededKey</string>
+    <string name="maxExperienceNeededKey" >maxExperienceNeededKey</string>
+    <string name="minMoneyOutKey" >minMoneyOutKey</string>
+    <string name="maxMoneyOutKey" >maxMoneyOutKey</string>
+    <string name="minMoneyInKey" >minMoneyInKey</string>
+    <string name="maxMoneyInKey" >maxMoneyInKey</string>
+    <string name="minContributorKey" >minContributorKey</string>
+    <string name="maxContributorKey" >maxContributorKey</string>
+    <string name="name_required" >إسم المشروع مطلوب</string>
+    <string name="details_required" >تفاصيل المشروع مطلوبة</string>
+    <string name="dept_error" >إختيار القسم مطلوب</string>
+    <string name="cap_required" >إختر محافظة واحدة علي الأقل</string>
+    <string name="reportText" >ادخل محتوى الشكوي</string>
+    <string name="hi" >مرحبا!</string>
+    <string name="happyHome" >نحن سعداء بعودتك</string>
+    <string name="loginOrSignup" >قم بتسجيل الدخول أو انشأ حساب جديد</string>
+    <string name="forgotPassword" >هل نسيت كلمة المرور الخاصة بك؟</string>
+    <string name="recoverPassword" >استعادة كلمة المرور</string>
+    <string name="resetPassword" >لا تقلق فقط قم بكتابة البريد الإلكترونى الخاص بحسابك ﻻسترجاع كلمة المرور عبر البريد الإلكترونى</string>
+    <string name="recover" >استرجاع</string>
+    <string name="home" >الرئيسية</string>
+    <string name="goMap" >جو ماب</string>
+    <string name="savedProjects" >المشاريع المسجلة</string>
+    <string name="perposedOffers" >العروض المقترحة</string>
+    <string name="favourite" >المفضلة</string>
+    <string name="profileSettings" >إعدادات الحساب الشخصى</string>
+    <string name="logout" >تسجيل الخروج</string>
+    <string name="noDataYet">لا توجد بيانات متوفرة الأن</string>
+    <string name="details">التفاصيل</string>
+    <string name="gotoEmail">راجع البريد الإلكترونى</string>
+    <string name="writeTheCode">وأكتب رمز التفعيل الخاص</string>
+    <string name="confirm">تأكيد</string>
+    <string name="write">قم بكتابة</string>
+    <string name="newPassword">كلمة المرور الجديدة</string>
+    <string name="confirmPassword">تأكيد كلمة المرور</string>
+    <string name="bio">نبذة مختصرة</string>
+    <string name="seeMore">عرض المزيد</string>
+    <string name="reportProject">ابلاغ عن المشروع</string>
+    <string name="wrongEmailPattern">صيغة بريد الكترونى خاطئ</string>
+    <string name="canotFindEmail">لم يتم العثور على بريدك الكترونى حاليا</string>
+    <string name="wrongCode">كود تفعيل خاطئ يرجى التحقق من البريد الالكترونى</string>
+    <string name="noRequestsFound">لا توجد مقترحات للمشروع حاليا</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_account_settings">تعديل بيانات الحساب</string>
+    <string name="alert">ابلاغ</string>
+    <string name="report">ابلاغ</string>
+    <string name="delete_offer">حذف</string>
+    <string name="edit_offer">تعديل</string>
+    <string name="login_failed_try_again">فشل تسجيل الدخول ، حاول مرة اخري.</string>
+    <string name="registerInProgress">جارى التسجيل</string>
+    <string name="noti_body">تحقق من المشاريع على تيم اب</string>
+    <string name="and"> و </string>
+    <string name="per"> / </string>
+
+    <string name="always">دائم</string>
+    <string name="perioud">موسمى</string>
+    <string name="jsutOnce">اخر</string>
+
+    <string name="hour">ساعة</string>
+    <string name="daily">يومى</string>
+    <string name="monthly">شهرى</string>
+    <string name="yearly">سنوى</string>
+    <string name="onceTime">موسمى</string>
+    <string name="others"> اخرون </string>
+    <string name="congrateForAcceptingUrRequirement"> مبارك، تم قبول مقترحاتك للمشاركة فى مشاريع </string>
+    <string name="likesUrProjects"> اعجبوا بمشاريعك </string>
+    <string name="congrateForConfirmingUrProjects"> مبارك، تم قبول مشاريع </string>
+    <string name="nowUCanTraceUrProject"> الآن يمكنك متابعه تقدم مشروعك </string>
+    <string name="notificationSettings">الإشعارات</string>
+    <string name="directCost">التكاليف الدورية</string>
+    <string name="IndirectCost">التكاليف التكميلية</string>
+    <string name="typeDirectCost">طبيعه المصاريف المباشره</string>
+    <string name="typeInDirectCost">طبيعه المصاريف الغير المباشره</string>
+    <string name="proDuration">مده تنفيذ المشروع</string>
+    <string name="availableProjects"> متاحة</string>
+    <string name="hintProjects"> استرشادية</string>
+    <string name="successProjects"> ناجحة</string>
+    <string name="noSpecailChars">غير مسموح بالحروف الخاصه</string>
+    <string name="moneyAmount" > كمية رأس المال المطلوبة لبناء المشروع </string>
+    <string name="totalCostExcpected">اجمالى التكاليف المتوقعة</string>
+    <string name="categories">الاقسام</string>
+    <string name="projectTotalCost">اجمالى تكلفة المشروع</string>
+    <string name="filterBlaBla">قم بتصنيف وعرض المشاريع الآن حسب احتياجاتك بكل سهولة ويسر من خلال الأدوات المتقدمة</string>
+    <string name="headMoney">• رأس المال</string>
+    <string name="a">• التكاليف الدورية</string>
+    <string name="b">• التكاليف التكميلية</string>
+    <string name="c">• مده التنفيذ</string>
+    <string name="d">• متوسط العائد الدورى</string>
+    <string name="e">• اجمالى التكاليف المتوقعة</string>
 </resources>

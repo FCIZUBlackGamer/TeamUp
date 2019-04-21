@@ -7,9 +7,9 @@ public class LoginDataBase extends RealmObject {
     UserDataBase User;
     RealmList<LikeModelDataBase> Likes;
     RealmList<FavouriteDataBase> Favorites;
-    RealmList<OfferDetailsDataBase> Offers;
+    RealmList<OfferDataBase> Offers;
 
-    public LoginDataBase(UserDataBase user, RealmList<LikeModelDataBase> likes, RealmList<FavouriteDataBase> favorites, RealmList<OfferDetailsDataBase> offers) {
+    public LoginDataBase(UserDataBase user, RealmList<LikeModelDataBase> likes, RealmList<FavouriteDataBase> favorites, RealmList<OfferDataBase> offers) {
         User = user;
         Likes = likes;
         Favorites = favorites;
@@ -59,11 +59,11 @@ public class LoginDataBase extends RealmObject {
         Favorites = favorites;
     }
 
-    public RealmList<OfferDetailsDataBase> getOffers() {
+    public RealmList<OfferDataBase> getOffers() {
         return Offers;
     }
 
-    public void setOffers(RealmList<OfferDetailsDataBase> offers) {
+    public void setOffers(RealmList<OfferDataBase> offers) {
         Offers = offers;
     }
 }

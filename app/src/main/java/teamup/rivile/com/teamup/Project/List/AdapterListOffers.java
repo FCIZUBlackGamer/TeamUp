@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -36,11 +37,9 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
-import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.FavouriteModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
@@ -48,11 +47,13 @@ import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
     private Helper mHelper;
+    private char SPACE = ' ';
 
     private Context context;
     private List<Offers> offersList;
@@ -93,31 +94,22 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         holder.option_menu.setVisibility(View.VISIBLE);
 
-//        if (ty == FragmentListProjectNames.NORMAL) {
-//            holder.option_menu.setImageResource(R.drawable.ic_report);
-//
-//        } else if (ty == FragmentListProjectNames.MINE) {
-//            holder.option_menu.setImageResource(R.drawable.ic_cancel);
-//
-//        }
-
+        holder.tv_proType.setVisibility(View.GONE);
         holder.favourite.setOnClickListener(v -> {
-            Drawable favDrawable = holder.favourite.getDrawable(); //right drawable
+            Drawable favDrawable = holder.favourite.getDrawable();
             if (favDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_star_full)
                             .getConstantState())) {
-                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_empty));
+                holder.favourite.setImageResource(R.drawable.ic_star_empty);
                 markFavourite(offersList.get(position).getId(), userId, 1);
                 if (ty == FragmentListProjects.FAVOURITE){
                     offersList.remove(position);
                     notifyDataSetChanged();
                     if (offersList.size() == 0){
 
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty())
-                                .commit();
+                        FragmentListProjects.showEmpty();
 
                     }
                 }
@@ -126,7 +118,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getResources()
                             .getDrawable(R.drawable.ic_star_empty)
                             .getConstantState())) {
-                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_full));
+                holder.favourite.setImageResource(R.drawable.ic_star_full);
                 markFavourite(offersList.get(position).getId(), userId, 0);
             }
 
@@ -149,14 +141,76 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         for (int i = 0; i < favouriteDataBases.size(); i++) {
             if (offersList.get(position).getId() == favouriteDataBases.get(i).getOfferId()) {
-                holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_full));
+                holder.favourite.setImageResource(R.drawable.ic_star_full);
+                holder.favourite.setTag(1);
+            } else {
+                holder.favourite.setTag(0);
             }
         }
 
+        holder.money.setVisibility(View.GONE);
         holder.project_name.setText(offersList.get(position).getName());
+        holder.tv_initialCost.setText(
+                String.valueOf(offersList.get(position).getInitialCost())
+//                        + SPACE
+//                        + context.getResources().getString(R.string.per)
+//                        + SPACE
+//                        + String.valueOf(offersList.get(position).getInitialCostType())
+        );
+        holder.tv_directCost.setText(
+                String.valueOf(offersList.get(position).getDirectExpenses())
+//                        + SPACE
+//                        + context.getResources().getString(R.string.per)
+//                        + SPACE
+//                        + checkString(offersList.get(position).getDirectExpensesType())
+        );
+        holder.tv_inDirectCost.setText(
+                String.valueOf(offersList.get(position).getIndectExpenses())
+//                        + SPACE
+//                        + context.getResources().getString(R.string.per)
+//                        + SPACE
+//                        + checkString(offersList.get(position).getIndectExpensesType())
+        );
+        holder.tv_duration.setText(
+                String.valueOf(offersList.get(position).getProjectDuration())
+//                        + SPACE
+//                        + checkString(offersList.get(position).getProjectDurationType())
+        );
+        holder.tv_profit.setText(
+                String.valueOf(offersList.get(position).getProfitMoney())
+//                        + SPACE
+//                        + context.getResources().getString(R.string.per)
+//                        + SPACE
+//                        + checkString(offersList.get(position).getProfitType())
+        );
+        holder.tv_totalCost.setText(
+                String.valueOf(
+                        offersList.get(position).getInitialCost() +
+                                offersList.get(position).getDirectExpenses() +
+                                offersList.get(position).getIndectExpenses()
+                )
+        );
+
+        holder.project_desc.setOnClickListener(v -> {
+            if (holder.money.getVisibility() == View.VISIBLE) {
+                holder.money.setVisibility(View.GONE);
+            } else {
+                holder.money.setVisibility(View.VISIBLE);
+            }
+        });
+
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
-        holder.num_contributer.setText(offersList.get(position).getNumContributorTo() + "");
-        holder.location.setText(offersList.get(position).getAddress());
+        holder.num_contributer.setText(offersList.get(position).getNumContributor() + "");
+        holder.user_name.setText(offersList.get(position).getUsers().get(0).getFullName());
+
+        if (offersList.get(position).getProjectType() == 0) {
+            holder.tv_proType.setText(context.getResources().getString(R.string.always));
+        } else if (offersList.get(position).getProjectType() == 1) {//perioud
+            holder.tv_proType.setText(context.getResources().getString(R.string.perioud));
+        } else if (offersList.get(position).getProjectType() == 2) {
+            holder.tv_proType.setText(context.getResources().getString(R.string.jsutOnce));
+        }
+
         if (offersList.get(position).getDescription().length() > 500) {//Check Description length
             String newDesc = offersList.get(position).getDescription().substring(0, 500) + context.getString(R.string.seeMore);
             holder.project_desc.setText(newDesc);
@@ -189,27 +243,27 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 if (imageUrl != null && !imageUrl.isEmpty()) {
                     Log.i("ImageState", "YYY");
                     Log.i("ImageState", offersList.get(position).getUsers().get(i).getImage());
-                    if (offersList.get(position).getUsers().get(i).getSocialId() != null) {
+                    if (offersList.get(position).getUsers().get(i).getImage().startsWith("http")) {
                         Picasso.get().load(offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
                     } else {
                         Picasso.get().load(API.BASE_URL + offersList.get(position).getUsers().get(i).getImage()).into(holder.image);
                     }
-                    holder.image_name.setVisibility(View.GONE);
+//                    holder.image_name.setVisibility(View.GONE);
                 } else {
                     Log.i("ImageState", "NNN");
-                    holder.image_name.setVisibility(View.VISIBLE);
-                    String[] sp = offersList.get(position).getUsers().get(i).getFullName().split(" ");
-                    if (!offersList.get(position).getUsers().get(i).getFullName().contains(" ")) {
-                        holder.image_name.setText(offersList.get(position).getUsers().get(i).getFullName().charAt(0) + "");
-                    } else if (sp.length > 0 && sp.length <= 2) {
-                        for (int j = 0; j < sp.length; j++) {
-                            holder.image_name.append(sp[j] + "");
-                        }
-                    } else if (sp.length > 2) {
-                        for (int j = 0; j < 2; j++) {
-                            holder.image_name.append(sp[j] + "");
-                        }
-                    }
+//                    holder.image_name.setVisibility(View.VISIBLE);
+//                    String[] sp = offersList.get(position).getUsers().get(i).getFullName().split(" ");
+//                    if (!offersList.get(position).getUsers().get(i).getFullName().contains(" ")) {
+//                        holder.image_name.setText(offersList.get(position).getUsers().get(i).getFullName().charAt(0) + "");
+//                    } else if (sp.length > 0 && sp.length <= 2) {
+//                        for (int j = 0; j < sp.length; j++) {
+//                            holder.image_name.append(sp[j] + "");
+//                        }
+//                    } else if (sp.length > 2) {
+//                        for (int j = 0; j < 2; j++) {
+//                            holder.image_name.append(sp[j] + "");
+//                        }
+//                    }
                 }
             } else {
                 Log.i("ImageState", "No");
@@ -222,32 +276,10 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     .replace(R.id.frame, FragmentProfileHome.setId(offersList.get(position).getUserId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
         });
 
-        holder.linearLayout.setOnClickListener(v -> fragmentManager.beginTransaction()
-                .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
-
-        holder.con.setOnClickListener(v -> fragmentManager.beginTransaction()
-                .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
-
-        holder.project_desc.setOnClickListener(v -> fragmentManager.beginTransaction()
-                .replace(R.id.frame,
-                        FragmentOfferDetails.setProjectId(offersList.get(position).getId(), ty, position))
-                .addToBackStack(FragmentOfferDetails.class.getSimpleName()).commit());
-
         if (ty != 1 && ty != 2)
             holder.make_offer.setOnClickListener(v -> {
-                if (userState != 1) {
-                    //TODO: Show user alert dialog of what's happening here
-                    Toast.makeText(context, "لم يتم تفعيل حسابك بشكل كامل بعد.", Toast.LENGTH_SHORT).show();
-                } else {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame,
-                                    FragmentJoinHome.setOfferId(offersList.get(position).getId()))
-                            .addToBackStack(FragmentJoinHome.class.getSimpleName()).commit();
-                }
+                //TODO: Show user alert dialog of what's happening here
+                Toast.makeText(context, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
             });
         else holder.make_offer.setEnabled(false);
 
@@ -368,24 +400,34 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     }
 
     class Vholder extends RecyclerView.ViewHolder {
-        TextView project_name, location, project_desc, project_tag;
+        TextView project_name, user_name, project_desc, project_tag, tv_proType;
         TextView num_likes, num_contributer;
-        CircleImageView image;
+        TextView tv_initialCost, tv_directCost, tv_inDirectCost, tv_duration, tv_totalCost, tv_profit;
+        ImageView image;
         LinearLayout linearLayout, con;
         TextView like, share, make_offer, image_name;
         RecyclerView recyclerView;
         RecyclerView.Adapter adapter;
-        ImageView option_menu, favourite;
+        ImageView option_menu;
+        FloatingActionButton favourite;
         TextView emptyView;
+        RelativeLayout money;
 
         Vholder(View itemView) {
             super(itemView);
             project_name = itemView.findViewById(R.id.project_name);
             project_tag = itemView.findViewById(R.id.project_tag);
             option_menu = itemView.findViewById(R.id.tv_options);
+            tv_initialCost = itemView.findViewById(R.id.tv_initialCost);
+            tv_directCost = itemView.findViewById(R.id.tv_directCost);
+            tv_inDirectCost = itemView.findViewById(R.id.tv_inDirectCost);
+            tv_duration = itemView.findViewById(R.id.tv_duration);
+            tv_totalCost = itemView.findViewById(R.id.tv_totalCost);
+            tv_proType = itemView.findViewById(R.id.tv_proType);
+            tv_profit = itemView.findViewById(R.id.tv_profit);
             favourite = itemView.findViewById(R.id.favourite);
             project_desc = itemView.findViewById(R.id.project_desc);
-            location = itemView.findViewById(R.id.location);
+            user_name = itemView.findViewById(R.id.user_name);
             image = itemView.findViewById(R.id.user_image);
             image_name = itemView.findViewById(R.id.image_name);
             linearLayout = itemView.findViewById(R.id.lin);
@@ -398,7 +440,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             recyclerView = itemView.findViewById(R.id.rec);
             recyclerView.setLayoutManager(layoutManager);
-
+            money = itemView.findViewById(R.id.money);
             emptyView = itemView.findViewById(R.id.tv_empty_view);
         }
     }
@@ -554,7 +596,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 String Offers = response.body();
                 if (Offers.equals("Success")) {
                     realm.beginTransaction();
-                    OfferDetailsDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
+                    OfferDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
                     l.deleteFromRealm();
                     realm.commitTransaction();
                     offersList.remove(position);
@@ -571,6 +613,22 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 Log.e("Erro", t.getMessage());
             }
         });
+    }
+
+    private String checkString(int num) {
+        if (num == 0) {
+            return context.getResources().getString(R.string.hour);
+        } else if (num == 1) {//perioud
+            return context.getResources().getString(R.string.daily);
+        } else if (num == 2) {
+            return context.getResources().getString(R.string.monthly);
+        } else if (num == 4) {//perioud
+            return context.getResources().getString(R.string.yearly);
+        } else if (num == 5) {
+            return context.getResources().getString(R.string.onceTime);
+        } else {
+            return null;
+        }
     }
 
 }

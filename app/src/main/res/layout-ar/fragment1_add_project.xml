@@ -48,11 +48,10 @@
                         android:fontFamily="@font/medium"
                         android:hint="@string/pressHere"
                         android:maxLines="2"
-                        android:layout_gravity="start"
-                        android:gravity="start"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
-                        android:textSize="16sp" />
+                        android:textDirection="rtl"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -106,8 +105,7 @@
                 android:fontFamily="@font/medium"
                 android:hint="@string/projectDesc"
                 android:lines="4"
-                android:padding="10dp"
-                android:textSize="16sp" />
+                android:padding="10dp" />
 
             <RelativeLayout
                 android:id="@+id/money"
@@ -211,10 +209,11 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/moneyAmount"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -238,7 +237,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:textSize="14sp"
                         android:inputType="number"
                         android:paddingStart="15dp"
                         android:text="0" />
@@ -261,10 +259,11 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/directCost"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -293,7 +292,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:textSize="14sp"
                         android:inputType="number"
                         android:paddingStart="15dp"
                         android:text="0" />
@@ -316,10 +314,11 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/IndirectCost"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -347,7 +346,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:textSize="14sp"
                         android:inputType="number"
                         android:paddingStart="15dp"
                         android:text="0" />
@@ -370,10 +368,11 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
-                    android:text="@string/totalCostExcpected"
+                    android:text="اجمالى التكاليف المتوقعة"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -402,7 +401,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:textSize="14sp"
                         android:editable="false"
                         android:paddingStart="15dp"
                         android:text="0" />
@@ -505,10 +503,11 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/moneyExpected"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
 
                 <LinearLayout
@@ -538,7 +537,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:textSize="14sp"
                         android:inputType="number"
                         android:paddingStart="15dp"
                         android:text="0" />
@@ -609,10 +607,11 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:fontFamily="@font/medium"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/gender"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <RadioGroup
                     android:id="@+id/genderGroup"
@@ -628,10 +627,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/medium"
                         android:gravity="start|center_vertical"
                         android:text="@string/both"
-                        android:textSize="14sp"
                         app:buttonTint="@color/backgroundDarkGreen" />
 
                     <RadioButton
@@ -640,10 +639,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/medium"
                         android:gravity="start|center_vertical"
                         android:text="@string/male"
-                        android:textSize="14sp"
                         app:buttonTint="@color/backgroundDarkGreen" />
 
                     <RadioButton
@@ -652,10 +651,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_gravity="start"
                         android:fontFamily="@font/medium"
                         android:gravity="start|center_vertical"
                         android:text="@string/female"
-                        android:textSize="14sp"
                         app:buttonTint="@color/backgroundDarkGreen" />
 
                 </RadioGroup>
@@ -665,11 +664,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:fontFamily="@font/medium"
                     android:text="@string/numContributors"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -685,7 +685,6 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:inputType="number"
-                        android:textSize="14sp"
                         android:paddingStart="15dp"
                         android:text="0" />
 
@@ -808,6 +807,7 @@
                     android:fontFamily="@font/medium"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/whatYouHave"
                     android:textColor="#000"
@@ -820,7 +820,6 @@
                     android:layout_gravity="start"
                     android:gravity="start"
                     android:layout_margin="8dp"
-                    android:textSize="14sp"
                     android:paddingStart="15dp"
                     android:background="@drawable/rounded_corner_edit_text"
                     android:fontFamily="@font/medium"
@@ -834,8 +833,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/medium"
-                    android:paddingStart="10dp"
                     android:paddingEnd="10dp"
+                    android:paddingStart="15dp"
+                    android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/whatYouHaveNot"
                     android:textColor="#000"
@@ -848,8 +848,6 @@
                     android:layout_gravity="start"
                     android:gravity="start"
                     android:layout_margin="8dp"
-                    android:paddingStart="15dp"
-                    android:textSize="14sp"
                     android:background="@drawable/rounded_corner_edit_text"
                     android:fontFamily="@font/medium"
                     android:hint="@string/whatYouHaveNotDesc"

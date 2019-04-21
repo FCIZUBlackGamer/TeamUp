@@ -6,25 +6,215 @@ import java.util.List;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 public class Offers implements Serializable {
-    public static int Id ;
-    public static String Name ;
-    public static String Description ;
-    public static int CategoryId ;
-    public static String CategoryName ;
-    public static int ProfitType ;
-    public static int ProfitFrom ;
-    public static int ProfitTo ;
-    public static int NumContributorFrom ;
-    public static int NumContributorTo ;
-    public static int AgeRequiredFrom ;
-    public static int AgeRequiredTo ;
-    public static int GenderContributor ;
-    public static int EducationContributorLevel ;
-    public static int UserId ;
-    public static int NumLiks ;
-    public static int NumJoinOffer ;
-    public static List<UserModel> Users ;
-    public static String Address ;
+    private static Integer Id;
+    private static String Name;
+    private static String Description;
+    private static Integer CategoryId;
+    private static String CategoryName;
+    private static Integer ProfitType;
+    private static Integer NumContributor;
+    private static Integer GenderContributor;
+    private static Integer UserId;
+    private static Integer NumLiks;
+    private static Integer NumJoinOffer;
+    private static List<UserModel> Users;
+    private static String Address;
+    private static String Date;
+    private static Float ProjectDuration;
+    private static Integer Status;
+    private static Integer LocationId;
+    private static Integer MinExperience;
+    private static Float ProfitMoney;
+    private static Float InitialCost;
+    private static Float DirectExpenses;
+    private static Float IndectExpenses;
+    public static boolean NeedPlace ;
+    public static boolean IsJoin ;
+
+    private static Integer InitialCostType;
+    private static Integer DirectExpensesType;
+    private static Integer IndectExpensesType;
+    private static Integer ProjectDurationType;
+    private static Integer ProjectType;
+    private static boolean IsSuccess ;
+    private static boolean IsCompleted ;
+
+    public static boolean isIsSuccess() {
+        return IsSuccess;
+    }
+
+    public static void setIsSuccess(boolean isSuccess) {
+        IsSuccess = isSuccess;
+    }
+
+    public static boolean isIsCompleted() {
+        return IsCompleted;
+    }
+
+    public static void setIsCompleted(boolean isCompleted) {
+        IsCompleted = isCompleted;
+    }
+
+    public static Integer getProjectType() {
+        return ProjectType;
+    }
+
+    public static void setProjectType(Integer projectType) {
+        ProjectType = projectType;
+    }
+
+    public static Integer getId() {
+        return Id;
+    }
+
+    public static Integer getInitialCostType() {
+
+        return InitialCostType;
+    }
+
+    public static void setInitialCostType(Integer initialCostType) {
+        InitialCostType = initialCostType;
+    }
+
+    public static Integer getDirectExpensesType() {
+        return DirectExpensesType;
+    }
+
+    public static void setDirectExpensesType(Integer directExpensesType) {
+        DirectExpensesType = directExpensesType;
+    }
+
+    public static Integer getIndectExpensesType() {
+        return IndectExpensesType;
+    }
+
+    public static void setIndectExpensesType(Integer indectExpensesType) {
+        IndectExpensesType = indectExpensesType;
+    }
+
+    public static Integer getProjectDurationType() {
+        return ProjectDurationType;
+    }
+
+    public static void setProjectDurationType(Integer projectDurationType) {
+        ProjectDurationType = projectDurationType;
+    }
+
+    public static boolean isSuccess() {
+        return IsSuccess;
+    }
+
+    public static void setSuccess(boolean success) {
+        IsSuccess = success;
+    }
+
+    public static boolean isCompleted() {
+        return IsCompleted;
+    }
+
+    public static void setCompleted(boolean completed) {
+        IsCompleted = completed;
+    }
+
+    public static Float getProfitMoney() {
+        return ProfitMoney;
+    }
+
+    public static void setProfitMoney(Float profitMoney) {
+        ProfitMoney = profitMoney;
+    }
+
+    public static void setId(Integer id) {
+        Id = id;
+    }
+
+    public static String getName() {
+        return Name;
+    }
+
+    public static void setName(String name) {
+        Name = name;
+    }
+
+    public static String getDescription() {
+        return Description;
+    }
+
+    public static void setDescription(String description) {
+        Description = description;
+    }
+
+    public static Integer getCategoryId() {
+        return CategoryId;
+    }
+
+    public static void setCategoryId(Integer categoryId) {
+        CategoryId = categoryId;
+    }
+
+    public static String getCategoryName() {
+        return CategoryName;
+    }
+
+    public static void setCategoryName(String categoryName) {
+        CategoryName = categoryName;
+    }
+
+    public static Integer getProfitType() {
+        return ProfitType;
+    }
+
+    public static void setProfitType(Integer profitType) {
+        ProfitType = profitType;
+    }
+
+    public static Integer getNumContributor() {
+        return NumContributor;
+    }
+
+    public static void setNumContributor(Integer numContributor) {
+        NumContributor = numContributor;
+    }
+
+    public static Integer getGenderContributor() {
+        return GenderContributor;
+    }
+
+    public static void setGenderContributor(Integer genderContributor) {
+        GenderContributor = genderContributor;
+    }
+
+    public static Integer getUserId() {
+        return UserId;
+    }
+
+    public static void setUserId(Integer userId) {
+        UserId = userId;
+    }
+
+    public static Integer getNumLiks() {
+        return NumLiks;
+    }
+
+    public static void setNumLiks(Integer numLiks) {
+        NumLiks = numLiks;
+    }
+
+    public static Integer getNumJoinOffer() {
+        return NumJoinOffer;
+    }
+
+    public static void setNumJoinOffer(Integer numJoinOffer) {
+        NumJoinOffer = numJoinOffer;
+    }
+
+    public static List<UserModel> getUsers() {
+        return Users;
+    }
+
+    public static void setUsers(List<UserModel> users) {
+        Users = users;
+    }
 
     public static String getAddress() {
         return Address;
@@ -34,151 +224,83 @@ public class Offers implements Serializable {
         Address = address;
     }
 
-    public Offers() {
+    public static String getDate() {
+        return Date;
     }
 
-    public static void setNumJoinOffer(int numJoinOffer) {
-        NumJoinOffer = numJoinOffer;
+    public static void setDate(String date) {
+        Date = date;
     }
 
-    public static void setNumLiks(int numLiks) {
-        NumLiks = numLiks;
+    public static Float getProjectDuration() {
+        return ProjectDuration;
     }
 
-    public static void setUsers(List<UserModel> users) {
-        Users = users;
+    public static void setProjectDuration(Float projectDuration) {
+        ProjectDuration = projectDuration;
     }
 
-    public static int getNumJoinOffer() {
-        return NumJoinOffer;
+    public static Integer getStatus() {
+        return Status;
     }
 
-    public static int getNumLiks() {
-        return NumLiks;
+    public static void setStatus(Integer status) {
+        Status = status;
     }
 
-    public static List<UserModel> getUsers() {
-        return Users;
+    public static Integer getLocationId() {
+        return LocationId;
     }
 
-    public static void setCategoryId(int categoryId) {
-        CategoryId = categoryId;
+    public static void setLocationId(Integer locationId) {
+        LocationId = locationId;
     }
 
-    public static void setAgeRequiredFrom(int ageRequiredFrom) {
-        AgeRequiredFrom = ageRequiredFrom;
+    public static Integer getMinExperience() {
+        return MinExperience;
     }
 
-    public static void setCategoryName(String categoryName) {
-        CategoryName = categoryName;
-
+    public static void setMinExperience(Integer minExperience) {
+        MinExperience = minExperience;
     }
 
-    public static void setAgeRequiredTo(int ageRequiredTo) {
-        AgeRequiredTo = ageRequiredTo;
+    public static Float getInitialCost() {
+        return InitialCost;
     }
 
-    public static int getUserId() {
-        return UserId;
+    public static void setInitialCost(Float initialCost) {
+        InitialCost = initialCost;
     }
 
-    public static void setUserId(int userId) {
-        UserId = userId;
+    public static Float getDirectExpenses() {
+        return DirectExpenses;
     }
 
-    public static void setDescription(String description) {
-        Description = description;
+    public static void setDirectExpenses(Float directExpenses) {
+        DirectExpenses = directExpenses;
     }
 
-    public static void setEducationContributorLevel(int educationContributorLevel) {
-        EducationContributorLevel = educationContributorLevel;
+    public static Float getIndectExpenses() {
+        return IndectExpenses;
     }
 
-    public static void setGenderContributor(int genderContributor) {
-        GenderContributor = genderContributor;
+    public static void setIndectExpenses(Float indectExpenses) {
+        IndectExpenses = indectExpenses;
     }
 
-    public static void setId(int id) {
-        Id = id;
+    public static boolean isNeedPlace() {
+        return NeedPlace;
     }
 
-    public static void setName(String name) {
-        Name = name;
+    public static void setNeedPlace(boolean needPlace) {
+        NeedPlace = needPlace;
     }
 
-    public static void setNumContributorFrom(int numContributorFrom) {
-        NumContributorFrom = numContributorFrom;
+    public static boolean isIsJoin() {
+        return IsJoin;
     }
 
-    public static void setNumContributorTo(int numContributorTo) {
-        NumContributorTo = numContributorTo;
-    }
-
-    public static void setProfitFrom(int profitFrom) {
-        ProfitFrom = profitFrom;
-    }
-
-    public static void setProfitTo(int profitTo) {
-        ProfitTo = profitTo;
-    }
-
-    public static void setProfitType(int profitType) {
-        ProfitType = profitType;
-    }
-
-    public static int getAgeRequiredFrom() {
-        return AgeRequiredFrom;
-    }
-
-    public static int getAgeRequiredTo() {
-        return AgeRequiredTo;
-    }
-
-    public static int getCategoryId() {
-        return CategoryId;
-    }
-
-    public static int getEducationContributorLevel() {
-        return EducationContributorLevel;
-    }
-
-    public static int getGenderContributor() {
-        return GenderContributor;
-    }
-
-    public static int getId() {
-        return Id;
-    }
-
-    public static int getNumContributorFrom() {
-        return NumContributorFrom;
-    }
-
-    public static int getNumContributorTo() {
-        return NumContributorTo;
-    }
-
-    public static int getProfitFrom() {
-        return ProfitFrom;
-    }
-
-    public static int getProfitTo() {
-        return ProfitTo;
-    }
-
-    public static int getProfitType() {
-        return ProfitType;
-    }
-
-    public static String getCategoryName() {
-        return CategoryName;
-    }
-
-    public static String getDescription() {
-        return Description;
-    }
-
-    public static String getName() {
-        return Name;
+    public static void setIsJoin(boolean isJoin) {
+        IsJoin = isJoin;
     }
 }

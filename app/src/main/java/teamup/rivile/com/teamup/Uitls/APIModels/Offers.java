@@ -10,84 +10,51 @@ public class Offers implements Serializable {
     private Integer CategoryId;
     private String CategoryName;
     private Integer ProfitType;
-    private Integer ProfitFrom;
-    private Integer ProfitTo;
-    private Integer NumContributorFrom;
-    private Integer NumContributorTo;
-    private Integer AgeRequiredFrom;
-    private Integer AgeRequiredTo;
+    private Integer NumContributor;
     private Integer GenderContributor;
-    private Integer EducationContributorLevel;
     private Integer UserId;
     private Integer NumLiks;
     private Integer NumJoinOffer;
     private List<UserModel> Users;
     private String Address;
     private String Date;
+    private Float ProjectDuration;
     private Integer Status;
-    private List<RequirmentModel> Requirments;
-    private List<CapitalModel> Capitals;
+    private List<StateModel> States;
     private List<TagsModel> Tags;
     private Integer LocationId;
+    private Integer InitialCostType;
+    private Integer DirectExpensesType;
+    private Integer IndectExpensesType;
+    private Integer ProjectDurationType;
+    private Integer MinExperience;
+    private Float ProfitMoney;
+    private Float InitialCost;
+    private Float DirectExpenses;
+    private Float IndectExpenses;
 
-    public Offers() {
+    private Integer ProjectType;
+    public boolean NeedPlace ;
+    public boolean IsJoin ;
+    public boolean IsSuccess ;
+    public boolean IsCompleted ;
+    public List<AttachmentModel> Attachments;
+
+
+    public Integer getProjectType() {
+        return ProjectType;
     }
 
-    public Offers(String name, String description, Integer categoryId, String categoryName, Integer profitType, Integer profitFrom, Integer profitTo, Integer numContributorFrom, Integer numContributorTo, Integer ageRequiredFrom, Integer ageRequiredTo, Integer genderContributor, Integer educationContributorLevel, Integer userId, Integer numLiks, Integer numJoinOffer, List<UserModel> users, String address, String date, Integer status, List<RequirmentModel> requirments, List<CapitalModel> capitals, List<TagsModel> tags, Integer locationId) {
-        Name = name;
-        Description = description;
-        CategoryId = categoryId;
-        CategoryName = categoryName;
-        ProfitType = profitType;
-        ProfitFrom = profitFrom;
-        ProfitTo = profitTo;
-        NumContributorFrom = numContributorFrom;
-        NumContributorTo = numContributorTo;
-        AgeRequiredFrom = ageRequiredFrom;
-        AgeRequiredTo = ageRequiredTo;
-        GenderContributor = genderContributor;
-        EducationContributorLevel = educationContributorLevel;
-        UserId = userId;
-        NumLiks = numLiks;
-        NumJoinOffer = numJoinOffer;
-        Users = users;
-        Address = address;
-        Date = date;
-        Status = status;
-        Requirments = requirments;
-        Capitals = capitals;
-        Tags = tags;
-        LocationId = locationId;
+    public void setProjectType(Integer projectType) {
+        ProjectType = projectType;
     }
 
-    public Offers(Integer id, String name, String description, Integer categoryId, String categoryName, Integer profitType, Integer profitFrom, Integer profitTo, Integer numContributorFrom, Integer numContributorTo, Integer ageRequiredFrom, Integer ageRequiredTo, Integer genderContributor, Integer educationContributorLevel, Integer userId, Integer numLiks, Integer numJoinOffer, List<UserModel> users, String address, String date, Integer status, List<RequirmentModel> requirments, List<CapitalModel> capitals, List<TagsModel> tags, Integer locationId) {
+    public Float getProfitMoney() {
+        return ProfitMoney;
+    }
 
-
-        Id = id;
-        Name = name;
-        Description = description;
-        CategoryId = categoryId;
-        CategoryName = categoryName;
-        ProfitType = profitType;
-        ProfitFrom = profitFrom;
-        ProfitTo = profitTo;
-        NumContributorFrom = numContributorFrom;
-        NumContributorTo = numContributorTo;
-        AgeRequiredFrom = ageRequiredFrom;
-        AgeRequiredTo = ageRequiredTo;
-        GenderContributor = genderContributor;
-        EducationContributorLevel = educationContributorLevel;
-        UserId = userId;
-        NumLiks = numLiks;
-        NumJoinOffer = numJoinOffer;
-        Users = users;
-        Address = address;
-        Date = date;
-        Status = status;
-        Requirments = requirments;
-        Capitals = capitals;
-        Tags = tags;
-        LocationId = locationId;
+    public void setProfitMoney(Float profitMoney) {
+        ProfitMoney = profitMoney;
     }
 
     public Integer getId() {
@@ -138,52 +105,12 @@ public class Offers implements Serializable {
         ProfitType = profitType;
     }
 
-    public Integer getProfitFrom() {
-        return ProfitFrom;
+    public Integer getNumContributor() {
+        return NumContributor;
     }
 
-    public void setProfitFrom(Integer profitFrom) {
-        ProfitFrom = profitFrom;
-    }
-
-    public Integer getProfitTo() {
-        return ProfitTo;
-    }
-
-    public void setProfitTo(Integer profitTo) {
-        ProfitTo = profitTo;
-    }
-
-    public Integer getNumContributorFrom() {
-        return NumContributorFrom;
-    }
-
-    public void setNumContributorFrom(Integer numContributorFrom) {
-        NumContributorFrom = numContributorFrom;
-    }
-
-    public Integer getNumContributorTo() {
-        return NumContributorTo;
-    }
-
-    public void setNumContributorTo(Integer numContributorTo) {
-        NumContributorTo = numContributorTo;
-    }
-
-    public Integer getAgeRequiredFrom() {
-        return AgeRequiredFrom;
-    }
-
-    public void setAgeRequiredFrom(Integer ageRequiredFrom) {
-        AgeRequiredFrom = ageRequiredFrom;
-    }
-
-    public Integer getAgeRequiredTo() {
-        return AgeRequiredTo;
-    }
-
-    public void setAgeRequiredTo(Integer ageRequiredTo) {
-        AgeRequiredTo = ageRequiredTo;
+    public void setNumContributor(Integer numContributor) {
+        NumContributor = numContributor;
     }
 
     public Integer getGenderContributor() {
@@ -192,14 +119,6 @@ public class Offers implements Serializable {
 
     public void setGenderContributor(Integer genderContributor) {
         GenderContributor = genderContributor;
-    }
-
-    public Integer getEducationContributorLevel() {
-        return EducationContributorLevel;
-    }
-
-    public void setEducationContributorLevel(Integer educationContributorLevel) {
-        EducationContributorLevel = educationContributorLevel;
     }
 
     public Integer getUserId() {
@@ -250,6 +169,62 @@ public class Offers implements Serializable {
         Date = date;
     }
 
+    public Integer getInitialCostType() {
+        return InitialCostType;
+    }
+
+    public void setInitialCostType(Integer initialCostType) {
+        InitialCostType = initialCostType;
+    }
+
+    public Integer getDirectExpensesType() {
+        return DirectExpensesType;
+    }
+
+    public void setDirectExpensesType(Integer directExpensesType) {
+        DirectExpensesType = directExpensesType;
+    }
+
+    public Integer getIndectExpensesType() {
+        return IndectExpensesType;
+    }
+
+    public void setIndectExpensesType(Integer indectExpensesType) {
+        IndectExpensesType = indectExpensesType;
+    }
+
+    public Integer getProjectDurationType() {
+        return ProjectDurationType;
+    }
+
+    public void setProjectDurationType(Integer projectDurationType) {
+        ProjectDurationType = projectDurationType;
+    }
+
+    public boolean isSuccess() {
+        return IsSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        IsSuccess = success;
+    }
+
+    public boolean isCompleted() {
+        return IsCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        IsCompleted = completed;
+    }
+
+    public Float getProjectDuration() {
+        return ProjectDuration;
+    }
+
+    public void setProjectDuration(Float projectDuration) {
+        ProjectDuration = projectDuration;
+    }
+
     public Integer getStatus() {
         return Status;
     }
@@ -258,20 +233,12 @@ public class Offers implements Serializable {
         Status = status;
     }
 
-    public List<RequirmentModel> getRequirments() {
-        return Requirments;
+    public List<StateModel> getStates() {
+        return States;
     }
 
-    public void setRequirments(List<RequirmentModel> requirments) {
-        Requirments = requirments;
-    }
-
-    public List<CapitalModel> getCapitals() {
-        return Capitals;
-    }
-
-    public void setCapitals(List<CapitalModel> capitals) {
-        Capitals = capitals;
+    public void setStates(List<StateModel> states) {
+        States = states;
     }
 
     public List<TagsModel> getTags() {
@@ -288,5 +255,61 @@ public class Offers implements Serializable {
 
     public void setLocationId(Integer locationId) {
         LocationId = locationId;
+    }
+
+    public Integer getMinExperience() {
+        return MinExperience;
+    }
+
+    public void setMinExperience(Integer minExperience) {
+        MinExperience = minExperience;
+    }
+
+    public Float getInitialCost() {
+        return InitialCost;
+    }
+
+    public void setInitialCost(Float initialCost) {
+        InitialCost = initialCost;
+    }
+
+    public Float getDirectExpenses() {
+        return DirectExpenses;
+    }
+
+    public void setDirectExpenses(Float directExpenses) {
+        DirectExpenses = directExpenses;
+    }
+
+    public Float getIndectExpenses() {
+        return IndectExpenses;
+    }
+
+    public void setIndectExpenses(Float indectExpenses) {
+        IndectExpenses = indectExpenses;
+    }
+
+    public boolean isNeedPlace() {
+        return NeedPlace;
+    }
+
+    public void setNeedPlace(boolean needPlace) {
+        NeedPlace = needPlace;
+    }
+
+    public boolean isJoin() {
+        return IsJoin;
+    }
+
+    public void setJoin(boolean join) {
+        IsJoin = join;
+    }
+
+    public List<AttachmentModel> getAttachments() {
+        return Attachments;
+    }
+
+    public void setAttachments(List<AttachmentModel> attachments) {
+        Attachments = attachments;
     }
 }

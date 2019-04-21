@@ -47,48 +47,49 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
             if (deals.get(position) != null && deals.get(position).getImage() != null && !deals.get(position).getImage().isEmpty()) {
                 try {
-                    if (deals.get(position).getSocialId() != null){
+                    if (deals.get(position).getImage().startsWith("http")){
                         Picasso.get().load(deals.get(position).getImage()).into(holder.image);
                     }else {
                         Picasso.get().load(API.BASE_URL + deals.get(position).getImage()).into(holder.image);
                     }
-                    holder.image_name.setVisibility(View.GONE);
+//                    holder.image_name.setVisibility(View.GONE);
                 } catch (Exception e) {
-                    holder.image_name.setVisibility(View.VISIBLE);
-                    String[] sp = deals.get(position).getFullName().split(" ");
-                    if (sp.length == 1){
-                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
-                    }else if (sp.length > 0 && sp.length <= 2) {
-                        for (int j = 0; j < sp.length; j++) {
-                            holder.image_name.append(sp[j]+"");
-                        }
-                    }else if (sp.length > 2){
-                        for (int j = 0; j < 2; j++) {
-                            holder.image_name.append(sp[j]+"");
-                        }
-                    }
-                }
-            } else {
-                try {
-                    holder.image_name.setVisibility(View.VISIBLE);
-                    String[] sp = deals.get(position).getFullName().split(" ");
-                    if (!deals.get(position).getFullName().contains(" ")){
-                        Log.e("IIIII",deals.get(position).getFullName().charAt(0)+"");
-                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
-
-                    }else if (sp.length > 0 && sp.length <= 2) {
-                        for (int j = 0; j < sp.length; j++) {
-                            holder.image_name.append(sp[j]+"");
-                        }
-                    }else if (sp.length > 2){
-                        for (int j = 0; j < 2; j++) {
-                            holder.image_name.append(sp[j]+"");
-                        }
-                    }
-                } catch (Exception e) {
-
+//                    holder.image_name.setVisibility(View.VISIBLE);
+//                    String[] sp = deals.get(position).getFullName().split(" ");
+//                    if (sp.length == 1){
+//                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
+//                    }else if (sp.length > 0 && sp.length <= 2) {
+//                        for (int j = 0; j < sp.length; j++) {
+//                            holder.image_name.append(sp[j]+"");
+//                        }
+//                    }else if (sp.length > 2){
+//                        for (int j = 0; j < 2; j++) {
+//                            holder.image_name.append(sp[j]+"");
+//                        }
+//                    }
                 }
             }
+//            else {
+//                try {
+//                    holder.image_name.setVisibility(View.VISIBLE);
+//                    String[] sp = deals.get(position).getFullName().split(" ");
+//                    if (!deals.get(position).getFullName().contains(" ")){
+//                        Log.e("IIIII",deals.get(position).getFullName().charAt(0)+"");
+//                        holder.image_name.setText(deals.get(position).getFullName().charAt(0)+"");
+//
+//                    }else if (sp.length > 0 && sp.length <= 2) {
+//                        for (int j = 0; j < sp.length; j++) {
+//                            holder.image_name.append(sp[j]+"");
+//                        }
+//                    }else if (sp.length > 2){
+//                        for (int j = 0; j < 2; j++) {
+//                            holder.image_name.append(sp[j]+"");
+//                        }
+//                    }
+//                } catch (Exception e) {
+//
+//                }
+//            }
         }
 
         holder.image.setContentDescription(deals.get(position).getFullName());
@@ -118,12 +119,12 @@ public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vh
 
     public class Vholder extends RecyclerView.ViewHolder {
         CircleImageView image;
-        TextView image_name;
+//        TextView image_name;
 
         public Vholder(View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.im);
-            image_name = itemView.findViewById(R.id.image_name);
+//            image_name = itemView.findViewById(R.id.image_name);
         }
 
     }

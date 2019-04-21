@@ -4,7 +4,7 @@ import java.util.List;
 
 public class FilterModel {
     public String Name ;
-    public int EducationContributorLevel ;
+//    public int EducationContributorLevel ;
     public int GenderContributor ;
     public List<Integer> State ;
     public List<Integer> CategoryId ;
@@ -25,13 +25,13 @@ public class FilterModel {
         Name = name;
     }
 
-    public int getEducationContributorLevel() {
-        return EducationContributorLevel;
-    }
-
-    public void setEducationContributorLevel(int educationContributorLevel) {
-        EducationContributorLevel = educationContributorLevel;
-    }
+//    public int getEducationContributorLevel() {
+//        return EducationContributorLevel;
+//    }
+//
+//    public void setEducationContributorLevel(int educationContributorLevel) {
+//        EducationContributorLevel = educationContributorLevel;
+//    }
 
     public int getGenderContributor() {
         return GenderContributor;

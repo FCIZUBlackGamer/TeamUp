@@ -59,6 +59,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -77,6 +78,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
@@ -626,7 +628,7 @@ public class FragmentProfileHome extends Fragment {
 
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
         UserDataBase userDataBase = loginDataBases.getUser();
-        List<OfferDetailsDataBase> offerDetailsDataBase = loginDataBases.getOffers();
+        RealmList<OfferDataBase> offerDetailsDataBase = loginDataBases.getOffers();
         profObject = loadUser(userDataBase);
         List<Offers> offers = loadOffers(offerDetailsDataBase);
         fillProfData(profObject);
@@ -635,7 +637,7 @@ public class FragmentProfileHome extends Fragment {
         fillProfOffersData(offers);
     }
 
-    private List<Offers> loadOffers(List<OfferDetailsDataBase> offerDetailsDataBase) {
+    private List<Offers> loadOffers(List<OfferDataBase> offerDetailsDataBase) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
         Gson gson = gsonBuilder.create();
@@ -643,7 +645,7 @@ public class FragmentProfileHome extends Fragment {
         List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBase.size(); i++) {
             Offers offers1 = new Offers();
-            OfferDetailsDataBase base = offerDetailsDataBase.get(i);
+            OfferDataBase base = offerDetailsDataBase.get(i);
             offers1.setUserId(base.getUserId());
             offers1.setId(base.getId());
 //            offers1.setCategoryId(base.getCategoryId());
@@ -655,8 +657,8 @@ public class FragmentProfileHome extends Fragment {
 //            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
             offers1.setDate(base.getDate());
 //            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
-            offers1.setNumContributorFrom(base.getNumContributorFrom());
-            offers1.setNumContributorTo(base.getNumContributorTo());
+//            offers1.setNumContributorFrom(base.getNumContributorFrom());
+            offers1.setNumContributor(base.getNumContributor());
             offers1.setGenderContributor(base.getGenderContributor());
             offers1.setNumJoinOffer(base.getNumJoinOffer());
             offers1.setNumLiks(base.getNumLiks());

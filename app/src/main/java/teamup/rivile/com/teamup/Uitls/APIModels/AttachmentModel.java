@@ -5,7 +5,7 @@ public class AttachmentModel {
     public Boolean Type;
     public String Name ;
     public String Source ;
-    public Integer RequirmentId;
+    public Integer OfferId;
 
     public AttachmentModel() {
     }
@@ -24,8 +24,8 @@ public class AttachmentModel {
         Name = name;
     }
 
-    public void setRequirmentId(Integer requirmentId) {
-        RequirmentId = requirmentId;
+    public void setOfferId(Integer offerId) {
+        OfferId = offerId;
     }
 
     public void setSource(String source) {
@@ -44,8 +44,8 @@ public class AttachmentModel {
         return Name;
     }
 
-    public Integer getRequirmentId() {
-        return RequirmentId;
+    public Integer getOfferId() {
+        return OfferId;
     }
 
     public Boolean getType() {

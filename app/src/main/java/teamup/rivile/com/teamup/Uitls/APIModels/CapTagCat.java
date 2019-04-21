@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CapTagCat {
-    List<CapitalModel> Category;
-    List<ExperienceTypeModel> Tags;
+    List<StateModel> Category;
+    List<TagsModel> Tags;
     @SerializedName("State")
-    List<CapitalModel> Capital;
+    List<StateModel> Capital;
     List<ExperienceTypeModel> ExperienceType;
 
-    public CapTagCat(List<CapitalModel> category, List<ExperienceTypeModel> tags, List<CapitalModel> capital, List<ExperienceTypeModel> experienceType) {
+    public CapTagCat(List<StateModel> category, List<TagsModel> tags, List<StateModel> capital, List<ExperienceTypeModel> experienceType) {
         Category = category;
         Tags = tags;
         Capital = capital;
@@ -21,27 +21,27 @@ public class CapTagCat {
     public CapTagCat() {
     }
 
-    public List<CapitalModel> getCategory() {
+    public List<StateModel> getCategory() {
         return Category;
     }
 
-    public void setCategory(List<CapitalModel> category) {
+    public void setCategory(List<StateModel> category) {
         Category = category;
     }
 
-    public List<ExperienceTypeModel> getTags() {
+    public List<TagsModel> getTags() {
         return Tags;
     }
 
-    public void setTags(List<ExperienceTypeModel> tags) {
+    public void setTags(List<TagsModel> tags) {
         Tags = tags;
     }
 
-    public List<CapitalModel> getCapital() {
+    public List<StateModel> getCapital() {
         return Capital;
     }
 
-    public void setCapital(List<CapitalModel> capital) {
+    public void setCapital(List<StateModel> capital) {
         Capital = capital;
     }
 

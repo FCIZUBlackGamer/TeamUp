@@ -6,24 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 
 public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.CapitalViewHolder> {
-    private List<CapitalModel> mCategoryModels;
+    private List<StateModel> mCategoryModels;
 
-    private CapitalModel mSelectedCategoryModels;
+    private StateModel mSelectedCategoryModels;
 
     private CheckBox mLastCheckedCheckBox;
 
-    public CategoriesRecyclerViewAdapter(List<CapitalModel> capitalModels,
-                                         @NonNull CapitalModel selectedCapitalModels) {
-        mCategoryModels = capitalModels;
-        mSelectedCategoryModels = selectedCapitalModels;
+    public CategoriesRecyclerViewAdapter(List<StateModel> stateModels,
+                                         @NonNull StateModel selectedStateModels) {
+        mCategoryModels = stateModels;
+        mSelectedCategoryModels = selectedStateModels;
     }
 
     @NonNull
@@ -37,7 +36,7 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
     @Override
     public void onBindViewHolder(@NonNull final CapitalViewHolder holder, int i) {
-        final CapitalModel model = mCategoryModels.get(i);
+        final StateModel model = mCategoryModels.get(i);
         holder.checkBox.setText(model.getName());
 
         holder.checkBox.setOnCheckedChangeListener(null);
@@ -78,17 +77,17 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
         }
     }
 
-    public CapitalModel getSelectedCategory() {
+    public StateModel getSelectedCategory() {
         return mSelectedCategoryModels;
     }
 
-    public void swapData(List<CapitalModel> categoryModels) {
+    public void swapData(List<StateModel> categoryModels) {
         mCategoryModels = categoryModels;
 
         notifyDataSetChanged();
     }
 
-    public void setSelectedCategoryModels(CapitalModel mSelectedCategoryModels) {
+    public void setSelectedCategoryModels(StateModel mSelectedCategoryModels) {
         this.mSelectedCategoryModels = mSelectedCategoryModels;
         notifyDataSetChanged();
     }

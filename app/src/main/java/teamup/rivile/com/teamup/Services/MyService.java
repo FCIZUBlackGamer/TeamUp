@@ -347,7 +347,7 @@ public class MyService extends Service {
                                     + String.valueOf(mJoinOffer.size() - 3)
                                     + getString(R.string.others);
                         }
-                        body += getString(R.string.othersSendsRequestsToJoinOffer);
+//                        body += getString(R.string.othersSendsRequestsToJoinOffer);
 
                         notificationModel.setJoinOffer(convertRealmList(mJoinOffer));
                         sendNotification(getString(R.string.app_name), body);

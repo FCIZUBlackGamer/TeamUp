@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:rsb="http://schemas.android.com/tools"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary">
@@ -58,7 +56,7 @@
             android:paddingStart="50dp"
             android:paddingEnd="50dp"
             android:paddingBottom="10dp"
-            android:text="قم بتصنيف وعرض المشاريع الآن حسب احتياجاتك بكل سهولة ويسر من خلال الأدوات المتقدمة"
+            android:text="@string/filterBlaBla"
             android:textAlignment="center"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,84 +73,11 @@
             android:background="@drawable/rounded_corner_edit_text"
             android:fontFamily="@font/medium"
             android:gravity="start"
-            android:hint="إسم المشروع"
+            android:hint="@string/proName"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView25" />
-
-        <TextView
-            android:id="@+id/textView26"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/medium"
-            android:text="@string/educationLevelContributors"
-            android:textColor="#000"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/project_name" />
-
-        <com.badoualy.stepperindicator.StepperIndicator
-            android:id="@+id/educationLevel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView26"
-            app:stpi_circleColor="@color/colorPrimary"
-            app:stpi_circleStrokeWidth="2dp"
-            app:stpi_indicatorColor="@color/colorPrimary"
-            app:stpi_lineDoneColor="@color/colorPrimary"
-            app:stpi_stepCount="4" />
-
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/educationLevel">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/medium"
-                android:text="@string/basicLevel"
-                android:textColor="#000"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/medium"
-                android:text="@string/midLevel"
-                android:textColor="#000"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/medium"
-                android:text="@string/highLevel"
-                android:textColor="#000"
-                android:textSize="16sp" />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/contributorsSection"
@@ -164,7 +89,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/project_name">
 
 
             <TextView
@@ -176,7 +101,7 @@
                 android:gravity="top"
                 android:text="@string/gender"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <RadioGroup
                 android:id="@+id/genderGroup"
@@ -193,7 +118,7 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:fontFamily="@font/medium"
-                    android:gravity="end|center_vertical"
+                    android:gravity="start|center_vertical"
                     android:text="@string/both"
                     app:buttonTint="@color/backgroundDarkGreen" />
 
@@ -204,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/medium"
-                    android:gravity="end|center_vertical"
+                    android:gravity="start|center_vertical"
                     android:text="@string/male"
                     app:buttonTint="@color/backgroundDarkGreen" />
 
@@ -215,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/medium"
-                    android:gravity="end|center_vertical"
+                    android:gravity="start|center_vertical"
                     android:text="@string/female"
                     app:buttonTint="@color/backgroundDarkGreen" />
 
@@ -230,7 +155,9 @@
             android:fontFamily="@font/medium"
             android:text="@string/place"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contributorsSection" />
@@ -263,6 +190,7 @@
 
         <TextView
             android:id="@+id/textView27"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -280,6 +208,7 @@
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:id="@+id/ageSeekbar"
+            android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -291,6 +220,7 @@
 
         <TextView
             android:id="@+id/tv_ageMin"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
@@ -300,6 +230,7 @@
 
         <TextView
             android:id="@+id/tv_ageMax"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
@@ -317,9 +248,9 @@
             android:fontFamily="@font/medium"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="الأقسام"
+            android:text="@string/categories"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ageSeekbar" />
@@ -347,9 +278,9 @@
             android:fontFamily="@font/medium"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="مدي تكلفة المشروع"
+            android:text="@string/projectTotalCost"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recDep" />
@@ -393,9 +324,9 @@
             android:fontFamily="@font/medium"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="عدد المساهمين في المشروع"
+            android:text="@string/numContributors"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/costSeekbar" />
@@ -429,52 +360,53 @@
             app:layout_constraintRight_toRightOf="@id/numberContributersSeekbar"
             app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />
 
-        <TextView
-            android:id="@+id/textView31"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/medium"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="مدي خبرة كل مشترك بالسنوات"
-            android:textColor="#000"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />
+        <!--<TextView-->
+            <!--android:id="@+id/textView31"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="24dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:fontFamily="@font/medium"-->
+            <!--android:paddingStart="10dp"-->
+            <!--android:paddingEnd="10dp"-->
+            <!--android:text="مدي خبرة كل مشترك بالسنوات"-->
+            <!--android:textColor="#000"-->
+            <!--android:textSize="18sp"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />-->
 
-        <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
-            android:id="@+id/experienceSeekbar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView31" />
+        <!--<com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar-->
+            <!--android:id="@+id/experienceSeekbar"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:visibility="gone"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/textView31" />-->
 
-        <TextView
-            android:id="@+id/tv_experienceMin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="0"
-            app:layout_constraintLeft_toLeftOf="@id/experienceSeekbar"
-            app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
+        <!--<TextView-->
+            <!--android:id="@+id/tv_experienceMin"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="2dp"-->
+            <!--android:text="0"-->
+            <!--app:layout_constraintLeft_toLeftOf="@id/experienceSeekbar"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />-->
 
-        <TextView
-            android:id="@+id/tv_experienceMax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="2dp"
-            android:text="65"
-            app:layout_constraintRight_toRightOf="@id/experienceSeekbar"
-            app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
+        <!--<TextView-->
+            <!--android:id="@+id/tv_experienceMax"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="2dp"-->
+            <!--android:text="65"-->
+            <!--app:layout_constraintRight_toRightOf="@id/experienceSeekbar"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />-->
 
         <Button
             android:id="@+id/go"
@@ -492,7 +424,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/experienceSeekbar" />
+            app:layout_constraintTop_toBottomOf="@+id/numberContributersSeekbar" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

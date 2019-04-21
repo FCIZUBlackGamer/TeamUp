@@ -1,25 +1,23 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class Offer {
-    @SerializedName("Offers")
-    private List<Offers> offersList;
 
-    public Offer(List<Offers> offersList) {
-        this.offersList = offersList;
+    private List<Offers> Offers;
+
+    public Offer(List<Offers> Offers) {
+        this.Offers = Offers;
     }
 
     public Offer() {
     }
 
-    public List<Offers> getOffersList() {
-        return offersList;
+    public List<Offers> getOffers() {
+        return Offers;
     }
 
-    public void setOffersList(List<Offers> offersList) {
-        this.offersList = offersList;
+    public void setOffers(List<Offers> offers) {
+        this.Offers = offers;
     }
 }

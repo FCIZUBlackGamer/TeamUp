@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,17 +29,16 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
 
 public class FragmentAddHome extends Fragment {
-    private MutableLiveData<ArrayList<ExperienceTypeModel>> mLoadedTagsLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<ExperienceTypeModel>> mExperienceTypesLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<CapitalModel>> mLoadedCapitalLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<CapitalModel>> mLoadedCategoryLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<TagsModel>> mLoadedTagsLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<StateModel>> mLoadedCapitalLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<StateModel>> mLoadedCategoryLiveData = new MutableLiveData<>();
 
     private ImageView mIndicatorImageView;
 
@@ -68,7 +68,7 @@ public class FragmentAddHome extends Fragment {
     //FragmentTransaction d;
 
     private Offers offer = null;
-    private RequirmentModel requirmentModel = null;
+//    private RequirmentModel requirmentModel = null;
 
     @Nullable
     @Override
@@ -86,6 +86,7 @@ public class FragmentAddHome extends Fragment {
         super.onStart();
 
         //d = fragmentManager.beginTransaction();
+//        viewPager.setRotationY(180);
 
         if (fab != null)
             fab.setVisibility(View.GONE);
@@ -104,8 +105,8 @@ public class FragmentAddHome extends Fragment {
                 if (i == 0) mIndicatorImageView.setImageResource(R.drawable.ic_indicator_first);
                 else if (i == 1)
                     mIndicatorImageView.setImageResource(R.drawable.ic_indicator_second);
-                else if (i == 2)
-                    mIndicatorImageView.setImageResource(R.drawable.ic_indicator_third);
+//                else if (i == 2)
+//                    mIndicatorImageView.setImageResource(R.drawable.ic_indicator_third);
             }
 
             @Override
@@ -113,6 +114,13 @@ public class FragmentAddHome extends Fragment {
 
             }
         });
+
+        if (Locale.getDefault().getLanguage().equals("ar")) {
+            viewPager.setCurrentItem(1);
+        }
+        else if (Locale.getDefault().getLanguage().equals("en")) {
+            viewPager.setCurrentItem(0);
+        }
     }
 
     class pager extends FragmentPagerAdapter {
@@ -126,13 +134,27 @@ public class FragmentAddHome extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
+                if (Locale.getDefault().getLanguage().equals("ar")) {
+                    fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
+                }
+                else if (Locale.getDefault().getLanguage().equals("en")) {
+                    fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
+                }
+
                 //d.commitNow();
-            } else if (position == 1) {
-                fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mExperienceTypesLiveData, mLoadedProjectWithAllDataLiveData);
-                //d.commitNow();
-            } else if (position == 2) {
-                fragment = FragmentOffer3.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
+            }
+//            else if (position == 1) {
+//                fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mExperienceTypesLiveData, mLoadedProjectWithAllDataLiveData);
+//                //d.commitNow();
+//            }
+            else if (position == 1) {
+                if (Locale.getDefault().getLanguage().equals("ar")) {
+                    fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
+                }
+                else if (Locale.getDefault().getLanguage().equals("en")) {
+                    fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
+                }
+
                 //d.commitNow();
             }
 
@@ -141,7 +163,7 @@ public class FragmentAddHome extends Fragment {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 
@@ -157,10 +179,10 @@ public class FragmentAddHome extends Fragment {
             public void onResponse(@NonNull Call<CapTagCat> call, @NonNull Response<CapTagCat> response) {
                 if (response.errorBody() == null) {
                     if (response.body() != null) {
-                        mLoadedCapitalLiveData.postValue((ArrayList<CapitalModel>) response.body().getCapital());
-                        mLoadedCategoryLiveData.postValue((ArrayList<CapitalModel>) response.body().getCategory());
-                        mLoadedTagsLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getTags());
-                        mExperienceTypesLiveData.postValue((ArrayList<ExperienceTypeModel>) response.body().getExperienceType());
+                        mLoadedCapitalLiveData.postValue((ArrayList<StateModel>) response.body().getCapital());
+                        mLoadedCategoryLiveData.postValue((ArrayList<StateModel>) response.body().getCategory());
+                        mLoadedTagsLiveData.postValue((ArrayList<TagsModel>) response.body().getTags());
+
                         if (mProjectId != -1)
                             loadAllProjectDataForEdit();
 
@@ -225,14 +247,14 @@ public class FragmentAddHome extends Fragment {
 //        for (int i = capitalArray.length() - 1; i >= 0; --i) {
 //            JSONObject capitalsJsonObject = capitalArray.getJSONObject(i);
 //
-//            mLoadedCapitalLiveData.add(gson.fromJson(capitalsJsonObject.toString(), CapitalModel.class));
+//            mLoadedCapitalLiveData.add(gson.fromJson(capitalsJsonObject.toString(), StateModel.class));
 //        }
 //
 //        JSONArray categoryArray = responseObject.getJSONArray("Category");
 //        for (int i = categoryArray.length() - 1; i >= 0; --i) {
 //            JSONObject CategoriesJsonObject = categoryArray.getJSONObject(i);
 //
-//            mLoadedCategoryLiveData.add(gson.fromJson(CategoriesJsonObject.toString(), CapitalModel.class));
+//            mLoadedCategoryLiveData.add(gson.fromJson(CategoriesJsonObject.toString(), StateModel.class));
 //        }
 //    }
 }

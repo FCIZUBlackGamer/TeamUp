@@ -1,10 +1,10 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-public class CapitalModel {
+public class StateModel {
     public Integer Id ;
     public String Name ;
 
-    public CapitalModel() {
+    public StateModel() {
     }
 
     public String getName() {

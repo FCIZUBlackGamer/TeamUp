@@ -16,51 +16,40 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
-import com.badoualy.stepperindicator.StepperIndicator;
 import com.squareup.picasso.Picasso;
-import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
-import java.util.List;
+import java.text.DecimalFormat;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.DrawerActivity;
 import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
-import teamup.rivile.com.teamup.Project.Add.StaticShit.RequirmentModel;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
-import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.MaxTextWatcher;
-import teamup.rivile.com.teamup.Uitls.MinTextWatcher;
 
 public class FragmentOffer1 extends Fragment {
     View view;
     CircleImageView user_image;
-    RelativeLayout money, contributors;
-    LinearLayout moneySection, contributorsSection;
+    RelativeLayout money, contributors, place;
+    LinearLayout moneySection, contributorsSection, placeSection;
 
     TextInputEditText project_name;
     EditText proDetail, moneyDesc;
-    RadioGroup moneyGroup, availGroupMoney, genderGroup;
-    RangeSeekBar moneySeekbar, moneyRequiredSeekbar, contributorSeekbar;
-    StepperIndicator educationLevel;
+    RadioGroup moneyGroup, genderGroup, placeGroup;
 
-    FloatingActionButton arrowContributors, arrowMoney;
-    EditText moneyOutFrom, moneyOutTo, moneyInFrom, moneyInTo, conFrom, conTo;
-
-    private final int minMoneyOut = 0,
-            maxMoneyOut = 100000,
-            minMoneyIn = 0,
-            maxMoneyIn = 100000,
-            minContributor = 0,
-            maxContributor = 15;
+    ImageView arrowContributors, arrowMoney, arrowPlace;
+    EditText ed_profitMoney, ed_initialCost, ed_directCost, ed_IndirectCost, ed_proDuration, ed_contributers;
+    Spinner sp_durationType, sp_profitMoney, /*sp_initialCost,*/ sp_directCost, sp_IndirectCost, sp_proType;
 
     static ViewPager pager;
     static FragmentPagerAdapter pagerAdapter;
@@ -81,17 +70,35 @@ public class FragmentOffer1 extends Fragment {
         view = inflater.inflate(R.layout.fragment1_add_project, container, false);
         realm = Realm.getDefaultInstance();
         /** Shrink and Expand Views */
+        place = view.findViewById(R.id.place);
         money = view.findViewById(R.id.money);
         contributors = view.findViewById(R.id.contributors);
         moneySection = view.findViewById(R.id.moneySection);
+        placeSection = view.findViewById(R.id.placeSection);
         contributorsSection = view.findViewById(R.id.contributorsSection);
         arrowMoney = view.findViewById(R.id.arrowMoney);
+        arrowPlace = view.findViewById(R.id.arrowPlace);
         arrowContributors = view.findViewById(R.id.arrowContributors);
         /** Input Views */
 
+        user_image = view.findViewById(R.id.user_image);
+        placeGroup = view.findViewById(R.id.placeGroup);
         project_name = view.findViewById(R.id.project_name);
         proDetail = view.findViewById(R.id.proDetail);
-        moneyDesc = view.findViewById(R.id.moneyDesc);
+//        moneyDesc = view.findViewById(R.id.moneyDesc);
+        ed_profitMoney = view.findViewById(R.id.ed_profitMoney);
+        ed_initialCost = view.findViewById(R.id.ed_initialCost);
+        ed_directCost = view.findViewById(R.id.ed_directCost);
+        ed_IndirectCost = view.findViewById(R.id.ed_IndirectCost);
+        ed_proDuration = view.findViewById(R.id.ed_proDuration);
+        sp_durationType = view.findViewById(R.id.sp_durationType);
+        ed_contributers = view.findViewById(R.id.ed_contributers);
+
+        sp_proType = view.findViewById(R.id.sp_proType);
+        sp_profitMoney = view.findViewById(R.id.sp_profitMoney);
+//        sp_initialCost = view.findViewById(R.id.sp_initialCost);
+        sp_directCost = view.findViewById(R.id.sp_directCost);
+        sp_IndirectCost = view.findViewById(R.id.sp_IndirectCost);
 
         moneyGroup = view.findViewById(R.id.moneyGroup);
         int checkedId = moneyGroup.getCheckedRadioButtonId();
@@ -105,7 +112,6 @@ public class FragmentOffer1 extends Fragment {
             Offers.setProfitType(3);
         }
 
-        user_image = view.findViewById(R.id.user_image);
         genderGroup = view.findViewById(R.id.genderGroup);
         checkedId = genderGroup.getCheckedRadioButtonId();
         if (checkedId == R.id.male) {
@@ -116,42 +122,6 @@ public class FragmentOffer1 extends Fragment {
             Offers.setGenderContributor(2);
         }
 
-        availGroupMoney = view.findViewById(R.id.availGroupMoney);
-        checkedId = availGroupMoney.getCheckedRadioButtonId();
-        RequirmentModel.setNeedMoney(checkedId == R.id.avail);
-
-        moneySeekbar = view.findViewById(R.id.moneySeekbar);
-        Offers.setProfitFrom(minMoneyOut);
-        Offers.setProfitTo(maxMoneyOut);
-
-        moneyRequiredSeekbar = view.findViewById(R.id.moneyRequiredSeekbar);
-        RequirmentModel.setMoneyFrom(minMoneyIn);
-        RequirmentModel.setMoneyTo(maxMoneyIn);
-
-        contributorSeekbar = view.findViewById(R.id.contributorSeekbar);
-        Offers.setNumContributorFrom(minContributor);
-        Offers.setNumContributorTo(maxContributor);
-
-        educationLevel = view.findViewById(R.id.educationLevel);
-        educationLevel.setCurrentStep(0);
-        Offers.setEducationContributorLevel(0);
-
-        moneyOutFrom = view.findViewById(R.id.moneyOutFrom);
-        moneyOutTo = view.findViewById(R.id.moneyOutTo);
-
-        moneyInFrom = view.findViewById(R.id.moneyInFrom);
-        moneyInTo = view.findViewById(R.id.moneyInTo);
-
-        conFrom = view.findViewById(R.id.conFrom);
-        conTo = view.findViewById(R.id.conTo);
-
-//        if (Offers == null) {
-//            Offers = new Offerss();
-//        }
-//
-//        if (RequirmentModel == null) {
-//            RequirmentModel = new RequirmentModel();
-//        }
         return view;
     }
 
@@ -168,10 +138,16 @@ public class FragmentOffer1 extends Fragment {
             if (false){ // founded in device
 
             }else {
+                if (!image.startsWith("http"))
                 Picasso.get().load(API.BASE_URL+image).into(user_image);
+                else {
+                    Picasso.get().load(image).into(user_image);
+                }
             }
         });
 
+        validate_Money();
+        validate_Type();
         proDetail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -185,47 +161,15 @@ public class FragmentOffer1 extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Offers.setDescription(proDetail.getText().toString());
-                Log.e("Data", Offers.getDescription());
+                if (s.toString().matches("[^&%$#@!~]*")){
+                    proDetail.setError(getString(R.string.noSpecailChars));
+                    Offers.setDescription(s.toString().replaceAll("[^&%$#@!~]*","•"));
+                }else {
+                    Offers.setDescription(proDetail.getText().toString());
+                }
             }
         });
 
-        moneyDesc.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-                Log.e("Data", Offers.getDescription());
-            }
-        });
-
-//
-//       moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-//                        actionId == EditorInfo.IME_ACTION_DONE ||
-//                        event != null &&
-//                                event.getAction() == KeyEvent.ACTION_DOWN &&
-//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-//                    if (event == null || !event.isShiftPressed()) {
-//                        // the user is done typing.
-//                        requirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-//                        return true; // consume.
-//                    }
-//                }
-//                return false;
-//            }
-//            });
         project_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -239,27 +183,15 @@ public class FragmentOffer1 extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Offers.setName(s.toString());
+                if (s.toString().matches("[^&%$#@!~]*")){
+                    project_name.setError(getString(R.string.noSpecailChars));
+                    Offers.setName(s.toString().replaceAll("[^&%$#@!~]*","•"));
+                }else {
+                    Offers.setName(s.toString());
+                }
             }
         });
 
-//        moneyDesc.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-//                        actionId == EditorInfo.IME_ACTION_DONE ||
-//                        event != null &&
-//                                event.getAction() == KeyEvent.ACTION_DOWN &&
-//                                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-//                    if (event == null || !event.isShiftPressed()) {
-//                        // the user is done typing.
-//                        RequirmentModel.setMoneyDescriptions(moneyDesc.getText().toString());
-//                        return true; // consume.
-//                    }
-//                }
-//                return false;
-//            }
-//        });
         moneyGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.day) {
                 Offers.setProfitType(0);
@@ -272,8 +204,6 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        setUpProjectMoneyAvailabilityViewsVisibility();
-
         genderGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.male) {
                 Offers.setGenderContributor(0);
@@ -284,38 +214,38 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        setUpSeekBarViews(minMoneyOut, maxMoneyOut, moneyOutFrom, moneyOutTo, moneySeekbar, 1);
-        setUpSeekBarViews(minMoneyIn, maxMoneyIn, moneyInFrom, moneyInTo, moneyRequiredSeekbar, 2);
-        setUpSeekBarViews(minContributor, maxContributor, conFrom, conTo, contributorSeekbar, 3);
-
-        if (educationLevel.getCurrentStep() != 0)
-            Offers.setEducationContributorLevel(educationLevel.getCurrentStep());
-        educationLevel.addOnStepClickListener(step -> {
-            educationLevel.setCurrentStep(step);
-            Offers.setEducationContributorLevel(step);
-        });
-
         //region Shrink And Expand
 
         money.setOnClickListener(v -> {
             if (moneySection.getVisibility() == View.VISIBLE) {
                 moneySection.setVisibility(View.GONE);
-                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+                arrowMoney.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
                 moneySection.setVisibility(View.VISIBLE);
-                arrowMoney.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+                arrowMoney.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+            }
+        });
+
+        place.setOnClickListener(v -> {
+            if (placeSection.getVisibility() == View.VISIBLE) {
+                placeSection.setVisibility(View.GONE);
+                arrowPlace.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+
+            } else {
+                placeSection.setVisibility(View.VISIBLE);
+                arrowPlace.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
 
         contributors.setOnClickListener(v -> {
             if (contributorsSection.getVisibility() == View.VISIBLE) {
                 contributorsSection.setVisibility(View.GONE);
-                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_down));
+                arrowContributors.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
                 contributorsSection.setVisibility(View.VISIBLE);
-                arrowContributors.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_arrow_up));
+                arrowContributors.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
 
@@ -341,9 +271,6 @@ public class FragmentOffer1 extends Fragment {
                             break;
                     }
 
-                    moneyOutFrom.setText(String.valueOf(offers.getProfitFrom()));
-                    moneyOutTo.setText(String.valueOf(offers.getProfitTo()));
-
                     switch (offers.getGenderContributor()) {
                         case 0:
                             genderGroup.check(R.id.male);
@@ -356,95 +283,324 @@ public class FragmentOffer1 extends Fragment {
                             break;
                     }
 
-                    conFrom.setText(String.valueOf(offers.getNumContributorFrom()));
-                    conTo.setText(String.valueOf(offers.getNumContributorTo()));
-
-                    educationLevel.setCurrentStep(offers.getEducationContributorLevel());
-
-                    List<OfferDetailsRequirment> requirmentModels = offers.getRequirments();
-                    if (!requirmentModels.isEmpty()) {
-                        OfferDetailsRequirment requirmentModel = requirmentModels.get(0);
-
-                        availGroupMoney.check(requirmentModel.isNeedMoney() ? R.id.avail : R.id.notAvail);
-                        moneyInFrom.setText(String.valueOf(requirmentModel.getMoneyFrom()));
-                        moneyInTo.setText(String.valueOf(requirmentModel.getMoneyTo()));
-                    }
                 }
             });
         }
 
     }
 
-    private void setUpSeekBarViews(
-            final int minVal,
-            final int maxVal,
-            final EditText fromEditText,
-            final EditText toEditText,
-            final RangeSeekBar seekBar,
-            final int seekBarOrder) {
-        final MinTextWatcher minTextWatcher = new MinTextWatcher(fromEditText, minVal, seekBar);
-        fromEditText.addTextChangedListener(minTextWatcher);
+    private void validate_Type() {
+        sp_profitMoney.setDropDownWidth(200);
+        sp_proType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Offers.setProjectType(position);
+            }
 
-        final MaxTextWatcher maxTextWatcher = new MaxTextWatcher(toEditText, maxVal, seekBar);
-        toEditText.addTextChangedListener(maxTextWatcher);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        seekBar.setNotifyWhileDragging(true);
-        seekBar.setRangeValues(minVal, maxVal);
-        seekBar.setOnRangeSeekBarChangeListener((bar, minValue, maxValue) -> {
-            fromEditText.removeTextChangedListener(minTextWatcher);
-            fromEditText.setText(minValue.toString());
-            fromEditText.addTextChangedListener(minTextWatcher);
-
-            toEditText.removeTextChangedListener(maxTextWatcher);
-            toEditText.setText(maxValue.toString());
-            toEditText.addTextChangedListener(maxTextWatcher);
-
-            if (seekBarOrder == 1) {
-                Offers.setProfitFrom(minVal);
-                Offers.setProfitTo(maxVal);
-            } else if (seekBarOrder == 2) {
-                RequirmentModel.setMoneyFrom(minVal);
-                RequirmentModel.setMoneyTo(maxVal);
-            } else if (seekBarOrder == 3) {
-                Offers.setNumContributorFrom(minVal);
-                Offers.setNumContributorTo(maxVal);
             }
         });
 
-//        fromEditText.setText(String.valueOf(minVal));
-        fromEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (fromEditText.getText().toString().isEmpty())
-                fromEditText.setText(String.valueOf(minVal));
-            if (Integer.valueOf(fromEditText.getText().toString()) > Integer.valueOf(toEditText.getText().toString()))
-                fromEditText.setText(toEditText.getText().toString());
+        sp_IndirectCost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Offers.setIndectExpensesType(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
-//        toEditText.setText(String.valueOf(maxVal));
-        toEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (toEditText.getText().toString().isEmpty())
-                toEditText.setText(String.valueOf(maxVal));
-            if (Integer.valueOf(toEditText.getText().toString()) < Integer.valueOf(fromEditText.getText().toString()))
-                toEditText.setText(fromEditText.getText().toString());
+        sp_directCost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Offers.setDirectExpensesType(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
+
+//        sp_initialCost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Offers.setInitialCostType(position);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+
+        sp_durationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Offers.setProjectDurationType(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        sp_profitMoney.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Offers.setProfitType(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
     }
 
+    private void validate_Money() {
 
-    private void setUpProjectMoneyAvailabilityViewsVisibility() {
-        availGroupMoney.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.avail) {
-                moneyRequiredSeekbar.setEnabled(true);
-                moneyInFrom.setEnabled(true);
-                moneyInTo.setEnabled(true);
+        ed_contributers.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                RequirmentModel.setNeedMoney(true);
-            } else if (checkedId == R.id.notAvail) {
-                moneyRequiredSeekbar.setEnabled(false);
-                moneyInFrom.setEnabled(false);
-                moneyInTo.setEnabled(false);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                RequirmentModel.setNeedMoney(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ed_contributers.removeTextChangedListener(this);
+
+                try {
+                    if (s.toString().isEmpty()) {
+                        Offers.setNumContributor(1);
+                        ed_contributers.setText("1");
+                    } else {
+                        Offers.setNumContributor(Integer.parseInt(s.toString()));
+                    }
+                    String givenstring = s.toString();
+                    Long longval;
+                    if (givenstring.contains(",")) {
+                        givenstring = givenstring.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(givenstring);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
+                    String formattedString = formatter.format(longval);
+                    ed_contributers.setText(formattedString);
+                    ed_contributers.setSelection(ed_contributers.getText().length());
+                    // to place the cursor at the end of text
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ed_contributers.addTextChangedListener(this);
             }
         });
+
+        ed_proDuration.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()|| Integer.parseInt(s.toString()) < 1) {
+                    Offers.setProjectDuration(1f);
+                    ed_proDuration.setText("1");
+                } else {
+                    Offers.setProjectDuration(Float.parseFloat(s.toString()));
+                }
+
+            }
+        });
+
+        ed_IndirectCost.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ed_IndirectCost.removeTextChangedListener(this);
+
+                try {
+                    if (s.toString().isEmpty()) {
+                        Offers.setIndectExpenses(0f);
+                        ed_IndirectCost.setText("0");
+                    } else {
+                        Offers.setIndectExpenses(Float.parseFloat(s.toString()));
+                    }
+                    String givenstring = s.toString();
+                    Long longval;
+                    if (givenstring.contains(",")) {
+                        givenstring = givenstring.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(givenstring);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
+                    String formattedString = formatter.format(longval);
+                    ed_IndirectCost.setText(formattedString);
+                    ed_IndirectCost.setSelection(ed_IndirectCost.getText().length());
+                    // to place the cursor at the end of text
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ed_IndirectCost.addTextChangedListener(this);
+            }
+        });
+
+        ed_directCost.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ed_directCost.removeTextChangedListener(this);
+
+                try {
+                    if (s.toString().isEmpty() || Integer.parseInt(s.toString()) < 1000) {
+                        Offers.setDirectExpenses(1000f);
+                        ed_directCost.setText("1000");
+                    } else {
+                        Offers.setDirectExpenses(Float.parseFloat(s.toString()));
+                    }
+                    String givenstring = s.toString();
+                    Long longval;
+                    if (givenstring.contains(",")) {
+                        givenstring = givenstring.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(givenstring);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
+                    String formattedString = formatter.format(longval);
+                    ed_directCost.setText(formattedString);
+                    ed_directCost.setSelection(ed_directCost.getText().length());
+                    // to place the cursor at the end of text
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ed_directCost.addTextChangedListener(this);
+            }
+        });
+
+        ed_initialCost.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ed_initialCost.removeTextChangedListener(this);
+
+                try {
+                    if (s.toString().isEmpty()  || Integer.parseInt(s.toString()) < 15000) {
+                        Offers.setInitialCost(15000f);
+                        ed_initialCost.setText("15000");
+                    } else {
+                        Offers.setInitialCost(Float.parseFloat(s.toString()));
+                    }
+                    String givenstring = s.toString();
+                    Long longval;
+                    if (givenstring.contains(",")) {
+                        givenstring = givenstring.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(givenstring);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
+                    String formattedString = formatter.format(longval);
+                    ed_initialCost.setText(formattedString);
+                    ed_initialCost.setSelection(ed_initialCost.getText().length());
+                    // to place the cursor at the end of text
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ed_initialCost.addTextChangedListener(this);
+            }
+        });
+
+        ed_profitMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ed_profitMoney.removeTextChangedListener(this);
+
+                try {
+                    if (s.toString().isEmpty()  || Integer.parseInt(s.toString()) < 5000)  {
+                        Offers.setProfitMoney(5000f);
+                        ed_profitMoney.setText("5000");
+                    } else {
+                        Offers.setProfitMoney(Float.parseFloat(s.toString()));
+                    }
+                    String givenstring = s.toString();
+                    Long longval;
+                    if (givenstring.contains(",")) {
+                        givenstring = givenstring.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(givenstring);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
+                    String formattedString = formatter.format(longval);
+                    ed_profitMoney.setText(formattedString);
+                    ed_profitMoney.setSelection(ed_profitMoney.getText().length());
+                    // to place the cursor at the end of text
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                ed_profitMoney.addTextChangedListener(this);
+            }
+        });
+
+
     }
 
 }

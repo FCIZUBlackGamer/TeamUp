@@ -13,13 +13,14 @@ import java.util.List;
 
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.ExperienceTypeModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
 
 public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHolder> {
-    private ArrayList<ExperienceTypeModel> mTypeModels;
+    private ArrayList<TagsModel> mTypeModels;
 
     private LoadedChipsAdapter mLoadedDataAdapter;
 
-    public ChipsAdapter(@Nullable ArrayList<ExperienceTypeModel> typeModels, @Nullable LoadedChipsAdapter loadedDataAdapter) {
+    public ChipsAdapter(@Nullable ArrayList<TagsModel> typeModels, @Nullable LoadedChipsAdapter loadedDataAdapter) {
         if (typeModels != null)
             mTypeModels = typeModels;
         else mTypeModels = new ArrayList<>();
@@ -38,7 +39,7 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ChipsViewHolder holder, int i) {
-        final ExperienceTypeModel typeModel = mTypeModels.get(i);
+        final TagsModel typeModel = mTypeModels.get(i);
         holder.chip.setText(typeModel.getName());
 
         holder.chip.setOnCloseIconClickListener(v -> {
@@ -67,14 +68,14 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
         }
     }
 
-    public void addTypeModel(@NonNull ExperienceTypeModel typeModel) {
+    public void addTypeModel(@NonNull TagsModel typeModel) {
         mTypeModels.add(typeModel);
 
 //        notifyItemInserted(mTypeModels.size() - 1);
         notifyDataSetChanged();
     }
 
-    public void removeTypeModel(@NonNull ExperienceTypeModel typeModel) {
+    public void removeTypeModel(@NonNull TagsModel typeModel) {
         mTypeModels.remove(typeModel);
 
 //        notifyItemRemoved(mTypeModels.size() - 1);
@@ -82,7 +83,7 @@ public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHol
     }
 
     @NonNull
-    public List<ExperienceTypeModel> getSelectedTypeModels() {
+    public List<TagsModel> getSelectedTypeModels() {
         return mTypeModels;
     }
 }

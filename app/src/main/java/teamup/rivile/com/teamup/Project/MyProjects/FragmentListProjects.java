@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +19,6 @@ import android.widget.Toast;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,22 +33,18 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Project.List.AdapterListOffers;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.CapitalModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsRequirmentDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 
@@ -66,6 +63,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     Realm realm;
     List<LikeModelDataBase> likeModelDataBase;
     List<FavouriteDataBase> favouriteDataBases;
+    ConstraintLayout cl_emptyView;
+    TabLayout tabs;
 
     public static FragmentListProjects setWord(String word) {
         Word = word;//Todo: Make Action
@@ -77,7 +76,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        tabs = view.findViewById(R.id.tabs);
         recyclerView = view.findViewById(R.id.rec);
+        cl_emptyView = view.findViewById(R.id.cl_emptyView);
         recyclerView.setLayoutManager(layoutManager);
 
         return view;
@@ -89,6 +90,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).showSearchBar("MyProjects");
         ((DrawerActivity) getActivity()).setTitle("المشاريع المسجلة");
         ((DrawerActivity) getActivity()).hideFab();
+        tabs.setVisibility(View.GONE);
 
 
 //        likeModelDataBase = new ArrayList<>();
@@ -108,15 +110,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
                 .findAll();
-        RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
+        RealmList<OfferDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
 
 ////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
         Log.e("Size", offerDetailsDataBases.size() + "");
         if (offerDetailsDataBases.size() > 0) {
-            //Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
+            cl_emptyView.setVisibility(View.GONE);
+            //Log.e("B Size", convertList(offerDetailsDataBases).getOffers().size() + "");
 
             if (Word != null) {
-                RealmResults<OfferDetailsDataBase> filltered = loginDataBases.get(0).getOffers().where().contains("Name", Word).findAll();
+                RealmResults<OfferDataBase> filltered = loginDataBases.get(0).getOffers().where().contains("Name", Word).findAll();
                 Offer offers = convertResult(filltered);
                 fillOffers(offers, MINE);
             }else {
@@ -125,114 +128,28 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 fillOffers(offers, MINE);
             }
         } else {
-
-            ((DrawerActivity) getActivity()).hideSearchBar();
-            //Todo: showSearchBar Empty view
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame, new FragmentEmpty());
+            cl_emptyView.setVisibility(View.GONE);
         }
 
     }
 
-//        realm.executeTransaction(realm1 -> {
-////            LoginDataBase loginData = realm1.where(LoginDataBase.class)
-////                    .findFirst();
-////            likeModelDataBase = loginData.getLikes();
-//            Log.e("UserId", loginData.getUser().getId() + "");
-//            Log.e("Type", ProType + "");
-//            if (ProType == 1 ) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
-//
-//////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                Log.e("Size", offerDetailsDataBases.size() + "");
-//                if (offerDetailsDataBases.size() > 0) {
-//                    Log.e("B Size", convertList(offerDetailsDataBases).getOffersList().size() + "");
-//                    //Todo: this method is calling twice
-//                    fillOffers(convertList(offerDetailsDataBases), MINE);
-//                } else {
-//
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty());
-//                }
-//
-//            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-//                if (favouriteDataBases.size() > 0) {
-//                    /**
-//                     * get offer ids from favouriteDataBases
-//                     *
-//                     * and fetch them from OfferDetailsDataBase
-//                     *
-//                     * */
-//                    List<Integer> offerIds = new ArrayList<>();
-//                    for (int i = 0; i < favouriteDataBases.size(); i++) {
-//                        offerIds.add(favouriteDataBases.get(i).getOfferId());
-//                    }
-//
-//                    RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-//                    for (int i = 0; i < offerIds.size(); i++) {
-//                        offerDetailsDataBases.add(realm1.where(OfferDetailsDataBase.class)
-//                                .equalTo("Id", offerIds.get(i))
-//                                .findFirst());
-//                    }
-//
-////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                    if (offerDetailsDataBases.size() > 0) {
-//                        fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-//                    } else {
-//                        ((DrawerActivity) getActivity()).hideSearchBar();
-//                        //Todo: showSearchBar Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-//
-//
-//                } else {
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty()).commit();
-//                }
-//            }
-//        });
-
-
-    public static Offer convertList(RealmList<OfferDetailsDataBase> offerDetailsDataBases) {
+    public static Offer convertList(RealmList<OfferDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();
         List<Offers> offers = new ArrayList<>();
 
         for (int j = 0; j < offerDetailsDataBases.size(); j++) {
             Offers offers1 = new Offers();
-            OfferDetailsDataBase base = offerDetailsDataBases.get(j);
+            OfferDataBase base = offerDetailsDataBases.get(j);
             offers1.setUserId(base.getUserId());
             offers1.setId(base.getId());
-//            offers1.setCategoryId(base.getCategoryId());
-//            offers1.setCategoryName(base.getCategoryName());
             offers1.setDescription(base.getDescription());
             offers1.setName(base.getName());
             offers1.setAddress(base.getAddress());
-//            offers1.setAgeRequiredFrom(base.getAgeRequiredFrom());
-//            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
             offers1.setDate(base.getDate());
-//            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
-            offers1.setNumContributorFrom(base.getNumContributorFrom());
-            offers1.setNumContributorTo(base.getNumContributorTo());
+            offers1.setNumContributor(base.getNumContributor());
             offers1.setGenderContributor(base.getGenderContributor());
             offers1.setNumJoinOffer(base.getNumJoinOffer());
             offers1.setNumLiks(base.getNumLiks());
-//            offers1.setProfitFrom(base.getProfitFrom());
-//            offers1.setProfitTo(base.getProfitTo());
-//            offers1.setProfitType(base.getProfitType());
             offers1.setStatus(base.getStatus());
             if (base.getUsers() != null && base.getUsers().size() > 0) {
                 List<UserModel> userModels = new ArrayList<>();
@@ -250,39 +167,26 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             offers.add(offers1);
         }
 
-        offer.setOffersList(offers);
+        offer.setOffers(offers);
         return offer;
     }
 
-    private Offer convertResult(RealmResults<OfferDetailsDataBase> offerDetailsDataBases) {
+    private Offer convertResult(RealmResults<OfferDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.serializeNulls();
-//        Gson gson = gsonBuilder.create();
-//        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
         List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBases.size(); i++) {
             Offers offers1 = new Offers();
-            OfferDetailsDataBase base = offerDetailsDataBases.get(i);
+            OfferDataBase base = offerDetailsDataBases.get(i);
             offers1.setUserId(base.getUserId());
             offers1.setId(base.getId());
-//            offers1.setCategoryId(base.getCategoryId());
-//            offers1.setCategoryName(base.getCategoryName());
             offers1.setDescription(base.getDescription());
             offers1.setName(base.getName());
             offers1.setAddress(base.getAddress());
-//            offers1.setAgeRequiredFrom(base.getAgeRequiredFrom());
-//            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
             offers1.setDate(base.getDate());
-//            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
-            offers1.setNumContributorFrom(base.getNumContributorFrom());
-            offers1.setNumContributorTo(base.getNumContributorTo());
+            offers1.setNumContributor(base.getNumContributor());
             offers1.setGenderContributor(base.getGenderContributor());
             offers1.setNumJoinOffer(base.getNumJoinOffer());
             offers1.setNumLiks(base.getNumLiks());
-//            offers1.setProfitFrom(base.getProfitFrom());
-//            offers1.setProfitTo(base.getProfitTo());
-//            offers1.setProfitType(base.getProfitType());
             offers1.setStatus(base.getStatus());
             if (base.getUsers() != null && base.getUsers().size() > 0) {
                 List<UserModel> userModels = new ArrayList<>();
@@ -298,20 +202,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 offers1.setUsers(userModels);
             }
             offers.add(offers1);
-//            List<RequirmentModel> rec = new ArrayList<>();
-//            for (int j = 0; j < base.getRequirments().size(); j++) {
-//                RequirmentModel requirmentModel = new RequirmentModel();
-//                OfferDetailsRequirmentDataBase re = base.getRequirments().get(j);
-//                requirmentModel.setExperienceDescriptions(re.getExperienceDescriptions());
-//                requirmentModel.setNeedExperience(re.isNeedExperience());
-//                requirmentModel.setNeedPlaceType(re.isNeedPlaceType());
-//                requirmentModel.setNeedPlace(re.isNeedPlace());
-//                requirmentModel.setNeedMoney(re.isNeedMoney());
-//                requirmentModel.setPlaceAddress(re.getPlaceAddress());
-//                requirmentModel.setNeedPlaceStatus(re.isNeedPlaceStatus());
-//            }
+
         }
-        offer.setOffersList(offers);
+        offer.setOffers(offers);
         return offer;
     }
 
@@ -331,6 +224,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
+                    cl_emptyView.setVisibility(View.GONE);
                     fillOffers(serverResponse, NORMAL);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
@@ -358,6 +252,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
+                    cl_emptyView.setVisibility(View.GONE);
                     fillOffers(serverResponse, NORMAL);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
@@ -386,14 +281,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
-                    if (serverResponse.getOffersList().size() > 0) {
+                    cl_emptyView.setVisibility(View.GONE);
+                    if (serverResponse.getOffers().size() > 0) {
                         fillOffers(serverResponse, MINE);
-                    } else {
-                        ((DrawerActivity) getActivity()).hideSearchBar();
-                        //Todo: showSearchBar Empty view
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty()).commit();
                     }
+//                    else {
+//                        ((DrawerActivity) getActivity()).hideSearchBar();
+//                        //Todo: showSearchBar Empty view
+//                        getActivity().getSupportFragmentManager().beginTransaction()
+//                                .replace(R.id.frame, new FragmentEmpty()).commit();
+//                    }
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
                 }
@@ -409,21 +306,23 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
-        Log.e("A Size", offers.getOffersList().size() + "");
-        if (offers.getOffersList() != null && !offers.getOffersList().isEmpty() && offers.getOffersList().size() > 0) {
+        Log.e("A Size", offers.getOffers().size() + "");
+        if (offers.getOffers() != null && !offers.getOffers().isEmpty() && offers.getOffers().size() > 0) {
+            cl_emptyView.setVisibility(View.GONE);
             adapter = new AdapterListOffers(getActivity(),
-                    offers.getOffersList(),
+                    offers.getOffers(),
                     likeModelDataBase,
                     favouriteDataBases,
                     type,
                     this);
 
             recyclerView.setAdapter(adapter);
-        } else {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.frame, new FragmentEmpty())
-                    .commit();
         }
+//        else {
+//            getFragmentManager().beginTransaction()
+//                    .replace(R.id.frame, new FragmentEmpty())
+//                    .commit();
+//        }
 //        }
     }
 
