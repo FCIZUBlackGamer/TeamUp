@@ -198,4 +198,5 @@
     <string name="c">• Duration of execution</string>
     <string name="d">• Average profit</string>
     <string name="e">• Total projected costs</string>
+    <string name="processing">Processing...</string>
 </resources>
