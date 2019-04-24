@@ -58,7 +58,6 @@ public class FragmentSendCode extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        email.setText(em);
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,6 +80,9 @@ public class FragmentSendCode extends Fragment {
                 }
             }
         });
+
+        email.setText(em);
+
         back.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
