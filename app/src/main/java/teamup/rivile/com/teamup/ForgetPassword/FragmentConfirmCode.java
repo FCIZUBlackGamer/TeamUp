@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -203,6 +204,7 @@ public class FragmentConfirmCode extends Fragment {
 
         resend.setOnClickListener(v -> {
             /** Send the Code Again*/
+            Snackbar.make(view, R.string.processing, Snackbar.LENGTH_LONG).show();
             forgetPassword(mail);
         });
     }
