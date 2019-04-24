@@ -41,29 +41,29 @@ public interface ApiConfig {
     @POST(API.HOME_URL)/** Initial Test #Done */
     Call<Offer> getAllOffers(@Field("token") String token);
 
-    @FormUrlEncoded
-    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+//    @FormUrlEncoded
+//    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getJoinedOffer(@Field("token") String token);
 
-    @FormUrlEncoded
-    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.ListJoinedOffer_URL)/** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("token") String token);
+//    @FormUrlEncoded
+//    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.ListSuccessOffer_URL)/** Initial Test #Done */
+//    Call<Offer> getSuccessOffer(@Field("token") String token);
 
     /**
      * @param Type {2: UserName, 1: ProjectName, 0: Tag}
@@ -102,9 +102,9 @@ public interface ApiConfig {
     @POST(API.PROFILE_URL)/** Initial Test #Done */
     Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
 
-    @FormUrlEncoded
-    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)/** Initial Test #Done */
-    Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
+//    @FormUrlEncoded
+//    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)/** Initial Test #Done */
+//    Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ForgetPassword_URL)/** Initial Test #Done */
@@ -126,25 +126,25 @@ public interface ApiConfig {
     @POST(API.OFFER_DETAILS_URL)
     Call<OfferDetailsJsonObject> offerDetails(@Field(API.PARAM_NAME_ID) int Id, @Field("token") String token);
 
-    @FormUrlEncoded
-    @POST(API.ACCEPT_JOIN_OFFER_URL)
-    Call<String> acceptRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.DeleteRequirement_URL)
-    Call<String> deleteRequirement(@Field("Id") int Id, @Field("token") String token);
-
-    @FormUrlEncoded
-    @POST(API.REFUSE_JOIN_OFFER_URL)
-    Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
+//    @FormUrlEncoded
+//    @POST(API.ACCEPT_JOIN_OFFER_URL)
+//    Call<String> acceptRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.DeleteRequirement_URL)
+//    Call<String> deleteRequirement(@Field("Id") int Id, @Field("token") String token);
+//
+//    @FormUrlEncoded
+//    @POST(API.REFUSE_JOIN_OFFER_URL)
+//    Call<String> rejectRequirement(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.DELETE_OFFER_URL)
     Call<String> deleteOffer(@Field("Id") int Id, @Field("token") String token);
 
-    @FormUrlEncoded
-    @POST(API.SelectOffer_URL)
-    Call<Offer> SelectOffer(@Field("UserId") int UserId, @Field("token") String token);
+//    @FormUrlEncoded
+//    @POST(API.SelectOffer_URL)
+//    Call<Offer> SelectOffer(@Field("UserId") int UserId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.EDIT_PROFILE_URL)
@@ -181,16 +181,16 @@ public interface ApiConfig {
                             @Field(API.PARAM_NAME_TAGS) String tags,
                             @Field(API.PARAM_NAME_LOCATION) String location);
 
-    @FormUrlEncoded
-    @POST(API.JOIN_OFFER_URL)
-    Call<String> joinOffer(@Field(API.PARAM_NAME_TOKEN) String token,
-                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
-                           @Field(API.PARAM_NAME_OFFER_ID) String offerId);
+//    @FormUrlEncoded
+//    @POST(API.JOIN_OFFER_URL)
+//    Call<String> joinOffer(@Field(API.PARAM_NAME_TOKEN) String token,
+//                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+//                           @Field(API.PARAM_NAME_OFFER_ID) String offerId);
 
-    @FormUrlEncoded
-    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
-    Call<OfferDetailsJsonObject> listRequirmentByUserId(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
-                                                        @Field(API.PARAM_NAME_TOKEN) String token);
+//    @FormUrlEncoded
+//    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
+//    Call<OfferDetailsJsonObject> listRequirmentByUserId(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
+//                                                        @Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
     @POST(API.ACCOUNT_SETTINGS_URL)
