@@ -38,8 +38,6 @@ public class FragmentConfirmCode extends Fragment {
         return new FragmentConfirmCode();
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -185,6 +183,7 @@ public class FragmentConfirmCode extends Fragment {
                 }else {
                    confirm.setEnabled(false);
                    confirm.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+                   n6.setText(s.toString().substring(1));
                }
             }
         });
