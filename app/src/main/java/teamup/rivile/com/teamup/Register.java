@@ -103,14 +103,16 @@ public class Register extends AppCompatActivity {
                 String serverResponse = response.body();
                 if (serverResponse != null){
                     Log.v("Re",serverResponse);
-                    if (serverResponse.equals("\"Success\"")) {
+                    if (serverResponse.equals("Success")) {
                         finish();
-                        startActivity(new Intent(Register.this, Login.class));
+                        startActivity(new Intent(Register.this, FirstActivity.class));
+                        Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
                     }
                 }else {
                     Log.v("Re",response.message());
+                    Toast.makeText(Register.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -119,6 +121,7 @@ public class Register extends AppCompatActivity {
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.v("Re",t.getMessage());
+                Toast.makeText(Register.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
