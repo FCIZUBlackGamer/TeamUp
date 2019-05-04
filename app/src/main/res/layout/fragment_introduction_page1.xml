@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-    tools:context=".Introduction.IntroductionPage1Fragment">
+    tools:context=".ui.Introduction.IntroductionPage1Fragment">
 
     <ImageView
         android:id="@+id/imageView"

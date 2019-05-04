@@ -1,6 +1,6 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
-import teamup.rivile.com.teamup.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
 
 public class OfferDetailsJsonObject {
 

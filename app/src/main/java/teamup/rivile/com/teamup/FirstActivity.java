@@ -17,6 +17,7 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        Realm.init(this);
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             Settings settings = new Settings();

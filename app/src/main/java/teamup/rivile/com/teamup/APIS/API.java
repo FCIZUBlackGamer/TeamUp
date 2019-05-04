@@ -23,14 +23,14 @@ public class API {
     final public static String NOTIFICATION_URL = BASE_URL + "Offer/Notification";
     final public static String LIST_OFFERS_BY_DEPARTMENT_URL = BASE_URL + "";
     final public static String GENERAL_SEARCH_URL = BASE_URL + "Offer/BasicSearch";
-    final public static String FILTTER_SEARCH_URL = BASE_URL + "Offer/Filter";
+    final public static String FILTER_SEARCH_URL = BASE_URL + "Offer/Filter";
     final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "Offer/ListCat/";
     final public static String LOAD_ListOfCapTagCat_URL = BASE_URL + "Offer/ListOfCapTagCat/";
     final public static String LOAD_FAVOURITE_URL = BASE_URL + "Offer/ListbyIds";
     final public static String FAVOURITE_URL = BASE_URL + "Offer/Favorite";
     final public static String LIKE_URL = BASE_URL + "Offer/Like";
     final public static String ForgetPassword_URL = BASE_URL + "Register/ForgetPassword";
-    final public static String CheakCode_URL = BASE_URL + "Register/CheakCodePassword";
+    final public static String CheckCode_URL = BASE_URL + "Register/CheakCodePassword";
     final public static String SavePasswordLogin_URL = BASE_URL + "Register/SavePasswordLogin";
     final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "Offer/Accept";
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "Offer/Refuse";

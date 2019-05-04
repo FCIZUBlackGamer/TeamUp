@@ -47,7 +47,7 @@
             android:label="@string/title_activity_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Introduction.IntroductionActivity"
+            android:name=".ui.Introduction.IntroductionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

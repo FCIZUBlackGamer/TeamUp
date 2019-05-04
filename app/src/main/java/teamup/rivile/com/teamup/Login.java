@@ -44,19 +44,16 @@ import java.net.URL;
 import java.util.Arrays;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.ForgetPassword.FragmentSendCode;
-import teamup.rivile.com.teamup.Loading.LoadLogin;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
+import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
+import teamup.rivile.com.teamup.ui.Loading.LoadLogin;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 
 public class Login extends Fragment {
     private static final int RC_SIGN_IN = 100;

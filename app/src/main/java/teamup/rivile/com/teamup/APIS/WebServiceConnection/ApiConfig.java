@@ -11,8 +11,8 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.Department.DepartmentJson;
-import teamup.rivile.com.teamup.Profile.ProfileResponse;
+import teamup.rivile.com.teamup.ui.Department.DepartmentJson;
+import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
 import teamup.rivile.com.teamup.Uitls.APIModels.NotificationModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
@@ -73,7 +73,7 @@ public interface ApiConfig {
     Call<Offer> searchOffer(@Field("Type") int Type, @Field("Name") String Name, @Field("token") String token);
 
     @FormUrlEncoded
-    @POST(API.FILTTER_SEARCH_URL)/** Initial Test #Done */
+    @POST(API.FILTER_SEARCH_URL)/** Initial Test #Done */
     Call<Offer> filterSearchOffer(@Field("Filter") String Filter, @Field("token") String token);
 
     @FormUrlEncoded
@@ -111,7 +111,7 @@ public interface ApiConfig {
     Call<Integer> ForgetPassword(@Field("Mail") String Mail, @Field("token") String token);
 
     @FormUrlEncoded
-    @POST(API.CheakCode_URL)/** Initial Test #Done */
+    @POST(API.CheckCode_URL)/** Initial Test #Done */
     Call<Integer> CheakCode(@Field("Code") String Code, @Field("token") String token);
 
     @FormUrlEncoded

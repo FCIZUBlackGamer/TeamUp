@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton
+    <teamup.rivile.com.teamup.ui.GoMap.MovableFloatingActionButton
         android:id="@+id/mv_floating_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,5 +83,5 @@
                 app:layout_constraintTop_toBottomOf="@+id/fab_filter" />
 
         </android.support.constraint.ConstraintLayout>
-    </teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton>
+    </teamup.rivile.com.teamup.ui.GoMap.MovableFloatingActionButton>
 </android.support.constraint.ConstraintLayout>

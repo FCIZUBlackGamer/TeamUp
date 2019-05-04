@@ -30,21 +30,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.Department.FragmentHome;
-import teamup.rivile.com.teamup.GoMap.GoMap;
-import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
-import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
-import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
+import teamup.rivile.com.teamup.ui.Department.FragmentHome;
+import teamup.rivile.com.teamup.ui.GoMap.GoMap;
+import teamup.rivile.com.teamup.ui.GoMap.MovableFloatingActionButton;
+import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
+import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
 //import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
-import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
-import teamup.rivile.com.teamup.Search.FilterSearchFragment;
+import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
+import teamup.rivile.com.teamup.ui.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
-import teamup.rivile.com.teamup.account.AccountSettingsFragment;
+import teamup.rivile.com.teamup.ui.account.AccountSettingsFragment;
 
-import static teamup.rivile.com.teamup.Project.List.FragmentListProjects.MINE;
+import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -168,7 +168,7 @@ public class DrawerActivity extends AppCompatActivity
                     }
                 } else if (Whome.equals("MyProjects")) {/** Means Current fragment is MyProjects*/
                     fragmentManager.beginTransaction()
-                            .replace(R.id.frame, teamup.rivile.com.teamup.Project.MyProjects.FragmentListProjects.setWord(s))
+                            .replace(R.id.frame, FragmentListProjects.setWord(1, s))
                             .commit();
 
                 } else if (Whome.equals("Favourite")) {/** Means Current fragment is Favourite*/
@@ -496,7 +496,7 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame, new teamup.rivile.com.teamup.Project.MyProjects.FragmentListProjects());
+                fragmentTransaction.replace(R.id.frame, new FragmentListProjects());
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
@@ -514,7 +514,7 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_favourite_projects);
 
-                fragmentTransaction.replace(R.id.frame, new teamup.rivile.com.teamup.Project.Favourite.FragmentListProjects());
+                fragmentTransaction.replace(R.id.frame, new teamup.rivile.com.teamup.ui.Project.Favourite.FragmentListProjects());
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
