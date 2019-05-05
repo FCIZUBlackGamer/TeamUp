@@ -689,7 +689,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
         Log.e("A Size", offers.getOffers().size() + "");
-        if (offers.getOffers() != null && !offers.getOffers().isEmpty() && offers.getOffers().size() > 0) {
+        if (offers.getOffers() != null ) {
             showEmpty();
             adapter = new AdapterListOffers(getActivity(),
                     offers.getOffers(),

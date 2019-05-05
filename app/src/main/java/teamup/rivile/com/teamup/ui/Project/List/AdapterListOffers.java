@@ -67,6 +67,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private int userState;
 
     private RelativeLayout mExpandedRelativeLayout = null;
+    private FloatingActionButton mHiddenLikeFAB = null;
+    private FloatingActionButton mHiddenFavouriteFAB = null;
     private int mExpandedPosition = -1;
 
     public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, List<FavouriteDataBase> favouriteModel, int type, Helper helper) {
@@ -354,8 +356,12 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 holder.likeFab.show();
 
                 holder.detailsRelativeLayout.setVisibility(View.GONE);
+                mHiddenLikeFAB.show();
+                mHiddenFavouriteFAB.show();
 
                 mExpandedRelativeLayout = null;
+                mHiddenFavouriteFAB = null;
+                mHiddenLikeFAB = null;
                 mExpandedPosition = -1;
             } else {
                 holder.favouriteFAB.hide();
@@ -365,9 +371,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
                 if (mExpandedRelativeLayout != null) {
                     mExpandedRelativeLayout.setVisibility(View.GONE);
+
+                    mHiddenLikeFAB.show();
+                    mHiddenFavouriteFAB.show();
                 }
 
                 mExpandedRelativeLayout = holder.detailsRelativeLayout;
+                mHiddenLikeFAB =  holder.likeFab;
+                mHiddenFavouriteFAB =  holder.favouriteFAB;
                 mExpandedPosition = position;
             }
         });
