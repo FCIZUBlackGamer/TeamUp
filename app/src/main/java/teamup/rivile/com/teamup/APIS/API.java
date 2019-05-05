@@ -1,7 +1,8 @@
 package teamup.rivile.com.teamup.APIS;
 
 public class API {
-    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
+//    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
+    final public static String BASE_URL = "http://192.168.1.2/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
     final public static String REGISTER_URL = BASE_URL + "Register/Add";

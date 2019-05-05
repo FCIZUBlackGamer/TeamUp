@@ -118,14 +118,10 @@ public class FragmentListProjectNames extends Fragment {
             Type = -1;
             Word = null;
             loadOffers(DepId);
-        }
-
-        else if (Word != null) {
+        } else if (Word != null) {
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
-        }
-
-        else if (filterModel != null) {
+        } else if (filterModel != null) {
             Type = -1;
             Word = null;
             DepId = -1;
@@ -317,8 +313,8 @@ public class FragmentListProjectNames extends Fragment {
         Call<Offer> call;
 
         if (depId != -1)
-            call = getOffers.getOffersByCatId(depId, API.URL_TOKEN);
-        else call = getOffers.getAllOffers(API.URL_TOKEN);
+            call = getOffers.getOffersByCatId("1", depId, API.URL_TOKEN);//TODO: get user ID
+        else call = getOffers.getAllOffers("1", API.URL_TOKEN);//TODO: get user ID
 
         call.enqueue(new Callback<Offer>() {
             @Override
@@ -406,14 +402,14 @@ public class FragmentListProjectNames extends Fragment {
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
         Log.e("A Size", offers.getOffers().size() + "");
-            if (offers.getOffers() != null && !offers.getOffers().isEmpty()&& offers.getOffers().size() > 0) {
-                cl_emptyView.setVisibility(View.GONE);
-                adapter = new AdapterListOffers(getActivity(),
-                        offers.getOffers(),
-                        likeModelDataBase);
+        if (offers.getOffers() != null && !offers.getOffers().isEmpty() && offers.getOffers().size() > 0) {
+            cl_emptyView.setVisibility(View.GONE);
+            adapter = new AdapterListOffers(getActivity(),
+                    offers.getOffers(),
+                    likeModelDataBase);
 
-                recyclerView.setAdapter(adapter);
-            }
+            recyclerView.setAdapter(adapter);
+        }
 //            else{
 //                getFragmentManager().beginTransaction()
 //                        .replace(R.id.frame, new FragmentEmpty())

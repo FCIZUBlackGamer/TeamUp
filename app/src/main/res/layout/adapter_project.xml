@@ -1,32 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#C9C9C9">
+    android:animateLayoutChanges="true">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/favourite"
+        android:id="@+id/fab_favourite"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|center"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
+        android:layout_marginStart="8dp"
         android:backgroundTint="@color/colorWhite"
         app:backgroundTint="#C9C9C9"
         app:borderWidth="2dp"
         app:fabCustomSize="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView3"
         app:srcCompat="@drawable/ic_star_empty"
         tools:ignore="VectorDrawableCompat" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_like"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorWhite"
+        app:backgroundTint="#C9C9C9"
+        app:fabCustomSize="35dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fab_favourite"
+        app:srcCompat="@drawable/ic_favorite_border_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
+
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/cardView3"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:layout_margin="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fab_favourite"
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,7 +60,6 @@
             android:layout_margin="5dp"
             android:background="@android:color/white"
             android:orientation="vertical">
-
 
             <RelativeLayout
                 android:id="@+id/t"
@@ -76,8 +101,6 @@
                             android:id="@+id/tv_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
                             android:src="@drawable/ic_option_menu"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -108,441 +131,448 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/user_name"
+                            android:id="@+id/tv_from_to"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start|center_vertical"
-                            android:fontFamily="@font/medium"
-                            android:gravity="center_vertical"
                             android:drawablePadding="10dp"
-                            android:drawableEnd="@drawable/ic_edit"
+                            android:fontFamily="@font/medium"
+                            android:gravity="right"
                             android:maxLength="50"
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
-                            android:text="مؤمن شاهين"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            tools:text="50 OF 60" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/e"
+            <RelativeLayout
+                android:id="@+id/rl_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/t"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                android:visibility="gone">
+                <!--tools:visibility="visible">-->
 
                 <LinearLayout
-                    android:id="@+id/con"
+                    android:id="@+id/e"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:orientation="vertical">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/con"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:maxLength="50"
-                        android:text="@string/partners"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
+                        android:layout_gravity="start"
+                        android:orientation="vertical">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rec"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp" />
+                        <!--<TextView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:fontFamily="@font/medium"-->
+                        <!--android:gravity="start"-->
+                        <!--android:maxLength="50"-->
+                        <!--android:text="@string/partners"-->
+                        <!--android:textColor="#000"-->
+                        <!--android:textSize="16sp" />-->
+
+                        <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/rec"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="100dp" />-->
+                    </LinearLayout>
+
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_proType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/e"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="@font/medium"
-                android:gravity="start"
-                android:paddingEnd="8dp"
-                android:text="دائم"
-                android:textColor="#8F0808"
-                android:textDirection="rtl"
-                android:textSize="18sp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/project_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_proType"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="2dp"
-                android:fontFamily="@font/medium"
-                android:gravity="start"
-                android:maxLines="4"
-                android:paddingEnd="8dp"
-                android:text="مشروع مزرعه دواجن "
-                android:textColor="#000"
-                android:textDirection="rtl"
-                android:textSize="18sp" />
-
-            <RelativeLayout
-                android:id="@+id/money"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/project_desc"
-                android:layout_alignStart="@+id/project_tag"
-                android:layout_alignEnd="@+id/project_tag"
-                android:orientation="vertical">
-
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/tv_proType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/text1">
+                    android:layout_below="@id/e"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/medium"
+                    android:gravity="start"
+                    android:paddingEnd="8dp"
+                    android:text="دائم"
+                    android:textColor="#8F0808"
+                    android:textDirection="rtl"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/project_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_proType"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/medium"
+                    android:gravity="start"
+                    android:maxLines="4"
+                    android:paddingEnd="8dp"
+                    android:text="مشروع مزرعه دواجن "
+                    android:textColor="#000"
+                    android:textDirection="rtl"
+                    android:textSize="18sp" />
+
+                <RelativeLayout
+                    android:id="@+id/money"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/project_desc"
+                    android:layout_alignStart="@+id/project_tag"
+                    android:layout_alignEnd="@+id/project_tag"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="@string/headMoney"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="@string/a"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/value1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_below="@id/text1">
+
+                        <TextView
+                            android:id="@+id/tv_initialCost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="1800"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_directCost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="3600"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/text2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/value1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="@string/b"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="@string/c"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/value2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text2">
+
+                        <TextView
+                            android:id="@+id/tv_inDirectCost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="1800"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="3600"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/text3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/value2">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="@string/e"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="@string/d"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/value3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text3">
+
+                        <TextView
+                            android:id="@+id/tv_totalCost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="start"
+                            android:paddingStart="8dp"
+                            android:text="1800"
+                            android:textColor="#000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tv_profit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:paddingEnd="8dp"
+                            android:text="3600"
+                            android:textColor="#000"
+                            android:textDirection="rtl"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/project_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/money"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:fontFamily="@font/medium"
+                    android:gravity="start"
+                    android:maxLines="4"
+                    android:paddingEnd="8dp"
+                    android:textColor="#2196F3"
+                    android:textDirection="rtl"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/project_tag"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                        android:id="@+id/num_contributer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:drawableStart="@drawable/ic_dd"
+                        android:drawablePadding="5dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="center"
+                        android:maxLength="6"
+                        android:text="150"
+                        android:textSize="15sp" />
+
+                    <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
+                        android:id="@+id/num_likes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="@string/headMoney"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:drawableEnd="@drawable/ic_like"
+                        android:drawablePadding="5dp"
                         android:fontFamily="@font/medium"
                         android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="@string/a"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+                        android:maxLength="6"
+                        android:text="150"
+                        android:textSize="15sp" />
 
-                <RelativeLayout
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/exten"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/value1"
-                    android:layout_below="@id/text1">
+                    android:layout_below="@id/r"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/tv_initialCost"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginBottom="10dp"
+                        android:id="@+id/share"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:drawableEnd="@drawable/ic_share"
+                        android:drawablePadding="10dp"
                         android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="1800"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="المشاركة" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tv_directCost"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:id="@+id/make_offer"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:drawableEnd="@drawable/ic_chat"
+                        android:drawablePadding="5dp"
                         android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="3600"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="انضمام" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/text2"
-                    android:layout_below="@id/value1">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:id="@+id/like"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:drawableEnd="@drawable/ic_favorite_border_black_24dp"
+                        android:drawablePadding="5dp"
                         android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="@string/b"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
+                        android:gravity="center_vertical"
+                        android:padding="3dp"
+                        android:text="الإعجاب" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="@string/c"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/value2"
-                    android:layout_below="@id/text2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/tv_inDirectCost"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="1800"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tv_duration"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="3600"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/text3"
-                    android:layout_below="@id/value2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="@string/e"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="@string/d"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/value3"
-                    android:layout_below="@id/text3">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:id="@+id/tv_totalCost"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="start"
-                        android:paddingStart="8dp"
-                        android:text="1800"
-                        android:textColor="#000"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tv_profit"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingEnd="8dp"
-                        android:text="3600"
-                        android:textColor="#000"
-                        android:textDirection="rtl"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
+                </LinearLayout>
             </RelativeLayout>
 
-
-            <TextView
-                android:id="@+id/project_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/money"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:fontFamily="@font/medium"
-                android:gravity="start"
-                android:maxLines="4"
-                android:paddingEnd="8dp"
-                android:textColor="#2196F3"
-                android:textDirection="rtl"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:id="@+id/r"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/project_tag"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                    android:id="@+id/num_contributer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:drawableStart="@drawable/ic_dd"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center"
-                    android:maxLength="6"
-                    android:text="150"
-                    android:textSize="15sp" />
-
-                <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
-                    android:id="@+id/num_likes"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:drawableEnd="@drawable/ic_like"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="end"
-                    android:maxLength="6"
-                    android:text="150"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/exten"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/r"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/share"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableEnd="@drawable/ic_share"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center_vertical"
-                    android:padding="3dp"
-                    android:text="المشاركة" />
-
-                <TextView
-                    android:id="@+id/make_offer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableEnd="@drawable/ic_chat"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center_vertical"
-                    android:padding="3dp"
-                    android:text="انضمام" />
-
-
-                <TextView
-                    android:id="@+id/like"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableEnd="@drawable/ic_favorite_border_black_24dp"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
-                    android:gravity="center_vertical"
-                    android:padding="3dp"
-                    android:text="الإعجاب" />
-
-            </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

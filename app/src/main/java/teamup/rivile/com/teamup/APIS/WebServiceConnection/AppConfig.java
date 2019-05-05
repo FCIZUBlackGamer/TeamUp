@@ -1,5 +1,8 @@
 package teamup.rivile.com.teamup.APIS.WebServiceConnection;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -18,9 +21,13 @@ public class AppConfig {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .build();
 
+        Gson gson = new GsonBuilder()
+                .setDateFormat("MM/dd/yyyy hh:mm:ss")
+                .create();
+
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
     }

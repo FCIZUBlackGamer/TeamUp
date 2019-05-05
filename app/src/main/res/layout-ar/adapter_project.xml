@@ -7,7 +7,7 @@
     android:background="#C9C9C9">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/favourite"
+        android:id="@+id/fab_favourite"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentEnd="true"

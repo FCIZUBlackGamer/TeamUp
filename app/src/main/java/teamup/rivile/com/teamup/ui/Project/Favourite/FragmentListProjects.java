@@ -191,8 +191,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         Call<Offer> call;
 
         if (depId != -1)
-            call = getOffers.getOffersByCatId(depId, API.URL_TOKEN);
-        else call = getOffers.getAllOffers(API.URL_TOKEN);
+            call = getOffers.getOffersByCatId("1", depId, API.URL_TOKEN);//TODO: get user ID
+        else call = getOffers.getAllOffers("1", API.URL_TOKEN);//TODO: get user ID
 
         call.enqueue(new Callback<Offer>() {
             @Override

@@ -1,6 +1,7 @@
 package teamup.rivile.com.teamup.Uitls.APIModels;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class Offers implements Serializable {
@@ -18,6 +19,7 @@ public class Offers implements Serializable {
     private List<UserModel> Users;
     private String Address;
     private String Date;
+    private Date StringDate;
     private Float ProjectDuration;
     private Integer Status;
     private List<StateModel> States;
@@ -311,5 +313,13 @@ public class Offers implements Serializable {
 
     public void setAttachments(List<AttachmentModel> attachments) {
         Attachments = attachments;
+    }
+
+    public Date getStringDate() {
+        return StringDate;
+    }
+
+    public void setStringDate(java.util.Date stringDate) {
+        StringDate = stringDate;
     }
 }

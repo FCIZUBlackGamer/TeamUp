@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
@@ -44,7 +46,6 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.FavouriteModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -64,6 +65,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private int ty;
     private int userId;
     private int userState;
+
+    private RelativeLayout mExpandedRelativeLayout = null;
+    private int mExpandedPosition = -1;
 
     public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, List<FavouriteDataBase> favouriteModel, int type, Helper helper) {
         this.context = context;
@@ -92,17 +96,20 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     @Override
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
+        Offers offers = offersList.get(position);
+        holder.fromToTextView.setText(offers.getNumContributor() + " Of " + offers.getNumJoinOffer());
+
         holder.option_menu.setVisibility(View.VISIBLE);
 
         holder.tv_proType.setVisibility(View.GONE);
-        holder.favourite.setOnClickListener(v -> {
-            Drawable favDrawable = holder.favourite.getDrawable();
+        holder.favouriteFAB.setOnClickListener(v -> {
+            Drawable favDrawable = holder.favouriteFAB.getDrawable();
             if (favDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_star_full)
                             .getConstantState())) {
-                holder.favourite.setImageResource(R.drawable.ic_star_empty);
+                holder.favouriteFAB.setImageResource(R.drawable.ic_star_empty);
                 markFavourite(offersList.get(position).getId(), userId, 1);
                 if (ty == FragmentListProjects.FAVOURITE) {
                     offersList.remove(position);
@@ -118,7 +125,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getResources()
                             .getDrawable(R.drawable.ic_star_empty)
                             .getConstantState())) {
-                holder.favourite.setImageResource(R.drawable.ic_star_full);
+                holder.favouriteFAB.setImageResource(R.drawable.ic_star_full);
                 markFavourite(offersList.get(position).getId(), userId, 0);
             }
 
@@ -136,19 +143,20 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         for (int i = 0; i < likeModelDataBase.size(); i++) {
             if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+                holder.likeFab.setImageResource(R.drawable.ic_like);
             }
         }
 
         for (int i = 0; i < favouriteDataBases.size(); i++) {
             if (offersList.get(position).getId() == favouriteDataBases.get(i).getOfferId()) {
-                holder.favourite.setImageResource(R.drawable.ic_star_full);
-                holder.favourite.setTag(1);
+                holder.favouriteFAB.setImageResource(R.drawable.ic_star_full);
+                holder.favouriteFAB.setTag(1);
             } else {
-                holder.favourite.setTag(0);
+                holder.favouriteFAB.setTag(0);
             }
         }
 
-        holder.money.setVisibility(View.GONE);
+//        holder.money.setVisibility(View.GONE);
         holder.project_name.setText(offersList.get(position).getName());
         holder.tv_initialCost.setText(
                 String.valueOf(offersList.get(position).getInitialCost())
@@ -191,26 +199,25 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 )
         );
 
-        holder.project_desc.setOnClickListener(v -> {
-            if (holder.money.getVisibility() == View.VISIBLE) {
-                holder.money.setVisibility(View.GONE);
-            } else {
-                holder.money.setVisibility(View.VISIBLE);
-            }
-        });
+//        holder.project_desc.setOnClickListener(v -> {
+//            if (holder.money.getVisibility() == View.VISIBLE) {
+//                holder.money.setVisibility(View.GONE);
+//            } else {
+//                holder.money.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
         holder.num_contributer.setText(offersList.get(position).getNumContributor() + "");
-        Offers offers = offersList.get(position);
-        if (offers != null) {
-            List<UserModel> userModels = offers.getUsers();
-            if (userModels != null && userModels.size() > 0) {
-                UserModel userModel = userModels.get(0);
-                if(userModel != null){
-                    holder.user_name.setText(userModel.getFullName());
-                }
-            }
-        }
+//        if (offers != null) {
+//            List<UserModel> userModels = offers.getUsers();
+//            if (userModels != null && userModels.size() > 0) {
+//                UserModel userModel = userModels.get(0);
+//                if (userModel != null) {
+//                    holder.fromToTextView.setText(userModel.getFullName());
+//                }
+//            }
+//        }
 
         if (offersList.get(position).getProjectType() == 0) {
             holder.tv_proType.setText(context.getResources().getString(R.string.always));
@@ -238,8 +245,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         }
 
-        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers(), holder.emptyView);
-        holder.recyclerView.setAdapter(holder.adapter);
+//        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers(), holder.emptyView);
+//        holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
             Log.e("UID", offersList.get(position).getUserId() + "");
             Log.e("OID", offersList.get(position).getUsers().get(i).getId() + "");
@@ -297,7 +304,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             for (int i = 0; i < Likes.size(); i++) {
                 if (Likes.get(i).getOfferId() == offersList.get(position).getId()) {
                     holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-
+                    holder.likeFab.setImageResource(R.drawable.ic_like);
                 }
             }
         });
@@ -310,6 +317,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+                holder.likeFab.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 likeOffer(offersList.get(position).getId(), userId, 1, holder.num_likes);
             } else if (likeDrawable.getConstantState()
                     .equals(context
@@ -317,13 +325,107 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
+                holder.likeFab.setImageResource(R.drawable.ic_like);
                 likeOffer(offersList.get(position).getId(), userId, 0, holder.num_likes);
             }
-
         });
 
         //TODO: get project URL and send it here
         holder.share.setOnClickListener(v -> mHelper.shareUrl("", offersList.get(position).getName()));
+
+
+        holder.likeFab.setOnClickListener(v -> holder.like.callOnClick());
+
+        if (position == mExpandedPosition) {
+            holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
+
+            holder.favouriteFAB.hide();
+            holder.likeFab.hide();
+        } else {
+            holder.detailsRelativeLayout.setVisibility(View.GONE);
+
+            holder.favouriteFAB.show();
+            holder.likeFab.show();
+        }
+
+        holder.projectRelativeLayout.setOnClickListener(v -> {
+            if (holder.detailsRelativeLayout.getVisibility() == View.VISIBLE) {
+                holder.favouriteFAB.show();
+                holder.likeFab.show();
+
+                holder.detailsRelativeLayout.setVisibility(View.GONE);
+
+                mExpandedRelativeLayout = null;
+                mExpandedPosition = -1;
+            } else {
+                holder.favouriteFAB.hide();
+                holder.likeFab.hide();
+
+                holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
+
+                if (mExpandedRelativeLayout != null) {
+                    mExpandedRelativeLayout.setVisibility(View.GONE);
+                }
+
+                mExpandedRelativeLayout = holder.detailsRelativeLayout;
+                mExpandedPosition = position;
+            }
+        });
+    }
+
+    class Vholder extends RecyclerView.ViewHolder {
+        TextView project_name, fromToTextView, project_desc, project_tag, tv_proType;
+        TextView num_likes, num_contributer;
+        TextView tv_initialCost, tv_directCost, tv_inDirectCost, tv_duration, tv_totalCost, tv_profit;
+        ImageView image;
+        LinearLayout linearLayout, con;
+        TextView like, share, make_offer, image_name;
+        //        RecyclerView recyclerView;
+//        RecyclerView.Adapter adapter;
+        ImageView option_menu;
+        FloatingActionButton favouriteFAB, likeFab;
+        TextView emptyView;
+        RelativeLayout money;
+
+        ConstraintLayout projectRelativeLayout;
+        RelativeLayout detailsRelativeLayout;
+
+        Vholder(View itemView) {
+            super(itemView);
+            project_name = itemView.findViewById(R.id.project_name);
+            project_tag = itemView.findViewById(R.id.project_tag);
+            option_menu = itemView.findViewById(R.id.tv_options);
+            tv_initialCost = itemView.findViewById(R.id.tv_initialCost);
+            tv_directCost = itemView.findViewById(R.id.tv_directCost);
+            tv_inDirectCost = itemView.findViewById(R.id.tv_inDirectCost);
+            tv_duration = itemView.findViewById(R.id.tv_duration);
+            tv_totalCost = itemView.findViewById(R.id.tv_totalCost);
+            tv_proType = itemView.findViewById(R.id.tv_proType);
+            tv_profit = itemView.findViewById(R.id.tv_profit);
+
+            favouriteFAB = itemView.findViewById(R.id.fab_favourite);
+            likeFab = itemView.findViewById(R.id.fab_like);
+
+            project_desc = itemView.findViewById(R.id.project_desc);
+            fromToTextView = itemView.findViewById(R.id.tv_from_to);
+            image = itemView.findViewById(R.id.user_image);
+            image_name = itemView.findViewById(R.id.image_name);
+            linearLayout = itemView.findViewById(R.id.lin);
+            con = itemView.findViewById(R.id.con);
+            like = itemView.findViewById(R.id.like);
+            share = itemView.findViewById(R.id.share);
+            make_offer = itemView.findViewById(R.id.make_offer);
+            num_contributer = itemView.findViewById(R.id.num_contributer);
+            num_likes = itemView.findViewById(R.id.num_likes);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//            recyclerView = itemView.findViewById(R.id.rec);
+//            recyclerView.setLayoutManager(layoutManager);
+            money = itemView.findViewById(R.id.money);
+            emptyView = itemView.findViewById(R.id.tv_empty_view);
+
+            projectRelativeLayout = itemView.findViewById(R.id.rl_project);
+            detailsRelativeLayout = itemView.findViewById(R.id.rl_details);
+        }
     }
 
     private void showNormalMenu(ImageView op, int position) {
@@ -408,52 +510,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         return offersList.size();
     }
 
-    class Vholder extends RecyclerView.ViewHolder {
-        TextView project_name, user_name, project_desc, project_tag, tv_proType;
-        TextView num_likes, num_contributer;
-        TextView tv_initialCost, tv_directCost, tv_inDirectCost, tv_duration, tv_totalCost, tv_profit;
-        ImageView image;
-        LinearLayout linearLayout, con;
-        TextView like, share, make_offer, image_name;
-        RecyclerView recyclerView;
-        RecyclerView.Adapter adapter;
-        ImageView option_menu;
-        FloatingActionButton favourite;
-        TextView emptyView;
-        RelativeLayout money;
-
-        Vholder(View itemView) {
-            super(itemView);
-            project_name = itemView.findViewById(R.id.project_name);
-            project_tag = itemView.findViewById(R.id.project_tag);
-            option_menu = itemView.findViewById(R.id.tv_options);
-            tv_initialCost = itemView.findViewById(R.id.tv_initialCost);
-            tv_directCost = itemView.findViewById(R.id.tv_directCost);
-            tv_inDirectCost = itemView.findViewById(R.id.tv_inDirectCost);
-            tv_duration = itemView.findViewById(R.id.tv_duration);
-            tv_totalCost = itemView.findViewById(R.id.tv_totalCost);
-            tv_proType = itemView.findViewById(R.id.tv_proType);
-            tv_profit = itemView.findViewById(R.id.tv_profit);
-            favourite = itemView.findViewById(R.id.favourite);
-            project_desc = itemView.findViewById(R.id.project_desc);
-            user_name = itemView.findViewById(R.id.user_name);
-            image = itemView.findViewById(R.id.user_image);
-            image_name = itemView.findViewById(R.id.image_name);
-            linearLayout = itemView.findViewById(R.id.lin);
-            con = itemView.findViewById(R.id.con);
-            like = itemView.findViewById(R.id.like);
-            share = itemView.findViewById(R.id.share);
-            make_offer = itemView.findViewById(R.id.make_offer);
-            num_contributer = itemView.findViewById(R.id.num_contributer);
-            num_likes = itemView.findViewById(R.id.num_likes);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-            recyclerView = itemView.findViewById(R.id.rec);
-            recyclerView.setLayoutManager(layoutManager);
-            money = itemView.findViewById(R.id.money);
-            emptyView = itemView.findViewById(R.id.tv_empty_view);
-        }
-    }
-
     public interface Helper {
         void shareUrl(String url, String projectName);
     }
@@ -521,10 +577,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                         });
                     }
                 } else {
-
                 }
-
-
             }
 
             @Override
@@ -553,7 +606,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 String Offers = response.body();
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
-                    if (fav == 1) {//remove favourite
+                    if (fav == 1) {//remove favouriteFAB
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
                                 RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
@@ -570,7 +623,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                                 Log.v("Status", "Not Found");
                             }
                         });
-                    } else {//mark favourite
+                    } else {//mark favouriteFAB
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
                             Log.i("Fav", "Done");
@@ -640,4 +693,30 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         }
     }
 
+    public void sort(int type) {
+        if (offersList != null && offersList.size() != 0) {
+            switch (type) {
+                case 0:
+                    Collections.sort(offersList, (o1, o2) -> o1.getStringDate().compareTo(o2.getStringDate()));
+                    break;
+                case 1:
+                    Collections.sort(offersList, (o1, o2) -> o2.getStringDate().compareTo(o1.getStringDate()));
+                    break;
+                case 2:
+                    Collections.sort(offersList, (o1, o2) -> o1.getNumContributor().compareTo(o2.getNumContributor()));
+                    break;
+                case 3:
+                    Collections.sort(offersList, (o1, o2) -> o2.getNumContributor().compareTo(o1.getNumContributor()));
+                    break;
+                case 4:
+                    Collections.sort(offersList, (o1, o2) -> o1.getNumJoinOffer().compareTo(o2.getNumJoinOffer()));
+                    break;
+                case 5:
+                    Collections.sort(offersList, (o1, o2) -> o2.getNumJoinOffer().compareTo(o1.getNumJoinOffer()));
+                    break;
+            }
+
+            notifyDataSetChanged();
+        }
+    }
 }

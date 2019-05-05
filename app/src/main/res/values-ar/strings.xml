@@ -195,4 +195,14 @@
     <string name="c">• مده التنفيذ</string>
     <string name="d">• متوسط العائد الدورى</string>
     <string name="e">• اجمالى التكاليف المتوقعة</string>
+
+    <string-array name="sort_by_array">
+        <item>الاحدث</item>
+        <item>الاقدم</item>
+        <item>عدد المشتركين المطلوب (تصاعدي)</item>
+        <item>عدد المشتركين المطلوب (تنازلي)</item>
+
+        <item>عدد المنضمين (تصاعدي)</item>
+        <item>عدد المنضمين (تنازلي)</item>
+    </string-array>
 </resources>

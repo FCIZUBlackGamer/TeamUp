@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup.ui.Project.List;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
@@ -21,15 +25,19 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
@@ -39,8 +47,8 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-
-public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper {
+public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper,
+        AdapterView.OnItemSelectedListener {
     private String mProjectURL = "";
     private String mProjectName = "";
     public static int MINE = 1;
@@ -71,7 +79,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     /**
-     * @param id refers to favourite projects(2) or all projects(0)
+     * @param id refers to favouriteFAB projects(2) or all projects(0)
      */
     public static FragmentListProjects setType(int id) {
         ProType = id;
@@ -88,7 +96,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     /**
-     * @param word refers to my projects(1), favourite projects(2) or all projects(-1)
+     * @param word refers to my projects(1), favouriteFAB projects(2) or all projects(-1)
      * @param type {2: UserName, 1: ProjectName, 0: Tag}
      */
     public static FragmentListProjects setWord(int type, String word) {
@@ -108,6 +116,13 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         cl_emptyView = view.findViewById(R.id.cl_emptyView);
         recyclerView.setLayoutManager(layoutManager);
 
+        Spinner spinner = view.findViewById(R.id.s_sort_by);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sort_by_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         return view;
     }
 
@@ -124,13 +139,13 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onTabSelected(TabLayout.Tab tab) {
                 //Todo: action filter the list and load Spin
                 ShowSpinnerTask.getManager(getFragmentManager());
-                if (tab.getText().equals(getString(R.string.availableProjects))){
+                if (tab.getText().equals(getString(R.string.availableProjects))) {
                     Log.d("Status", getString(R.string.availableProjects));
                     loadJoinedOffer(DepId);
-                }else if (tab.getText().equals(getString(R.string.hintProjects))){
+                } else if (tab.getText().equals(getString(R.string.hintProjects))) {
                     Log.d("Status", getString(R.string.hintProjects));
                     loadOffers(DepId);
-                }else if (tab.getText().equals(getString(R.string.successProjects))){
+                } else if (tab.getText().equals(getString(R.string.successProjects))) {
                     Log.d("Status", getString(R.string.successProjects));
                     loadSuccessOffer(DepId);
                 }
@@ -193,7 +208,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                }
 //
 //            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
+//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteFAB));
 //
 //                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
 //                        .findAll();
@@ -241,9 +256,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            ProType =-1;
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
-        }
-
-        else if (filterModel != null) {
+        } else if (filterModel != null) {
 //            ProType = -1;
             Type = -1;
             Word = null;
@@ -279,7 +292,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                }
 //
 //            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
+//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteFAB));
 //
 //                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
 //                        .findAll();
@@ -508,15 +521,15 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         Call<Offer> call;
 
         if (depId != -1)
-            call = getOffers.getOffersByCatId(depId, API.URL_TOKEN);
-        else call = getOffers.getAllOffers(API.URL_TOKEN);
+            call = getOffers.getOffersByCatId("1", depId, API.URL_TOKEN); //TODO: get user ID
+        else call = getOffers.getAllOffers("1", API.URL_TOKEN);//TODO: get user ID
 
         call.enqueue(new Callback<Offer>() {
             @Override
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 Log.d("Status", "loadOffers");
-                Log.d("CatId", depId+"");
+                Log.d("CatId", depId + "");
                 if (serverResponse != null) {
                     showEmpty();
                     Gson d = new Gson();
@@ -552,7 +565,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 Log.d("Status", "loadJoinedOffer");
-                Log.d("CatId", depId+"");
+                Log.d("CatId", depId + "");
                 if (serverResponse != null) {
                     showEmpty();
                     Gson d = new Gson();
@@ -587,7 +600,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 Log.d("Status", "loadSuccessOffer");
-                Log.d("CatId", depId+"");
+                Log.d("CatId", depId + "");
                 if (serverResponse != null) {
                     showEmpty();
                     Gson d = new Gson();
@@ -646,7 +659,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         call.enqueue(new Callback<Offer>() {
             @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+            public void onResponse(Call<Offer> call, Response<Offer> response) {
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffers().size() > 0) {
@@ -675,17 +688,17 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
         Log.e("A Size", offers.getOffers().size() + "");
-            if (offers.getOffers() != null && !offers.getOffers().isEmpty()&& offers.getOffers().size() > 0) {
-                showEmpty();
-                adapter = new AdapterListOffers(getActivity(),
-                        offers.getOffers(),
-                        likeModelDataBase,
-                        favouriteDataBases,
-                        type,
-                        this);
+        if (offers.getOffers() != null && !offers.getOffers().isEmpty() && offers.getOffers().size() > 0) {
+            showEmpty();
+            adapter = new AdapterListOffers(getActivity(),
+                    offers.getOffers(),
+                    likeModelDataBase,
+                    favouriteDataBases,
+                    type,
+                    this);
 
-                recyclerView.setAdapter(adapter);
-            }
+            recyclerView.setAdapter(adapter);
+        }
 //            else{
 //                getFragmentManager().beginTransaction()
 //                        .replace(R.id.frame, new FragmentEmpty())
@@ -795,5 +808,15 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         ShareDialogFragment.getInstance(FragmentListProjects.this)
                 .show(getFragmentManager(), "ShareDialogFragment");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+       if(adapter != null) ((AdapterListOffers) adapter).sort(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if(adapter != null) ((AdapterListOffers) adapter).sort(0);
     }
 }
