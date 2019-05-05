@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 

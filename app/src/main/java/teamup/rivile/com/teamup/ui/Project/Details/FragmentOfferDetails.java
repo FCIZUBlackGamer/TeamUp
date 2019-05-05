@@ -47,7 +47,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.ui.Project.List.ContributerImages;

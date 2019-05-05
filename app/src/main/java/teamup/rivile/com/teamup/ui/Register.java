@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup;
+package teamup.rivile.com.teamup.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 

@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 
 /**

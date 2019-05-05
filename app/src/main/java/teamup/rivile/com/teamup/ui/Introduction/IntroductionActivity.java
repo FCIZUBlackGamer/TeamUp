@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 
 public class IntroductionActivity extends AppCompatActivity {

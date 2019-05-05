@@ -30,12 +30,12 @@
             android:enabled="true"
             android:exported="true"></service>
 
-        <activity android:name=".SplashScreen">
+        <activity android:name=".ui.SplashScreen">
 
             <!-- TODO: Make this as Launcher Activity -->
         </activity>
-        <activity android:name=".FirstActivity" />
-        <activity android:name=".Register">
+        <activity android:name=".ui.FirstActivity" />
+        <activity android:name=".ui.Register">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DrawerActivity"
+            android:name=".ui.DrawerActivity"
             android:label="@string/title_activity_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

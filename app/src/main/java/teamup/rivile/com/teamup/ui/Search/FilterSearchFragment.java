@@ -28,7 +28,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.ui.Department.Department;
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;

@@ -1,10 +1,11 @@
-package teamup.rivile.com.teamup;
+package teamup.rivile.com.teamup.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import teamup.rivile.com.teamup.R;
 
 public class SplashScreen extends AppCompatActivity {
 

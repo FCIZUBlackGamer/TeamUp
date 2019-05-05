@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#C9C9C9">
+    android:background="#FFFFFF">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#C9C9C9">
+        android:background="#FFFFFF">
 
         <Spinner
             android:id="@+id/s_sort_by"
@@ -60,7 +60,7 @@
             android:id="@+id/rec"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#C9C9C9"
+            android:background="#FFFFFF"
             android:clipToPadding="false"
             android:paddingBottom="78dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
             android:id="@+id/cl_emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#C9C9C9">
+            android:background="#FFFFFF">
 
             <ImageView
                 android:id="@+id/imageView4"

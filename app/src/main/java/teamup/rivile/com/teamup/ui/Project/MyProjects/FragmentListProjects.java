@@ -32,7 +32,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.List.AdapterListOffers;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;

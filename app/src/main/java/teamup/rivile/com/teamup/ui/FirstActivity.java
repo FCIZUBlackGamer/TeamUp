@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup;
+package teamup.rivile.com.teamup.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import io.realm.Realm;
+import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Services.BroadcastNotificationReceiver;
 import teamup.rivile.com.teamup.Services.MyService;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;

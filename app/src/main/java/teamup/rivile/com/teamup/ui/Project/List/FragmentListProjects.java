@@ -2,7 +2,6 @@ package teamup.rivile.com.teamup.ui.Project.List;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,8 +24,6 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
@@ -36,8 +33,7 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;

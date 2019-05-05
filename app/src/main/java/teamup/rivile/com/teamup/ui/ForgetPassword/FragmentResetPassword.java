@@ -27,8 +27,8 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Login;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
+import teamup.rivile.com.teamup.ui.Login;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 

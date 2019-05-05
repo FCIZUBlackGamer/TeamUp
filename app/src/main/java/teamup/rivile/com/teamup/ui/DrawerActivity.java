@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup;
+package teamup.rivile.com.teamup.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -30,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.ui.Department.FragmentHome;
 import teamup.rivile.com.teamup.ui.GoMap.GoMap;
 import teamup.rivile.com.teamup.ui.GoMap.MovableFloatingActionButton;

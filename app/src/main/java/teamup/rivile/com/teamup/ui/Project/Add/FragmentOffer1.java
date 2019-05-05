@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.DrawerActivity;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
