@@ -25,7 +25,7 @@ public class ShowSpinnerTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         // Do some background process here.
         // It just waits 5 sec in this Tutorial
-        SystemClock.sleep(5000);
+        SystemClock.sleep(1000); //TODO : احنا هنهزر 5555555555555
         return null;
     }
 

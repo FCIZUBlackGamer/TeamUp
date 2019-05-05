@@ -696,22 +696,22 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     public void sort(int type) {
         if (offersList != null && offersList.size() != 0) {
             switch (type) {
-                case 0:
+                case 0: //Sort by date ASC
                     Collections.sort(offersList, (o1, o2) -> o1.getStringDate().compareTo(o2.getStringDate()));
                     break;
-                case 1:
+                case 1: //Sort by date DESC
                     Collections.sort(offersList, (o1, o2) -> o2.getStringDate().compareTo(o1.getStringDate()));
                     break;
-                case 2:
+                case 2: //Sort by required number of contributors ASC
                     Collections.sort(offersList, (o1, o2) -> o1.getNumContributor().compareTo(o2.getNumContributor()));
                     break;
-                case 3:
+                case 3: //Sort by required number of contributors DESC
                     Collections.sort(offersList, (o1, o2) -> o2.getNumContributor().compareTo(o1.getNumContributor()));
                     break;
-                case 4:
+                case 4: //Sort by number of contributors joined ASC
                     Collections.sort(offersList, (o1, o2) -> o1.getNumJoinOffer().compareTo(o2.getNumJoinOffer()));
                     break;
-                case 5:
+                case 5: //Sort by number of contributors joined ASC
                     Collections.sort(offersList, (o1, o2) -> o2.getNumJoinOffer().compareTo(o1.getNumJoinOffer()));
                     break;
             }

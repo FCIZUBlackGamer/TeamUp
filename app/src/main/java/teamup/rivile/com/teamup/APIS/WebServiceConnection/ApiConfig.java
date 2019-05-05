@@ -49,32 +49,32 @@ public interface ApiConfig {
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+    Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("CatId") int CatId, @Field("token") String token);
+    Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getJoinedOffer(@Field("token") String token);
+    Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
+    Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("CatId") int CatId, @Field("token") String token);
+    Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
 /** Initial Test #Done */
-    Call<Offer> getSuccessOffer(@Field("token") String token);
+    Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("token") String token);
 
     /**
      * @param Type {2: UserName, 1: ProjectName, 0: Tag}

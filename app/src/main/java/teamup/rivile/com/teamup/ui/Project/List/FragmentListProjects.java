@@ -69,6 +69,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     TabLayout tabLayout;
     static ConstraintLayout cl_emptyView;
 
+    private int mUserId = -1;
+
     /**
      * @param id refers to Department Id from Home Page
      */
@@ -139,13 +141,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onTabSelected(TabLayout.Tab tab) {
                 //Todo: action filter the list and load Spin
                 ShowSpinnerTask.getManager(getFragmentManager());
-                if (tab.getText().equals(getString(R.string.availableProjects))) {
+                int position = tab.getPosition();
+                if (position == 0) {
                     Log.d("Status", getString(R.string.availableProjects));
                     loadJoinedOffer(DepId);
-                } else if (tab.getText().equals(getString(R.string.hintProjects))) {
+                } else if (position == 1) {
                     Log.d("Status", getString(R.string.hintProjects));
                     loadOffers(DepId);
-                } else if (tab.getText().equals(getString(R.string.successProjects))) {
+                } else if (position == 2) {
                     Log.d("Status", getString(R.string.successProjects));
                     loadSuccessOffer(DepId);
                 }
@@ -171,6 +174,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
 
+        mUserId = loginData.getUser().getId();
+
         likeModelDataBase = loginData.getLikes();
         favouriteDataBases = loginData.getFavorites();
         Log.e("UserId", loginData.getUser().getId() + "");
@@ -180,7 +185,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            ProType = -1;
             Type = -1;
             Word = null;
-            loadOffers(DepId);
+            loadJoinedOffer(DepId);
         }
 //        if (ProType != -1) {
 //            DepId = -1;
@@ -557,8 +562,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         Call<Offer> call;
 
         if (depId != -1)
-            call = getOffers.getJoinedOffer(depId, API.URL_TOKEN);
-        else call = getOffers.getJoinedOffer(API.URL_TOKEN);
+            call = getOffers.getJoinedOffer(String.valueOf(mUserId), depId, API.URL_TOKEN);
+        else call = getOffers.getJoinedOffer(String.valueOf(mUserId), API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
             @Override
@@ -592,8 +597,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         Call<Offer> call;
 
         if (depId != -1)
-            call = getOffers.getSuccessOffer(depId, API.URL_TOKEN);
-        else call = getOffers.getSuccessOffer(API.URL_TOKEN);
+            call = getOffers.getSuccessOffer(String.valueOf(mUserId), depId, API.URL_TOKEN);
+        else call = getOffers.getSuccessOffer(String.valueOf(mUserId), API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
             @Override
@@ -812,11 +817,11 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-       if(adapter != null) ((AdapterListOffers) adapter).sort(position);
+        if (adapter != null) ((AdapterListOffers) adapter).sort(position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        if(adapter != null) ((AdapterListOffers) adapter).sort(0);
+        if (adapter != null) ((AdapterListOffers) adapter).sort(0);
     }
 }
