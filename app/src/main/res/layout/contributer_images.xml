@@ -23,7 +23,7 @@
         <!--android:id="@+id/image_name"-->
         <!--android:layout_width="50dp"-->
         <!--android:layout_height="50dp"-->
-        <!--android:fontFamily="@font/medium"-->
+        <!---->
         <!--android:gravity="center"-->
         <!--android:text=""-->
         <!--android:textColor="@android:color/white"-->

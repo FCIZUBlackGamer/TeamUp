@@ -18,7 +18,6 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/medium</item>
     </style>
 
     <style name="type_toolbar_title" parent="@android:style/TextAppearance.Holo.Medium">

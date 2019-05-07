@@ -28,16 +28,16 @@ public class Offers implements Serializable {
     private static Float InitialCost;
     private static Float DirectExpenses;
     private static Float IndectExpenses;
-    public static boolean NeedPlace ;
-    public static boolean IsJoin ;
+    public static boolean NeedPlace;
+    public static boolean IsJoin;
 
     private static Integer InitialCostType;
     private static Integer DirectExpensesType;
     private static Integer IndectExpensesType;
     private static Integer ProjectDurationType;
     private static Integer ProjectType;
-    private static boolean IsSuccess ;
-    private static boolean IsCompleted ;
+    private static boolean IsSuccess;
+    private static boolean IsCompleted;
 
     public static boolean isIsSuccess() {
         return IsSuccess;
@@ -64,7 +64,7 @@ public class Offers implements Serializable {
     }
 
     public static Integer getId() {
-        return Id;
+        return Id == null ? 0 : Id;
     }
 
     public static Integer getInitialCostType() {
@@ -302,5 +302,40 @@ public class Offers implements Serializable {
 
     public static void setIsJoin(boolean isJoin) {
         IsJoin = isJoin;
+    }
+
+    public static void reset() {
+        Id = null;
+        Name = null;
+        Description = null;
+        CategoryId = null;
+        CategoryName = null;
+        ProfitType = null;
+        NumContributor = null;
+        GenderContributor = null;
+        UserId = null;
+        NumLiks = null;
+        NumJoinOffer = null;
+        Users = null;
+        Address = null;
+        Date = null;
+        ProjectDuration = null;
+        Status = null;
+        LocationId = null;
+        MinExperience = null;
+        ProfitMoney = null;
+        InitialCost = null;
+        DirectExpenses = null;
+        IndectExpenses = null;
+        InitialCostType = null;
+        DirectExpensesType = null;
+        IndectExpensesType = null;
+        ProjectDurationType = null;
+        ProjectType = null;
+
+        NeedPlace = false;
+        IsJoin = false;
+        IsSuccess = false;
+        IsCompleted = false;
     }
 }

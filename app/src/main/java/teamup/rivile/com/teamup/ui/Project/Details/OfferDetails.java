@@ -14,7 +14,6 @@ public class OfferDetails implements Serializable {
     private String Description;
     private Integer CategoryId;
     private String CategoryName;
-    private Integer ProfitType;
     private Integer NumContributor;
     private Integer GenderContributor;
     private Integer UserId;
@@ -57,7 +56,7 @@ public class OfferDetails implements Serializable {
     }
 
     public Integer getId() {
-        return Id;
+        return Id == null ? 0 : Id;
     }
 
     public Integer getInitialCostType() {
@@ -142,14 +141,6 @@ public class OfferDetails implements Serializable {
 
     public void setCategoryName(String categoryName) {
         CategoryName = categoryName;
-    }
-
-    public Integer getProfitType() {
-        return ProfitType;
-    }
-
-    public void setProfitType(Integer profitType) {
-        ProfitType = profitType;
     }
 
     public Integer getNumContributor() {

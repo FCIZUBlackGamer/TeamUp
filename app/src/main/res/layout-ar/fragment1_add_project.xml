@@ -45,7 +45,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#fff"
-                        android:fontFamily="@font/medium"
+
                         android:hint="@string/pressHere"
                         android:maxLines="2"
                         android:textColor="@color/colorPrimary"
@@ -82,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:id="@+id/rrrr"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="5dp"
@@ -102,7 +102,7 @@
                 android:gravity="start"
                 android:layout_margin="8dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:hint="@string/projectDesc"
                 android:lines="4"
                 android:padding="10dp" />
@@ -130,7 +130,7 @@
                     android:layout_marginBottom="0dp"
                     android:textColor="@color/colorWhite"
                     android:layout_toEndOf="@+id/arrowMoney"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:text="@string/money"
                     android:textAlignment="center"
@@ -156,7 +156,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:visibility="gone"
@@ -195,7 +195,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -206,7 +206,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -244,7 +244,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -256,7 +256,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -300,7 +300,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -311,7 +311,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -354,7 +354,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -365,7 +365,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -408,7 +408,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -420,7 +420,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="top"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -442,7 +442,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end|center_vertical"
                         android:text="@string/day"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -453,7 +453,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end|center_vertical"
                         android:text="@string/month"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -464,7 +464,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end|center_vertical"
                         android:text="@string/year"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -476,7 +476,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checked="true"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end|center_vertical"
                         android:text="@string/anotherKind"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -490,7 +490,7 @@
                 <!--android:layout_gravity="right"-->
                 <!--android:layout_margin="8dp"-->
                 <!--android:background="@drawable/rounded_corner_edit_text"-->
-                <!--android:fontFamily="@font/medium"-->
+                <!---->
                 <!--android:gravity="right"-->
                 <!--android:hint="@string/moneyDetail"-->
                 <!--android:lines="1"-->
@@ -500,7 +500,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -544,7 +544,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -577,7 +577,7 @@
                     android:layout_marginBottom="0dp"
                     android:textColor="@color/colorWhite"
                     android:layout_toEndOf="@+id/arrowContributors"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:text="@string/contributors"
                     android:textAlignment="center"
@@ -606,7 +606,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
-                    android:fontFamily="@font/medium"
+
                     android:layout_gravity="start"
                     android:gravity="start"
                     android:text="@string/gender"
@@ -628,7 +628,7 @@
                         android:layout_weight="1"
                         android:checked="true"
                         android:layout_gravity="start"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start|center_vertical"
                         android:text="@string/both"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -640,7 +640,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="start"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start|center_vertical"
                         android:text="@string/male"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -652,7 +652,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="start"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start|center_vertical"
                         android:text="@string/female"
                         app:buttonTint="@color/backgroundDarkGreen" />
@@ -666,7 +666,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_gravity="start"
                     android:gravity="start"
-                    android:fontFamily="@font/medium"
+
                     android:text="@string/numContributors"
                     android:textColor="#000"
                     android:textSize="18sp" />
@@ -691,7 +691,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="@string/from"
@@ -725,7 +725,7 @@
                     android:layout_marginBottom="0dp"
                     android:textColor="@color/colorWhite"
                     android:layout_toEndOf="@+id/arrowPlace"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:text="@string/place"
                     android:textAlignment="center"
@@ -769,7 +769,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:fontFamily="@font/medium"
+
                             android:gravity="end|center_vertical"
                             android:text="@string/no"
                             app:buttonTint="@color/backgroundDarkGreen" />
@@ -781,7 +781,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:checked="true"
-                            android:fontFamily="@font/medium"
+
                             android:gravity="end|center_vertical"
                             android:text="@string/yes"
                             app:buttonTint="@color/backgroundDarkGreen" />
@@ -793,7 +793,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="center"
                         android:text="@string/neddplace"
                         android:textColor="#000"
@@ -804,7 +804,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/medium"
+
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:layout_gravity="start"
@@ -822,7 +822,7 @@
                     android:layout_margin="8dp"
                     android:paddingStart="15dp"
                     android:background="@drawable/rounded_corner_edit_text"
-                    android:fontFamily="@font/medium"
+
                     android:hint="@string/whatYouHaveDesc"
                     android:lines="5"
                     android:padding="10dp" />
@@ -832,7 +832,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="@font/medium"
+
                     android:paddingEnd="10dp"
                     android:paddingStart="15dp"
                     android:layout_gravity="start"
@@ -849,7 +849,7 @@
                     android:gravity="start"
                     android:layout_margin="8dp"
                     android:background="@drawable/rounded_corner_edit_text"
-                    android:fontFamily="@font/medium"
+
                     android:hint="@string/whatYouHaveNotDesc"
                     android:lines="5"
                     android:padding="10dp" />

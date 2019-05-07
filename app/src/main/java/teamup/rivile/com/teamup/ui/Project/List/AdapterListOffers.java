@@ -51,6 +51,8 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 
+import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
+
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
 
     private Helper mHelper;
@@ -137,7 +139,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             if (ty == FragmentListProjects.NORMAL || ty == FragmentListProjects.FAVOURITE) {
                 showNormalMenu(holder.option_menu, position);
 
-            } else if (ty == FragmentListProjects.MINE) {
+            } else if (ty == MINE) {
                 showMyMenu(holder.option_menu, position);
             }
         });
@@ -221,13 +223,13 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //            }
 //        }
 
-        if (offersList.get(position).getProjectType() == 0) {
-            holder.tv_proType.setText(context.getResources().getString(R.string.always));
-        } else if (offersList.get(position).getProjectType() == 1) {//perioud
-            holder.tv_proType.setText(context.getResources().getString(R.string.perioud));
-        } else if (offersList.get(position).getProjectType() == 2) {
-            holder.tv_proType.setText(context.getResources().getString(R.string.jsutOnce));
-        }
+//        if (offersList.get(position).getProjectType() == 0) {
+//            holder.tv_proType.setText(context.getResources().getString(R.string.always));
+//        } else if (offersList.get(position).getProjectType() == 1) {//perioud
+//            holder.tv_proType.setText(context.getResources().getString(R.string.perioud));
+//        } else if (offersList.get(position).getProjectType() == 2) {
+//            holder.tv_proType.setText(context.getResources().getString(R.string.jsutOnce));
+//        }
 
         if (offersList.get(position).getDescription().length() > 500) {//Check Description length
             String newDesc = offersList.get(position).getDescription().substring(0, 500) + context.getString(R.string.seeMore);
@@ -499,11 +501,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     }
 
     private void reportOrDelete(MenuItem op, int position) {
-        if (op.getIcon()
-                .getConstantState()
-                .equals(context.getResources()
-                        .getDrawable(R.drawable.ic_cancel)
-                        .getConstantState())) {//means delete action
+        if (ty == MINE) {//means delete action
             deleteOffer(offersList.get(position).getId(), position);
             notifyDataSetChanged();
         } else {//make report

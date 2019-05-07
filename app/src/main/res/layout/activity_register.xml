@@ -31,7 +31,7 @@
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:text="@string/join_us_now"
-            android:fontFamily="@font/medium"
+
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorBlue"
             android:textSize="48sp"
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/medium"
+
             android:gravity="center"
             android:text="@string/join_us_now_1"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:fontFamily="@font/medium"
+
             android:text="@string/join_us_now_2"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/textColorBlue"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginEnd="16dp"
             android:gravity="start"
             android:text="@string/full_name"
@@ -91,7 +91,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:fontFamily="@font/medium"
+
             android:background="@drawable/rounded_corner_edit_text"
             android:inputType="textPersonName"
             android:maxLines="1"
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginEnd="16dp"
             android:gravity="start"
             android:text="@string/email"
@@ -121,7 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/rounded_corner_edit_text"
@@ -137,7 +137,7 @@
             <!--android:layout_width="0dp"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginStart="16dp"-->
-            <!--android:fontFamily="@font/medium"-->
+            <!---->
             <!--android:layout_marginTop="8dp"-->
             <!--android:layout_marginEnd="16dp"-->
             <!--android:gravity="start"-->
@@ -151,7 +151,7 @@
         <!--<EditText-->
             <!--android:id="@+id/ed_user_name"-->
             <!--android:layout_width="0dp"-->
-            <!--android:fontFamily="@font/medium"-->
+            <!---->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginStart="16dp"-->
             <!--android:layout_marginTop="8dp"-->
@@ -169,7 +169,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:gravity="start"
@@ -187,7 +187,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:fontFamily="@font/medium"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView14"
@@ -199,7 +199,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:inputType="textPassword"
-                android:fontFamily="@font/medium"
+
                 android:maxLines="1"
                 android:padding="8dp" />
         </android.support.design.widget.TextInputLayout>
@@ -211,7 +211,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_corner_button_blue"
             android:text="@string/sign_up"
@@ -228,7 +228,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginBottom="16dp"
             android:gravity="start"
             android:text="@string/already_have_an_account"
@@ -244,7 +244,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFamily="@font/medium"
+
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"

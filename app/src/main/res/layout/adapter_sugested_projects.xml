@@ -16,7 +16,7 @@
         android:text="بلح"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
-        android:fontFamily="@font/medium"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

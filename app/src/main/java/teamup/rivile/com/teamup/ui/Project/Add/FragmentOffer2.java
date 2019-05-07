@@ -76,6 +76,7 @@ import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
@@ -103,54 +104,53 @@ public class FragmentOffer2 extends Fragment {
     static final int CAMERA_REQUEST = 1888;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
-    ArrayList<StateModel> mSelectedStateModels = new ArrayList<>();
-    CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
+    private ArrayList<StateModel> mSelectedStateModels = new ArrayList<>();
+    private CapitalsRecyclerViewAdapter mCapitalsRecyclerViewAdapter;
 
-    StateModel mSelectedCategory;
-    CategoriesRecyclerViewAdapter mCategoriesRecyclerViewAdapter;
+    private StateModel mSelectedCategory;
+    private CategoriesRecyclerViewAdapter mCategoriesRecyclerViewAdapter;
 
-    ArrayList<AttachmentModel> mAttachmentModelArrayList = new ArrayList<>();
+    private ArrayList<AttachmentModel> mAttachmentModelArrayList = new ArrayList<>();
 
-    View view;
-    RelativeLayout attachment, cap, dep, tags;
-    LinearLayout attachmentSection, CapSection, DepSection, tagSection;
+    private RelativeLayout mAttachmentRelativeLayout, mCapitalsRelativeLayout, mSectionsRelativeLayout, mTagsRelativeLayout;
+    private LinearLayout mAttachmentSectionLinearLayout, mCapitalSectionLinearLayout,
+            mDepartmentSectionLinearLayout, mTagsSectionLinearLayout;
 
-    ImageView doc, image, preview, delete;
-    RecyclerView recFiles, recImages;
-    RecyclerView.Adapter imagesAdapter, filesAdapter;
-    RecyclerView recCapitals;
-    RecyclerView recDep;
-    CheckBox egypt;
-    EditText tagsInput;
-    Button go;
-    private ArrayList<FilesModel> imagesArrayUri, fileArrayUri;
-    List<FilesModel> finalFileModel;
+    private ImageView mDocumontsImageView, mImagesImageView, mPreviewImageView, mDeleteImageView;
+    private RecyclerView mFilesRecyclerView, mImagesRecyclerView;
+    private RecyclerView.Adapter mImagesAdapter, mFilesAdapter;
+    private RecyclerView mCapitalsRecyclerView;
+    private RecyclerView mDepartmentRecyclerView;
+    private CheckBox mEgyptCheckBox;
+    private EditText mTagsInputEditText;
+    private Button mGoButton;
+    private ArrayList<FilesModel> mImagesUriArrayList, mFilesUriArrayList;
+    private List<FilesModel> mFinalFileModelList;
 
-    View Camera_view;
-    ImageView close, minimize, cam, gal;
-    ImageView arrowAttachments, arrowCapitals, arrowDepartments, arrowTags;
-    int close_type;
-    RelativeLayout viewPreview;
+    private View mCameraView;
+    private ImageView mCloseImageView, mMinimizeImageView, mCameraImageView, mGalleryImageView;
+    private ImageView mArrowAttachmentsImageView, mArrowCapitalsImageView, mArrowDepartmentsImageView, mArrowTagsImageView;
+    private int mCloseType;
+    private RelativeLayout mViewPreviewRelativeLayout;
 
+    private FilesModel mCurrentFileModel;
+    private Realm mRealm;
+    private OfferDetailsDataBase mOfferDetailsDataBase, mOfferDetailsDataBaseIN;
 
-    FilesModel currentFileModel;
-    Realm realm;
-    OfferDetailsDataBase offerDetailsDataBase, offerDetailsDataBaseIN;
-
-    ChipsAdapter mTagsRecUserAdapter;
-    LoadedChipsAdapter mTagsRecLoadedAdapter;
+    private ChipsAdapter mTagsRecUserAdapter;
+    private LoadedChipsAdapter mTagsRecLoadedAdapter;
 
     private int mUserId = -1;
 
-    static MutableLiveData<ArrayList<TagsModel>> mLoadedTags = new MutableLiveData<>();
-    static MutableLiveData<ArrayList<StateModel>> mLoadedCapitals = new MutableLiveData<>();
-    static MutableLiveData<ArrayList<StateModel>> mLoadedCategories = new MutableLiveData<>();
-    RecyclerView tagsRecUserLoad, tagsRec;
+    private static MutableLiveData<ArrayList<TagsModel>> mLoadedTags = new MutableLiveData<>();
+    private static MutableLiveData<ArrayList<StateModel>> mLoadedCapitals = new MutableLiveData<>();
+    private static MutableLiveData<ArrayList<StateModel>> mLoadedCategories = new MutableLiveData<>();
+    private RecyclerView mTagsUserLoadRecyclerView, mTagsRecyclerView;
 
-    static ViewPager pager;
-    static FragmentPagerAdapter pagerAdapter;
+    private static ViewPager mPager;
+    private static FragmentPagerAdapter mPagerAdapter;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
-    FragmentManager fragmentManager;
+    private FragmentManager mFM;
 
     static FragmentOffer2 setPager(
             ViewPager viewPager, FragmentPagerAdapter pagerAdapter,
@@ -159,8 +159,8 @@ public class FragmentOffer2 extends Fragment {
             MutableLiveData<ArrayList<StateModel>> loadedCategories,
             MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
 
-        pager = viewPager;
-        FragmentOffer2.pagerAdapter = pagerAdapter;
+        mPager = viewPager;
+        FragmentOffer2.mPagerAdapter = pagerAdapter;
         mLoadedTags = tagsArrayList;
         mLoadedCapitals = loadedCapitals;
         mLoadedCategories = loadedCategories;
@@ -171,58 +171,58 @@ public class FragmentOffer2 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment2_add_project, container, false);
+        View view = inflater.inflate(R.layout.fragment2_add_project, container, false);
         //Shrink and Expand Views
-        attachment = view.findViewById(R.id.attachment);
-        cap = view.findViewById(R.id.cap);
-        dep = view.findViewById(R.id.dep);
-        tags = view.findViewById(R.id.tags);
-        attachmentSection = view.findViewById(R.id.attachmentSection);
-        CapSection = view.findViewById(R.id.CapSection);
-        DepSection = view.findViewById(R.id.DepSection);
-        tagSection = view.findViewById(R.id.tagSection);
-        arrowAttachments = view.findViewById(R.id.arrowAttachments);
-        arrowDepartments = view.findViewById(R.id.arrowDepartments);
-        arrowCapitals = view.findViewById(R.id.arrowCapitals);
-        arrowTags = view.findViewById(R.id.arrowTags);
+        mAttachmentRelativeLayout = view.findViewById(R.id.attachment);
+        mCapitalsRelativeLayout = view.findViewById(R.id.cap);
+        mSectionsRelativeLayout = view.findViewById(R.id.dep);
+        mTagsRelativeLayout = view.findViewById(R.id.tags);
+        mAttachmentSectionLinearLayout = view.findViewById(R.id.attachmentSection);
+        mCapitalSectionLinearLayout = view.findViewById(R.id.CapSection);
+        mDepartmentSectionLinearLayout = view.findViewById(R.id.DepSection);
+        mTagsSectionLinearLayout = view.findViewById(R.id.tagSection);
+        mArrowAttachmentsImageView = view.findViewById(R.id.arrowAttachments);
+        mArrowDepartmentsImageView = view.findViewById(R.id.arrowDepartments);
+        mArrowCapitalsImageView = view.findViewById(R.id.arrowCapitals);
+        mArrowTagsImageView = view.findViewById(R.id.arrowTags);
         // Input Views
 
-        realm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
 
-        doc = view.findViewById(R.id.doc);
-        image = view.findViewById(R.id.image);
-        viewPreview = view.findViewById(R.id.view);
-        preview = view.findViewById(R.id.preview);
-        delete = view.findViewById(R.id.tv_options);
-        recFiles = view.findViewById(R.id.recFiles);
-        recImages = view.findViewById(R.id.recImages);
-        recCapitals = view.findViewById(R.id.recCapitals);
-        recDep = view.findViewById(R.id.recDep);
-        egypt = view.findViewById(R.id.egypt);
-        tagsInput = view.findViewById(R.id.tagsInput);
-        go = view.findViewById(R.id.go);
+        mDocumontsImageView = view.findViewById(R.id.doc);
+        mImagesImageView = view.findViewById(R.id.image);
+        mViewPreviewRelativeLayout = view.findViewById(R.id.view);
+        mPreviewImageView = view.findViewById(R.id.preview);
+        mDeleteImageView = view.findViewById(R.id.tv_options);
+        mFilesRecyclerView = view.findViewById(R.id.recFiles);
+        mImagesRecyclerView = view.findViewById(R.id.recImages);
+        mCapitalsRecyclerView = view.findViewById(R.id.recCapitals);
+        mDepartmentRecyclerView = view.findViewById(R.id.recDep);
+        mEgyptCheckBox = view.findViewById(R.id.egypt);
+        mTagsInputEditText = view.findViewById(R.id.tagsInput);
+        mGoButton = view.findViewById(R.id.go);
 
-        if (finalFileModel == null) {
-            finalFileModel = new ArrayList<>();
+        if (mFinalFileModelList == null) {
+            mFinalFileModelList = new ArrayList<>();
         }
-        if (imagesArrayUri == null) {
-            imagesArrayUri = new ArrayList<>();
+        if (mImagesUriArrayList == null) {
+            mImagesUriArrayList = new ArrayList<>();
         }
-        if (fileArrayUri == null) {
-            fileArrayUri = new ArrayList<>();
+        if (mFilesUriArrayList == null) {
+            mFilesUriArrayList = new ArrayList<>();
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recImages.setLayoutManager(layoutManager);
+        mImagesRecyclerView.setLayoutManager(layoutManager);
 
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recFiles.setLayoutManager(layoutManager1);
+        mFilesRecyclerView.setLayoutManager(layoutManager1);
 
-        tagsRecUserLoad = view.findViewById(R.id.tagsRecUserLoad);
-        tagsRec = view.findViewById(R.id.tagsRec);
+        mTagsUserLoadRecyclerView = view.findViewById(R.id.tagsRecUserLoad);
+        mTagsRecyclerView = view.findViewById(R.id.tagsRec);
 
-        realm = Realm.getDefaultInstance();
-        fragmentManager = getFragmentManager();
+        mRealm = Realm.getDefaultInstance();
+        mFM = getFragmentManager();
         return view;
     }
 
@@ -252,27 +252,27 @@ public class FragmentOffer2 extends Fragment {
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
 
-        realm.executeTransaction(realm1 -> {
+        mRealm.executeTransaction(realm1 -> {
             mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
-            Log.e("UserIdDDDdDDD1", mUserId+"");
+            Log.e("UserIdDDDdDDD1", mUserId + "");
         });
-        Log.e("UserIdDDDdDDD2", mUserId+"");
+        Log.e("UserIdDDDdDDD2", mUserId + "");
 
 
         setUpRecyclerViews();
 
-        imagesAdapter = new ImagesAdapter(getActivity(), imagesArrayUri, item -> {
+        mImagesAdapter = new ImagesAdapter(getActivity(), mImagesUriArrayList, item -> {
             try {
-                viewPreview.setVisibility(View.VISIBLE);
-                currentFileModel = item;
+                mViewPreviewRelativeLayout.setVisibility(View.VISIBLE);
+                mCurrentFileModel = item;
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), item.getFileUri());
-                preview.setImageBitmap(bitmap);
+                mPreviewImageView.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-        filesAdapter = new FilesAdapter(getActivity(), fileArrayUri, item -> {
+        mFilesAdapter = new FilesAdapter(getActivity(), mFilesUriArrayList, item -> {
             try {
                 //File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + (item.getFileName().isEmpty() ? item.getServerFileName(): item.getFileName()));
                 MimeTypeMap myMime = MimeTypeMap.getSingleton();
@@ -291,36 +291,36 @@ public class FragmentOffer2 extends Fragment {
                 e.printStackTrace();
             }
         });
-        recFiles.setAdapter(filesAdapter);
+        mFilesRecyclerView.setAdapter(mFilesAdapter);
 
-        if (imagesArrayUri.size() > 0) {
-            viewPreview.setVisibility(View.VISIBLE);
+        if (mImagesUriArrayList.size() > 0) {
+            mViewPreviewRelativeLayout.setVisibility(View.VISIBLE);
         } else {
-            viewPreview.setVisibility(View.GONE);
+            mViewPreviewRelativeLayout.setVisibility(View.GONE);
         }
 
-        delete.setOnClickListener(v -> {
-            imagesArrayUri.remove(currentFileModel);
-            imagesAdapter.notifyDataSetChanged();
-            if (imagesArrayUri.size() > 0) {
-                viewPreview.setVisibility(View.VISIBLE);
+        mDeleteImageView.setOnClickListener(v -> {
+            mImagesUriArrayList.remove(mCurrentFileModel);
+            mImagesAdapter.notifyDataSetChanged();
+            if (mImagesUriArrayList.size() > 0) {
+                mViewPreviewRelativeLayout.setVisibility(View.VISIBLE);
                 try {
-                    currentFileModel = imagesArrayUri.get(0);
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagesArrayUri.get(0).getFileUri());
-                    preview.setImageBitmap(bitmap);
+                    mCurrentFileModel = mImagesUriArrayList.get(0);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImagesUriArrayList.get(0).getFileUri());
+                    mPreviewImageView.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
-                viewPreview.setVisibility(View.GONE);
+                mViewPreviewRelativeLayout.setVisibility(View.GONE);
             }
 
         });
 
-        recImages.setAdapter(imagesAdapter);
+        mImagesRecyclerView.setAdapter(mImagesAdapter);
 
 
-        doc.setOnClickListener(v -> {
+        mDocumontsImageView.setOnClickListener(v -> {
             /* Open Storage Files*/
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -336,42 +336,42 @@ public class FragmentOffer2 extends Fragment {
             startActivityForResult(intent, PICK_FILE_REQUEST_CODE);
         });
 
-        image.setOnClickListener(v -> {
+        mImagesImageView.setOnClickListener(v -> {
             /** Choose Either Camera Or Gallery */
             final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            Camera_view = inflater.inflate(R.layout.camera_view, null);
+            mCameraView = inflater.inflate(R.layout.camera_view, null);
 
-            close = Camera_view.findViewById(R.id.close);
-            minimize = Camera_view.findViewById(R.id.minimize);
-            cam = Camera_view.findViewById(R.id.cam);
-            gal = Camera_view.findViewById(R.id.gal);
+            mCloseImageView = mCameraView.findViewById(R.id.close);
+            mMinimizeImageView = mCameraView.findViewById(R.id.minimize);
+            mCameraImageView = mCameraView.findViewById(R.id.cam);
+            mGalleryImageView = mCameraView.findViewById(R.id.gal);
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setCancelable(false)
-                    .setView(Camera_view);
+                    .setView(mCameraView);
 
             final AlertDialog dialog = builder.create();
             dialog.show();
 
-            gal.setOnClickListener(v1 -> {
+            mGalleryImageView.setOnClickListener(v1 -> {
                 openGallery();
                 dialog.dismiss();
             });
 
-            cam.setOnClickListener(v12 -> {
+            mCameraImageView.setOnClickListener(v12 -> {
                 openCamera();
                 dialog.dismiss();
             });
 
-            close.setOnClickListener(v13 -> {
-                close_type = 0;
+            mCloseImageView.setOnClickListener(v13 -> {
+                mCloseType = 0;
                 dialog.dismiss();
 
             });
         });
 
-        egypt.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        mEgyptCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (mLoadedCapitals.getValue() != null) {
                     mSelectedStateModels.addAll(mLoadedCapitals.getValue());
@@ -383,20 +383,20 @@ public class FragmentOffer2 extends Fragment {
             }
         });
 
-        go.setOnClickListener(v -> {
+        mGoButton.setOnClickListener(v -> {
 
             mSelectedCategory = mCategoriesRecyclerViewAdapter.getSelectedCategory();
 
             Log.v("mSelectedCategory", String.valueOf(mSelectedCategory));
 
             if (Offers.getName() == null || Offers.getName().isEmpty()) {
-                pager.setCurrentItem(0);
+                mPager.setCurrentItem(0);
                 Toast.makeText(getContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show();
             } else if (Offers.getDescription() == null || Offers.getDescription().isEmpty()) {
-                pager.setCurrentItem(0);
+                mPager.setCurrentItem(0);
                 Toast.makeText(getContext(), getString(R.string.details_required), Toast.LENGTH_SHORT).show();
             } else if (Offers.isNeedPlace()) {
-                pager.setCurrentItem(0);
+                mPager.setCurrentItem(0);
 //                Toast.makeText(getContext(), getString(R.string.location_required), Toast.LENGTH_SHORT).show();
             } else if (mSelectedCategory == null) {
                 Toast.makeText(getContext(), getString(R.string.dept_error), Toast.LENGTH_SHORT).show();
@@ -405,7 +405,7 @@ public class FragmentOffer2 extends Fragment {
             } else {
 
                 if (mUserId != -1) {
-                    go.setEnabled(false);
+                    mGoButton.setEnabled(false);
                     Offers.setUserId(mUserId);
                 } else {
                     Toast.makeText(getContext(), "User Id is not set yet", Toast.LENGTH_SHORT).show();
@@ -417,24 +417,24 @@ public class FragmentOffer2 extends Fragment {
                 mSelectedStateModels = mCapitalsRecyclerViewAdapter.getSelectedCapitals();
 
                 //TODO: start uploading and adding...
-                for (int i = 0; i < imagesArrayUri.size(); i++) {
+                for (int i = 0; i < mImagesUriArrayList.size(); i++) {
                     FilesModel model = new FilesModel();
-                    model.setFileName(imagesArrayUri.get(i).getFileName());
-                    model.setServerFileName(imagesArrayUri.get(i).getServerFileName());
-                    model.setFileUri(imagesArrayUri.get(i).getFileUri());
-                    model.setFileName(imagesArrayUri.get(i).getFileName());
-                    finalFileModel.add(model);
+                    model.setFileName(mImagesUriArrayList.get(i).getFileName());
+                    model.setServerFileName(mImagesUriArrayList.get(i).getServerFileName());
+                    model.setFileUri(mImagesUriArrayList.get(i).getFileUri());
+                    model.setFileName(mImagesUriArrayList.get(i).getFileName());
+                    mFinalFileModelList.add(model);
                 }
-                for (int i = 0; i < fileArrayUri.size(); i++) {
+                for (int i = 0; i < mFilesUriArrayList.size(); i++) {
                     FilesModel model = new FilesModel();
-                    model.setFileName(fileArrayUri.get(i).getFileName());
-                    model.setServerFileName(fileArrayUri.get(i).getServerFileName());
-                    model.setFileUri(fileArrayUri.get(i).getFileUri());
-                    model.setFileName(fileArrayUri.get(i).getFileName());
-                    finalFileModel.add(model);
+                    model.setFileName(mFilesUriArrayList.get(i).getFileName());
+                    model.setServerFileName(mFilesUriArrayList.get(i).getServerFileName());
+                    model.setFileUri(mFilesUriArrayList.get(i).getFileUri());
+                    model.setFileName(mFilesUriArrayList.get(i).getFileName());
+                    mFinalFileModelList.add(model);
                 }
 
-                if (!finalFileModel.isEmpty())
+                if (!mFinalFileModelList.isEmpty())
                     copyFilesUploadFilesAddOffer();
                 else addOffer();
             }
@@ -442,47 +442,47 @@ public class FragmentOffer2 extends Fragment {
 
         //region Shrink And Expand
 
-        attachment.setOnClickListener(v -> {
-            if (attachmentSection.getVisibility() == View.VISIBLE) {
-                attachmentSection.setVisibility(View.GONE);
-                arrowAttachments.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+        mAttachmentRelativeLayout.setOnClickListener(v -> {
+            if (mAttachmentSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mAttachmentSectionLinearLayout.setVisibility(View.GONE);
+                mArrowAttachmentsImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
-                attachmentSection.setVisibility(View.VISIBLE);
-                arrowAttachments.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                mAttachmentSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowAttachmentsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
 
-        cap.setOnClickListener(v -> {
-            if (CapSection.getVisibility() == View.VISIBLE) {
-                CapSection.setVisibility(View.GONE);
-                arrowCapitals.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+        mCapitalsRelativeLayout.setOnClickListener(v -> {
+            if (mCapitalSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mCapitalSectionLinearLayout.setVisibility(View.GONE);
+                mArrowCapitalsImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
-                CapSection.setVisibility(View.VISIBLE);
-                arrowCapitals.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                mCapitalSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowCapitalsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
 
-        dep.setOnClickListener(v -> {
-            if (DepSection.getVisibility() == View.VISIBLE) {
-                DepSection.setVisibility(View.GONE);
-                arrowDepartments.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+        mSectionsRelativeLayout.setOnClickListener(v -> {
+            if (mDepartmentSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mDepartmentSectionLinearLayout.setVisibility(View.GONE);
+                mArrowDepartmentsImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
-                DepSection.setVisibility(View.VISIBLE);
-                arrowDepartments.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                mDepartmentSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowDepartmentsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
 
-        tags.setOnClickListener(v -> {
-            if (tagSection.getVisibility() == View.VISIBLE) {
-                tagSection.setVisibility(View.GONE);
-                arrowTags.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+        mTagsRelativeLayout.setOnClickListener(v -> {
+            if (mTagsSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mTagsSectionLinearLayout.setVisibility(View.GONE);
+                mArrowTagsImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
 
             } else {
-                tagSection.setVisibility(View.VISIBLE);
-                arrowTags.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+                mTagsSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowTagsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
             }
         });
         // endregion
@@ -499,7 +499,6 @@ public class FragmentOffer2 extends Fragment {
 
                     List<AttachmentModel> requirmentModels = offer.getAttachments();
                     if (!requirmentModels.isEmpty()) {
-
                         mAttachmentModelArrayList = (ArrayList<AttachmentModel>) requirmentModels;
                     }
 
@@ -530,18 +529,18 @@ public class FragmentOffer2 extends Fragment {
 
     private void setUpExpDepViews() {
 
-        tagsRec.setLayoutManager(new StaggeredGridLayoutManager(3,
+        mTagsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
 
         mTagsRecLoadedAdapter = new LoadedChipsAdapter(null, mTagsRecUserAdapter);
-        tagsRec.setAdapter(mTagsRecLoadedAdapter);
+        mTagsRecyclerView.setAdapter(mTagsRecLoadedAdapter);
 
-        tagsRecUserLoad.setLayoutManager(new StaggeredGridLayoutManager(3,
+        mTagsUserLoadRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.HORIZONTAL));
         mTagsRecUserAdapter = new ChipsAdapter(null, mTagsRecLoadedAdapter);
-        tagsRecUserLoad.setAdapter(mTagsRecUserAdapter);
+        mTagsUserLoadRecyclerView.setAdapter(mTagsRecUserAdapter);
 
-        tagsInput.addTextChangedListener(new TextWatcher() {
+        mTagsInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -592,7 +591,7 @@ public class FragmentOffer2 extends Fragment {
                         mTagsRecUserAdapter.addTypeModel(typeModel);
 
                         //clear EditText
-                        tagsInput.setText("");
+                        mTagsInputEditText.setText("");
                     }
                 }
             }
@@ -610,7 +609,7 @@ public class FragmentOffer2 extends Fragment {
             }
         } else {
             Intent intent = new Intent();
-            intent.setType("image/*");
+            intent.setType("mImagesImageView/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);// ACTION_VIEW
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
@@ -706,14 +705,14 @@ public class FragmentOffer2 extends Fragment {
         int actualHeight = options.outHeight;
         int actualWidth = options.outWidth;
 
-//      max Height and width values of the compressed image is taken as 816x612
+//      max Height and width values of the compressed mImagesImageView is taken as 816x612
 
         float maxHeight = 816.0f;
         float maxWidth = 612.0f;
         float imgRatio = actualWidth / actualHeight;
         float maxRatio = maxWidth / maxHeight;
 
-//      width and height values are set maintaining the aspect ratio of the image
+//      width and height values are set maintaining the aspect ratio of the mImagesImageView
 
         if (actualHeight > maxHeight || actualWidth > maxWidth) {
             if (imgRatio < maxRatio) {
@@ -731,7 +730,7 @@ public class FragmentOffer2 extends Fragment {
             }
         }
 
-//      setting inSampleSize value allows to load a scaled down version of the original image
+//      setting inSampleSize value allows to load a scaled down version of the original mImagesImageView
 
         options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
 
@@ -768,7 +767,7 @@ public class FragmentOffer2 extends Fragment {
         canvas.setMatrix(scaleMatrix);
         canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
 
-//      check the rotation of the image and display it properly
+//      check the rotation of the mImagesImageView and display it properly
         ExifInterface exif;
         try {
             exif = new ExifInterface(filePath);
@@ -811,7 +810,7 @@ public class FragmentOffer2 extends Fragment {
     }
 
     public String getFilename() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), getString(R.string.app_name)+"/Images");
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), getString(R.string.app_name) + "/Images");
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -862,14 +861,14 @@ public class FragmentOffer2 extends Fragment {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            viewPreview.setVisibility(View.VISIBLE);
+            mViewPreviewRelativeLayout.setVisibility(View.VISIBLE);
             new Handler().post(() -> {
-                pager.setCurrentItem(2);
-                pagerAdapter.notifyDataSetChanged();
-                Log.e("Item", pager.getCurrentItem() + "");
+                mPager.setCurrentItem(2);
+                mPagerAdapter.notifyDataSetChanged();
+                Log.e("Item", mPager.getCurrentItem() + "");
                 if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                     /** We Got The File */
-                    /** Save File to Local Folder and get Uri and add it to (fileArrayUri) */
+                    /** Save File to Local Folder and get Uri and add it to (mFilesUriArrayList) */
                     Toast.makeText(getActivity(), "File", Toast.LENGTH_SHORT).show();
 
                     ClipData mClipData = data.getClipData();
@@ -880,7 +879,7 @@ public class FragmentOffer2 extends Fragment {
                         Log.i("File Name", getFileName(s.getFileUri()));
                         Toast.makeText(getActivity(), getFileName(s.getFileUri()), Toast.LENGTH_SHORT).show();
                         s.setFileName(getFileName(s.getFileUri()));
-                        fileArrayUri.add(s);
+                        mFilesUriArrayList.add(s);
 
                     } else {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
@@ -892,21 +891,21 @@ public class FragmentOffer2 extends Fragment {
                             Log.i("File Name1", getFileName(s.getFileUri()));
                             Toast.makeText(getActivity(), getFileName(s.getFileUri()), Toast.LENGTH_SHORT).show();
                             s.setFileName(getFileName(s.getFileUri()));
-                            fileArrayUri.add(s);
+                            mFilesUriArrayList.add(s);
 
                         }
                     }
-                    filesAdapter.notifyDataSetChanged();
+                    mFilesAdapter.notifyDataSetChanged();
                 } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
                     ClipData mClipData = data.getClipData();
                     if (mClipData == null) {
                         Uri uri = data.getData();
-                        imagesArrayUri.add(new FilesModel(uri));
-//                        finalFileModel.add(new FilesModel(uri));
+                        mImagesUriArrayList.add(new FilesModel(uri));
+//                        mFinalFileModelList.add(new FilesModel(uri));
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                             bitmap = getResizedBitmap(bitmap, 65);
-                            preview.setImageBitmap(bitmap);
+                            mPreviewImageView.setImageBitmap(bitmap);
                             Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -915,13 +914,13 @@ public class FragmentOffer2 extends Fragment {
                         for (int i = 0; i < mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            imagesArrayUri.add(new FilesModel(uri));
-//                            finalFileModel.add(new FilesModel(uri));
-                            // !! You may need to resize the image if it's too large
+                            mImagesUriArrayList.add(new FilesModel(uri));
+//                            mFinalFileModelList.add(new FilesModel(uri));
+                            // !! You may need to resize the mImagesImageView if it's too large
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 //                                bitmap = getResizedBitmap(bitmap, 65);
-                                preview.setImageBitmap(bitmap);
+                                mPreviewImageView.setImageBitmap(bitmap);
                                 Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -929,25 +928,25 @@ public class FragmentOffer2 extends Fragment {
 
                         }
                     }
-                    Log.e("finalFileModel Length", finalFileModel.size() + "");
+                    Log.e("mFinalFileModelList", mFinalFileModelList.size() + "");
                 } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
 //                    bitmap = getResizedBitmap(bitmap, 400);
-                        Uri imageUri = getImageUri(getActivity(), bitmap);
-                    /** Save Image to Local Folder and get Uri and add it to (imagesArrayUri) */
-                    preview.setImageBitmap(bitmap);
+                    Uri imageUri = getImageUri(getActivity(), bitmap);
+                    /** Save Image to Local Folder and get Uri and add it to (mImagesUriArrayList) */
+                    mPreviewImageView.setImageBitmap(bitmap);
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                         //Uri tempUri = getImageUri(getActivity(), String.valueOf(imageUri));
                         // CALL THIS METHOD TO GET THE ACTUAL PATH
 //                        Toast.makeText(getActivity(), "Here " + getRealPathFromURI(imageUri), Toast.LENGTH_LONG).show();
 
-                        imagesArrayUri.add(new FilesModel(imageUri));
+                        mImagesUriArrayList.add(new FilesModel(imageUri));
                     }
                 }
-                imagesAdapter.notifyDataSetChanged();
-                for (int i = 0; i < imagesArrayUri.size(); i++) {
-                    Log.e("Index " + i, imagesArrayUri.get(i).getFileUri().toString());
+                mImagesAdapter.notifyDataSetChanged();
+                for (int i = 0; i < mImagesUriArrayList.size(); i++) {
+                    Log.e("Index " + i, mImagesUriArrayList.get(i).getFileUri().toString());
                 }
             });
         }
@@ -1011,10 +1010,10 @@ public class FragmentOffer2 extends Fragment {
 //            out = getActivity().openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
 //
 //            copyPdfFile(in, out);
-//            in.close();
+//            in.mCloseImageView();
 //            in = null;
 //            out.flush();
-//            out.close();
+//            out.mCloseImageView();
 //            out = null;
 //        } catch (Exception e) {
 //            Log.e("exception", e.getMessage());
@@ -1038,8 +1037,8 @@ public class FragmentOffer2 extends Fragment {
 
     private void copyFilesUploadFilesAddOffer() {
 
-        for (int i = finalFileModel.size() - 1; i >= 0; --i) {
-            Uri uri = finalFileModel.get(i).getFileUri();
+        for (int i = mFinalFileModelList.size() - 1; i >= 0; --i) {
+            Uri uri = mFinalFileModelList.get(i).getFileUri();
 
             try (Cursor cursor = getContext().getContentResolver()
                     .query(uri, null, null, null, null, null)) {
@@ -1051,7 +1050,7 @@ public class FragmentOffer2 extends Fragment {
 
                     if (copyFileToProjectDirectory(uri, displayName, i)) {
                         //Load New File Location
-                        uri = finalFileModel.get(i).getFileUri();
+                        uri = mFinalFileModelList.get(i).getFileUri();
                         Log.v("NewFileUri", uri.getPath());
 
                         // Map is used to multipart the file using okhttp3.RequestBody
@@ -1091,7 +1090,7 @@ public class FragmentOffer2 extends Fragment {
                                                 new AttachmentModel(displayName, url, fileType)
                                         );
 
-                                        if (mAttachmentModelArrayList.size() == finalFileModel.size()) {
+                                        if (mAttachmentModelArrayList.size() == mFinalFileModelList.size()) {
                                             addOffer();
                                             Toast.makeText(getContext(), "Adding Offer...", Toast.LENGTH_SHORT).show();
                                         }
@@ -1150,7 +1149,7 @@ public class FragmentOffer2 extends Fragment {
             }
 
             Log.d("MODELSS", "File Copied Successfully.");
-            finalFileModel.get(i).setFileUri(Uri.parse(destFile.getPath()));
+            mFinalFileModelList.get(i).setFileUri(Uri.parse(destFile.getPath()));
             Log.v("NewFileUrl", destFile.getPath());
 
         } catch (IOException e) {
@@ -1175,15 +1174,15 @@ public class FragmentOffer2 extends Fragment {
     }
 
     private void setUpRecyclerViews() {
-        recCapitals.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mCapitalsRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mCapitalsRecyclerViewAdapter = new CapitalsRecyclerViewAdapter(null, mSelectedStateModels);
-        recCapitals.setAdapter(mCapitalsRecyclerViewAdapter);
-        mLoadedCapitals.observe(this, capitalModels -> mCapitalsRecyclerViewAdapter.swapData(capitalModels));
+        mCapitalsRecyclerView.setAdapter(mCapitalsRecyclerViewAdapter);
+        mLoadedCapitals.observe(this, mCapitalsRecyclerViewAdapter::swapData);
 
-        recDep.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mDepartmentRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mCategoriesRecyclerViewAdapter = new CategoriesRecyclerViewAdapter(null, mSelectedCategory);
-        recDep.setAdapter(mCategoriesRecyclerViewAdapter);
+        mDepartmentRecyclerView.setAdapter(mCategoriesRecyclerViewAdapter);
         mLoadedCategories.observe(this, capitalModels -> mCategoriesRecyclerViewAdapter.swapData(capitalModels));
     }
 
@@ -1199,7 +1198,7 @@ public class FragmentOffer2 extends Fragment {
         offers.setDescription(Offers.getDescription());
         offers.setCategoryId(Offers.getCategoryId());
         offers.setCategoryName(Offers.getCategoryName());
-        offers.setProfitType(Offers.getProfitType());
+//        offers.setProfitType(Offers.getProfitType());
         offers.setNumContributor(Offers.getNumContributor());
         offers.setGenderContributor(Offers.getGenderContributor());
         offers.setUserId(Offers.getUserId());
@@ -1210,23 +1209,31 @@ public class FragmentOffer2 extends Fragment {
         offers.setUserId(Offers.getUserId());
         offers.setAddress(Offers.getAddress());
 
-        if (offerDetailsDataBase != null) {
+        offers.setInitialCost(Offers.getInitialCost());
+        offers.setProfitMoney(Offers.getProfitMoney());
+        offers.setDirectExpenses(Offers.getDirectExpenses());
+        offers.setIndectExpenses(Offers.getIndectExpenses());
+        offers.setStatus(Offers.getStatus());
+        offers.setNumJoinOffer(0);
+        offers.setNumLiks(0);
+
+        if (mOfferDetailsDataBase != null) {
             if (mLoadedProjectWithAllDataLiveData != null) {
                 OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
                 if (o != null)
-                    offerDetailsDataBase.setId(o.getId());
+                    mOfferDetailsDataBase.setId(o.getId());
             }
-            if (offerDetailsDataBase.getId() == null) offerDetailsDataBase.setId(0);
-            offerDetailsDataBase.setName(Offers.getName());
-            offerDetailsDataBase.setDescription(Offers.getDescription());
-            offerDetailsDataBase.setCategoryId(Offers.getCategoryId());
-            offerDetailsDataBase.setCategoryName(Offers.getCategoryName());
-            offerDetailsDataBase.setProfitType(Offers.getProfitType());
-            offerDetailsDataBase.setNumContributorFrom(Offers.getNumContributor());
-            offerDetailsDataBase.setGenderContributor(Offers.getGenderContributor());
-            offerDetailsDataBase.setUserId(Offers.getUserId());
-            offerDetailsDataBase.setNumLiks(Offers.getNumLiks());
-            offerDetailsDataBase.setNumJoinOffer(Offers.getNumJoinOffer());
+            if (mOfferDetailsDataBase.getId() == null) mOfferDetailsDataBase.setId(0);
+            mOfferDetailsDataBase.setName(Offers.getName());
+            mOfferDetailsDataBase.setDescription(Offers.getDescription());
+            mOfferDetailsDataBase.setCategoryId(Offers.getCategoryId());
+            mOfferDetailsDataBase.setCategoryName(Offers.getCategoryName());
+            mOfferDetailsDataBase.setProfitType(Offers.getProfitType());
+            mOfferDetailsDataBase.setNumContributorFrom(Offers.getNumContributor());
+            mOfferDetailsDataBase.setGenderContributor(Offers.getGenderContributor());
+            mOfferDetailsDataBase.setUserId(Offers.getUserId());
+            mOfferDetailsDataBase.setNumLiks(Offers.getNumLiks());
+            mOfferDetailsDataBase.setNumJoinOffer(Offers.getNumJoinOffer());
             /**
              * start User Section
              * */
@@ -1236,29 +1243,29 @@ public class FragmentOffer2 extends Fragment {
             userDataBase.setImage(Offers.getUsers().get(0).getImage());
             RealmList<UserDataBase> userDataBases = new RealmList<>();
             userDataBases.add(userDataBase);
-            offerDetailsDataBase.setUsers(userDataBases);
+            mOfferDetailsDataBase.setUsers(userDataBases);
             /**
              * end User Section
              * */
-            offerDetailsDataBase.setAddress(Offers.getAddress());
-            offerDetailsDataBase.setUserId(Offers.getUserId());
-            offerDetailsDataBase.setAddress(Offers.getAddress());
-            offerDetailsDataBaseIN = offerDetailsDataBase;
-        }else {
-            offerDetailsDataBaseIN = new OfferDetailsDataBase();
-            offerDetailsDataBaseIN.setName(Offers.getName());
-            offerDetailsDataBaseIN.setDescription(Offers.getDescription());
-            offerDetailsDataBaseIN.setCategoryId(Offers.getCategoryId());
-            offerDetailsDataBaseIN.setCategoryName(Offers.getCategoryName());
-            offerDetailsDataBaseIN.setProfitType(Offers.getProfitType());
-            offerDetailsDataBaseIN.setNumContributorFrom(Offers.getNumContributor());
-            offerDetailsDataBaseIN.setGenderContributor(Offers.getGenderContributor());
-            offerDetailsDataBaseIN.setUserId(Offers.getUserId());
-            offerDetailsDataBaseIN.setNumLiks(Offers.getNumLiks());
-            offerDetailsDataBaseIN.setNumJoinOffer(Offers.getNumJoinOffer());
-            offerDetailsDataBaseIN.setAddress(Offers.getAddress());
-            offerDetailsDataBaseIN.setUserId(Offers.getUserId());
-            offerDetailsDataBaseIN.setAddress(Offers.getAddress());
+            mOfferDetailsDataBase.setAddress(Offers.getAddress());
+            mOfferDetailsDataBase.setUserId(Offers.getUserId());
+            mOfferDetailsDataBase.setAddress(Offers.getAddress());
+            mOfferDetailsDataBaseIN = mOfferDetailsDataBase;
+        } else {
+            mOfferDetailsDataBaseIN = new OfferDetailsDataBase();
+            mOfferDetailsDataBaseIN.setName(Offers.getName());
+            mOfferDetailsDataBaseIN.setDescription(Offers.getDescription());
+            mOfferDetailsDataBaseIN.setCategoryId(Offers.getCategoryId());
+            mOfferDetailsDataBaseIN.setCategoryName(Offers.getCategoryName());
+            mOfferDetailsDataBaseIN.setProfitType(Offers.getProfitType());
+            mOfferDetailsDataBaseIN.setNumContributorFrom(Offers.getNumContributor());
+            mOfferDetailsDataBaseIN.setGenderContributor(Offers.getGenderContributor());
+            mOfferDetailsDataBaseIN.setUserId(Offers.getUserId());
+            mOfferDetailsDataBaseIN.setNumLiks(Offers.getNumLiks());
+            mOfferDetailsDataBaseIN.setNumJoinOffer(Offers.getNumJoinOffer());
+            mOfferDetailsDataBaseIN.setAddress(Offers.getAddress());
+            mOfferDetailsDataBaseIN.setUserId(Offers.getUserId());
+            mOfferDetailsDataBaseIN.setAddress(Offers.getAddress());
         }
         return offers;
     }
@@ -1307,7 +1314,7 @@ public class FragmentOffer2 extends Fragment {
 //        offerDetailsRequirmentDataBase.setUserId(RequirmentModel.getUserId());
 //        offerDetailsRequirmentDataBase.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
 //        list.add(offerDetailsRequirmentDataBase);
-//        if (offerDetailsDataBase != null) offerDetailsDataBase.setRequirments(list);
+//        if (mOfferDetailsDataBase != null) mOfferDetailsDataBase.setRequirments(list);
 //        return requirementModel;
 //    }
 
@@ -1350,17 +1357,22 @@ public class FragmentOffer2 extends Fragment {
         Call<Integer> response;
         if (mLoadedProjectWithAllDataLiveData != null) {
             OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
-            if (o != null && offerDetailsDataBase != null)
-                offerDetailsDataBase.setId(o.getId());
+            if (o != null && mOfferDetailsDataBase != null)
+                mOfferDetailsDataBase.setId(o.getId());
         }
 
-        if (Offers.getId() == 0) {
+        int id = Offers.getId();
+        if (id == 0 && mLoadedProjectWithAllDataLiveData != null)
+            if (mLoadedProjectWithAllDataLiveData.getValue() != null)
+                id = mLoadedProjectWithAllDataLiveData.getValue().getId();
+
+        if (id == 0) {
             //TODO: Set location instead of null here
             response = retrofitService.addOffer(API.URL_TOKEN,
                     offerString, attachmentString, capitalString, tagsString, "null");
         } else {
             response = retrofitService.editOffer(API.URL_TOKEN,
-                    offerString, attachmentString, capitalString, tagsString, "null");
+                    offerString, attachmentString, "[]", capitalString, tagsString, "null");
         }
 
         response.enqueue(new Callback<Integer>() {
@@ -1368,31 +1380,31 @@ public class FragmentOffer2 extends Fragment {
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body() != 0) {
-                        Log.e("OfferId", response.body()+"");
+                        Log.e("OfferId", response.body() + "");
                         Toast.makeText(getContext(), "Success.", Toast.LENGTH_LONG).show();
-                        offerDetailsDataBaseIN.setId(response.body());
-                        realm.beginTransaction();
-                        UserDataBase userDataBase = realm.where(LoginDataBase.class).findFirst().getUser();
+                        mOfferDetailsDataBaseIN.setId(response.body());
+                        mRealm.beginTransaction();
+                        UserDataBase userDataBase = mRealm.where(LoginDataBase.class).findFirst().getUser();
                         userDataBase.updateNumProject();
-                        realm.insertOrUpdate(userDataBase);
-                        realm.commitTransaction();
-                        realm.executeTransaction(realm1 -> {
-                            realm1.insertOrUpdate(offerDetailsDataBaseIN);
+                        mRealm.insertOrUpdate(userDataBase);
+                        mRealm.commitTransaction();
+                        mRealm.executeTransaction(realm1 -> {
+                            realm1.insertOrUpdate(mOfferDetailsDataBaseIN);
                         });
 
-//                        fragmentManager.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
+//                        mFM.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
 //                        getFragmentManager().popBackStack();
 
                         getActivity().onBackPressed();
 
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                        go.setEnabled(true);
+                        mGoButton.setEnabled(true);
                     }
                 } else {
                     Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
                     Log.d("MODELSS", response.errorBody().toString());
-                    go.setEnabled(true);
+                    mGoButton.setEnabled(true);
                 }
             }
 
@@ -1400,7 +1412,7 @@ public class FragmentOffer2 extends Fragment {
             public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.d("MODELSS", t.getCause().getMessage());
-                go.setEnabled(true);
+                mGoButton.setEnabled(true);
             }
         });
     }

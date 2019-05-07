@@ -13,7 +13,7 @@
         android:maxWidth="10dp"
         android:paddingStart="28dp"
         android:paddingEnd="28dp"
-        android:fontFamily="@font/medium"
+
         android:paddingBottom="15dp"
         android:text="برمجيات فى شركة ريفيل" />
 
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="@font/medium"
+
             android:textStyle="bold"
             android:text="@string/dateOfBirth" />
 
@@ -42,7 +42,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="@font/medium"
+
             android:padding="5dp"
             android:text="برمجيات فى شركة ريفيل" />
     </LinearLayout>
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:fontFamily="@font/medium"
+
             android:textStyle="bold"
             android:gravity="center"
             android:text="@string/email" />
@@ -73,7 +73,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="@font/medium"
+
             android:padding="5dp"
             android:text="برمجيات فى شركة ريفيل" />
     </LinearLayout>
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:fontFamily="@font/medium"
+
             android:textStyle="bold"
             android:gravity="center"
             android:text="@string/phone" />
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:fontFamily="@font/medium"
+
             android:gravity="center"
             android:padding="5dp"
             android:text="برمجيات فى شركة ريفيل" />

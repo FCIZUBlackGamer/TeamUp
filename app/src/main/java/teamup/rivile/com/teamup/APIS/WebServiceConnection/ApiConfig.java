@@ -199,6 +199,7 @@ public interface ApiConfig {
     Call<Integer> editOffer(@Field(API.PARAM_NAME_TOKEN) String token,
                             @Field(API.PARAM_NAME_OFFER) String offer,
                             @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
+                            @Field(API.PARAM_NAME_DELETED_ATTACHMENT) String deletedAttachment,
                             @Field(API.PARAM_NAME_CAPITAL) String capital,
                             @Field(API.PARAM_NAME_TAGS) String tags,
                             @Field(API.PARAM_NAME_LOCATION) String location);

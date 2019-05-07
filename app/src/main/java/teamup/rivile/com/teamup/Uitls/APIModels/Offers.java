@@ -10,7 +10,7 @@ public class Offers implements Serializable {
     private String Description;
     private Integer CategoryId;
     private String CategoryName;
-    private Integer ProfitType;
+//    private Integer ProfitType;
     private Integer NumContributor;
     private Integer GenderContributor;
     private Integer UserId;
@@ -18,46 +18,29 @@ public class Offers implements Serializable {
     private Integer NumJoinOffer;
     private List<UserModel> Users;
     private String Address;
-    private String Date;
+//    private String Date;
     private Date StringDate;
     private Float ProjectDuration;
     private Integer Status;
-    private List<StateModel> States;
+//    private List<StateModel> States;
     private List<TagsModel> Tags;
     private Integer LocationId;
-    private Integer InitialCostType;
-    private Integer DirectExpensesType;
-    private Integer IndectExpensesType;
-    private Integer ProjectDurationType;
-    private Integer MinExperience;
+//    private Integer InitialCostType;
+//    private Integer DirectExpensesType;
+//    private Integer IndectExpensesType;
+//    private Integer ProjectDurationType;
+//    private Integer MinExperience;
     private Float ProfitMoney;
     private Float InitialCost;
     private Float DirectExpenses;
     private Float IndectExpenses;
 
-    private Integer ProjectType;
+//    private Integer ProjectType;
     public boolean NeedPlace ;
     public boolean IsJoin ;
     public boolean IsSuccess ;
     public boolean IsCompleted ;
     public List<AttachmentModel> Attachments;
-
-
-    public Integer getProjectType() {
-        return ProjectType;
-    }
-
-    public void setProjectType(Integer projectType) {
-        ProjectType = projectType;
-    }
-
-    public Float getProfitMoney() {
-        return ProfitMoney;
-    }
-
-    public void setProfitMoney(Float profitMoney) {
-        ProfitMoney = profitMoney;
-    }
 
     public Integer getId() {
         return Id;
@@ -97,14 +80,6 @@ public class Offers implements Serializable {
 
     public void setCategoryName(String categoryName) {
         CategoryName = categoryName;
-    }
-
-    public Integer getProfitType() {
-        return ProfitType;
-    }
-
-    public void setProfitType(Integer profitType) {
-        ProfitType = profitType;
     }
 
     public Integer getNumContributor() {
@@ -163,68 +138,12 @@ public class Offers implements Serializable {
         Address = address;
     }
 
-    public String getDate() {
-        return Date;
+    public Date getStringDate() {
+        return StringDate;
     }
 
-    public void setDate(String date) {
-        Date = date;
-    }
-
-    public Integer getInitialCostType() {
-        return InitialCostType;
-    }
-
-    public void setInitialCostType(Integer initialCostType) {
-        InitialCostType = initialCostType;
-    }
-
-    public Integer getDirectExpensesType() {
-        return DirectExpensesType;
-    }
-
-    public void setDirectExpensesType(Integer directExpensesType) {
-        DirectExpensesType = directExpensesType;
-    }
-
-    public Integer getIndectExpensesType() {
-        return IndectExpensesType;
-    }
-
-    public void setIndectExpensesType(Integer indectExpensesType) {
-        IndectExpensesType = indectExpensesType;
-    }
-
-    public Integer getProjectDurationType() {
-        return ProjectDurationType;
-    }
-
-    public void setProjectDurationType(Integer projectDurationType) {
-        ProjectDurationType = projectDurationType;
-    }
-
-    public boolean isSuccess() {
-        return IsSuccess;
-    }
-
-    public void setSuccess(boolean success) {
-        IsSuccess = success;
-    }
-
-    public boolean isCompleted() {
-        return IsCompleted;
-    }
-
-    public void setCompleted(boolean completed) {
-        IsCompleted = completed;
-    }
-
-    public Float getProjectDuration() {
-        return ProjectDuration;
-    }
-
-    public void setProjectDuration(Float projectDuration) {
-        ProjectDuration = projectDuration;
+    public void setStringDate(Date stringDate) {
+        StringDate = stringDate;
     }
 
     public Integer getStatus() {
@@ -233,14 +152,6 @@ public class Offers implements Serializable {
 
     public void setStatus(Integer status) {
         Status = status;
-    }
-
-    public List<StateModel> getStates() {
-        return States;
-    }
-
-    public void setStates(List<StateModel> states) {
-        States = states;
     }
 
     public List<TagsModel> getTags() {
@@ -259,12 +170,12 @@ public class Offers implements Serializable {
         LocationId = locationId;
     }
 
-    public Integer getMinExperience() {
-        return MinExperience;
+    public Float getProfitMoney() {
+        return ProfitMoney;
     }
 
-    public void setMinExperience(Integer minExperience) {
-        MinExperience = minExperience;
+    public void setProfitMoney(Float profitMoney) {
+        ProfitMoney = profitMoney;
     }
 
     public Float getInitialCost() {
@@ -307,6 +218,22 @@ public class Offers implements Serializable {
         IsJoin = join;
     }
 
+    public boolean isSuccess() {
+        return IsSuccess;
+    }
+
+    public void setSuccess(boolean success) {
+        IsSuccess = success;
+    }
+
+    public boolean isCompleted() {
+        return IsCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        IsCompleted = completed;
+    }
+
     public List<AttachmentModel> getAttachments() {
         return Attachments;
     }
@@ -315,11 +242,11 @@ public class Offers implements Serializable {
         Attachments = attachments;
     }
 
-    public Date getStringDate() {
-        return StringDate;
+    public Float getProjectDuration() {
+        return ProjectDuration;
     }
 
-    public void setStringDate(java.util.Date stringDate) {
-        StringDate = stringDate;
+    public void setProjectDuration(Float projectDuration) {
+        ProjectDuration = projectDuration;
     }
 }

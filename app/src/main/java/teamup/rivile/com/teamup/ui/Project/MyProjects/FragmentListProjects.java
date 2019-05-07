@@ -144,7 +144,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             offers1.setDescription(base.getDescription());
             offers1.setName(base.getName());
             offers1.setAddress(base.getAddress());
-            offers1.setDate(base.getDate());
+//            offers1.setDate(base.getDate());
             offers1.setNumContributor(base.getNumContributor());
             offers1.setGenderContributor(base.getGenderContributor());
             offers1.setNumJoinOffer(base.getNumJoinOffer());
@@ -181,7 +181,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             offers1.setDescription(base.getDescription());
             offers1.setName(base.getName());
             offers1.setAddress(base.getAddress());
-            offers1.setDate(base.getDate());
+//            offers1.setDate(base.getDate());
             offers1.setNumContributor(base.getNumContributor());
             offers1.setGenderContributor(base.getGenderContributor());
             offers1.setNumJoinOffer(base.getNumJoinOffer());

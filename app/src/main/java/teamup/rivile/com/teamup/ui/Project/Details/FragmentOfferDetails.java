@@ -790,15 +790,15 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
             recCont.setAdapter(conAdapter);
         }
 
-        if (Offers.getProfitType() == 0) {
-            moneyProfitType.setText(getResources().getString(R.string.day));
-        } else if (Offers.getProfitType() == 1) {
-            moneyProfitType.setText(getResources().getString(R.string.month));
-        } else if (Offers.getProfitType() == 2) {
-            moneyProfitType.setText(getResources().getString(R.string.year));
-        } else if (Offers.getProfitType() == 3) {
-            moneyProfitType.setText(getResources().getString(R.string.anotherKind));
-        }
+//        if (Offers.getProfitType() == 0) {
+//            moneyProfitType.setText(getResources().getString(R.string.day));
+//        } else if (Offers.getProfitType() == 1) {
+//            moneyProfitType.setText(getResources().getString(R.string.month));
+//        } else if (Offers.getProfitType() == 2) {
+//            moneyProfitType.setText(getResources().getString(R.string.year));
+//        } else if (Offers.getProfitType() == 3) {
+//            moneyProfitType.setText(getResources().getString(R.string.anotherKind));
+//        }
 
 //        if (Offers.getRequirments() != null && !Offers.getRequirments().isEmpty() && Offers.getRequirments().get(0).isNeedPlace()) {
 //            if (Offers.getRequirments().get(0).isNeedPlaceType()) {
@@ -851,9 +851,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         if (Offers.getGenderContributor() == 0) {
             genderRequired.setText(getResources().getString(R.string.male));
-        } else if (Offers.getProfitType() == 1) {
+        } else if (Offers.getGenderContributor() == 1) {
             genderRequired.setText(getResources().getString(R.string.female));
-        } else if (Offers.getProfitType() == 2) {
+        } else if (Offers.getGenderContributor() == 2) {
             genderRequired.setText(getResources().getString(R.string.both));
         }
 

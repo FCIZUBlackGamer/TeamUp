@@ -141,7 +141,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //        offersItem.setNumContributorFrom(offerDetailsDataBases.get(0).getNumContributorFrom());
         offersItem.setGenderContributor(offerDetailsDataBases.get(0).getGenderContributor());
 //        offersItem.setProfitFrom(offerDetailsDataBases.get(0).getProfitFrom());
-        offersItem.setProfitType(offerDetailsDataBases.get(0).getProfitType());
+//        offersItem.setProfitType(offerDetailsDataBases.get(0).getProfitType());
         offersItem.setName(offerDetailsDataBases.get(0).getName());
         offersItem.setDescription(offerDetailsDataBases.get(0).getDescription());
 //        offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(0).getAgeRequiredFrom());

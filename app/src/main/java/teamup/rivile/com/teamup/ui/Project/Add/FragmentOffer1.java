@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
@@ -36,28 +37,29 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentOffer1 extends Fragment {
-    View view;
-    CircleImageView user_image;
-    RelativeLayout money, contributors, place;
-    LinearLayout moneySection, contributorsSection, placeSection;
+    private CircleImageView mUserImage;
+    private RelativeLayout mMoneyRelativeLayout, mContributorsRelativeLayout, mPlaceRelativeLayout;
+    private LinearLayout mMoneySectionLinearLayout, mContributorsSectionLinearLayout, mPlaceSectionLinearLayout;
 
-    TextInputEditText project_name;
-    EditText proDetail, moneyDesc;
-    RadioGroup moneyGroup, genderGroup, placeGroup;
+    private TextInputEditText mProjectNameTextInputEditText;
+    private EditText mProductDetailsEditText, mMoneyDescriptionEditText;
+    private RadioGroup mMoneyRadioGroup, mGenderRadioGroup, mPlaceRadioGroup;
 
-    ImageView arrowContributors, arrowMoney, arrowPlace;
-    EditText ed_profitMoney, ed_initialCost, ed_directCost, ed_IndirectCost, ed_proDuration, ed_contributers;
-    Spinner sp_durationType, sp_profitMoney, /*sp_initialCost,*/ sp_directCost, sp_IndirectCost, sp_proType;
+    private ImageView mArrowContributorsImageView, mArrowMoneyImageView, mArrowPlaceImageView;
+    private EditText mProfitMoneyEditText, mInitialCostEditText, mDirectCostEditText,
+            mIndirectCostEditText, mTotalCostEditText, mProjectDurationEditText, mContributorsEditText;
+    private Spinner mDurationTypeSpinner, mProfitMoneySpinner,
+    /*sp_initialCost,*/ mDirectCostSpinner, mIndirectCostSpinner, mProjectTypeSpinner;
 
-    static ViewPager pager;
-    static FragmentPagerAdapter pagerAdapter;
-    Realm realm;
+    private static ViewPager mPager;
+    private static FragmentPagerAdapter mPagerAdapter;
+    private Realm mRealm;
 
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
 
-    static FragmentOffer1 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapte, MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
-        pager = viewPager;
-        pagerAdapter = pagerAdapte;
+    static FragmentOffer1 setPager(ViewPager viewPager, FragmentPagerAdapter pagerAdapter, MutableLiveData<OfferDetails> loadedProjectWithAllDataLiveData) {
+        mPager = viewPager;
+        mPagerAdapter = pagerAdapter;
         mLoadedProjectWithAllDataLiveData = loadedProjectWithAllDataLiveData;
         return new FragmentOffer1();
     }
@@ -65,60 +67,43 @@ public class FragmentOffer1 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment1_add_project, container, false);
-        realm = Realm.getDefaultInstance();
+        View view = inflater.inflate(R.layout.fragment1_add_project, container, false);
+        mRealm = Realm.getDefaultInstance();
         /** Shrink and Expand Views */
-        place = view.findViewById(R.id.place);
-        money = view.findViewById(R.id.money);
-        contributors = view.findViewById(R.id.contributors);
-        moneySection = view.findViewById(R.id.moneySection);
-        placeSection = view.findViewById(R.id.placeSection);
-        contributorsSection = view.findViewById(R.id.contributorsSection);
-        arrowMoney = view.findViewById(R.id.arrowMoney);
-        arrowPlace = view.findViewById(R.id.arrowPlace);
-        arrowContributors = view.findViewById(R.id.arrowContributors);
+        mPlaceRelativeLayout = view.findViewById(R.id.place);
+        mMoneyRelativeLayout = view.findViewById(R.id.money);
+        mContributorsRelativeLayout = view.findViewById(R.id.contributors);
+        mMoneySectionLinearLayout = view.findViewById(R.id.moneySection);
+        mPlaceSectionLinearLayout = view.findViewById(R.id.placeSection);
+        mContributorsSectionLinearLayout = view.findViewById(R.id.contributorsSection);
+        mArrowMoneyImageView = view.findViewById(R.id.arrowMoney);
+        mArrowPlaceImageView = view.findViewById(R.id.arrowPlace);
+        mArrowContributorsImageView = view.findViewById(R.id.arrowContributors);
         /** Input Views */
 
-        user_image = view.findViewById(R.id.user_image);
-        placeGroup = view.findViewById(R.id.placeGroup);
-        project_name = view.findViewById(R.id.project_name);
-        proDetail = view.findViewById(R.id.proDetail);
-//        moneyDesc = view.findViewById(R.id.moneyDesc);
-        ed_profitMoney = view.findViewById(R.id.ed_profitMoney);
-        ed_initialCost = view.findViewById(R.id.ed_initialCost);
-        ed_directCost = view.findViewById(R.id.ed_directCost);
-        ed_IndirectCost = view.findViewById(R.id.ed_IndirectCost);
-        ed_proDuration = view.findViewById(R.id.ed_proDuration);
-        sp_durationType = view.findViewById(R.id.sp_durationType);
-        ed_contributers = view.findViewById(R.id.ed_contributers);
+        mUserImage = view.findViewById(R.id.user_image);
+        mPlaceRadioGroup = view.findViewById(R.id.placeGroup);
+        mProjectNameTextInputEditText = view.findViewById(R.id.project_name);
+        mProductDetailsEditText = view.findViewById(R.id.proDetail);
+//        mMoneyDescriptionEditText = view.findViewById(R.id.mMoneyDescriptionEditText);
+        mProfitMoneyEditText = view.findViewById(R.id.ed_profitMoney);
+        mInitialCostEditText = view.findViewById(R.id.ed_initialCost);
+        mDirectCostEditText = view.findViewById(R.id.ed_directCost);
+        mIndirectCostEditText = view.findViewById(R.id.ed_IndirectCost);
+        mTotalCostEditText = view.findViewById(R.id.ed_totalCost);
+        mProjectDurationEditText = view.findViewById(R.id.ed_proDuration);
+        mDurationTypeSpinner = view.findViewById(R.id.sp_durationType);
+        mContributorsEditText = view.findViewById(R.id.ed_contributers);
 
-        sp_proType = view.findViewById(R.id.sp_proType);
-        sp_profitMoney = view.findViewById(R.id.sp_profitMoney);
+        mProjectTypeSpinner = view.findViewById(R.id.sp_proType);
+        mProfitMoneySpinner = view.findViewById(R.id.sp_profitMoney);
 //        sp_initialCost = view.findViewById(R.id.sp_initialCost);
-        sp_directCost = view.findViewById(R.id.sp_directCost);
-        sp_IndirectCost = view.findViewById(R.id.sp_IndirectCost);
+        mDirectCostSpinner = view.findViewById(R.id.sp_directCost);
+        mIndirectCostSpinner = view.findViewById(R.id.sp_IndirectCost);
 
-        moneyGroup = view.findViewById(R.id.moneyGroup);
-        int checkedId = moneyGroup.getCheckedRadioButtonId();
-        if (checkedId == R.id.day) {
-            Offers.setProfitType(0);
-        } else if (checkedId == R.id.month) {
-            Offers.setProfitType(1);
-        } else if (checkedId == R.id.year) {
-            Offers.setProfitType(2);
-        } else if (checkedId == R.id.other) {
-            Offers.setProfitType(3);
-        }
+        mMoneyRadioGroup = view.findViewById(R.id.moneyGroup);
 
-        genderGroup = view.findViewById(R.id.genderGroup);
-        checkedId = genderGroup.getCheckedRadioButtonId();
-        if (checkedId == R.id.male) {
-            Offers.setGenderContributor(0);
-        } else if (checkedId == R.id.female) {
-            Offers.setGenderContributor(1);
-        } else if (checkedId == R.id.both) {
-            Offers.setGenderContributor(2);
-        }
+        mGenderRadioGroup = view.findViewById(R.id.genderGroup);
 
         return view;
     }
@@ -131,165 +116,202 @@ public class FragmentOffer1 extends Fragment {
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
 
-        realm.executeTransaction( realm1 -> {
+        mRealm.executeTransaction(realm1 -> {
             String image = realm1.where(LoginDataBase.class).findFirst().getUser().getImage();
-            if (false){ // founded in device
+            if (false) { // founded in device
 
-            }else {
+            } else {
                 if (!image.startsWith("http"))
-                Picasso.get().load(API.BASE_URL+image).into(user_image);
+                    Picasso.get().load(API.BASE_URL + image).into(mUserImage);
                 else {
-                    Picasso.get().load(image).into(user_image);
+                    Picasso.get().load(image).into(mUserImage);
                 }
             }
         });
 
         validate_Money();
         validate_Type();
-        proDetail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().matches("[^&%$#@!~]*")){
-                    proDetail.setError(getString(R.string.noSpecailChars));
-                    Offers.setDescription(s.toString().replaceAll("[^&%$#@!~]*","•"));
-                }else {
-                    Offers.setDescription(proDetail.getText().toString());
-                }
-            }
+        mProjectNameTextInputEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) Offers.setName(mProjectNameTextInputEditText.getText().toString());
         });
 
-        project_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().matches("[^&%$#@!~]*")){
-                    project_name.setError(getString(R.string.noSpecailChars));
-                    Offers.setName(s.toString().replaceAll("[^&%$#@!~]*","•"));
-                }else {
-                    Offers.setName(s.toString());
-                }
-            }
+        mProductDetailsEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus)
+                Offers.setDescription(mProductDetailsEditText.getText().toString());
         });
 
-        moneyGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.day) {
+        int checkedId = mMoneyRadioGroup.getCheckedRadioButtonId();
+        switch (checkedId) {
+            case R.id.day:
                 Offers.setProfitType(0);
-            } else if (checkedId == R.id.month) {
+                break;
+            case R.id.month:
                 Offers.setProfitType(1);
-            } else if (checkedId == R.id.year) {
+                break;
+            case R.id.year:
                 Offers.setProfitType(2);
-            } else if (checkedId == R.id.other) {
+                break;
+            case R.id.other:
                 Offers.setProfitType(3);
-            }
-        });
+                break;
+        }
 
-        genderGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.male) {
+        checkedId = mGenderRadioGroup.getCheckedRadioButtonId();
+        switch (checkedId) {
+            case R.id.male:
                 Offers.setGenderContributor(0);
-            } else if (checkedId == R.id.female) {
+                break;
+            case R.id.female:
                 Offers.setGenderContributor(1);
-            } else if (checkedId == R.id.both) {
+                break;
+            case R.id.both:
                 Offers.setGenderContributor(2);
+                break;
+        }
+
+        mMoneyRadioGroup.setOnCheckedChangeListener((group, checkedId2) -> {
+            switch (checkedId2) {
+                case R.id.day:
+                    Offers.setProfitType(0);
+                    break;
+                case R.id.month:
+                    Offers.setProfitType(1);
+                    break;
+                case R.id.year:
+                    Offers.setProfitType(2);
+                    break;
+                case R.id.other:
+                    Offers.setProfitType(3);
+                    break;
             }
         });
 
-        //region Shrink And Expand
-
-        money.setOnClickListener(v -> {
-            if (moneySection.getVisibility() == View.VISIBLE) {
-                moneySection.setVisibility(View.GONE);
-                arrowMoney.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
-
-            } else {
-                moneySection.setVisibility(View.VISIBLE);
-                arrowMoney.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+        mGenderRadioGroup.setOnCheckedChangeListener((group, checkedId2) -> {
+            switch (checkedId2) {
+                case R.id.male:
+                    Offers.setGenderContributor(0);
+                    break;
+                case R.id.female:
+                    Offers.setGenderContributor(1);
+                    break;
+                case R.id.both:
+                    Offers.setGenderContributor(2);
+                    break;
             }
         });
 
-        place.setOnClickListener(v -> {
-            if (placeSection.getVisibility() == View.VISIBLE) {
-                placeSection.setVisibility(View.GONE);
-                arrowPlace.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
-
-            } else {
-                placeSection.setVisibility(View.VISIBLE);
-                arrowPlace.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-            }
-        });
-
-        contributors.setOnClickListener(v -> {
-            if (contributorsSection.getVisibility() == View.VISIBLE) {
-                contributorsSection.setVisibility(View.GONE);
-                arrowContributors.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
-
-            } else {
-                contributorsSection.setVisibility(View.VISIBLE);
-                arrowContributors.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-            }
-        });
-
-        //endregion
+        Offers.setStatus(0);
 
         if (mLoadedProjectWithAllDataLiveData != null) {
             mLoadedProjectWithAllDataLiveData.observe(this, offers -> {
                 if (offers != null) {
-                    project_name.setText(offers.getName());
-                    proDetail.setText(offers.getDescription());
-                    switch (offers.getProfitType()) {
-                        case 0:
-                            moneyGroup.check(R.id.day);
-                            break;
-                        case 1:
-                            moneyGroup.check(R.id.month);
-                            break;
-                        case 2:
-                            moneyGroup.check(R.id.year);
-                            break;
-                        case 3:
-                            moneyGroup.check(R.id.other);
-                            break;
-                    }
+                    Offers.setStatus(offers.getStatus());
+
+                    mProjectNameTextInputEditText.setText(offers.getName());
+                    Offers.setName(mProjectNameTextInputEditText.getText().toString());
+
+                    mProductDetailsEditText.setText(offers.getDescription());
+                    Offers.setDescription(mProductDetailsEditText.getText().toString());
+
+//                    switch (offers.getProfitType()) {
+//                        case 0:
+//                            mMoneyRadioGroup.check(R.id.day);
+//                            Offers.setProfitType(0);
+//                            break;
+//                        case 1:
+//                            mMoneyRadioGroup.check(R.id.month);
+//                            Offers.setProfitType(1);
+//                            break;
+//                        case 2:
+//                            mMoneyRadioGroup.check(R.id.year);
+//                            Offers.setProfitType(2);
+//                            break;
+//                        case 3:
+//                            mMoneyRadioGroup.check(R.id.other);
+//                            Offers.setProfitType(3);
+//                            break;
+//                    }
 
                     switch (offers.getGenderContributor()) {
                         case 0:
-                            genderGroup.check(R.id.male);
+                            mGenderRadioGroup.check(R.id.male);
+                            Offers.setGenderContributor(0);
                             break;
                         case 1:
-                            genderGroup.check(R.id.female);
+                            mGenderRadioGroup.check(R.id.female);
+                            Offers.setGenderContributor(1);
                             break;
                         case 2:
-                            genderGroup.check(R.id.both);
+                            mGenderRadioGroup.check(R.id.both);
+                            Offers.setGenderContributor(2);
                             break;
                     }
 
+                    mInitialCostEditText.setText(String.valueOf(offers.getInitialCost()));
+                    Offers.setInitialCost(offers.getInitialCost());
+
+                    mDirectCostEditText.setText(String.valueOf(offers.getDirectExpenses()));
+                    Offers.setDirectExpenses(offers.getDirectExpenses());
+
+                    mIndirectCostEditText.setText(String.valueOf(offers.getIndectExpenses()));
+                    Offers.setIndectExpenses(offers.getIndectExpenses());
+
+                    mTotalCostEditText.setText(String.valueOf(
+                            Offers.getDirectExpenses() + Offers.getIndectExpenses()
+                    ));
+
+                    mProfitMoneyEditText.setText(String.valueOf(offers.getProfitMoney()));
+                    Offers.setProfitMoney(offers.getProfitMoney());
+
+                    mContributorsEditText.setText(String.valueOf(offers.getNumContributor()));
+                    Offers.setNumContributor(offers.getNumContributor());
                 }
             });
         }
 
+        //region Shrink And Expand
+
+        mMoneyRelativeLayout.setOnClickListener(v -> {
+            if (mMoneySectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mMoneySectionLinearLayout.setVisibility(View.GONE);
+                mArrowMoneyImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+
+            } else {
+                mMoneySectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowMoneyImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+            }
+        });
+
+        mPlaceRelativeLayout.setOnClickListener(v -> {
+            if (mPlaceSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mPlaceSectionLinearLayout.setVisibility(View.GONE);
+                mArrowPlaceImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+
+            } else {
+                mPlaceSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowPlaceImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+            }
+        });
+
+        mContributorsRelativeLayout.setOnClickListener(v -> {
+            if (mContributorsSectionLinearLayout.getVisibility() == View.VISIBLE) {
+                mContributorsSectionLinearLayout.setVisibility(View.GONE);
+                mArrowContributorsImageView.setImageResource(R.drawable.ic_keyboard_arrow_right_white_24dp);
+
+            } else {
+                mContributorsSectionLinearLayout.setVisibility(View.VISIBLE);
+                mArrowContributorsImageView.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
+            }
+        });
+
+        //endregion
     }
 
     private void validate_Type() {
-        sp_profitMoney.setDropDownWidth(200);
-        sp_proType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mProfitMoneySpinner.setDropDownWidth(200);
+        mProjectTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Offers.setProjectType(position);
@@ -301,7 +323,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        sp_IndirectCost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mIndirectCostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Offers.setIndectExpensesType(position);
@@ -313,7 +335,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        sp_directCost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mDirectCostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Offers.setDirectExpensesType(position);
@@ -337,7 +359,7 @@ public class FragmentOffer1 extends Fragment {
 //            }
 //        });
 
-        sp_durationType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mDurationTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Offers.setProjectDurationType(position);
@@ -349,7 +371,7 @@ public class FragmentOffer1 extends Fragment {
             }
         });
 
-        sp_profitMoney.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mProfitMoneySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Offers.setProfitType(position);
@@ -366,239 +388,78 @@ public class FragmentOffer1 extends Fragment {
 
     private void validate_Money() {
 
-        ed_contributers.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ed_contributers.removeTextChangedListener(this);
-
-                try {
-                    if (s.toString().isEmpty()) {
-                        Offers.setNumContributor(1);
-                        ed_contributers.setText("1");
-                    } else {
-                        Offers.setNumContributor(Integer.parseInt(s.toString()));
-                    }
-                    String givenstring = s.toString();
-                    Long longval;
-                    if (givenstring.contains(",")) {
-                        givenstring = givenstring.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(givenstring);
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
-                    String formattedString = formatter.format(longval);
-                    ed_contributers.setText(formattedString);
-                    ed_contributers.setSelection(ed_contributers.getText().length());
-                    // to place the cursor at the end of text
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                ed_contributers.addTextChangedListener(this);
+        mContributorsEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mContributorsEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                int value = Integer.valueOf(valString);
+                if (value <= 1) value = 1;
+                Offers.setNumContributor(value);
+                mContributorsEditText.setText(String.valueOf(value));
             }
         });
 
-        ed_proDuration.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()|| Integer.parseInt(s.toString()) < 1) {
-                    Offers.setProjectDuration(1f);
-                    ed_proDuration.setText("1");
-                } else {
-                    Offers.setProjectDuration(Float.parseFloat(s.toString()));
-                }
-
+        mProjectDurationEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mProjectDurationEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                float value = Float.valueOf(valString);
+                if (value <= 1f) value = 1f;
+                Offers.setProjectDuration(value);
+                mProjectDurationEditText.setText(String.valueOf(value));
             }
         });
 
-        ed_IndirectCost.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        mIndirectCostEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mIndirectCostEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                float value = Float.valueOf(valString);
+                if (value <= 0f) value = 0f;
+                Offers.setIndectExpenses(value);
+                mIndirectCostEditText.setText(String.valueOf(value));
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ed_IndirectCost.removeTextChangedListener(this);
-
-                try {
-                    if (s.toString().isEmpty()) {
-                        Offers.setIndectExpenses(0f);
-                        ed_IndirectCost.setText("0");
-                    } else {
-                        Offers.setIndectExpenses(Float.parseFloat(s.toString()));
-                    }
-                    String givenstring = s.toString();
-                    Long longval;
-                    if (givenstring.contains(",")) {
-                        givenstring = givenstring.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(givenstring);
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
-                    String formattedString = formatter.format(longval);
-                    ed_IndirectCost.setText(formattedString);
-                    ed_IndirectCost.setSelection(ed_IndirectCost.getText().length());
-                    // to place the cursor at the end of text
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                ed_IndirectCost.addTextChangedListener(this);
+                mTotalCostEditText.setText(String.valueOf(
+                        Offers.getDirectExpenses() + Offers.getIndectExpenses()
+                ));
             }
         });
 
-        ed_directCost.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        mDirectCostEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mDirectCostEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                float value = Float.valueOf(valString);
+                if (value <= 1000f) value = 1000f;
+                Offers.setDirectExpenses(value);
+                mDirectCostEditText.setText(String.valueOf(value));
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ed_directCost.removeTextChangedListener(this);
-
-                try {
-                    if (s.toString().isEmpty() || Integer.parseInt(s.toString()) < 1000) {
-                        Offers.setDirectExpenses(1000f);
-                        ed_directCost.setText("1000");
-                    } else {
-                        Offers.setDirectExpenses(Float.parseFloat(s.toString()));
-                    }
-                    String givenstring = s.toString();
-                    Long longval;
-                    if (givenstring.contains(",")) {
-                        givenstring = givenstring.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(givenstring);
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
-                    String formattedString = formatter.format(longval);
-                    ed_directCost.setText(formattedString);
-                    ed_directCost.setSelection(ed_directCost.getText().length());
-                    // to place the cursor at the end of text
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                ed_directCost.addTextChangedListener(this);
+                mTotalCostEditText.setText(String.valueOf(
+                        Offers.getDirectExpenses() + Offers.getIndectExpenses()
+                ));
             }
         });
 
-        ed_initialCost.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ed_initialCost.removeTextChangedListener(this);
-
-                try {
-                    if (s.toString().isEmpty()  || Integer.parseInt(s.toString()) < 15000) {
-                        Offers.setInitialCost(15000f);
-                        ed_initialCost.setText("15000");
-                    } else {
-                        Offers.setInitialCost(Float.parseFloat(s.toString()));
-                    }
-                    String givenstring = s.toString();
-                    Long longval;
-                    if (givenstring.contains(",")) {
-                        givenstring = givenstring.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(givenstring);
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
-                    String formattedString = formatter.format(longval);
-                    ed_initialCost.setText(formattedString);
-                    ed_initialCost.setSelection(ed_initialCost.getText().length());
-                    // to place the cursor at the end of text
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                ed_initialCost.addTextChangedListener(this);
+        mInitialCostEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mInitialCostEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                float value = Float.valueOf(valString);
+                if (value <= 0f) value = 0f;
+                Offers.setInitialCost(value);
+                mInitialCostEditText.setText(String.valueOf(value));
             }
         });
 
-        ed_profitMoney.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                ed_profitMoney.removeTextChangedListener(this);
-
-                try {
-                    if (s.toString().isEmpty()  || Integer.parseInt(s.toString()) < 5000)  {
-                        Offers.setProfitMoney(5000f);
-                        ed_profitMoney.setText("5000");
-                    } else {
-                        Offers.setProfitMoney(Float.parseFloat(s.toString()));
-                    }
-                    String givenstring = s.toString();
-                    Long longval;
-                    if (givenstring.contains(",")) {
-                        givenstring = givenstring.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(givenstring);
-                    DecimalFormat formatter = new DecimalFormat("#,###,###,###,###,###,###,###,###,###,###");
-                    String formattedString = formatter.format(longval);
-                    ed_profitMoney.setText(formattedString);
-                    ed_profitMoney.setSelection(ed_profitMoney.getText().length());
-                    // to place the cursor at the end of text
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                ed_profitMoney.addTextChangedListener(this);
+        mProfitMoneyEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String valString = mProfitMoneyEditText.getText().toString();
+                if (valString.isEmpty()) valString = "0";
+                float value = Float.valueOf(valString);
+                if (value <= 5000f) value = 5000f;
+                Offers.setProfitMoney(value);
+                mProfitMoneyEditText.setText(String.valueOf(value));
             }
         });
-
-
     }
-
 }

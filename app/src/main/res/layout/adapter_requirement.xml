@@ -24,7 +24,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/medium"
+
         android:padding="2dp"
         android:textDirection="rtl"
         android:textSize="16sp"
@@ -42,7 +42,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:fontFamily="@font/medium"
+
         android:padding="2dp"
         android:textDirection="rtl"
         android:textSize="16sp"
@@ -59,7 +59,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/medium"
+
         android:gravity="center"
         android:text="@string/details"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"

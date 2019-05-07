@@ -88,7 +88,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:fontFamily="@font/medium"
+
                             android:gravity="start"
                             android:maxLength="16"
                             android:maxLines="1"
@@ -113,7 +113,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:textAlignment="textEnd"
-                            android:fontFamily="@font/medium"
+
                             android:gravity="center_vertical"
                             android:drawablePadding="10dp"
                             android:drawableEnd="@drawable/ic_edit"
@@ -148,7 +148,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:maxLength="50"
                         android:text="@string/partners"
@@ -171,7 +171,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:fontFamily="@font/medium"
+
                 android:gravity="start"
                 android:paddingEnd="8dp"
                 android:text="مشروع مزرعه دواجن "
@@ -190,7 +190,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="2dp"
-                android:fontFamily="@font/medium"
+
                 android:gravity="start"
                 android:maxLines="4"
                 android:paddingEnd="8dp"
@@ -222,7 +222,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="@string/headMoney"
@@ -236,7 +236,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="@string/a"
@@ -261,7 +261,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="30dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="1800"
@@ -276,7 +276,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="3600"
@@ -300,7 +300,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="@string/b"
@@ -314,7 +314,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="@string/c"
@@ -339,7 +339,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="30dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="1800"
@@ -354,7 +354,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="3600"
@@ -378,7 +378,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="@string/e"
@@ -392,7 +392,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="@string/d"
@@ -417,7 +417,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="30dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="start"
                         android:paddingStart="8dp"
                         android:text="1800"
@@ -432,7 +432,7 @@
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/medium"
+
                         android:gravity="end"
                         android:paddingEnd="8dp"
                         android:text="3600"
@@ -451,7 +451,7 @@
                 android:layout_below="@id/money"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:fontFamily="@font/medium"
+
                 android:gravity="start"
                 android:maxLines="4"
                 android:paddingEnd="8dp"
@@ -477,7 +477,7 @@
                     android:layout_marginEnd="20dp"
                     android:drawableStart="@drawable/ic_dd"
                     android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center"
                     android:maxLength="6"
                     android:text="150"
@@ -490,7 +490,7 @@
                     android:layout_marginEnd="10dp"
                     android:drawableEnd="@drawable/ic_like"
                     android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="end"
                     android:maxLength="6"
                     android:text="150"
@@ -513,7 +513,7 @@
                     android:layout_weight="1"
                     android:drawableEnd="@drawable/ic_share"
                     android:drawablePadding="10dp"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:padding="3dp"
                     android:textAlignment="textEnd"
@@ -527,7 +527,7 @@
                     android:layout_weight="1"
                     android:drawableEnd="@drawable/ic_chat"
                     android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:padding="3dp"
                     android:textAlignment="textEnd"
@@ -542,7 +542,7 @@
                     android:layout_weight="1"
                     android:drawableEnd="@drawable/ic_favorite_border_black_24dp"
                     android:drawablePadding="5dp"
-                    android:fontFamily="@font/medium"
+
                     android:gravity="center_vertical"
                     android:textAlignment="textEnd"
                     android:padding="3dp"

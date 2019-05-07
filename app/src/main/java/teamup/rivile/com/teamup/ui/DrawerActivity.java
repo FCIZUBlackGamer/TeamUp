@@ -497,7 +497,7 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame, new FragmentListProjects());
+                fragmentTransaction.replace(R.id.frame,  FragmentListProjects.setType(MINE));
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;

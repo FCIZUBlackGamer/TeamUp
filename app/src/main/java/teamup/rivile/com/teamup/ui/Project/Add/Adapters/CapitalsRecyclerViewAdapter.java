@@ -43,7 +43,7 @@ public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRe
         else holder.checkBox.setChecked(false);
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) mSelectedStateModels.add(model);
+            if (isChecked && !selected(model)) mSelectedStateModels.add(model);
             else mSelectedStateModels.remove(model);
         });
     }

@@ -186,7 +186,7 @@
     <string name="noSpecailChars">Special characters are not allowed</string>
 
     <string name="moneyType">Profit Type</string>
-    <string name="moneyAmount"> Amount of capital required to build the project </string>
+    <string name="moneyAmount"> Amount of Initial money required to build the project </string>
     <string name="totalCostExcpected">Total projected costs</string>
     <string name="categories">Categories</string>
     <string name="projectTotalCost">Project total cost</string>

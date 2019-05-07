@@ -24,6 +24,7 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
@@ -72,15 +74,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
      */
     public static FragmentListProjects setDepId(int id) {
         DepId = id;
+        ProType = NORMAL;
         Word = null;
         return new FragmentListProjects();
     }
 
     /**
-     * @param id refers to favouriteFAB projects(2) or all projects(0)
+     * @param type refers to favouriteFAB projects(2) or all projects(0)
      */
-    public static FragmentListProjects setType(int id) {
-        ProType = id;
+    public static FragmentListProjects setType(int type) {
+        ProType = type;
         DepId = -1;
         return new FragmentListProjects();
     }
@@ -535,7 +538,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     showEmpty();
                     Gson d = new Gson();
                     Log.d("DABUGG", d.toJson(serverResponse));
-                    fillOffers(serverResponse, NORMAL);
+                    fillOffers(serverResponse, ProType);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
                 }
@@ -548,7 +551,6 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             }
         });
     }
-
 
     private void loadJoinedOffer(int depId) {
         // Map is used to multipart the file using okhttp3.RequestBody
@@ -686,13 +688,23 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         });
     }
 
-    private void fillOffers(Offer offers, int type) {
+    private void fillOffers(Offer offer, int type) {
 //        if (likeModelDataBase != null) {
-        Log.e("A Size", offers.getOffers().size() + "");
-        if (offers.getOffers() != null ) {
+        Log.e("A Size", offer.getOffers().size() + "");
+
+
+        if (offer.getOffers() != null) {
+            if (type == MINE) {
+                ArrayList<Offers> offers = new ArrayList<>();
+                for (Offers o : offer.getOffers()) {
+                    if (o.getUserId().equals(mUserId)) offers.add(o);
+                }
+                offer.setOffers(offers);
+            }
+
             showEmpty();
             adapter = new AdapterListOffers(getActivity(),
-                    offers.getOffers(),
+                    offer.getOffers(),
                     likeModelDataBase,
                     favouriteDataBases,
                     type,

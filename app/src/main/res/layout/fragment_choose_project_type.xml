@@ -33,7 +33,7 @@
                 android:layout_below="@+id/thumbnail"
                 android:maxLines="3"
                 android:padding="8dp"
-                android:fontFamily="@font/medium"
+
                 android:text="مشاريع مسجله"
                 android:textColor="#222"
                 android:textStyle="bold"
@@ -80,7 +80,7 @@
                 android:layout_below="@+id/thumbnail1"
                 android:maxLines="3"
                 android:padding="8dp"
-                android:fontFamily="@font/medium"
+
                 android:text="مشاريع متوفر الاشتراك بها"
                 android:textColor="#222"
                 android:textStyle="bold"

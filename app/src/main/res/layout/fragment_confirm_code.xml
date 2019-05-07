@@ -30,7 +30,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
-            android:fontFamily="@font/medium"
+
             android:gravity="center"
             android:text="@string/gotoEmail"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -47,7 +47,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:fontFamily="@font/medium"
+
             android:gravity="center"
             android:text="@string/writeTheCode"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -75,7 +75,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -90,7 +90,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -105,7 +105,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -120,7 +120,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -135,7 +135,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corner_edit_text"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -151,7 +151,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_corner_edit_text"
                 android:focusable="true"
-                android:fontFamily="@font/medium"
+
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
@@ -168,7 +168,7 @@
         <!--android:layout_width="0dp"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_marginStart="16dp"-->
-        <!--android:fontFamily="@font/medium"-->
+        <!---->
         <!--android:layout_marginTop="8dp"-->
         <!--android:layout_marginEnd="16dp"-->
         <!--android:gravity="start"-->
@@ -182,7 +182,7 @@
         <!--<EditText-->
         <!--android:id="@+id/ed_user_name"-->
         <!--android:layout_width="0dp"-->
-        <!--android:fontFamily="@font/medium"-->
+        <!---->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_marginStart="16dp"-->
         <!--android:layout_marginTop="8dp"-->
@@ -206,7 +206,7 @@
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/rounded_corner_button_gray"
-            android:fontFamily="@font/medium"
+
             android:text="@string/confirm"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/textColorWhite"

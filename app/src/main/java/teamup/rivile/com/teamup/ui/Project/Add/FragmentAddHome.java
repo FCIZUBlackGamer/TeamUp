@@ -73,6 +73,8 @@ public class FragmentAddHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_home, container, false);
+
+        teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers.reset();
         //fragmentManager = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
         viewPager = view.findViewById(R.id.offer_pager);
         mIndicatorImageView = view.findViewById(R.id.iv_indicator);

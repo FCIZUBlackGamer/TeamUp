@@ -41,11 +41,6 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
         holder.checkBox.setOnCheckedChangeListener(null);
 
-        if (mSelectedCategoryModels != null && mSelectedCategoryModels.getId().equals(model.getId())) {
-            holder.checkBox.setChecked(true);
-            mLastCheckedCheckBox = holder.checkBox;
-        } else holder.checkBox.setChecked(false);
-
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mSelectedCategoryModels = model;
@@ -55,11 +50,17 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
                     mLastCheckedCheckBox.setChecked(false);
                 mLastCheckedCheckBox = holder.checkBox;
             } else {
-                mSelectedCategoryModels = null;
+                if (mSelectedCategoryModels.equals(model))
+                    mSelectedCategoryModels = null;
                 holder.checkBox.setChecked(false);
 //                    mLastCheckedCheckBox.setChecked(false);
             }
         });
+
+        if (mSelectedCategoryModels != null && mSelectedCategoryModels.getId().equals(model.getId())) {
+            holder.checkBox.setChecked(true);
+            mLastCheckedCheckBox = holder.checkBox;
+        } else holder.checkBox.setChecked(false);
     }
 
     @Override

@@ -67,7 +67,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
-            android:fontFamily="@font/medium"
+
             android:text="@string/noRequestsFound"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

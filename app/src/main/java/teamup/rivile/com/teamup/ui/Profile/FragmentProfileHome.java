@@ -654,7 +654,7 @@ public class FragmentProfileHome extends Fragment {
             offers1.setAddress(base.getAddress());
 //            offers1.setAgeRequiredFrom(base.getAgeRequiredFrom());
 //            offers1.setAgeRequiredTo(base.getAgeRequiredTo());
-            offers1.setDate(base.getDate());
+//            offers1.setDate(base.getDate());
 //            offers1.setEducationContributorLevel(base.getEducationContributorLevel());
 //            offers1.setNumContributorFrom(base.getNumContributorFrom());
             offers1.setNumContributor(base.getNumContributor());

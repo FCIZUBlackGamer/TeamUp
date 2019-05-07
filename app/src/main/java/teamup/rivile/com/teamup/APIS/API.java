@@ -44,6 +44,7 @@ public class API {
     public final static String PARAM_NAME_TOKEN = "token";
     public static final String PARAM_NAME_OFFER = "Offer";
     public static final String PARAM_NAME_ATTACHMENT = "Attachment";
+    public static final String PARAM_NAME_DELETED_ATTACHMENT = "AttachmentDeleted";
     public static final String PARAM_NAME_CAPITAL = "State";
     public static final String PARAM_NAME_TAGS = "Tags";
     public static final String PARAM_NAME_OFFER_ID = "OfferId";

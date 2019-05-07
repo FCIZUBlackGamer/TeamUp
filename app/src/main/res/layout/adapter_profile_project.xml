@@ -43,7 +43,7 @@
                     android:layout_marginTop="10dp"
                     android:maxLength="40"
                     android:maxLines="1"
-                    android:fontFamily="@font/medium"
+
                     android:text="مشروع مزرعه دواجن "
                     android:textColor="#000"
                     android:textDirection="rtl"
@@ -62,7 +62,7 @@
                         android:drawableEnd="@drawable/ic_placeholder"
                         android:gravity="center_vertical"
                         android:maxLength="50"
-                        android:fontFamily="@font/medium"
+
                         android:text="مصر - الشرقيه - الزقازيق"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -96,7 +96,7 @@
                     android:drawablePadding="5dp"
                     android:padding="5dp"
                     android:text="150"
-                    android:fontFamily="@font/medium"
+
                     android:textSize="15sp" />
 
                 <teamup.rivile.com.teamup.Uitls.TextViewWithArabicDigits
@@ -109,7 +109,7 @@
                     android:drawablePadding="5dp"
                     android:padding="5dp"
                     android:maxLength="6"
-                    android:fontFamily="@font/medium"
+
                     android:text="150"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -127,7 +127,7 @@
                     android:gravity="start"
                     android:maxLength="50"
                     android:paddingEnd="10dp"
-                    android:fontFamily="@font/medium"
+
                     android:text="المشاركين فى المشروع"
                     android:textColor="#000"
                     android:textSize="16sp" />
