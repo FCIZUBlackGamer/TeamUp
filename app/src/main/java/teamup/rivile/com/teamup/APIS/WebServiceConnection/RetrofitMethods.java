@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.ui.Department.DepartmentJson;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
@@ -20,7 +21,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-public interface ApiConfig {
+public interface RetrofitMethods {
     @Multipart
     @POST(API.UPLOAD_URL)
 /** Initial Test #Done */
@@ -206,9 +207,9 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.JOIN_OFFER_URL)
-    Call<String> joinOffer(@Field(API.PARAM_NAME_TOKEN) String token,
-                           @Field(API.PARAM_NAME_ATTACHMENT) String attachment,
-                           @Field(API.PARAM_NAME_OFFER_ID) String offerId);
+    Call<String> joinOffer(@Field(API.PARAM_NAME_USER_ID) int userId,
+                           @Field(API.PARAM_NAME_OFFER_ID) int offerId,
+                           @Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
     @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
@@ -228,8 +229,42 @@ public interface ApiConfig {
 
     @FormUrlEncoded
     @POST(API.RESET_MAIL_CHECK_CODE_MAIL)
-    Call<String> cheakCodeMail(@Field(API.PARAM_NAME_USER_ID) int UserId,
+    Call<String> checkCodeMail(@Field(API.PARAM_NAME_USER_ID) int UserId,
                                @Field(API.PARAM_NAME_MAIL) String Mail,
                                @Field(API.PARAM_NAME_CODE) String Code,
                                @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.OWNER_PANEL_URL)
+    Call<String> acceptUserJoinRequest(@Field(API.PARAM_NAME_OFFER_ID) int projectId,
+                                       @Field(API.PARAM_NAME_USER_ID) int userId,
+                                       @Field(API.PARAM_NAME_STATUS) int status,
+                                       @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.OWNER_PANEL_URL)
+    Call<String> blockUser(@Field(API.PARAM_NAME_OFFER_ID) int projectId,
+                           @Field(API.PARAM_NAME_USER_ID) int userId,
+                           @Field(API.PARAM_NAME_STATUS) int status,
+                           @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.OWNER_PANEL_URL)
+    Call<String> refuseUserJoinRequestWithSystemReason(@Field(API.PARAM_NAME_OFFER_ID) int projectId,
+                                                       @Field(API.PARAM_NAME_USER_ID) int userId,
+                                                       @Field(API.PARAM_NAME_STATUS) int status,
+                                                       @Field(API.PARAM_NAME_REFUSE_ID) int refuseReasonId,
+                                                       @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.OWNER_PANEL_URL)
+    Call<String> refuseUserJoinRequestWithReason(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
+                                                 @Field(API.PARAM_NAME_USER_ID) int userId,
+                                                 @Field(API.PARAM_NAME_STATUS) int status,
+                                                 @Field(API.PARAM_NAME_OTHER_REASON) String otherReason,
+                                                 @Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.LIST_REASONS_URL)
+    Call<List<RefuseReason>> getSystemRefudeReasons(@Field(API.PARAM_NAME_TOKEN) String token);
 }

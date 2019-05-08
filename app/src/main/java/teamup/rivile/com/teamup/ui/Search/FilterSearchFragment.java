@@ -25,8 +25,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.Department.Department;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
@@ -213,9 +213,9 @@ public class FilterSearchFragment extends Fragment {
     }
 
     private void loadCategoriesAndCapitals() {
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         ShowSpinnerTask.getManager(getFragmentManager());
-        ApiConfig getDepartments = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getDepartments = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<CapTagCat> call = getDepartments.getCapTagCat(API.URL_TOKEN);
         call.enqueue(new Callback<CapTagCat>() {
             @Override

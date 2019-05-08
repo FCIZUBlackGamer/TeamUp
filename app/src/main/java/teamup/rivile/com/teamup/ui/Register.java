@@ -19,8 +19,8 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -89,13 +89,13 @@ public class Register extends AppCompatActivity {
                 })
                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
                 .show();
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
 
         // Parsing any Media type file
 
         Log.e("RegisterModel", gson.toJson(userModel));
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         //TODO: Set location instead of null here
         Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<String>() {

@@ -5,6 +5,8 @@ public class API {
     final public static String BASE_URL = "http://192.168.1.2/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
+    public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
+
     final public static String REGISTER_URL = BASE_URL + "Register/Add";
     final public static String LOGIN_URL = BASE_URL + "Register/Login";
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
@@ -38,8 +40,8 @@ public class API {
     public final static String ACCOUNT_SETTINGS_URL = BASE_URL + "Register/AccountSetting";
     public final static String RESET_MAIL_URL = BASE_URL + "Register/MailReset";
     public final static String RESET_MAIL_CHECK_CODE_MAIL = BASE_URL + "Register/CheakCodeMail";
-
-    public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
+    public final static String OWNER_PANEL_URL = BASE_URL + "Offer/OwnerPanel";
+    public final static String LIST_REASONS_URL = BASE_URL + "Offer/ListResons";
 
     public final static String PARAM_NAME_TOKEN = "token";
     public static final String PARAM_NAME_OFFER = "Offer";
@@ -55,4 +57,13 @@ public class API {
     public static final String PARAM_NAME_USER = "User";
     public static final String PARAM_NAME_MAIL = "Mail";
     public static final String PARAM_NAME_CODE = "Code";
+    public static final String PARAM_NAME_STATUS = "Status";
+    public static final String PARAM_NAME_REFUSE_ID = "RefuseId";
+    public static final String PARAM_NAME_OTHER_REASON = "OtherReson";
+
+    public class Constants{
+        public static final int STATUS_ACCEPT = 1;
+        public static final int STATUS_REFUSE = 2;
+        public static final int STATUS_BLOCK = 3;
+    }
 }

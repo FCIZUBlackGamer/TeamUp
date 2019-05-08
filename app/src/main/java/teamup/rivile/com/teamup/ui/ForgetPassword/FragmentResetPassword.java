@@ -25,8 +25,8 @@ import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Login;
 import teamup.rivile.com.teamup.R;
@@ -132,7 +132,7 @@ public class FragmentResetPassword extends Fragment {
     }
     private void login(int id, String password) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         // Parsing any Media type file
 
         realm.executeTransaction(realm1 -> {
@@ -140,7 +140,7 @@ public class FragmentResetPassword extends Fragment {
         });
         Gson gson = new Gson();
 
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<LoginDataBase> call = reg.SavePasswordLogin(id, password, API.URL_TOKEN);
         call.enqueue(new Callback<LoginDataBase>() {
             @Override

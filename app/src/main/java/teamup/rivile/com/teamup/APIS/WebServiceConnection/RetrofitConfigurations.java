@@ -9,10 +9,10 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AppConfig {
+public class RetrofitConfigurations {
     private String BASE_URL;
 //    private static String BASE_URL = "http://www.teamupapi.rivile.com/";
-    public AppConfig(String url){
+    public RetrofitConfigurations(String url){
         BASE_URL = url;
     }
     public Retrofit getRetrofit() {

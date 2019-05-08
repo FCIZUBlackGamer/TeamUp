@@ -195,6 +195,21 @@
     <string name="c">• مده التنفيذ</string>
     <string name="d">• متوسط العائد الدورى</string>
     <string name="e">• اجمالى التكاليف المتوقعة</string>
+    <string name="see_joined_people">شاهد المشتركين</string>
+    <string name="accept">قبول</string>
+    <string name="reject">رفض</string>
+    <string name="block">حظر</string>
+    <string name="join">إنضمام</string>
+    <string name="share">المشاركة</string>
+    <string name="like">إعجاب</string>
+    <string name="reason_to_refuse">حدد سبب الرفض</string>
+    <string name="continueString">إستمرار</string>
+    <string name="please_select_reason">من فضلك اختر سبب واحد من الاسباب المتاحة</string>
+    <string name="select">إختر…</string>
+    <string name="your_reason">سببك …</string>
+    <string name="please_enter_a_reason">من فضلك ادخل سببك للرفض</string>
+    <string name="other_reason">سبب اخر …</string>
+    <string name="no_one_joined">لم يطلب أحد الإنضمام لمشروعك بعد</string>
 
     <string-array name="sort_by_array">
         <item>الاحدث</item>

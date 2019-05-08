@@ -199,6 +199,21 @@
     <string name="d">• Average profit</string>
     <string name="e">• Total projected costs</string>
     <string name="processing">Processing...</string>
+    <string name="see_joined_people">See Joined People</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="block">Block</string>
+    <string name="join">Join</string>
+    <string name="share">Share</string>
+    <string name="like">Like</string>
+    <string name="reason_to_refuse">Reason to refuse</string>
+    <string name="continueString">Continue</string>
+    <string name="please_select_reason">Please select one of the available reasons</string>
+    <string name="select">Select...</string>
+    <string name="your_reason">Your Reason...</string>
+    <string name="please_enter_a_reason">Please Enter A Reason</string>
+    <string name="other_reason">Other reason</string>
+    <string name="no_one_joined">No one has requested to join your project yet.</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

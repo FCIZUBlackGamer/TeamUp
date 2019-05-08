@@ -32,8 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
@@ -519,9 +519,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void loadOffers(int depId) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Offer> call;
 
         if (depId != -1)
@@ -554,9 +554,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void loadJoinedOffer(int depId) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Offer> call;
 
         if (depId != -1)
@@ -589,9 +589,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void loadSuccessOffer(int depId) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Offer> call;
 
         if (depId != -1)
@@ -625,10 +625,10 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void loadOffers(FilterModel filterModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
 
         Gson gson = new Gson();
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Offer> call = getOffers.filterSearchOffer(gson.toJson(filterModel), API.URL_TOKEN);
 
         call.enqueue(new Callback<Offer>() {
@@ -653,9 +653,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
     private void loadOffers(int type, String word) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.HOME_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Offer> call;
 
         call = getOffers.searchOffer(type, word, API.URL_TOKEN);

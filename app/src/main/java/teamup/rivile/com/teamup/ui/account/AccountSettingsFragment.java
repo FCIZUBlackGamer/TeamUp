@@ -31,8 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Services.BroadcastNotificationReceiver;
@@ -284,8 +284,8 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void updateEmail(UserModel userModel) {
-        final ApiConfig apiConfig = new AppConfig(API.BASE_URL).getRetrofit().create(ApiConfig.class);
-        Call<String> call = apiConfig.mailReset(
+        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
+        Call<String> call = retrofitMethods.mailReset(
                 new Gson().toJson(userModel),
                 API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
@@ -318,8 +318,8 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     private void updateOtherData(UserModel userModel, String currentPassword) {
-        final ApiConfig apiConfig = new AppConfig(API.BASE_URL).getRetrofit().create(ApiConfig.class);
-        Call<String> call = apiConfig.accountSettings(
+        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
+        Call<String> call = retrofitMethods.accountSettings(
                 new Gson().toJson(userModel),
                 currentPassword,
                 API.URL_TOKEN);
@@ -536,8 +536,8 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     public void confirmCode(int userId, String newEmail, String code) {
-        final ApiConfig apiConfig = new AppConfig(API.BASE_URL).getRetrofit().create(ApiConfig.class);
-        Call<String> call = apiConfig.cheakCodeMail(userId, newEmail, code, API.URL_TOKEN);
+        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
+        Call<String> call = retrofitMethods.checkCodeMail(userId, newEmail, code, API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

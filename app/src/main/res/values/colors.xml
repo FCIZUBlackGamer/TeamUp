@@ -19,6 +19,7 @@
     <color name="gray">#E6E6E6</color>
 
     <color name="buttonColorGreen">#88B337</color>
+    <color name="buttonColorRed">#D32F2F</color>
     <color name="buttonColorend">#ABFF00</color>
     <color name="buttonColorBlue">#3083C9</color>
 

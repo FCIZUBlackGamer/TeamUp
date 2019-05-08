@@ -68,8 +68,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
@@ -206,7 +206,7 @@ public class FragmentProfileHome extends Fragment {
 
             final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            edit_data = inflater.inflate(R.layout.edit_personal_data, null);
+            edit_data = inflater.inflate(R.layout.popup_edit_personal_data, null);
             iv_cancel = edit_data.findViewById(R.id.iv_cancel);
             ed_name = edit_data.findViewById(R.id.ed_name);
             ed_bio = edit_data.findViewById(R.id.ed_bio);
@@ -370,14 +370,14 @@ public class FragmentProfileHome extends Fragment {
 
                 // Map is used to multipart the file using okhttp3.RequestBody
                 File file = new File(uri.getPath());
-                AppConfig appConfig = new AppConfig(API.BASE_URL);
+                RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
                 // Parsing any Media type file
                 final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
                 MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                 RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-                ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                RetrofitMethods getResponse = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
                 Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
                 call.enqueue(new Callback<List<String>>() {
                     @Override
@@ -572,9 +572,9 @@ public class FragmentProfileHome extends Fragment {
     private void editAction(UserModel userModel) {
         Gson gson = new Gson();
 
-        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
 
-        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
         Log.e("Request Model", gson.toJson(userModel));
 
         Call<String> response = retrofitService.editProfile(gson.toJson(userModel), "null", API.URL_TOKEN);
@@ -720,9 +720,9 @@ public class FragmentProfileHome extends Fragment {
 
     private void loadProfile(int id) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        final ApiConfig profile = appConfig.getRetrofit().create(ApiConfig.class);
+        final RetrofitMethods profile = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<ProfileResponse> call = profile.getProfile(id, API.URL_TOKEN);
         call.enqueue(new Callback<ProfileResponse>() {
             @Override

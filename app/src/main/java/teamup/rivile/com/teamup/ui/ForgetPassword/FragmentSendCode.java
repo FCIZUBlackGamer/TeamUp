@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.Login;
 import teamup.rivile.com.teamup.R;
 
@@ -104,10 +104,10 @@ public class FragmentSendCode extends Fragment {
         Snackbar.make(view, R.string.processing, Snackbar.LENGTH_LONG).show();
 
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         // Parsing any Media type file
 
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<Integer> call = reg.ForgetPassword(mail, API.URL_TOKEN);
         call.enqueue(new Callback<Integer>() {
             @Override

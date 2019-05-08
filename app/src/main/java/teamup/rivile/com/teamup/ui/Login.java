@@ -48,8 +48,8 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.ui.Loading.LoadLogin;
@@ -333,7 +333,7 @@ public class Login extends Fragment {
     private void login(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
         LoadLogin.getManager(getFragmentManager());
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
         // Parsing any Media type file
@@ -342,7 +342,7 @@ public class Login extends Fragment {
             realm1.deleteAll();
         });
 
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<LoginDataBase> call = reg.login(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
@@ -376,12 +376,12 @@ public class Login extends Fragment {
     private void loginFb(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
         LoadLogin.getManager(getFragmentManager());
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
         // Parsing any Media type file
 
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<LoginDataBase> call = reg.loginFb(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<LoginDataBase>() {
             @Override

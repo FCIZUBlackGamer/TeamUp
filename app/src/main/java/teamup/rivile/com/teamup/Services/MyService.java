@@ -26,8 +26,8 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.FirstActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.Model;
@@ -244,9 +244,9 @@ public class MyService extends Service {
     private void getNotification(String model) {
         // Map is used to multipart the file using okhttp3.RequestBody
 
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig reg = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<teamup.rivile.com.teamup.Uitls.APIModels.NotificationModel> call = reg.getNotification(model, API.URL_TOKEN);
         call.enqueue(new Callback<teamup.rivile.com.teamup.Uitls.APIModels.NotificationModel>() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

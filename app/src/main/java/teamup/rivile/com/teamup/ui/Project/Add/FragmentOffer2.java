@@ -74,9 +74,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
@@ -1055,14 +1054,14 @@ public class FragmentOffer2 extends Fragment {
 
                         // Map is used to multipart the file using okhttp3.RequestBody
                         File file = new File(uri.getPath());
-                        AppConfig appConfig = new AppConfig(API.BASE_URL);
+                        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
                         // Parsing any Media type file
                         final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
                         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+                        RetrofitMethods getResponse = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
                         Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
                         Uri finalUri = uri;
                         call.enqueue(new Callback<List<String>>() {
@@ -1350,9 +1349,9 @@ public class FragmentOffer2 extends Fragment {
                         "\"Tags\": " + tagsString + ",\n" +
                         "\"Capital\": " + capitalString + "\n}");
 
-        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
 
-        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
 
         Call<Integer> response;
         if (mLoadedProjectWithAllDataLiveData != null) {

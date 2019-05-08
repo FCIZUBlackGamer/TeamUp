@@ -45,8 +45,8 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.ImagesAdapter;
@@ -425,9 +425,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     public void markFavourite(int offerId, int userId, int fav) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<String> call;
         FavouriteModel favouriteModel = new FavouriteModel();
         favouriteModel.setOfferId(offerId);
@@ -480,10 +480,10 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     public void deleteOffer(int offerId, int position) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
         Log.e("OfferId", offerId + "");
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
 
         call.enqueue(new Callback<String>() {
@@ -604,9 +604,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     }
 
     public static void reportOffer(int userId, int projectId, String desc, Context context, AlertDialog dialog2) {
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<String> call;
         ReportModel model = new ReportModel();
         model.setOfferId(projectId);
@@ -634,9 +634,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     private void loadOfferDetails(int Id) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<OfferDetailsJsonObject> call;
 
         call = getOffers.offerDetails(Id, API.URL_TOKEN);
@@ -666,9 +666,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     public void likeOffer(int offerId, int userId, int like) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<String> call;
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
@@ -708,9 +708,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
     public void deleteOffer(int offerId) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        AppConfig appConfig = new AppConfig(API.BASE_URL);
+        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-        ApiConfig getOffers = appConfig.getRetrofit().create(ApiConfig.class);
+        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
 
         call.enqueue(new Callback<String>() {
@@ -953,7 +953,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
 
 //        //Todo: Download file names & images source
-//        AppConfig appConfig = new AppConfig(API.BASE_URL);
+//        RetrofitConfigurations appConfig = new RetrofitConfigurations(API.BASE_URL);
 //
 //        if (Offers.getRequirments() != null) {
 //            if (Offers.getRequirments().get(0).getAttachmentModels().size() > 0) {
@@ -961,7 +961,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 //                    AttachmentModel model = Offers.getRequirments().get(0).getAttachmentModels().get(i);
 //                    String fileLink = model.getName(); //Todo: attachment.getName()
 //                    if (!model.getType()) {
-//                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+//                        RetrofitMethods getResponse = appConfig.getRetrofit().create(RetrofitMethods.class);
 //                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
 //                            @Override
 //                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {
@@ -987,7 +987,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 //                            }
 //                        });
 //                    } else {
-//                        ApiConfig getResponse = appConfig.getRetrofit().create(ApiConfig.class);
+//                        RetrofitMethods getResponse = appConfig.getRetrofit().create(RetrofitMethods.class);
 //                        getResponse.download(fileLink, new Callback<AttachmentModel>() {
 //                            @Override
 //                            public void onResponse(Call<AttachmentModel> call, Response<AttachmentModel> response) {

@@ -24,8 +24,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
@@ -169,9 +169,9 @@ public class FragmentAddHome extends Fragment {
     }
 
     private void loadCapTagCat() {
-        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
 
-        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
 
         Call<CapTagCat> response = retrofitService.getCapTagCat(API.URL_TOKEN);
 
@@ -201,9 +201,9 @@ public class FragmentAddHome extends Fragment {
     }
 
     private void loadAllProjectDataForEdit() {
-        Retrofit retrofit = new AppConfig(API.BASE_URL).getRetrofit();
+        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
 
-        ApiConfig retrofitService = retrofit.create(ApiConfig.class);
+        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
 
         Call<OfferDetailsJsonObject> response = retrofitService.offerDetails(mProjectId, API.URL_TOKEN);
 
