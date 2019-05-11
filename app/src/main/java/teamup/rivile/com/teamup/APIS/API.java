@@ -11,7 +11,7 @@ public class API {
     final public static String LOGIN_URL = BASE_URL + "Register/Login";
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
-    final public static String LIST_REQUIREMENT_BY_USER_ID_URL = BASE_URL + "Offer/Income/";
+    final public static String LIST_USERS_JOIN_REQUESTS = BASE_URL + "Offer/Income/";
     final public static String SelectOffer_URL = BASE_URL + "Offer/SelectOffer/";
     final public static String PROFILE_URL = BASE_URL + "Register/Profile";
     final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
@@ -42,6 +42,7 @@ public class API {
     public final static String RESET_MAIL_CHECK_CODE_MAIL = BASE_URL + "Register/CheakCodeMail";
     public final static String OWNER_PANEL_URL = BASE_URL + "Offer/OwnerPanel";
     public final static String LIST_REASONS_URL = BASE_URL + "Offer/ListResons";
+    public final static String LIST_JOINED_OFFERS = BASE_URL + "Offer/JoinOfferbyUserId";
 
     public final static String PARAM_NAME_TOKEN = "token";
     public static final String PARAM_NAME_OFFER = "Offer";
@@ -62,6 +63,7 @@ public class API {
     public static final String PARAM_NAME_OTHER_REASON = "OtherReson";
 
     public class Constants{
+        public static final int STATUS_ON_HOLD = 0;
         public static final int STATUS_ACCEPT = 1;
         public static final int STATUS_REFUSE = 2;
         public static final int STATUS_BLOCK = 3;

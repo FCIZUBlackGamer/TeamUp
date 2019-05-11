@@ -11,6 +11,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
+import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.ui.Department.DepartmentJson;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
@@ -123,7 +124,7 @@ public interface RetrofitMethods {
     Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
 
     @FormUrlEncoded
-    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
+    @POST(API.LIST_USERS_JOIN_REQUESTS)
 /** Initial Test #Done */
     Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
 
@@ -212,9 +213,9 @@ public interface RetrofitMethods {
                            @Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
-    @POST(API.LIST_REQUIREMENT_BY_USER_ID_URL)
-    Call<OfferDetailsJsonObject> listRequirmentByUserId(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
-                                                        @Field(API.PARAM_NAME_TOKEN) String token);
+    @POST(API.LIST_USERS_JOIN_REQUESTS)
+    Call<OfferDetailsJsonObject> listUsersJoinRequests(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
+                                                       @Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
     @POST(API.ACCOUNT_SETTINGS_URL)
@@ -266,5 +267,10 @@ public interface RetrofitMethods {
 
     @FormUrlEncoded
     @POST(API.LIST_REASONS_URL)
-    Call<List<RefuseReason>> getSystemRefudeReasons(@Field(API.PARAM_NAME_TOKEN) String token);
+    Call<List<RefuseReason>> getSystemRefuseReasons(@Field(API.PARAM_NAME_TOKEN) String token);
+
+    @FormUrlEncoded
+    @POST(API.LIST_JOINED_OFFERS)
+    Call<List<JoinedProject>> listJoinedProjects(@Field(API.PARAM_NAME_USER_ID) int userId,
+                                                 @Field(API.PARAM_NAME_TOKEN) String token);
 }

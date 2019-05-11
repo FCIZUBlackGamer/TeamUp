@@ -11,6 +11,7 @@ public class UserModel {
     private String Image ;
     private String Jobtitle ;
     private Integer Status ;
+    private Integer JoinOfferStatus;
     private String Bio ;
     private String Mail ;
     private Integer NumProject ;
@@ -25,8 +26,7 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(Integer id, String fullName, String password, Boolean gender, String dateOfBirth, String phone, String address, String image, String jobtitle, Integer status, String bio, String mail, Integer numProject, Integer capitalId, String identityNum, String socialId, String identityImage, Boolean isCoded, String code, Integer locationId) {
-        Id = id;
+    public UserModel(String fullName, String password, Boolean gender, String dateOfBirth, String phone, String address, String image, String jobtitle, Integer status, Integer joinOfferStatus, String bio, String mail, Integer numProject, Integer capitalId, String identityNum, String socialId, String identityImage, Boolean isCoded, String code, Integer locationId) {
         FullName = fullName;
         Password = password;
         Gender = gender;
@@ -36,6 +36,7 @@ public class UserModel {
         Image = image;
         Jobtitle = jobtitle;
         Status = status;
+        JoinOfferStatus = joinOfferStatus;
         Bio = bio;
         Mail = mail;
         NumProject = numProject;
@@ -48,7 +49,8 @@ public class UserModel {
         LocationId = locationId;
     }
 
-    public UserModel(String fullName, String password, Boolean gender, String dateOfBirth, String phone, String address, String image, String jobtitle, Integer status, String bio, String mail, Integer numProject, Integer capitalId, String identityNum, String socialId, String identityImage, Boolean isCoded, String code, Integer locationId) {
+    public UserModel(Integer id, String fullName, String password, Boolean gender, String dateOfBirth, String phone, String address, String image, String jobtitle, Integer status, Integer joinOfferStatus, String bio, String mail, Integer numProject, Integer capitalId, String identityNum, String socialId, String identityImage, Boolean isCoded, String code, Integer locationId) {
+        Id = id;
         FullName = fullName;
         Password = password;
         Gender = gender;
@@ -58,6 +60,7 @@ public class UserModel {
         Image = image;
         Jobtitle = jobtitle;
         Status = status;
+        JoinOfferStatus = joinOfferStatus;
         Bio = bio;
         Mail = mail;
         NumProject = numProject;
@@ -148,6 +151,14 @@ public class UserModel {
 
     public void setStatus(Integer status) {
         Status = status;
+    }
+
+    public Integer getJoinOfferStatus() {
+        return JoinOfferStatus;
+    }
+
+    public void setJoinOfferStatus(Integer joinOfferStatus) {
+        JoinOfferStatus = joinOfferStatus;
     }
 
     public String getBio() {

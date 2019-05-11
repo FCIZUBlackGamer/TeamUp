@@ -15,7 +15,7 @@
         <View
             android:background="@drawable/top_card_blue"
             android:id="@+id/view"
-            android:layout_height="60dp"
+            android:layout_height="0dp"
             android:layout_width="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -25,17 +25,19 @@
 
         <TextView
             android:id="@+id/tv_header"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:gravity="start"
+            android:gravity="center"
             android:text="@string/see_joined_people"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/textColorWhite"
             app:layout_constraintBottom_toBottomOf="@+id/view"
             app:layout_constraintEnd_toEndOf="@+id/view"
+            app:layout_constraintStart_toEndOf="@+id/iv_cancel"
             app:layout_constraintTop_toTopOf="@+id/view" />
 
         <ImageView
@@ -46,9 +48,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_cancel"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_header"
             app:layout_constraintStart_toStartOf="@+id/view"
-            app:layout_constraintTop_toTopOf="@+id/view"
+            app:layout_constraintTop_toTopOf="@+id/tv_header"
             app:layout_constraintVertical_bias="0.458" />
 
     </android.support.constraint.ConstraintLayout>

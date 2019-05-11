@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -44,7 +43,6 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
@@ -361,9 +359,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
                         .getRetrofit().create(RetrofitMethods.class);
 
-                Call<OfferDetailsJsonObject> getJoinedUsersCall = retrofitMethods.listRequirmentByUserId(offers.getId(), URL_TOKEN);
+                Call<OfferDetailsJsonObject> getJoinedUsersCall = retrofitMethods.listUsersJoinRequests(offers.getId(), URL_TOKEN);
 
-                Call<List<RefuseReason>> listRefuseReasonCall = retrofitMethods.getSystemRefudeReasons(URL_TOKEN);
+                Call<List<RefuseReason>> listRefuseReasonCall = retrofitMethods.getSystemRefuseReasons(URL_TOKEN);
                 listRefuseReasonCall.enqueue(new Callback<List<RefuseReason>>() {
                     @Override
                     public void onResponse(Call<List<RefuseReason>> call, Response<List<RefuseReason>> response) {

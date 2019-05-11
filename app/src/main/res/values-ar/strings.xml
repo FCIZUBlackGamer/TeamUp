@@ -210,6 +210,10 @@
     <string name="please_enter_a_reason">من فضلك ادخل سببك للرفض</string>
     <string name="other_reason">سبب اخر …</string>
     <string name="no_one_joined">لم يطلب أحد الإنضمام لمشروعك بعد</string>
+    <string name="accepted">تمت الموافقة</string>
+    <string name="rejected">تم الرفض</string>
+    <string name="status">الحالة:</string>
+    <string name="on_hold">قيد الإنتظار</string>
 
     <string-array name="sort_by_array">
         <item>الاحدث</item>

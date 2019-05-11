@@ -44,6 +44,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 import teamup.rivile.com.teamup.ui.account.AccountSettingsFragment;
+import teamup.rivile.com.teamup.ui.projectsJoinRequests.ListJoinedProjectsFragment;
 
 import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
 
@@ -504,11 +505,11 @@ public class DrawerActivity extends AppCompatActivity
 
             case R.id.nav_requirement: // internal db
                 showToolbar();
-//                navigation.setSelectedItemId(R.id.navigation_saved_project);
+               navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-//                fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
-//                if (mIsCurrentFragmentIsHomeFragment)
-//                    fragmentTransaction.addToBackStack(FragmentIncommingRequirement.class.getSimpleName());
+                fragmentTransaction.replace(R.id.frame, new ListJoinedProjectsFragment());
+                if (mIsCurrentFragmentIsHomeFragment)
+                    fragmentTransaction.addToBackStack(ListJoinedProjectsFragment.class.getSimpleName());
                 break;
 
             case R.id.nav_favourite_projects: // internal db

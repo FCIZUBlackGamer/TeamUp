@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,7 +44,7 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
 
     private List<UserModel> mUsers = null;
     private int mProjectId;
-    List<RefuseReason> mRefuseReasonsList;
+    private List<RefuseReason> mRefuseReasonsList;
 
     private AlertDialog mParentDialog;
     private TextView mHeaderTextView;
@@ -80,12 +81,38 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
         int userId = userModel.getId();
 
         holder.acceptButton.setOnClickListener(v ->
-                respondToUser(mRetrofitMethods.acceptUserJoinRequest(mProjectId, userId, STATUS_ACCEPT, URL_TOKEN), position, null));
+                respondToUser(mRetrofitMethods.acceptUserJoinRequest(mProjectId, userId, STATUS_ACCEPT, URL_TOKEN),
+                        position, null, STATUS_ACCEPT));
 
         holder.rejectButton.setOnClickListener(v -> showRefuseAlertDialog(userId, position));
 
         holder.blockButton.setOnClickListener(v ->
-                respondToUser(mRetrofitMethods.blockUser(mProjectId, userId, STATUS_BLOCK, URL_TOKEN), position, null));
+                respondToUser(mRetrofitMethods.blockUser(mProjectId, userId, STATUS_BLOCK, URL_TOKEN),
+                        position, null, null));
+
+        Integer joinStatus = userModel.getJoinOfferStatus();
+        if (joinStatus == null) joinStatus = STATUS_ON_HOLD;
+
+        checkJoinStatus(joinStatus, holder);
+    }
+
+    private void checkJoinStatus(Integer joinedOfferStatus, JoinedPeopleViewHolder holder) {
+        switch (joinedOfferStatus) {
+            case STATUS_ACCEPT:
+                holder.rejectButton.setVisibility(View.GONE);
+                holder.blockButton.setVisibility(View.GONE);
+
+                holder.acceptButton.setEnabled(false);
+                holder.acceptButton.setText(mContext.getString(R.string.accepted));
+                break;
+            case STATUS_REFUSE:
+                holder.acceptButton.setVisibility(View.GONE);
+                holder.blockButton.setVisibility(View.GONE);
+
+                holder.rejectButton.setEnabled(false);
+                holder.rejectButton.setText(mContext.getString(R.string.rejected));
+                break;
+        }
     }
 
     @Override
@@ -177,10 +204,10 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
             stringCall = mRetrofitMethods.refuseUserJoinRequestWithSystemReason(mProjectId, userId, STATUS_REFUSE, reasonId, URL_TOKEN);
         }
 
-        respondToUser(stringCall, position, dialog);
+        respondToUser(stringCall, position, dialog, STATUS_REFUSE);
     }
 
-    private void respondToUser(Call<String> stringCall, int position, @Nullable AlertDialog dialog) {
+    private void respondToUser(Call<String> stringCall, int position, @Nullable AlertDialog dialog, Integer status) {
         stringCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
@@ -194,7 +221,14 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
                             mParentDialog.show();
                         }
 
-                        mUsers.remove(position);
+                        if (status == null) mUsers.remove(position);
+                        else {
+                            UserModel userModel = mUsers.get(position);
+                            userModel.setJoinOfferStatus(status);
+
+                            mUsers.set(position, userModel);
+                        }
+
                         swapData(mUsers);
                     } else if (serverResponse.equals("Fail")) {
                         Toast.makeText(mContext, "Fail", Toast.LENGTH_SHORT).show();
@@ -214,6 +248,10 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
 
     void swapData(List<UserModel> users) {
         mUsers = users;
+
+        if (mUsers != null) {
+            Collections.sort(mUsers, (o1, o2) -> o1.getJoinOfferStatus().compareTo(o2.getJoinOfferStatus()));
+        }
 
         if (mUsers == null || mUsers.size() == 0) {
             mHeaderTextView.setText(mContext.getString(R.string.no_one_joined));

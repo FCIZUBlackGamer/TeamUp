@@ -214,6 +214,10 @@
     <string name="please_enter_a_reason">Please Enter A Reason</string>
     <string name="other_reason">Other reason</string>
     <string name="no_one_joined">No one has requested to join your project yet.</string>
+    <string name="accepted">Accepted</string>
+    <string name="rejected">Rejected</string>
+    <string name="status">Status:</string>
+    <string name="on_hold">On Hold</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>
