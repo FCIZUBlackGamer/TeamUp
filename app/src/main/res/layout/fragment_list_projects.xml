@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -70,9 +70,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cl_emptyView"
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -106,7 +106,6 @@
 
         </android.support.constraint.ConstraintLayout>
 
+        <include layout="@layout/load_view" />
     </android.support.constraint.ConstraintLayout>
-
-
 </LinearLayout>

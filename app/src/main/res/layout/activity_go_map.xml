@@ -79,4 +79,5 @@
         </Spinner>
     </android.support.constraint.ConstraintLayout>
 
+    <include layout="@layout/load_view"/>
 </RelativeLayout>

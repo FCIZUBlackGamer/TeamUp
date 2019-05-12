@@ -24,15 +24,14 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-
 public class FragmentListProjectNames extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     public static int NORMAL = 0;
 
@@ -90,6 +89,9 @@ public class FragmentListProjectNames extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
         cl_emptyView = view.findViewById(R.id.cl_emptyView);
@@ -103,7 +105,7 @@ public class FragmentListProjectNames extends Fragment {
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
         ((DrawerActivity) getActivity()).showFab();
 
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 
         realm = Realm.getDefaultInstance();
 
@@ -325,12 +327,16 @@ public class FragmentListProjectNames extends Fragment {
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
                 }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -352,12 +358,16 @@ public class FragmentListProjectNames extends Fragment {
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
                 }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -389,12 +399,15 @@ public class FragmentListProjectNames extends Fragment {
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
                 }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -417,6 +430,4 @@ public class FragmentListProjectNames extends Fragment {
 //            }
 //        }
     }
-
-
 }

@@ -36,7 +36,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
@@ -47,6 +46,8 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper,
         AdapterView.OnItemSelectedListener {
+
+    private ConstraintLayout mLoadingViewConstraintLayout;
     private String mProjectURL = "";
     private String mProjectName = "";
     public static int MINE = 1;
@@ -111,6 +112,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
         tabLayout = view.findViewById(R.id.tabs);
@@ -133,13 +137,13 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
         ((DrawerActivity) getActivity()).showFab();
 
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 //Todo: action filter the list and load Spin
-                ShowSpinnerTask.getManager(getFragmentManager());
+                mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
                 int position = tab.getPosition();
                 if (position == 0) {
                     Log.d("Status", getString(R.string.availableProjects));
@@ -535,12 +539,12 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Log.d("Status", "loadOffers");
                 Log.d("CatId", depId + "");
                 if (serverResponse != null) {
-                    showEmpty();
                     Gson d = new Gson();
                     Log.d("DABUGG", d.toJson(serverResponse));
                     fillOffers(serverResponse, ProType);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
+                    showEmptyView();
                 }
             }
 
@@ -570,19 +574,22 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Log.d("Status", "loadJoinedOffer");
                 Log.d("CatId", depId + "");
                 if (serverResponse != null) {
-                    showEmpty();
+
                     Gson d = new Gson();
                     Log.d("DABUGG", d.toJson(serverResponse));
                     fillOffers(serverResponse, NORMAL);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
+                    showEmptyView();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -605,20 +612,22 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Log.d("Status", "loadSuccessOffer");
                 Log.d("CatId", depId + "");
                 if (serverResponse != null) {
-                    showEmpty();
                     Gson d = new Gson();
                     Log.d("DABUGG", d.toJson(serverResponse));
 
                     fillOffers(serverResponse, NORMAL);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
+                    showEmptyView();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -636,17 +645,19 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
-                    showEmpty();
                     fillOffers(serverResponse, NORMAL);
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
+                    showEmptyView();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -666,7 +677,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffers().size() > 0) {
-                        showEmpty();
+                        hideEmptyView();
                         fillOffers(serverResponse, NORMAL);
                     }
 //                    else {
@@ -677,13 +688,16 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                    }
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
+                    showEmptyView();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -702,7 +716,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 offer.setOffers(offers);
             }
 
-            showEmpty();
+            if (offer.getOffers().size() == 0) showEmptyView();
+            else hideEmptyView();
+
             adapter = new AdapterListOffers(getActivity(),
                     offer.getOffers(),
                     likeModelDataBase,
@@ -711,7 +727,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     this);
 
             recyclerView.setAdapter(adapter);
-        }
+        } else showEmptyView();
 //            else{
 //                getFragmentManager().beginTransaction()
 //                        .replace(R.id.frame, new FragmentEmpty())
@@ -720,9 +736,13 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //        }
     }
 
-    public static void showEmpty() {
-        cl_emptyView.setVisibility(View.GONE);
+    public static void showEmptyView() {
+        cl_emptyView.setVisibility(View.VISIBLE);
 
+    }
+
+    public static void hideEmptyView() {
+        cl_emptyView.setVisibility(View.GONE);
     }
 
     @Override

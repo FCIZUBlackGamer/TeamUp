@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup.ui.Search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +30,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.Department.Department;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
@@ -38,6 +38,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 
 public class FilterSearchFragment extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
     private EditText mProjectNameEditText;
 //    private StepperIndicator mEducationLevelStepperIndicator;
     private RadioGroup mGenderRadioGroup;
@@ -78,6 +79,9 @@ public class FilterSearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_search, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         mProjectNameEditText = view.findViewById(R.id.project_name);
 
 //        mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
@@ -214,7 +218,7 @@ public class FilterSearchFragment extends Fragment {
 
     private void loadCategoriesAndCapitals() {
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         RetrofitMethods getDepartments = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         Call<CapTagCat> call = getDepartments.getCapTagCat(API.URL_TOKEN);
         call.enqueue(new Callback<CapTagCat>() {
@@ -239,11 +243,14 @@ public class FilterSearchFragment extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
                 }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(@NonNull Call<CapTagCat> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }

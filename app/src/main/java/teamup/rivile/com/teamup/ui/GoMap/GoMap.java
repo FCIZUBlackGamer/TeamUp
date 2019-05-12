@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -29,10 +30,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 
 public class GoMap extends Fragment implements OnMapReadyCallback {
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     private GoogleMap mMap;
 
@@ -57,6 +58,8 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_go_map, container, false);
 
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -79,7 +82,9 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
-        ShowSpinnerTask.getManager(getFragmentManager());
+
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         CustomAdapter mCustomAdapter = new CustomAdapter(getActivity(), imageArray);
         mCustomAdapter.setDropDownViewResource(R.layout.custom_spinner_row);
 
@@ -117,6 +122,8 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 

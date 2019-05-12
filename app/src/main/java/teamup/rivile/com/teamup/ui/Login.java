@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -52,11 +53,11 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
-import teamup.rivile.com.teamup.ui.Loading.LoadLogin;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class Login extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
     private static final int RC_SIGN_IN = 100;
     private static final String EMAIL = "email";
 
@@ -79,6 +80,9 @@ public class Login extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         initViews(view);
         return view;
     }
@@ -332,7 +336,7 @@ public class Login extends Fragment {
 
     private void login(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        LoadLogin.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
@@ -360,8 +364,9 @@ public class Login extends Fragment {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
                     Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                    activateViews();
                 }
-                activateViews();
             }
 
             @Override
@@ -369,13 +374,14 @@ public class Login extends Fragment {
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
                 activateViews();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
 
     private void loginFb(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        LoadLogin.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
@@ -410,6 +416,7 @@ public class Login extends Fragment {
                     Log.e("Err", "Empty");
                 }
                 activateViews();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
@@ -417,6 +424,7 @@ public class Login extends Fragment {
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
                 activateViews();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }

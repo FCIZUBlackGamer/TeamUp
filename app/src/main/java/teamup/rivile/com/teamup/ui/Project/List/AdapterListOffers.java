@@ -128,9 +128,9 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     offersList.remove(position);
                     notifyDataSetChanged();
                     if (offersList.size() == 0) {
-
-                        FragmentListProjects.showEmpty();
-
+                        FragmentListProjects.showEmptyView();
+                    } else {
+                        FragmentListProjects.hideEmptyView();
                     }
                 }
             } else if (favDrawable.getConstantState()

@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -21,11 +22,11 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 
 
 public class FragmentHome extends Fragment {
+private ConstraintLayout mLoadingViewConstraintLayout;
 
     // All Category
     GridView gridView;
@@ -47,6 +48,8 @@ public class FragmentHome extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_category, container, false);
 
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         fragmentManager = getFragmentManager();
         gridView = (GridView) view.findViewById(R.id.gridview);
 
@@ -66,7 +69,7 @@ public class FragmentHome extends Fragment {
         ((DrawerActivity) getActivity()).showSearchBar("Home");
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 //        Intent intent = new Intent(getActivity(), NotifyService.class);
 //        getActivity().startService(intent);
         loadOffers();
@@ -91,11 +94,13 @@ public class FragmentHome extends Fragment {
                 } else {
                     Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<DepartmentJson> call, Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }

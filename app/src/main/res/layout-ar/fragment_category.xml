@@ -15,4 +15,5 @@
         android:stretchMode="spacingWidthUniform"
         android:verticalSpacing="24dp" />
 
+    <include layout="@layout/load_view"/>
 </android.support.constraint.ConstraintLayout>
