@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -74,8 +75,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
-import teamup.rivile.com.teamup.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.Project.join.Adapters.CapitalsRecyclerViewAdapter;
@@ -91,6 +90,7 @@ import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentJoinHome extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     //region variable declarations
     private static final int PICK_FILE_REQUEST_CODE = 10;
@@ -205,11 +205,14 @@ public class FragmentJoinHome extends Fragment {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(@NonNull Call<OfferDetailsJsonObject> call, @NonNull Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -234,12 +237,15 @@ public class FragmentJoinHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_join_home, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         if (requirmentModel == null && mOfferId != -1) {
-            ShowSpinnerTask.getManager(getFragmentManager());
+            mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
             loadOffer();
         }
 
-        view = inflater.inflate(R.layout.fragment_join_home, container, false);
         /** Shrink and Expand Views */
         money = view.findViewById(R.id.money);
         contributors = view.findViewById(R.id.contributors);
@@ -638,7 +644,8 @@ public class FragmentJoinHome extends Fragment {
 
         Log.e("UserIdDDDdDDD2", mUserId + "");
 
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         setUpRecyclerViews();
 
         moneyDesc.addTextChangedListener(new TextWatcher() {
@@ -1152,6 +1159,8 @@ public class FragmentJoinHome extends Fragment {
         });
 //        if (requirmentModel != null)
 //            loadDataFroEdit(mRequirementDetails);
+
+        mLoadingViewConstraintLayout.setVisibility(View.GONE);
     }
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(

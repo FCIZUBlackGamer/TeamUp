@@ -6,8 +6,6 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -16,9 +14,9 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,10 +52,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.Department.FragmentHome;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
-import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.Project.List.ContributerImages;
@@ -79,6 +73,8 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 
 public class FragmentOfferDetails extends Fragment implements ShareDialogFragment.Helper {
+    private ConstraintLayout mLoadingViewConstraintLayout;
+
     private String mProjectURL = "";
     private String mProjectName = "";
     private OfferDetailsJsonObject offerDetailsJsonObject = null;
@@ -141,6 +137,9 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_project_details, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         m = c = 1;
         p = e = 1;
         a = ca = d = t = 1;
@@ -249,23 +248,25 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
 
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ShowSpinnerTask.getManager(getFragmentManager());
+
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         realm.executeTransactionAsync(realm1 -> {
-            if(realm1.where(LoginDataBase.class)
+            if (realm1.where(LoginDataBase.class)
                     .findFirst()
                     .getLikes()
-                    .where().equalTo("OfferId",projectId)
-                    .findAll().size() > 0){
-                Log.i("Like","d");
+                    .where().equalTo("OfferId", projectId)
+                    .findAll().size() > 0) {
+                Log.i("Like", "d");
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
             }
 
-            if(realm1.where(LoginDataBase.class)
+            if (realm1.where(LoginDataBase.class)
                     .findFirst()
                     .getFavorites()
-                    .where().equalTo("OfferId",projectId)
-                    .findAll().size() > 0){
-                Log.i("Fav","g");
+                    .where().equalTo("OfferId", projectId)
+                    .findAll().size() > 0) {
+                Log.i("Fav", "g");
                 favourite.setImageDrawable(getActivity().getDrawable(R.drawable.ic_star_full));
             }
 
@@ -348,7 +349,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                likeOffer(projectId, userId,  1);
+                likeOffer(projectId, userId, 1);
             } else if (likeDrawable.getConstantState()
                     .equals(getContext()
                             .getResources()
@@ -682,7 +683,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     break;
                 case R.id.action_edit_offer:
                     if (offerDetailsJsonObject != null
-                            && offerDetailsJsonObject.getOffer() != null && offerDetailsJsonObject.getOffer().getRequirments() != null){
+                            && offerDetailsJsonObject.getOffer() != null && offerDetailsJsonObject.getOffer().getRequirments() != null) {
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.frame, FragmentJoinHome.setRequirement(offerDetailsJsonObject.getOffer().getRequirments().get(0), projectId))
                                 .addToBackStack(FragmentOfferDetails.class.getName())
@@ -795,11 +796,13 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                 } else {
 
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
                 //textView.setText(t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -814,13 +817,13 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
         likeModel.setUserId(userId);
-        Log.v("offerId", offerId+"");
-        Log.v("userId", userId+"");
-        Log.v("Like", like+"");
+        Log.v("offerId", offerId + "");
+        Log.v("userId", userId + "");
+        Log.v("Like", like + "");
         likeModel.setStatus(like);
         if (like == 1) {//dislike
             realm.executeTransactionAsync(realm1 -> {
-                LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId",offerId).findFirst();
+                LikeModelDataBase l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findFirst();
                 l.deleteFromRealm();
 //                realm1.commitTransaction();
             });
@@ -866,14 +869,17 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
                     });
                 }
 
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                //textView.setText(t.getMessage());
+                Log.e("onFailure", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }
+
     public void exportDatabase() {
 
         File exportRealmFile = null;

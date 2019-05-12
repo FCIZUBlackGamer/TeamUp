@@ -21,10 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/search"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="60dp">
 
         <teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton
             android:id="@+id/movableFloatingActionButton"
@@ -79,4 +79,5 @@
         </Spinner>
     </android.support.constraint.ConstraintLayout>
 
+    <include layout="@layout/loading" />
 </RelativeLayout>

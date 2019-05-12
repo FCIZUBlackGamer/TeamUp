@@ -23,6 +23,7 @@ import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -70,7 +71,6 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
@@ -81,6 +81,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class FragmentProfileHome extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     FloatingActionButton fab_edit;
     ImageView cir_user_image;
@@ -143,6 +144,9 @@ public class FragmentProfileHome extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
         txt_name = view.findViewById(R.id.name);
@@ -178,7 +182,7 @@ public class FragmentProfileHome extends Fragment {
         ((DrawerActivity) getActivity()).hideFab();
 //        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 //        viewPager.setAdapter(new pager(fragmentManager));
         adapter = new AdapterProfileProject(getActivity(), offersList);
         recyclerView.setAdapter(adapter);
@@ -340,7 +344,8 @@ public class FragmentProfileHome extends Fragment {
                     model.setImage(profObject.getImage());
 
 //                    model.setIdentityImage(profObject.getIdentityImage());
-                    ShowSpinnerTask.getManager(getFragmentManager());
+                    mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
                     editAction(model);
                     dialog.dismiss();
                 }
@@ -581,20 +586,28 @@ public class FragmentProfileHome extends Fragment {
         response.enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+
                 if (response.errorBody() == null) {
                     if (response.body() != null && response.body().equals("Success")) {
                         Toast.makeText(getContext(), "Profile # Successfully.", Toast.LENGTH_SHORT).show();
                         updateUserDB(userModel);
-                    } else
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
+                    } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                    }
                 } else {
                     Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
                     Log.d("MODELSS", response.errorBody().toString());
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 Log.d("MODELSS", t.getCause().getMessage());
             }
@@ -633,6 +646,8 @@ public class FragmentProfileHome extends Fragment {
         Gson gson = new Gson();
         Log.e("Gson", gson.toJson(offers));
         fillProfOffersData(offers);
+
+        mLoadingViewConstraintLayout.setVisibility(View.GONE);
     }
 
     private List<Offers> loadOffers(List<OfferDetailsDataBase> offerDetailsDataBase) {
@@ -733,10 +748,13 @@ public class FragmentProfileHome extends Fragment {
                 Log.e("GS", gson.toJson(profObject));
                 fillProfData(profObject);
                 fillProfOffersData(offers);
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(@NonNull Call<ProfileResponse> call, @NonNull Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 Log.d("loadProfile", t.getMessage());
             }
         });

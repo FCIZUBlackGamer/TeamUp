@@ -2,6 +2,7 @@ package teamup.rivile.com.teamup.Search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +31,6 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.Department.Department;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
@@ -39,6 +39,8 @@ import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
 
 public class FilterSearchFragment extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
+
     private EditText mProjectNameEditText;
     private StepperIndicator mEducationLevelStepperIndicator;
     private RadioGroup mGenderRadioGroup;
@@ -79,6 +81,9 @@ public class FilterSearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_search, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         mProjectNameEditText = view.findViewById(R.id.project_name);
 
         mEducationLevelStepperIndicator = view.findViewById(R.id.educationLevel);
@@ -88,7 +93,7 @@ public class FilterSearchFragment extends Fragment {
 //        mAddressEditText = view.findViewById(R.id.address);
 
         mAgeRangeSeekBar = view.findViewById(R.id.ageSeekbar);
-        mAgeRangeSeekBar.setRangeValues(18,80);
+        mAgeRangeSeekBar.setRangeValues(18, 80);
         mAgeRangeSeekBar.setNotifyWhileDragging(true);
         mAgeRangeSeekBarMin = view.findViewById(R.id.tv_ageMin);
         mAgeRangeSeekBarMax = view.findViewById(R.id.tv_ageMax);
@@ -105,7 +110,7 @@ public class FilterSearchFragment extends Fragment {
         mEgyptCheckBox = view.findViewById(R.id.egypt);
 
         mProjectCostRangeSeekBar = view.findViewById(R.id.costSeekbar);
-        mProjectCostRangeSeekBar.setRangeValues(0,100000);
+        mProjectCostRangeSeekBar.setRangeValues(0, 100000);
         mProjectCostRangeSeekBar.setNotifyWhileDragging(true);
         mProjectCostRangeSeekBarMin = view.findViewById(R.id.tv_costMin);
         mProjectCostRangeSeekBarMax = view.findViewById(R.id.tv_costMax);
@@ -115,7 +120,7 @@ public class FilterSearchFragment extends Fragment {
         });
 
         mContributorsNumberRangeSeekBar = view.findViewById(R.id.numberContributersSeekbar);
-        mContributorsNumberRangeSeekBar.setRangeValues(1,15);
+        mContributorsNumberRangeSeekBar.setRangeValues(1, 15);
         mContributorsNumberRangeSeekBar.setNotifyWhileDragging(true);
         mContributorsNumberRangeSeekBarMin = view.findViewById(R.id.tv_numberContributerMin);
         mContributorsNumberRangeSeekBarMax = view.findViewById(R.id.tv_numberContributerMax);
@@ -126,7 +131,7 @@ public class FilterSearchFragment extends Fragment {
 
 
         mContributorExperienceRangeSeekBar = view.findViewById(R.id.experienceSeekbar);
-        mContributorExperienceRangeSeekBar.setRangeValues(0,65);
+        mContributorExperienceRangeSeekBar.setRangeValues(0, 65);
         mContributorExperienceRangeSeekBar.setNotifyWhileDragging(true);
         mContributorExperienceRangeSeekBarMin = view.findViewById(R.id.tv_experienceMin);
         mContributorExperienceRangeSeekBarMax = view.findViewById(R.id.tv_experienceMax);
@@ -215,7 +220,8 @@ public class FilterSearchFragment extends Fragment {
 
     private void loadCategoriesAndCapitals() {
         AppConfig appConfig = new AppConfig(API.BASE_URL);
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         ApiConfig getDepartments = appConfig.getRetrofit().create(ApiConfig.class);
         Call<CapTagCat> call = getDepartments.getCapTagCat(API.URL_TOKEN);
         call.enqueue(new Callback<CapTagCat>() {
@@ -234,16 +240,23 @@ public class FilterSearchFragment extends Fragment {
 
                         mLoadedCapitals.addAll(response.body().getCapital());
                         mCapitalsRecyclerViewAdapter.swapData(mLoadedCapitals);
+
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
                     } else {
-                        Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
+                        {
+                            Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
+                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<CapTagCat> call, @NonNull Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

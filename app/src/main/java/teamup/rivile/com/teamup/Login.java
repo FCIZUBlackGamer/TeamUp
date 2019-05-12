@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -44,7 +45,6 @@ import java.net.URL;
 import java.util.Arrays;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,13 +52,11 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.ForgetPassword.FragmentSendCode;
-import teamup.rivile.com.teamup.Loading.LoadLogin;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 
 public class Login extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
     private static final int RC_SIGN_IN = 100;
     private static final String EMAIL = "email";
 
@@ -81,6 +79,9 @@ public class Login extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         initViews(view);
         return view;
     }
@@ -334,7 +335,8 @@ public class Login extends Fragment {
 
     private void login(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        LoadLogin.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
@@ -349,6 +351,8 @@ public class Login extends Fragment {
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
                     Log.i("Response", gson.toJson(serverResponse));
@@ -368,6 +372,7 @@ public class Login extends Fragment {
 
             @Override
             public void onFailure(Call<LoginDataBase> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
                 activateViews();
@@ -377,7 +382,8 @@ public class Login extends Fragment {
 
     private void loginFb(UserModel userModel) {
         // Map is used to multipart the file using okhttp3.RequestBody
-        LoadLogin.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         AppConfig appConfig = new AppConfig(API.BASE_URL);
         Gson gson = new Gson();
         Log.e("Here", gson.toJson(userModel));
@@ -388,6 +394,8 @@ public class Login extends Fragment {
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null) {
                     Log.i("Response", gson.toJson(serverResponse));
@@ -416,6 +424,7 @@ public class Login extends Fragment {
 
             @Override
             public void onFailure(Call<LoginDataBase> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
                 activateViews();

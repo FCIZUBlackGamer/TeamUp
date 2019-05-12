@@ -25,4 +25,7 @@
     <color name="backgroundGreen">#10AC84</color>
     <color name="backgroundBlue">#53BED9</color>
     <color name="backgroundDarkGreen">#079992</color>
+
+
+    <color name="loadingColor">#00DDFF</color>
 </resources>

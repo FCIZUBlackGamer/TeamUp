@@ -1,10 +1,10 @@
 package teamup.rivile.com.teamup.Department;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -22,11 +22,10 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.R;
 
-
 public class FragmentHome extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     // All Category
     GridView gridView;
@@ -48,6 +47,8 @@ public class FragmentHome extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_category, container, false);
 
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
         fragmentManager = getFragmentManager();
         gridView = (GridView) view.findViewById(R.id.gridview);
 
@@ -67,7 +68,8 @@ public class FragmentHome extends Fragment {
         ((DrawerActivity) getActivity()).showSearchBar("Home");
         ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
-        ShowSpinnerTask.getManager(getFragmentManager());
+
+       mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 //        Intent intent = new Intent(getActivity(), NotifyService.class);
 //        getActivity().startService(intent);
         loadOffers();
@@ -82,6 +84,7 @@ public class FragmentHome extends Fragment {
         call.enqueue(new Callback<DepartmentJson>() {
             @Override
             public void onResponse(Call<DepartmentJson> call, retrofit2.Response<DepartmentJson> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 if (response.body() != null) {
                     if (response.body().getCategory() != null) {
                         List<Department> serverResponse = response.body().getCategory();
@@ -96,6 +99,8 @@ public class FragmentHome extends Fragment {
 
             @Override
             public void onFailure(Call<DepartmentJson> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

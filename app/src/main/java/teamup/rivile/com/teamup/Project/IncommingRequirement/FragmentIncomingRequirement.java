@@ -28,7 +28,6 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
 import teamup.rivile.com.teamup.R;
@@ -41,6 +40,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class FragmentIncomingRequirement extends Fragment {
     private ConstraintLayout mEmptyViewConstraintLayout;
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     View view;
     RecyclerView recyclerView;
@@ -58,6 +58,7 @@ public class FragmentIncomingRequirement extends Fragment {
         view = inflater.inflate(R.layout.fragment_filter_incoming_requests, container, false);
 
         mEmptyViewConstraintLayout = view.findViewById(R.id.cl_emptyView);
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         project_requests = view.findViewById(R.id.project_requests);
@@ -77,7 +78,9 @@ public class FragmentIncomingRequirement extends Fragment {
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.perposedOffers));
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).hideFab();
-        ShowSpinnerTask.getManager(getFragmentManager());
+
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
@@ -93,7 +96,7 @@ public class FragmentIncomingRequirement extends Fragment {
     }
 
     private void fillOffers(OfferDetailsJsonObject offers) {
-        if (offers.getOffer()!=null && offers.getOffer().getRequirments()!=null && offers.getOffer().getRequirments().size() > 0){
+        if (offers.getOffer() != null && offers.getOffer().getRequirments() != null && offers.getOffer().getRequirments().size() > 0) {
             mEmptyViewConstraintLayout.setVisibility(View.GONE);
 
             OfferDetailsJsonObject object = new OfferDetailsJsonObject();
@@ -111,8 +114,8 @@ public class FragmentIncomingRequirement extends Fragment {
             details.setId(offers.getOffer().getId());
             object.setOffer(details);
             Gson gson = new Gson();
-            Log.e("Req",gson.toJson(object));
-            Log.e("offerId",gson.toJson(offers.getOffer().getId()));
+            Log.e("Req", gson.toJson(object));
+            Log.e("offerId", gson.toJson(offers.getOffer().getId()));
             if (object.getOffer() != null && object.getOffer().getRequirments() != null && object.getOffer().getRequirments().size() > 0) {
                 adapter = new AdapterListRequirement(getActivity(), object);
                 recyclerView.setAdapter(adapter);
@@ -120,9 +123,9 @@ public class FragmentIncomingRequirement extends Fragment {
             } else {
                 noReqFound.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             ((DrawerActivity) getActivity()).hideSearchBar();
-           mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
+            mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
             project_requests.setVisibility(View.GONE);
         }
     }
@@ -180,6 +183,7 @@ public class FragmentIncomingRequirement extends Fragment {
         call.enqueue(new Callback<OfferDetailsJsonObject>() {
             @Override
             public void onResponse(Call<OfferDetailsJsonObject> call, retrofit2.Response<OfferDetailsJsonObject> response) {
+
                 OfferDetailsJsonObject serverResponse = response.body();
                 if (serverResponse != null) {
                     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -187,14 +191,18 @@ public class FragmentIncomingRequirement extends Fragment {
                     Gson gson = gsonBuilder.create();
                     Log.i("Response", gson.toJson(serverResponse));
                     fillOffers(serverResponse);
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
             }
@@ -211,6 +219,7 @@ public class FragmentIncomingRequirement extends Fragment {
         call.enqueue(new Callback<Offer>() {
             @Override
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     offerList = new ArrayList<>();
@@ -225,14 +234,18 @@ public class FragmentIncomingRequirement extends Fragment {
                     }
 
                     fillSpinner(serverResponse);
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
                 //textView.setText(t.getMessage());
                 Log.e("Err", t.getMessage());
             }

@@ -59,4 +59,6 @@
 
         <include layout="@layout/fragment_proofile_content" />
     <!--</android.support.v4.widget.NestedScrollView>-->
+
+    <include layout="@layout/loading"/>
 </android.support.design.widget.CoordinatorLayout>

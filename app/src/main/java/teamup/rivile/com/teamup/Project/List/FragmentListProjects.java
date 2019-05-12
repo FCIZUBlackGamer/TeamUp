@@ -32,7 +32,6 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapitalModel;
@@ -52,6 +51,7 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper {
 
     private ConstraintLayout mEmptyViewConstraintLayout;
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     private String mProjectURL = "";
     private String mProjectName = "";
@@ -114,6 +114,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
 
         mEmptyViewConstraintLayout = view.findViewById(R.id.cl_emptyView);
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
@@ -128,7 +129,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
         ((DrawerActivity) getActivity()).showFab();
 
-        ShowSpinnerTask.getManager(getFragmentManager());
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 
 //        likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){
@@ -497,6 +498,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         call.enqueue(new Callback<Offer>() {
             @Override
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     fillOffers(serverResponse, NORMAL);
@@ -507,6 +509,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
             }
@@ -524,6 +527,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         call.enqueue(new Callback<Offer>() {
             @Override
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     fillOffers(serverResponse, NORMAL);
@@ -534,6 +538,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
             }
@@ -552,6 +557,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         call.enqueue(new Callback<Offer>() {
             @Override
             public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
@@ -569,6 +575,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
             }

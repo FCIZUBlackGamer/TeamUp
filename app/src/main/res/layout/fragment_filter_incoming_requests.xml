@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <include layout="@layout/empty_view" />
 
     <Spinner
         android:id="@+id/project_requests"
@@ -80,4 +79,7 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <include layout="@layout/empty_view" />
+
+    <include layout="@layout/loading" />
 </android.support.constraint.ConstraintLayout>

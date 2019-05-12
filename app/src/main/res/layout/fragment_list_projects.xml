@@ -11,4 +11,5 @@
         android:paddingBottom="78dp" />
 
     <include layout="@layout/empty_view" />
+    <include layout="@layout/loading" />
 </android.support.constraint.ConstraintLayout>
