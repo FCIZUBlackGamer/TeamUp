@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,7 +37,6 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
-import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.Project.Details.FragmentOfferDetails;
@@ -77,6 +77,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     @Override
     public Vholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_project, parent, false);
+
         fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
@@ -110,15 +111,11 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getConstantState())) {
                 holder.favourite.setImageDrawable(context.getDrawable(R.drawable.ic_star_empty));
                 markFavourite(offersList.get(position).getId(), userId, 1);
-                if (ty == FragmentListProjects.FAVOURITE){
+                if (ty == FragmentListProjects.FAVOURITE) {
                     offersList.remove(position);
                     notifyDataSetChanged();
-                    if (offersList.size() == 0){
-
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty())
-                                .commit();
-
+                    if (offersList.size() == 0) {
+                        mHelper.showEmptyView();
                     }
                 }
             } else if (favDrawable.getConstantState()
@@ -405,6 +402,10 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     public interface Helper {
         void shareUrl(String url, String projectName);
+
+        void showEmptyView();
+
+        void hideEmptyView();
     }
 
     Bitmap getBitmap(Drawable drawable) {

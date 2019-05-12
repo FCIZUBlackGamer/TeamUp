@@ -28,7 +28,6 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.Details.OfferDetails;
 import teamup.rivile.com.teamup.Project.Details.OfferDetailsRequirment;
@@ -40,7 +39,9 @@ import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.SpinnerModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-public class FragmentIncommingRequirement extends Fragment {
+public class FragmentIncomingRequirement extends Fragment {
+    private ConstraintLayout mEmptyViewConstraintLayout;
+
     View view;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
@@ -55,6 +56,9 @@ public class FragmentIncommingRequirement extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_incoming_requests, container, false);
+
+        mEmptyViewConstraintLayout = view.findViewById(R.id.cl_emptyView);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         project_requests = view.findViewById(R.id.project_requests);
         recyclerView = view.findViewById(R.id.rec);
@@ -90,6 +94,8 @@ public class FragmentIncommingRequirement extends Fragment {
 
     private void fillOffers(OfferDetailsJsonObject offers) {
         if (offers.getOffer()!=null && offers.getOffer().getRequirments()!=null && offers.getOffer().getRequirments().size() > 0){
+            mEmptyViewConstraintLayout.setVisibility(View.GONE);
+
             OfferDetailsJsonObject object = new OfferDetailsJsonObject();
             List<OfferDetailsRequirment> requirments = new ArrayList<>();
             List<UserModel> users = new ArrayList<>();
@@ -116,14 +122,15 @@ public class FragmentIncommingRequirement extends Fragment {
             }
         }else {
             ((DrawerActivity) getActivity()).hideSearchBar();
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.frame, new FragmentEmpty()).commit();
+           mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
             project_requests.setVisibility(View.GONE);
         }
     }
 
     private void fillSpinner(Offer serverResponse) {
         if (serverResponse.getOffersList().size() > 0) {
+            mEmptyViewConstraintLayout.setVisibility(View.GONE);
+
             for (int i = 0; i < serverResponse.getOffersList().size(); i++) {
                 SpinnerModel spinnerModel = new SpinnerModel();
                 spinnerModel.setId(serverResponse.getOffersList().get(i).getId());
@@ -157,12 +164,9 @@ public class FragmentIncommingRequirement extends Fragment {
 
             ((DrawerActivity) getActivity()).hideSearchBar();
             ((DrawerActivity) getActivity()).hideFab();
-            try {
-                ((DrawerActivity) getActivity()).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty()).commit();
-            }catch (Exception e){
 
-            }
+            mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
+
             project_requests.setVisibility(View.GONE);
         }
     }

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,6 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.ApiConfig;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.AppConfig;
 import teamup.rivile.com.teamup.DrawerActivity;
-import teamup.rivile.com.teamup.EmptyView.FragmentEmpty;
 import teamup.rivile.com.teamup.Loading.ShowSpinnerTask;
 import teamup.rivile.com.teamup.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
@@ -49,8 +49,10 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsRequirmentDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
-
 public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper {
+
+    private ConstraintLayout mEmptyViewConstraintLayout;
+
     private String mProjectURL = "";
     private String mProjectName = "";
     public static int MINE = 1;
@@ -110,6 +112,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
+
+        mEmptyViewConstraintLayout = view.findViewById(R.id.cl_emptyView);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
         recyclerView.setLayoutManager(layoutManager);
@@ -219,9 +224,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            ProType =-1;
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
-        }
-
-        else if (filterModel != null) {
+        } else if (filterModel != null) {
 //            ProType = -1;
             Type = -1;
             Word = null;
@@ -552,12 +555,12 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Offer serverResponse = response.body();
                 if (serverResponse != null) {
                     if (serverResponse.getOffersList().size() > 0) {
+                        mEmptyViewConstraintLayout.setVisibility(View.GONE);
                         fillOffers(serverResponse, NORMAL);
                     } else {
                         ((DrawerActivity) getActivity()).hideSearchBar();
                         //Todo: showSearchBar Empty view
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.frame, new FragmentEmpty()).commit();
+                        mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
                     Log.d("DABUGG", "serverResponse = null");
@@ -575,20 +578,20 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     private void fillOffers(Offer offers, int type) {
 //        if (likeModelDataBase != null) {
         Log.e("A Size", offers.getOffersList().size() + "");
-            if (offers.getOffersList() != null && !offers.getOffersList().isEmpty()&& offers.getOffersList().size() > 0) {
-                adapter = new AdapterListOffers(getActivity(),
-                        offers.getOffersList(),
-                        likeModelDataBase,
-                        favouriteDataBases,
-                        type,
-                        this);
+        if (offers.getOffersList() != null && !offers.getOffersList().isEmpty() && offers.getOffersList().size() > 0) {
+            mEmptyViewConstraintLayout.setVisibility(View.GONE);
 
-                recyclerView.setAdapter(adapter);
-            } else{
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.frame, new FragmentEmpty())
-                        .commit();
-            }
+            adapter = new AdapterListOffers(getActivity(),
+                    offers.getOffersList(),
+                    likeModelDataBase,
+                    favouriteDataBases,
+                    type,
+                    this);
+
+            recyclerView.setAdapter(adapter);
+        } else {
+            mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
+        }
 //        }
     }
 
@@ -688,5 +691,15 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         ShareDialogFragment.getInstance(FragmentListProjects.this)
                 .show(getFragmentManager(), "ShareDialogFragment");
+    }
+
+    @Override
+    public void showEmptyView() {
+        mEmptyViewConstraintLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmptyView() {
+        mEmptyViewConstraintLayout.setVisibility(View.GONE);
     }
 }

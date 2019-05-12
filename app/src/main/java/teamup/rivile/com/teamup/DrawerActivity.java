@@ -36,7 +36,7 @@ import teamup.rivile.com.teamup.GoMap.GoMap;
 import teamup.rivile.com.teamup.GoMap.MovableFloatingActionButton;
 import teamup.rivile.com.teamup.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.Project.Add.FragmentAddHome;
-import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
+import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncomingRequirement;
 import teamup.rivile.com.teamup.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.Project.join.FragmentJoinHome;
 import teamup.rivile.com.teamup.Search.FilterSearchFragment;
@@ -513,9 +513,9 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
 //                navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame, new FragmentIncommingRequirement());
+                fragmentTransaction.replace(R.id.frame, new FragmentIncomingRequirement());
                 if (mIsCurrentFragmentIsHomeFragment)
-                    fragmentTransaction.addToBackStack(FragmentIncommingRequirement.class.getSimpleName());
+                    fragmentTransaction.addToBackStack(FragmentIncomingRequirement.class.getSimpleName());
                 break;
 
             case R.id.nav_favourite_projects: // internal db
