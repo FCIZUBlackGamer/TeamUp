@@ -36,6 +36,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +46,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.ui.Project.Details.FragmentOfferDetails;
@@ -110,6 +112,19 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
         Offers offers = offersList.get(position);
+
+
+        if (ty != MINE) {
+            if (offers.getUserId().equals(userId)) holder.make_offer.setEnabled(false);
+            RealmResults<JoinedOfferIdRealmModel> joinedOfferIdRealmModels = realm.where(JoinedOfferIdRealmModel.class).findAll();
+            for (int i = 0; i < joinedOfferIdRealmModels.size(); i++) {
+                int id = joinedOfferIdRealmModels.get(i).getId();
+                if (offers.getId() == id) {
+                    holder.make_offer.setEnabled(false);
+                    break;
+                }
+            }
+        }
         holder.fromToTextView.setText(offers.getNumContributor() + " Of " + offers.getNumJoinOffer());
 
         holder.option_menu.setVisibility(View.VISIBLE);
@@ -307,6 +322,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         if (ty != MINE && ty != FAVOURITE)
             holder.make_offer.setOnClickListener(v -> {
+                v.setEnabled(false);
                 //TODO: Show user alert dialog of what's happening here
                 RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
                         .getRetrofit().create(RetrofitMethods.class);
@@ -319,6 +335,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                         if (serverResponse != null) {
                             if (serverResponse.equals("Success")) {
                                 Toast.makeText(context, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
+                                realm.executeTransaction(realm1 ->
+                                        realm1.insert(new JoinedOfferIdRealmModel(offers.getId())));
                             } else if (serverResponse.equals("Fail")) {
                                 Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                             }
@@ -330,6 +348,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        v.setEnabled(true);
                     }
                 });
 
@@ -399,7 +418,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     }
                 });
             });
-        } else holder.make_offer.setEnabled(false);
+        }
 
         realm.executeTransaction(realm1 -> {
             RealmList<LikeModelDataBase> Likes = realm1.where(LoginDataBase.class).findFirst().getLikes();

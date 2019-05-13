@@ -19,12 +19,12 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         Realm.init(this);
+
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             Settings settings = new Settings();
             settings.setNotificaionStatus(true);
             realm1.insertOrUpdate(settings);
-
 
             /** Launch the service for calling the API */
             Intent broadcastIntent = new Intent(this, BroadcastNotificationReceiver.class);

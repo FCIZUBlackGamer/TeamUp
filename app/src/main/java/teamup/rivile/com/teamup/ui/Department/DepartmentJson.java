@@ -2,6 +2,8 @@ package teamup.rivile.com.teamup.ui.Department;
 
 import java.util.List;
 
+import teamup.rivile.com.teamup.Uitls.APIModels.Department;
+
 public class DepartmentJson {
     List<Department> Category;
 

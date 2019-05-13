@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import teamup.rivile.com.teamup.ui.Department.Department;
+import teamup.rivile.com.teamup.Uitls.APIModels.Department;
 import teamup.rivile.com.teamup.R;
 
 public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.CapitalViewHolder> {

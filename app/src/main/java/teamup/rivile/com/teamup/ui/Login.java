@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,15 +44,19 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -75,6 +80,7 @@ public class Login extends Fragment {
     View view;
     UserModel userModel;
     Realm realm;
+    private Context mContext;
 
     @Nullable
     @Override
@@ -82,6 +88,8 @@ public class Login extends Fragment {
         view = inflater.inflate(R.layout.fragment_login, container, false);
 
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
+        mContext = getContext();
 
         initViews(view);
         return view;
@@ -95,9 +103,9 @@ public class Login extends Fragment {
 
         realm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
-            if (results.size() > 0){
+            if (results.size() > 0) {
                 Gson gson = new Gson();
-                Log.e("results", results.get(0).getUser().getId()+"");
+                Log.e("results", results.get(0).getUser().getId() + "");
                 startActivity(new Intent(getActivity(), DrawerActivity.class));
                 getActivity().finish();
             }
@@ -329,7 +337,7 @@ public class Login extends Fragment {
         super.onDestroyView();
         try {
             mProfileTracker.stopTracking();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -354,12 +362,7 @@ public class Login extends Fragment {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
                     Log.i("Response", gson.toJson(serverResponse));
-                    realm.executeTransaction(realm1 -> {
-                        realm1.insertOrUpdate(serverResponse);
-                        Log.e("results", serverResponse.getUser().getId()+"");
-                        startActivity(new Intent(getActivity(), DrawerActivity.class));
-                        getActivity().finish();
-                    });
+                    loadJoinedProjects(serverResponse);
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
@@ -394,29 +397,13 @@ public class Login extends Fragment {
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null) {
-                    Log.i("Response", gson.toJson(serverResponse));
-                    realm.executeTransaction(realm1 -> {
-                        realm1.deleteAll();
-                    });
-
-                    realm.executeTransaction(realm1 -> {
-                        realm1.insertOrUpdate(serverResponse);
-                        Log.e("results", serverResponse.getUser().getId()+"");
-                        Log.e("size", serverResponse.getOffers().size()+"");
-                        for (int i = 0; i < serverResponse.getOffers().size(); i++) {
-                            Log.e("Offer Name "+serverResponse.getOffers().get(i).getId(),
-                                    serverResponse.getOffers().get(i).getName()+"");
-                        }
-                        startActivity(new Intent(getActivity(), DrawerActivity.class));
-                        getActivity().finish();
-                    });
+                    loadJoinedProjects(serverResponse);
 
                 } else {
                     //textView.setText(serverResponse.toString());
                     Log.e("Err", "Empty");
                 }
                 activateViews();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
@@ -425,6 +412,55 @@ public class Login extends Fragment {
                 Log.e("Err", t.getMessage());
                 activateViews();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void loadJoinedProjects(LoginDataBase serverResponse) {
+        RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).
+                getRetrofit().
+                create(RetrofitMethods.class);
+
+        Call<List<JoinedProject>> call = retrofitMethods.listJoinedProjects(serverResponse.getUser().getId(), API.URL_TOKEN);
+
+        call.enqueue(new Callback<List<JoinedProject>>() {
+            @Override
+            public void onResponse(Call<List<JoinedProject>> call, Response<List<JoinedProject>> response) {
+                List<JoinedProject> joinedProjectList = response.body();
+                if (joinedProjectList != null) {
+                    if (joinedProjectList.size() != 0) {
+                        Log.i("Response", new Gson().toJson(serverResponse));
+                        realm.executeTransaction(realm1 -> realm1.deleteAll());
+
+                        realm.executeTransaction(realm1 -> {
+                            realm1.insertOrUpdate(serverResponse);
+                            Log.e("results", serverResponse.getUser().getId() + "");
+                            Log.e("size", serverResponse.getOffers().size() + "");
+                            for (int i = 0; i < serverResponse.getOffers().size(); i++) {
+                                Log.e("Offer Name " + serverResponse.getOffers().get(i).getId(),
+                                        serverResponse.getOffers().get(i).getName() + "");
+                            }
+
+                            for (JoinedProject project : joinedProjectList) {
+                                realm1.insert(new JoinedOfferIdRealmModel(project.getOfferId()));
+                            }
+
+                            startActivity(new Intent(getActivity(), DrawerActivity.class));
+                            getActivity().finish();
+                        });
+                    }
+                } else {
+                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<List<JoinedProject>> call, Throwable t) {
+                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
             }
         });
     }

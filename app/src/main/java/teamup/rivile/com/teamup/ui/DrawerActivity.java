@@ -31,6 +31,10 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.ui.Department.FragmentHome;
 import teamup.rivile.com.teamup.ui.GoMap.GoMap;
 import teamup.rivile.com.teamup.ui.GoMap.MovableFloatingActionButton;
@@ -211,24 +215,24 @@ public class DrawerActivity extends AppCompatActivity
 //            user_name.setText(User.getFullName());
             if (User.getImage() != null && !User.getImage().isEmpty()) {
                 try {
-                    if (User.getSocialId() != null){
+                    if (User.getSocialId() != null) {
                         Picasso.get().load(User.getImage()).into(user_image);
-                    }else {
+                    } else {
                         Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
                     }
                     image_name.setVisibility(View.GONE);
                 } catch (Exception e) {
                     image_name.setVisibility(View.VISIBLE);
                     String[] sp = User.getFullName().split(" ");
-                    if (!User.getFullName().contains(" ")){
-                        image_name.setText(User.getFullName().charAt(0)+"");
-                    }else if (sp.length > 0 && sp.length <= 2) {
+                    if (!User.getFullName().contains(" ")) {
+                        image_name.setText(User.getFullName().charAt(0) + "");
+                    } else if (sp.length > 0 && sp.length <= 2) {
                         for (int j = 0; j < sp.length; j++) {
-                            image_name.append(sp[j]+"");
+                            image_name.append(sp[j] + "");
                         }
-                    }else if (sp.length > 2){
+                    } else if (sp.length > 2) {
                         for (int j = 0; j < 2; j++) {
-                            image_name.append(sp[j]+"");
+                            image_name.append(sp[j] + "");
                         }
                     }
                 }
@@ -498,14 +502,14 @@ public class DrawerActivity extends AppCompatActivity
                 showToolbar();
                 navigation.setSelectedItemId(R.id.navigation_saved_project);
 
-                fragmentTransaction.replace(R.id.frame,  FragmentListProjects.setType(MINE));
+                fragmentTransaction.replace(R.id.frame, FragmentListProjects.setType(MINE));
                 if (mIsCurrentFragmentIsHomeFragment)
                     fragmentTransaction.addToBackStack(FragmentListProjects.class.getSimpleName());
                 break;
 
             case R.id.nav_requirement: // internal db
                 showToolbar();
-               navigation.setSelectedItemId(R.id.navigation_saved_project);
+                navigation.setSelectedItemId(R.id.navigation_saved_project);
 
                 fragmentTransaction.replace(R.id.frame, new ListJoinedProjectsFragment());
                 if (mIsCurrentFragmentIsHomeFragment)
@@ -543,9 +547,17 @@ public class DrawerActivity extends AppCompatActivity
 
                     RealmResults<Settings> settings = realm.where(Settings.class).findAll();
                     settings.deleteAllFromRealm();
+
+                    realm.where(JoinedOfferIdRealmModel.class).findAll().deleteAllFromRealm();
+
+                    realm.where(FavouriteDataBase.class).findAll().deleteAllFromRealm();
+                    realm.where(LikeDataBase.class).findAll().deleteAllFromRealm();
+                    realm.where(OfferDataBase.class).findAll().deleteAllFromRealm();
+                    realm.where(UserDataBase.class).findAll().deleteAllFromRealm();
+
 //                finish();
                     startActivity(new Intent(DrawerActivity.this, FirstActivity.class));
-                    this.finish();
+                    DrawerActivity.this.finish();
                 });
 
                 break;

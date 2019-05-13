@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.ui.Department;
+package teamup.rivile.com.teamup.Uitls.APIModels;
 
 import java.io.Serializable;
 

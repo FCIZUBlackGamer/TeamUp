@@ -48,6 +48,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         AdapterView.OnItemSelectedListener {
 
     private ConstraintLayout mLoadingViewConstraintLayout;
+
     private String mProjectURL = "";
     private String mProjectName = "";
     public static int MINE = 1;
@@ -546,12 +547,15 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     Log.d("DABUGG", "serverResponse = null");
                     showEmptyView();
                 }
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Offer> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.d("DABUGG", t.getMessage());
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+
             }
         });
     }
@@ -582,6 +586,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                     Log.d("DABUGG", "serverResponse = null");
                     showEmptyView();
                 }
+
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 

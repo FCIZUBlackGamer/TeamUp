@@ -23,9 +23,11 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class ListJoinedProjectsFragment extends Fragment {
+    private ConstraintLayout mLoadingViewConstraintLayout;
     private JoinedProjectsAdapter mProjectsAdapter;
     private ConstraintLayout mEmptyLayout;
 
@@ -38,6 +40,8 @@ public class ListJoinedProjectsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_joined_projects, container, false);
+
+        mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         mContext = getContext();
 
@@ -63,6 +67,8 @@ public class ListJoinedProjectsFragment extends Fragment {
     }
 
     private void loadJoinedProjects() {
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
         RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).
                 getRetrofit().
                 create(RetrofitMethods.class);
@@ -79,17 +85,28 @@ public class ListJoinedProjectsFragment extends Fragment {
                     } else {
                         mEmptyLayout.setVisibility(View.GONE);
                         mProjectsAdapter.swapData(joinedProjectList);
+
+                        mRealm.executeTransaction(realm -> {
+                            realm.where(JoinedOfferIdRealmModel.class).findAll().deleteAllFromRealm();
+                            for (JoinedProject project : joinedProjectList) {
+                                realm.insert(new JoinedOfferIdRealmModel(project.getOfferId()));
+                            }
+                        });
                     }
                 } else {
                     Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                     mEmptyLayout.setVisibility(View.VISIBLE);
                 }
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<List<JoinedProject>> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 mEmptyLayout.setVisibility(View.VISIBLE);
+
+                mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
     }

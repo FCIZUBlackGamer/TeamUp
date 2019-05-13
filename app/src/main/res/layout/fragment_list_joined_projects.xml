@@ -54,4 +54,6 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <include layout="@layout/load_view" />
+
 </android.support.constraint.ConstraintLayout>

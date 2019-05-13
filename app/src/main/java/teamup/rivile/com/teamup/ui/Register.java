@@ -39,9 +39,12 @@ public class Register extends AppCompatActivity {
         getSupportActionBar().hide();
 
         initViews();
+
         Realm.init(this);
+
         RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
+
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
@@ -81,11 +84,8 @@ public class Register extends AppCompatActivity {
         // Map is used to multipart the file using okhttp3.RequestBody
         View parentLayout = findViewById(android.R.id.content);
         Snackbar.make(parentLayout, R.string.registerInProgress, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                .setAction("CLOSE", view -> {
 
-                    }
                 })
                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
                 .show();

@@ -292,6 +292,7 @@
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-    <include layout="@layout/load_view"/>
+    <include layout="@layout/load_view"
+       tools:visibility="gone" />
 </android.support.constraint.ConstraintLayout>
 

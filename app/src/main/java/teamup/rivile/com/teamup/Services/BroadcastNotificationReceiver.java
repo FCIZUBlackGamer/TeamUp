@@ -17,13 +17,17 @@ public class BroadcastNotificationReceiver extends BroadcastReceiver {
 
     public BroadcastNotificationReceiver() {
         super();
-        realm = Realm.getDefaultInstance();
     }
 
     Realm realm;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         contex = context;
+
+        Realm.init(context);
+        realm = Realm.getDefaultInstance();
+
         realm.executeTransaction(realm1 -> {
             try {
                 if (realm == null) {
@@ -31,7 +35,7 @@ public class BroadcastNotificationReceiver extends BroadcastReceiver {
                     realm = Realm.getDefaultInstance();
                 }
                 Settings settings = realm1.where(Settings.class).findFirst();
-                if (realm1.where(LoginDataBase.class).findFirst() != null && realm1.where(LoginDataBase.class).findFirst().getUser() != null){
+                if (realm1.where(LoginDataBase.class).findFirst() != null && realm1.where(LoginDataBase.class).findFirst().getUser() != null) {
                     userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
                     if (settings != null && settings.isNotificaionStatus()) {
                         if (!isServiceRunning(MyService.class)) {
@@ -39,11 +43,11 @@ public class BroadcastNotificationReceiver extends BroadcastReceiver {
 //                    in.putExtra("Id",userId);
                             contex.startService(in);
                         }
-                    }else {
-                        Log.e("GG","Null");
+                    } else {
+                        Log.e("GG", "Null");
                     }
-                }else {
-                    Log.e("GG","So bad1");
+                } else {
+                    Log.e("GG", "So bad1");
                 }
 
             } catch (Exception r) {
@@ -53,7 +57,6 @@ public class BroadcastNotificationReceiver extends BroadcastReceiver {
                     realm.close();
                 }
             }
-
         });
     }
 
@@ -66,5 +69,4 @@ public class BroadcastNotificationReceiver extends BroadcastReceiver {
         }
         return false;
     }
-
 }
