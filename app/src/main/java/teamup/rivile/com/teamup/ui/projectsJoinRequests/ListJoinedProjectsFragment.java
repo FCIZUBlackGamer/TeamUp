@@ -25,6 +25,7 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 
 public class ListJoinedProjectsFragment extends Fragment {
     private ConstraintLayout mLoadingViewConstraintLayout;
@@ -44,6 +45,8 @@ public class ListJoinedProjectsFragment extends Fragment {
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         mContext = getContext();
+
+        ((DrawerActivity) getActivity()).hideFab();
 
         mRealm = Realm.getDefaultInstance();
         LoginDataBase loginData = mRealm.where(LoginDataBase.class)
