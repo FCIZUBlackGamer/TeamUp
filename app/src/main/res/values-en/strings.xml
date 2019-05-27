@@ -41,7 +41,7 @@
     <string name="facebook_app_id">424047931700835</string>
     <string name="fb_login_protocol_scheme">fb424047931700835</string>
     <string name="already_have_an_account">Already have account?</string>
-    <string name="join_us_now">join us</string>
+    <string name="join_us_now">join Us Now</string>
     <string name="join_us_now_1">Register an account now and start with secure</string>
     <string name="join_us_now_2"> and secured investment through our platform</string>
     <string name="full_name">Full Name</string>
@@ -216,6 +216,10 @@
     <string name="rejected">Rejected</string>
     <string name="status">Status:</string>
     <string name="on_hold">On Hold</string>
+    <string name="enter_valid_full_name">Enter Valid User Name.</string>
+    <string name="enter_valid_email">Enter Valid email.</string>
+    <string name="password_must_have_8">Password must contain at least 8 characters.</string>
+    <string name="enter_valid_password">Enter Valid Password.</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

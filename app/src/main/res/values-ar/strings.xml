@@ -214,6 +214,11 @@
     <string name="rejected">تم الرفض</string>
     <string name="status">الحالة:</string>
     <string name="on_hold">قيد الإنتظار</string>
+    <string name="enter_valid_full_name">أدخل اسم صحيح.</string>
+    <string name="enter_valid_email">أدخل بريد إلكتروني صحيح.</string>
+    <string name="password_must_have_8">كلمة المرور يجب الا تكون اقل من 8 حروف.</string>
+    <string name="enter_valid_password">أدخل كلمة مرور صحيحة.</string>
+
 
     <string-array name="sort_by_array">
         <item>الاحدث</item>

@@ -27,10 +27,10 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class Register extends AppCompatActivity {
 
-    EditText ed_full_name, ed_email, ed_password;
-    Button btn_save;
-    TextView tv_login;
-    Realm realm;
+    private EditText mFullNameEditText, mEmailEditText, mPasswordEditText;
+    private Button mRegisterButton;
+    private TextView mLoginTextView;
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,39 +45,74 @@ public class Register extends AppCompatActivity {
         RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);
 
-        realm = Realm.getDefaultInstance();
-        realm.executeTransaction(realm1 -> {
-            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
-            if (results.size() > 0){
+        mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransaction(realm1 -> {
+            RealmResults<LoginDataBase> results = mRealm.where(LoginDataBase.class).findAll();
+            if (results.size() > 0) {
 //                Log.i("REalm", results.get)
                 Gson gson = new Gson();
-                Log.e("results", results.get(0).getUser().getId()+"");
+                Log.e("results", results.get(0).getUser().getId() + "");
                 startActivity(new Intent(Register.this, DrawerActivity.class));
                 finish();
             }
         });
 
-        tv_login.setOnClickListener(v -> {
+        mLoginTextView.setOnClickListener(v -> {
             //finish();
             startActivity(new Intent(Register.this, FirstActivity.class));
         });
 
-        btn_save.setOnClickListener(v -> {
+        mRegisterButton.setOnClickListener(v -> {
             UserModel userModel = new UserModel();
-            userModel.setFullName(ed_full_name.getText().toString());
-            userModel.setMail(ed_email.getText().toString());
-            userModel.setPassword(ed_password.getText().toString());
-            register(userModel);
+            userModel.setFullName(mFullNameEditText.getText().toString());
+            userModel.setMail(mEmailEditText.getText().toString());
+            userModel.setPassword(mPasswordEditText.getText().toString());
+            if (validUserData(userModel)) {
+                register(userModel);
+            }
         });
     }
 
     private void initViews() {
-        tv_login = findViewById(R.id.tv_login);
-        btn_save = findViewById(R.id.btn_save);
-        ed_full_name = findViewById(R.id.ed_full_name);
-        ed_email = findViewById(R.id.ed_email);
+        mLoginTextView = findViewById(R.id.tv_login);
+        mRegisterButton = findViewById(R.id.btn_sign_up);
+        mFullNameEditText = findViewById(R.id.ed_full_name);
+        mEmailEditText = findViewById(R.id.ed_email);
 //        ed_user_name = findViewById(R.id.ed_user_name);
-        ed_password = findViewById(R.id.til_password);
+        mPasswordEditText = findViewById(R.id.til_password);
+    }
+
+    private boolean validUserData(UserModel userModel) {
+        boolean isValidUserData = true;
+
+        String fullName = userModel.getFullName();
+        if (fullName == null || fullName.isEmpty()) {
+            mFullNameEditText.setError(getString(R.string.enter_valid_full_name));
+            isValidUserData = false;
+        } else {
+            mFullNameEditText.setError(null);
+        }
+
+        String email = userModel.getMail();
+        if (email == null || email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mEmailEditText.setError(getString(R.string.enter_valid_email));
+            isValidUserData = false;
+        } else {
+            mEmailEditText.setError(null);
+        }
+
+        String password = userModel.getPassword();
+        if (password == null || password.isEmpty()) {
+            mPasswordEditText.setError(getString(R.string.enter_valid_password));
+            isValidUserData = false;
+        } else if (password.length() < 8) {
+            mPasswordEditText.setError(getString(R.string.password_must_have_8));
+            isValidUserData = false;
+        } else {
+            mPasswordEditText.setError(null);
+        }
+
+        return isValidUserData;
     }
 
     private void register(UserModel userModel) {
@@ -87,7 +122,7 @@ public class Register extends AppCompatActivity {
                 .setAction("CLOSE", view -> {
 
                 })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                 .show();
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
@@ -102,17 +137,19 @@ public class Register extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 String serverResponse = response.body();
-                if (serverResponse != null){
-                    Log.v("Re",serverResponse);
+                if (serverResponse != null) {
+                    Log.v("Re", serverResponse);
                     if (serverResponse.equals("Success")) {
                         finish();
-                        startActivity(new Intent(Register.this, FirstActivity.class));
+                        startActivity(
+                                new Intent(Register.this, FirstActivity.class)
+                        );
                         Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
                     }
-                }else {
-                    Log.v("Re",response.message());
+                } else {
+                    Log.v("Re", response.message());
                     Toast.makeText(Register.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -121,7 +158,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
-                Log.v("Re",t.getMessage());
+                Log.v("Re", t.getMessage());
                 Toast.makeText(Register.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
