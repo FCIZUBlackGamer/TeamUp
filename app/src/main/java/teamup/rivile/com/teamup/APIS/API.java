@@ -7,14 +7,14 @@ public class API {
 
     public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
 
-    final public static String REGISTER_URL = BASE_URL + "Register/Add";
-    final public static String LOGIN_URL = BASE_URL + "Register/Login";
-    final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
+    final public static String REGISTER_URL = BASE_URL + "RegisterActivity/Add";
+    final public static String LOGIN_URL = BASE_URL + "RegisterActivity/FragmentLogin";
+    final public static String SOCIAL_LOGIN_URL = BASE_URL + "RegisterActivity/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
     final public static String LIST_USERS_JOIN_REQUESTS = BASE_URL + "Offer/Income/";
     final public static String SelectOffer_URL = BASE_URL + "Offer/SelectOffer/";
-    final public static String PROFILE_URL = BASE_URL + "Register/Profile";
-    final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
+    final public static String PROFILE_URL = BASE_URL + "RegisterActivity/Profile";
+    final public static String EDIT_PROFILE_URL = BASE_URL + "RegisterActivity/ProfileEdit";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
     final public static String EDIT_OFFER_URL = BASE_URL + "Offer/Edit";
     final public static String ListJoinedOffer_URL = BASE_URL + "Offer/ListJoinedOffer";
@@ -30,16 +30,16 @@ public class API {
     final public static String LOAD_FAVOURITE_URL = BASE_URL + "Offer/ListbyIds";
     final public static String FAVOURITE_URL = BASE_URL + "Offer/Favorite";
     final public static String LIKE_URL = BASE_URL + "Offer/Like";
-    final public static String ForgetPassword_URL = BASE_URL + "Register/ForgetPassword";
-    final public static String CheckCode_URL = BASE_URL + "Register/CheakCodePassword";
-    final public static String SavePasswordLogin_URL = BASE_URL + "Register/SavePasswordLogin";
+    final public static String ForgetPassword_URL = BASE_URL + "RegisterActivity/ForgetPassword";
+    final public static String CheckCode_URL = BASE_URL + "RegisterActivity/CheakCodePassword";
+    final public static String SavePasswordLogin_URL = BASE_URL + "RegisterActivity/SavePasswordLogin";
     final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "Offer/Accept";
     final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "Offer/Refuse";
     final public static String DeleteRequirement_URL = BASE_URL + "Offer/DeleteRequirement";
     final public static String REPORT_URL = BASE_URL + "Offer/Report";
-    public final static String ACCOUNT_SETTINGS_URL = BASE_URL + "Register/AccountSetting";
-    public final static String RESET_MAIL_URL = BASE_URL + "Register/MailReset";
-    public final static String RESET_MAIL_CHECK_CODE_MAIL = BASE_URL + "Register/CheakCodeMail";
+    public final static String ACCOUNT_SETTINGS_URL = BASE_URL + "RegisterActivity/AccountSetting";
+    public final static String RESET_MAIL_URL = BASE_URL + "RegisterActivity/MailReset";
+    public final static String RESET_MAIL_CHECK_CODE_MAIL = BASE_URL + "RegisterActivity/CheakCodeMail";
     public final static String OWNER_PANEL_URL = BASE_URL + "Offer/OwnerPanel";
     public final static String LIST_REASONS_URL = BASE_URL + "Offer/ListResons";
     public final static String LIST_JOINED_OFFERS = BASE_URL + "Offer/JoinOfferbyUserId";

@@ -61,31 +61,31 @@ import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-public class Login extends Fragment {
-    private ConstraintLayout mLoadingViewConstraintLayout;
+public class FragmentLogin extends Fragment {
     private static final int RC_SIGN_IN = 100;
-    private static final String EMAIL = "email";
+
+    private ConstraintLayout mLoadingViewConstraintLayout;
+
+    private EditText mEmailEditText, mPasswordEditText;
+    private Button mLoginButton;
+
+    private TextView mResetPasswordTextView;
+    private TextView mRegisterTextView;
+
+    private SignInButton mGoogleSignInButton;
+    private LoginButton mFacebookLoginButton;
 
     private GoogleSignInClient mGoogleSignInClient;
-
     private CallbackManager mCallbackManager;
     private ProfileTracker mProfileTracker;
-
-    SignInButton signInButton;
-    LoginButton loginButton;
-
-    EditText ed_email, ed_password;
-    Button btn_save;
-    TextView tv_login;
-    View view;
-    UserModel userModel;
-    Realm realm;
+    private UserModel mUserModel;
+    private Realm mRealm;
     private Context mContext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
@@ -95,28 +95,42 @@ public class Login extends Fragment {
         return view;
     }
 
+    private void initViews(View view) {
+        mEmailEditText = view.findViewById(R.id.ed_email);
+        mPasswordEditText = view.findViewById(R.id.til_password);
+
+        mLoginButton = view.findViewById(R.id.btn_save);
+
+        mGoogleSignInButton = view.findViewById(R.id.btn_login_google);
+        mGoogleSignInButton.setSize(SignInButton.SIZE_WIDE);
+
+        mFacebookLoginButton = view.findViewById(R.id.btn_login_facebook);
+
+        mRegisterTextView = view.findViewById(R.id.tv_register);
+
+        mResetPasswordTextView = view.findViewById(R.id.tv_login);
+
+    }
+
     @Override
     public void onStart() {
         super.onStart();
 
-        realm = Realm.getDefaultInstance();
+        mRealm = Realm.getDefaultInstance();
 
-        realm.executeTransaction(realm1 -> {
-            RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
+        mRealm.executeTransaction(realm1 -> {
+            RealmResults<LoginDataBase> results = mRealm.where(LoginDataBase.class).findAll();
             if (results.size() > 0) {
-                Gson gson = new Gson();
-                Log.e("results", results.get(0).getUser().getId() + "");
                 startActivity(new Intent(getActivity(), DrawerActivity.class));
                 getActivity().finish();
             }
         });
 
-        userModel = new UserModel();
-        signInButton.setOnClickListener(v -> {
+        mUserModel = new UserModel();
+        mGoogleSignInButton.setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
-
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -133,42 +147,18 @@ public class Login extends Fragment {
         mCallbackManager = CallbackManager.Factory.create();
 
 
-        loginButton.setReadPermissions(Arrays.asList(
+        mFacebookLoginButton.setReadPermissions(Arrays.asList(
                 "public_profile", "email"));
-        loginButton.setFragment(this);
-        // If you are using in a fragment, call loginButton.setFragment(this);
+        mFacebookLoginButton.setFragment(this);
+        // If you are using in a fragment, call mFacebookLoginButton.setFragment(this);
 
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResult.getAccessToken(),
                                 (object, response) -> {
-                                    Log.v("LoginActivity", response.toString());
-
-                                    /**
-                                     * All Data
-                                     * {
-                                     *   "id": "12345678",
-                                     *   "birthday": "1/1/1950",
-                                     *   "first_name": "Chris",
-                                     *   "gender": "male",
-                                     *   "last_name": "Colm", 
-                                     *   "link": "http://www.facebook.com/12345678",
-                                     *   "location": {
-                                     *     "id": "110843418940484",
-                                     *     "name": "Seattle, Washington"
-                                     *   },
-                                     *   "locale": "en_US",
-                                     *   "name": "Chris Colm",
-                                     *   "timezone": -8,
-                                     *   "updated_time": "2010-01-01T16:40:43+0000",
-                                     *   "verified": true
-                                     * }
-                                     * */
-                                    // Application code
                                     if (object != null) {
                                         try {
                                             String id = object.getString("id");
@@ -177,18 +167,18 @@ public class Login extends Fragment {
                                             String email = object.getString("email");
 //                                            String gender = object.getString("link");
 //                                            String birthday = object.getString("birthday"); // 01/31/1980 format
-                                            userModel.setSocialId(id);
-                                            userModel.setMail(email);
-                                            userModel.setFullName(firstName + " " + lastName);
-//                                            userModel.setDateOfBirth(birthday);
+                                            mUserModel.setSocialId(id);
+                                            mUserModel.setMail(email);
+                                            mUserModel.setFullName(firstName + " " + lastName);
+//                                            mUserModel.setDateOfBirth(birthday);
 //                                            if (gender.equals("male")) {
-//                                                userModel.setGender(true);
+//                                                mUserModel.setGender(true);
 //                                            } else if (gender.equals("female")) {
-//                                                userModel.setGender(false);
+//                                                mUserModel.setGender(false);
 //                                            }
-                                            loginFb(userModel);
+                                            loginFb(mUserModel);
                                             Gson gson = new Gson();
-                                            Log.e("UserModel", gson.toJson(userModel));
+                                            Log.e("UserModel", gson.toJson(mUserModel));
 //                                            Log.e("link", gender);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -196,6 +186,7 @@ public class Login extends Fragment {
                                     }
 
                                 });
+
                         Bundle parameters = new Bundle();
                         parameters.putString("fields", "hometown,first_name,last_name,email");
                         request.setParameters(parameters);
@@ -210,7 +201,7 @@ public class Login extends Fragment {
                             imageURL = new URL("https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?type=large");
 //                            Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
                             Log.e("UserImage", imageURL + "");
-                            userModel.setImage(imageURL + "");
+                            mUserModel.setImage(imageURL + "");
 //                            mUserImageImageView.setImageBitmap(bitmap);
                         } catch (IOException ignored) {
                         }
@@ -220,12 +211,13 @@ public class Login extends Fragment {
 
                     @Override
                     public void onCancel() {
-
+                        activateViews();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
-                        Log.e("ERROR ", exception.toString());
+                        activateViews();
+                        Toast.makeText(mContext, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -238,57 +230,54 @@ public class Login extends Fragment {
                     Uri userImageUri = currentProfile.getProfilePictureUri(60, 60);
                     Log.e("FbName ", name);
                     Log.e("FbImage ", userImageUri + "");
-                } else {
-
                 }
             }
         };
 
-        tv_login.setOnClickListener(v -> {
+        mResetPasswordTextView.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-            transaction.replace(R.id.first, FragmentSendCode.setEmail(ed_email.getText().toString()));
+            transaction.replace(R.id.first, FragmentSendCode.setEmail(mEmailEditText.getText().toString()));
             transaction.commit();
         });
 
-        btn_save.setOnClickListener(v -> {
-            suspendViews();
-            userModel = new UserModel();
-            userModel.setPassword(ed_password.getText().toString());
-            userModel.setMail(ed_email.getText().toString());
-            //Todo: Call login(userModel)
-            login(userModel);
+        mLoginButton.setOnClickListener(v -> {
+            if (mEmailEditText.getText().toString().isEmpty()) {
+                mEmailEditText.setError(getString(R.string.email_required));
+            } else if (mPasswordEditText.getText().toString().isEmpty()) {
+                mPasswordEditText.setError(getString(R.string.password_required));
+            } else {
+                suspendViews();
+
+                mUserModel = new UserModel();
+                mUserModel.setPassword(mPasswordEditText.getText().toString());
+                mUserModel.setMail(mEmailEditText.getText().toString());
+
+                login(mUserModel);
+            }
         });
 
-    }
-
-    private void initViews(View view) {
-        tv_login = view.findViewById(R.id.tv_login);
-        btn_save = view.findViewById(R.id.btn_save);
-        ed_email = view.findViewById(R.id.ed_email);
-        ed_password = view.findViewById(R.id.til_password);
-        signInButton = view.findViewById(R.id.btn_login_google);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        loginButton = view.findViewById(R.id.btn_login_facebook);
-
+        mRegisterTextView.setOnClickListener(v -> {
+            mContext.startActivity(new Intent(mContext, RegisterActivity.class));
+        });
     }
 
     private void suspendViews() {
-        tv_login.setEnabled(false);
-        btn_save.setEnabled(false);
-        ed_email.setEnabled(false);
-        ed_password.setEnabled(false);
-        signInButton.setEnabled(false);
-        loginButton.setEnabled(false);
+        mResetPasswordTextView.setEnabled(false);
+        mLoginButton.setEnabled(false);
+        mEmailEditText.setEnabled(false);
+        mPasswordEditText.setEnabled(false);
+        mGoogleSignInButton.setEnabled(false);
+        mFacebookLoginButton.setEnabled(false);
     }
 
     private void activateViews() {
-        tv_login.setEnabled(true);
-        btn_save.setEnabled(true);
-        ed_email.setEnabled(true);
-        ed_password.setEnabled(true);
-        signInButton.setEnabled(true);
-        loginButton.setEnabled(true);
+        mResetPasswordTextView.setEnabled(true);
+        mLoginButton.setEnabled(true);
+        mEmailEditText.setEnabled(true);
+        mPasswordEditText.setEnabled(true);
+        mGoogleSignInButton.setEnabled(true);
+        mFacebookLoginButton.setEnabled(true);
     }
 
     @Override
@@ -301,7 +290,11 @@ public class Login extends Fragment {
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleGoogleSignInResult(task);
-        } else mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
+            activateViews();
+        }
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -318,17 +311,19 @@ public class Login extends Fragment {
                 Log.e("GEmail ", account.getEmail());
                 Log.e("GId ", account.getId());
                 Log.e("GImage ", userImageUri + "");
-                userModel.setFullName(userName);
-                userModel.setImage(userImageUri + "");
-                userModel.setMail(account.getEmail());
-                userModel.setSocialId(account.getId());
-                loginFb(userModel);
+                mUserModel.setFullName(userName);
+                mUserModel.setImage(userImageUri + "");
+                mUserModel.setMail(account.getEmail());
+                mUserModel.setSocialId(account.getId());
+
+                loginFb(mUserModel);
             }
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.e("ERROR ", e.getStatusCode() + "");
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+            activateViews();
         }
     }
 
@@ -350,7 +345,7 @@ public class Login extends Fragment {
         Log.e("Here", gson.toJson(userModel));
         // Parsing any Media type file
 
-        realm.executeTransaction(realm1 -> {
+        mRealm.executeTransaction(realm1 -> {
             realm1.deleteAll();
         });
 
@@ -361,11 +356,8 @@ public class Login extends Fragment {
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
-                    Log.i("Response", gson.toJson(serverResponse));
                     loadJoinedProjects(serverResponse);
                 } else {
-                    //textView.setText(serverResponse.toString());
-                    Log.e("Err", "Empty");
                     Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
                     mLoadingViewConstraintLayout.setVisibility(View.GONE);
                     activateViews();
@@ -374,8 +366,7 @@ public class Login extends Fragment {
 
             @Override
             public void onFailure(Call<LoginDataBase> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.e("Err", t.getMessage());
+                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 activateViews();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
@@ -383,7 +374,6 @@ public class Login extends Fragment {
     }
 
     private void loginFb(UserModel userModel) {
-        // Map is used to multipart the file using okhttp3.RequestBody
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
@@ -430,9 +420,9 @@ public class Login extends Fragment {
                 if (joinedProjectList != null) {
                     if (joinedProjectList.size() != 0) {
                         Log.i("Response", new Gson().toJson(serverResponse));
-                        realm.executeTransaction(realm1 -> realm1.deleteAll());
+                        mRealm.executeTransaction(realm1 -> realm1.deleteAll());
 
-                        realm.executeTransaction(realm1 -> {
+                        mRealm.executeTransaction(realm1 -> {
                             realm1.insertOrUpdate(serverResponse);
                             Log.e("results", serverResponse.getUser().getId() + "");
                             Log.e("size", serverResponse.getOffers().size() + "");

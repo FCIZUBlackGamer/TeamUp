@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.ui.Login;
+import teamup.rivile.com.teamup.ui.FragmentLogin;
 import teamup.rivile.com.teamup.R;
 
 public class FragmentConfirmCode extends Fragment {
@@ -192,7 +192,7 @@ public class FragmentConfirmCode extends Fragment {
         back.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-            transaction.replace(R.id.first, new Login());
+            transaction.replace(R.id.first, new FragmentLogin());
             transaction.commit();
         });
 

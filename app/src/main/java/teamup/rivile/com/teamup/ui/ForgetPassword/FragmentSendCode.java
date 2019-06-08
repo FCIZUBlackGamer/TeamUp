@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.ui.Login;
+import teamup.rivile.com.teamup.ui.FragmentLogin;
 import teamup.rivile.com.teamup.R;
 
 public class FragmentSendCode extends Fragment {
@@ -52,52 +53,23 @@ public class FragmentSendCode extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        email.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isEmailValid(email.getText().toString())) {
-                    recover.setEnabled(true);
-                    recover.setBackgroundResource(R.drawable.rounded_corner_button_blue);
-                }else {
-                    recover.setEnabled(false);
-                    recover.setBackgroundResource(R.drawable.rounded_corner_button_gray);
-                }
-            }
-        });
 
         email.setText(em);
 
         back.setOnClickListener(v -> {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-            transaction.replace(R.id.first, new Login());
+            transaction.replace(R.id.first, new FragmentLogin());
             transaction.commit();
         });
+
         recover.setOnClickListener(v -> {
-            /** API */
-            if (isEmailValid(email.getText().toString())) {
+            if (Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
                 forgetPassword(email.getText().toString());
             }else {
                 Snackbar.make(view, R.string.wrongEmailPattern, Snackbar.LENGTH_LONG).show();
             }
         });
-    }
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 
     private void forgetPassword(String mail) {

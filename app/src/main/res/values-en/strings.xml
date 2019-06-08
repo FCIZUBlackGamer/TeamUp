@@ -38,8 +38,6 @@
     <string name="shared_preferences_name">preference</string>
     <string name="title_activity_go_map">Map</string>
     <string name="log_in">"Sign In"</string>
-    <string name="facebook_app_id">424047931700835</string>
-    <string name="fb_login_protocol_scheme">fb424047931700835</string>
     <string name="already_have_an_account">Already have account?</string>
     <string name="join_us_now">join Us Now</string>
     <string name="join_us_now_1">Register an account now and start with secure</string>
@@ -61,9 +59,9 @@
     <string name="save">Save</string>
 
     <string name="pressHere">Click here to edit the project name</string>
-    <string name="projectDesc">What about the project...</string>
-    <string name="whatYouHaveDesc">Mention in detail what you now own to participate in the project...</string>
-    <string name="whatYouHaveNotDesc">Mention in detail what you need with your project applicants...</string>
+    <string name="projectDesc">What about the project…</string>
+    <string name="whatYouHaveDesc">Mention in detail what you now own to participate in the project…</string>
+    <string name="whatYouHaveNotDesc">Mention in detail what you need with your project applicants…</string>
     <string name="money">Discretionary Financial study</string>
     <string name="proDetails">Project Details</string>
     <string name="day">Day</string>
@@ -207,8 +205,8 @@
     <string name="reason_to_refuse">Reason to refuse</string>
     <string name="continueString">Continue</string>
     <string name="please_select_reason">Please select one of the available reasons</string>
-    <string name="select">Select...</string>
-    <string name="your_reason">Your Reason...</string>
+    <string name="select">Select…</string>
+    <string name="your_reason">Your Reason…</string>
     <string name="please_enter_a_reason">Please Enter A Reason</string>
     <string name="other_reason">Other reason</string>
     <string name="no_one_joined">No one has requested to join your project yet.</string>
@@ -220,6 +218,11 @@
     <string name="enter_valid_email">Enter Valid email.</string>
     <string name="password_must_have_8">Password must contain at least 8 characters.</string>
     <string name="enter_valid_password">Enter Valid Password.</string>
+    <string name="login">Login</string>
+    <string name="donot_have_an_account">Do not have an account?</string>
+    <string name="register">Register</string>
+    <string name="email_required">E-Mail Required</string>
+    <string name="password_required">Password Required</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

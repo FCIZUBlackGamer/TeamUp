@@ -25,7 +25,7 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
-public class Register extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private EditText mFullNameEditText, mEmailEditText, mPasswordEditText;
     private Button mRegisterButton;
@@ -40,26 +40,19 @@ public class Register extends AppCompatActivity {
 
         initViews();
 
-        Realm.init(this);
-
-        RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
-        Realm.setDefaultConfiguration(configuration);
-
         mRealm = Realm.getDefaultInstance();
         mRealm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = mRealm.where(LoginDataBase.class).findAll();
             if (results.size() > 0) {
-//                Log.i("REalm", results.get)
                 Gson gson = new Gson();
                 Log.e("results", results.get(0).getUser().getId() + "");
-                startActivity(new Intent(Register.this, DrawerActivity.class));
+                startActivity(new Intent(RegisterActivity.this, DrawerActivity.class));
                 finish();
             }
         });
 
         mLoginTextView.setOnClickListener(v -> {
-            //finish();
-            startActivity(new Intent(Register.this, FirstActivity.class));
+            RegisterActivity.this.finish();
         });
 
         mRegisterButton.setOnClickListener(v -> {
@@ -78,7 +71,6 @@ public class Register extends AppCompatActivity {
         mRegisterButton = findViewById(R.id.btn_sign_up);
         mFullNameEditText = findViewById(R.id.ed_full_name);
         mEmailEditText = findViewById(R.id.ed_email);
-//        ed_user_name = findViewById(R.id.ed_user_name);
         mPasswordEditText = findViewById(R.id.til_password);
     }
 
@@ -116,7 +108,6 @@ public class Register extends AppCompatActivity {
     }
 
     private void register(UserModel userModel) {
-        // Map is used to multipart the file using okhttp3.RequestBody
         View parentLayout = findViewById(android.R.id.content);
         Snackbar.make(parentLayout, R.string.registerInProgress, Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", view -> {
@@ -127,7 +118,6 @@ public class Register extends AppCompatActivity {
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
 
-        // Parsing any Media type file
 
         Log.e("RegisterModel", gson.toJson(userModel));
         RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
@@ -142,15 +132,15 @@ public class Register extends AppCompatActivity {
                     if (serverResponse.equals("Success")) {
                         finish();
                         startActivity(
-                                new Intent(Register.this, FirstActivity.class)
+                                new Intent(RegisterActivity.this, FirstActivity.class)
                         );
-                        Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(Register.this, serverResponse, Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Log.v("Re", response.message());
-                    Toast.makeText(Register.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -159,7 +149,7 @@ public class Register extends AppCompatActivity {
             public void onFailure(Call<String> call, Throwable t) {
                 //textView.setText(t.getMessage());
                 Log.v("Re", t.getMessage());
-                Toast.makeText(Register.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

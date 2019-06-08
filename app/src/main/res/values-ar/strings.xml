@@ -38,8 +38,6 @@
     <string name="shared_preferences_name" >preference</string>
     <string name="title_activity_go_map" >جو ماب</string>
     <string name="log_in" >"تسجيل الدخول"</string>
-    <string name="facebook_app_id" >424047931700835</string>
-    <string name="fb_login_protocol_scheme" >fb424047931700835</string>
     <string name="already_have_an_account" >"لديك حساب بالفعل ؟"</string>
     <string name="join_us_now" >إشترك معنا الآن</string>
     <string name="join_us_now_1" >سجل حساب الآن وابدأ بالإستثمار</string>
@@ -218,6 +216,11 @@
     <string name="enter_valid_email">أدخل بريد إلكتروني صحيح.</string>
     <string name="password_must_have_8">كلمة المرور يجب الا تكون اقل من 8 حروف.</string>
     <string name="enter_valid_password">أدخل كلمة مرور صحيحة.</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="donot_have_an_account">ليس لديك حساب ؟</string>
+    <string name="register">التسجيل</string>
+    <string name="email_required">البريد الإلكتروني مطلوب</string>
+    <string name="password_required">كلمة المرور مطلوبة</string>
 
 
     <string-array name="sort_by_array">

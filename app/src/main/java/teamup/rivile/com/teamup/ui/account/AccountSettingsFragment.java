@@ -2,7 +2,6 @@ package teamup.rivile.com.teamup.ui.account;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -35,10 +34,8 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Services.BroadcastNotificationReceiver;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.Settings;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
 public class AccountSettingsFragment extends Fragment {
@@ -137,18 +134,6 @@ public class AccountSettingsFragment extends Fragment {
 
         mRealm.executeTransaction(realm -> {
 
-            Settings settings = realm.where(Settings.class).findFirst();
-
-            if (settings != null &&  String.valueOf(realm.where(Settings.class).findFirst().isNotificaionStatus()).equals("true")){
-                getActivity().runOnUiThread(() -> {
-                    sNotification.setChecked(true);
-                });
-            }else {
-                getActivity().runOnUiThread(() -> {
-                    sNotification.setChecked(false);
-                });
-            }
-
             LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
             if (loginDataBase != null) {
                 UserDataBase userDataBase = loginDataBase.getUser();
@@ -162,47 +147,6 @@ public class AccountSettingsFragment extends Fragment {
 
             mProgressDialog.hide();
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
-
-        sNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (sNotification.isChecked()){
-                mRealm.executeTransaction(realm -> {
-                    Settings settings = realm.where(Settings.class).findFirst();
-                    if (settings == null){
-                        Settings s = new Settings();
-                        s.setNotificaionStatus(true);
-                        realm.insertOrUpdate(s);
-                    }else {
-                        Log.e("Not",  String.valueOf(settings.isNotificaionStatus()));
-                        settings.setNotificaionStatus(true);
-                        realm.insertOrUpdate(settings);
-                    }
-
-                    Intent broadcastIntent = new Intent(getContext(), BroadcastNotificationReceiver.class);
-                    getActivity().sendBroadcast(broadcastIntent);
-                });
-            }else {
-                mRealm.executeTransaction(realm -> {
-                    Settings settings = realm.where(Settings.class).findFirst();
-                    if (settings == null){
-                        Settings s = new Settings();
-                        s.setNotificaionStatus(false);
-                        realm.insertOrUpdate(s);
-                    }else {
-                        settings.setNotificaionStatus(false);
-                        realm.insertOrUpdate(settings);
-                    }
-
-                });
-            }
-        });
-
     }
 
     private void setUpClickListeners() {

@@ -222,6 +222,11 @@
     <string name="enter_valid_email">Enter Valid E-Mail Address.</string>
     <string name="password_must_have_8">Password must contain at least 8 characters.</string>
     <string name="enter_valid_password">Enter Valid Password.</string>
+    <string name="login">Login</string>
+    <string name="donot_have_an_account">Do not have an account?</string>
+    <string name="register">Register</string>
+    <string name="email_required">E-Mail Required</string>
+    <string name="password_required">Password Required</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>
