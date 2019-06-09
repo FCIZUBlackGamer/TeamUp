@@ -88,7 +88,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("MyProjects");
         ((DrawerActivity) getActivity()).setTitle("المشاريع المسجلة");
-        ((DrawerActivity) getActivity()).hideFab();
+
         tabs.setVisibility(View.GONE);
 
 

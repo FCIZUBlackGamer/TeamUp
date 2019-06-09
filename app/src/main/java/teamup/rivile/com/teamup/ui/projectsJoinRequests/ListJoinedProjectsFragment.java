@@ -46,7 +46,7 @@ public class ListJoinedProjectsFragment extends Fragment {
 
         mContext = getContext();
 
-        ((DrawerActivity) getActivity()).hideFab();
+
 
         mRealm = Realm.getDefaultInstance();
         LoginDataBase loginData = mRealm.where(LoginDataBase.class)

@@ -30,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers;
 import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
@@ -114,17 +115,25 @@ public class FragmentOffer1 extends Fragment {
         super.onStart();
 
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
+
 
         mRealm.executeTransaction(realm1 -> {
-            String image = realm1.where(LoginDataBase.class).findFirst().getUser().getImage();
-            if (false) { // founded in device
+            LoginDataBase loginDataBase = realm1.where(LoginDataBase.class).findFirst();
+            UserDataBase userDataBase = null;
+            if (loginDataBase != null) {
+                userDataBase = loginDataBase.getUser();
+            }
 
-            } else {
-                if (!image.startsWith("http"))
-                    Picasso.get().load(API.BASE_URL + image).into(mUserImage);
-                else {
-                    Picasso.get().load(image).into(mUserImage);
+            if (loginDataBase != null) {
+                String image = userDataBase.getImage();
+                if (false) { // founded in device
+
+                } else {
+                    if (!image.startsWith("http"))
+                        Picasso.get().load(API.BASE_URL + image).into(mUserImage);
+                    else {
+                        Picasso.get().load(image).into(mUserImage);
+                    }
                 }
             }
         });

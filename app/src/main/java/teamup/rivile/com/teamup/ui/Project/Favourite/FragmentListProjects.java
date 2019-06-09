@@ -88,8 +88,6 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
-        ((DrawerActivity) getActivity()).showFab();
-        ((DrawerActivity) getActivity()).hideFab();
 
         likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){
@@ -100,36 +98,43 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
 
-        likeModelDataBase = loginData.getLikes();
-        favouriteDataBases = loginData.getFavorites();
-        Log.e("UserId", loginData.getUser().getId() + "");
-        Log.e("Type", FAVOURITE + "");
+        if (loginData != null) {
+            likeModelDataBase = loginData.getLikes();
+            favouriteDataBases = loginData.getFavorites();
+            Log.e("UserId", loginData.getUser().getId() + "");
+            Log.e("Type", FAVOURITE + "");
 
-        ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
 
-        RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-                .findAll();
-        RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-        if (favouriteDataBases != null && favouriteDataBases.size() > 0) {
-            cl_emptyView.setVisibility(View.GONE);
-            /**
-             * get offer ids from favouriteDataBases
-             *
-             * and fetch them from OfferDetailsDataBase
-             *
-             * */
-            List<Integer> offerIds = new ArrayList<>();
-            for (int i = 0; i < favouriteDataBases.size(); i++) {
-                offerIds.add(favouriteDataBases.get(i).getOfferId());
+            ((DrawerActivity) getActivity()).setTitle(getString(R.string.favourite));
+
+            RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
+                    .findAll();
+
+            LoginDataBase firstLoginDataBase = loginDataBases.get(0);
+            RealmList<FavouriteDataBase> favouriteDataBases = null;
+            if (firstLoginDataBase != null) {
+                favouriteDataBases = firstLoginDataBase.getFavorites();
             }
+            if (favouriteDataBases != null && favouriteDataBases.size() > 0) {
+                cl_emptyView.setVisibility(View.GONE);
+                /**
+                 * get offer ids from favouriteDataBases
+                 *
+                 * and fetch them from OfferDetailsDataBase
+                 *
+                 * */
+                List<Integer> offerIds = new ArrayList<>();
+                for (int i = 0; i < favouriteDataBases.size(); i++) {
+                    FavouriteDataBase favouriteDataBase = favouriteDataBases.get(i);
+                    if (favouriteDataBase != null) {
+                        offerIds.add(favouriteDataBase.getOfferId());
+                    }
+                }
 
-            loadOffers(offerIds);
-
+                loadOffers(offerIds);
+            }
         }
-
-
     }
-
 
     private Offer convertResult(RealmResults<OfferDataBase> offerDetailsDataBases) {
         Offer offer = new Offer();

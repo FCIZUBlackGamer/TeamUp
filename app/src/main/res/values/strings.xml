@@ -227,6 +227,7 @@
     <string name="register">Register</string>
     <string name="email_required">E-Mail Required</string>
     <string name="password_required">Password Required</string>
+    <string name="share_project_idea">Share Project Idea</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

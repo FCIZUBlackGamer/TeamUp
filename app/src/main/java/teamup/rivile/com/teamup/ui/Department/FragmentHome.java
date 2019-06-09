@@ -68,7 +68,7 @@ private ConstraintLayout mLoadingViewConstraintLayout;
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("Home");
-        ((DrawerActivity) getActivity()).hideFab();
+
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.home));
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 //        Intent intent = new Intent(getActivity(), NotifyService.class);

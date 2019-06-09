@@ -118,7 +118,6 @@ public class AccountSettingsFragment extends Fragment {
             getActivity().onBackPressed();
         }
 
-        ((DrawerActivity) getActivity()).hideFab();
         ((DrawerActivity) getActivity()).hideSearchBar();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.edit_account_settings));
 

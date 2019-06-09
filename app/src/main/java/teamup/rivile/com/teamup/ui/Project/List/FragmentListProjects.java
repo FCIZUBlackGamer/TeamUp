@@ -136,7 +136,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
-        ((DrawerActivity) getActivity()).showFab();
+
 
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 
@@ -178,18 +178,20 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
 
-        mUserId = loginData.getUser().getId();
+        if (loginData != null) {
+            mUserId = loginData.getUser().getId();
 
-        likeModelDataBase = loginData.getLikes();
-        favouriteDataBases = loginData.getFavorites();
-        Log.e("UserId", loginData.getUser().getId() + "");
+            likeModelDataBase = loginData.getLikes();
+            favouriteDataBases = loginData.getFavorites();
+            Log.e("UserId", loginData.getUser().getId() + "");
 //        Log.e("Type", ProType + "");
 
-        if (DepId != -1) {
+            if (DepId != -1) {
 //            ProType = -1;
-            Type = -1;
-            Word = null;
-            loadJoinedOffer(DepId);
+                Type = -1;
+                Word = null;
+                loadJoinedOffer(DepId);
+            }
         }
 //        if (ProType != -1) {
 //            DepId = -1;

@@ -108,6 +108,7 @@ public class FragmentSendCode extends Fragment {
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                mRecoverButton.setEnabled(true);
             }
         });
     }

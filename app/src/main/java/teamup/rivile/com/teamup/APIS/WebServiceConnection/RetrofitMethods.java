@@ -105,8 +105,8 @@ public interface RetrofitMethods {
     @FormUrlEncoded
     @POST(API.SOCIAL_LOGIN_URL)
 /** Initial Test #Done */
-    Call<LoginDataBase> loginFb(@Field("User") String User, @Field("token") String token,
-                                @Field(API.PARAM_NAME_LOCATION) String location);
+    Call<LoginDataBase> socialLogin(@Field("User") String User, @Field("token") String token,
+                                    @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.REGISTER_URL)

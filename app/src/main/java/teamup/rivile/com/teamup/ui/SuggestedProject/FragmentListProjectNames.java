@@ -103,7 +103,7 @@ public class FragmentListProjectNames extends Fragment {
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
-        ((DrawerActivity) getActivity()).showFab();
+
 
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 

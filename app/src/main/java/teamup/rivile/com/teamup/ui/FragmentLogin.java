@@ -109,7 +109,6 @@ public class FragmentLogin extends Fragment {
         mRegisterTextView = view.findViewById(R.id.tv_register);
 
         mResetPasswordTextView = view.findViewById(R.id.tv_login);
-
     }
 
     @Override
@@ -176,7 +175,7 @@ public class FragmentLogin extends Fragment {
 //                                            } else if (gender.equals("female")) {
 //                                                mUserModel.setGender(false);
 //                                            }
-                                            loginFb(mUserModel);
+                                            socialLogin(mUserModel);
                                             Gson gson = new Gson();
                                             Log.e("UserModel", gson.toJson(mUserModel));
 //                                            Log.e("link", gender);
@@ -221,7 +220,6 @@ public class FragmentLogin extends Fragment {
                     }
                 });
 
-
         mProfileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -247,6 +245,9 @@ public class FragmentLogin extends Fragment {
             } else if (mPasswordEditText.getText().toString().isEmpty()) {
                 mPasswordEditText.setError(getString(R.string.password_required));
             } else {
+                mEmailEditText.setError(null);
+                mPasswordEditText.setError(null);
+
                 suspendViews();
 
                 mUserModel = new UserModel();
@@ -316,7 +317,7 @@ public class FragmentLogin extends Fragment {
                 mUserModel.setMail(account.getEmail());
                 mUserModel.setSocialId(account.getId());
 
-                loginFb(mUserModel);
+                socialLogin(mUserModel);
             }
 
         } catch (ApiException e) {
@@ -332,7 +333,7 @@ public class FragmentLogin extends Fragment {
         super.onDestroyView();
         try {
             mProfileTracker.stopTracking();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
@@ -357,6 +358,7 @@ public class FragmentLogin extends Fragment {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
                     loadJoinedProjects(serverResponse);
+                    mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
                 } else {
                     Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
                     mLoadingViewConstraintLayout.setVisibility(View.GONE);
@@ -373,7 +375,7 @@ public class FragmentLogin extends Fragment {
         });
     }
 
-    private void loginFb(UserModel userModel) {
+    private void socialLogin(UserModel userModel) {
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         Gson gson = new Gson();
@@ -381,17 +383,17 @@ public class FragmentLogin extends Fragment {
         // Parsing any Media type file
 
         RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.loginFb(gson.toJson(userModel), API.URL_TOKEN, "null");
+        Call<LoginDataBase> call = reg.socialLogin(gson.toJson(userModel), API.URL_TOKEN, "null");
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null) {
                     loadJoinedProjects(serverResponse);
-
+                    mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
                 } else {
-                    //textView.setText(serverResponse.toString());
-                    Log.e("Err", "Empty");
+                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
                 }
                 activateViews();
             }
@@ -399,7 +401,7 @@ public class FragmentLogin extends Fragment {
             @Override
             public void onFailure(Call<LoginDataBase> call, Throwable t) {
                 //textView.setText(t.getMessage());
-                Log.e("Err", t.getMessage());
+                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 activateViews();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
@@ -434,13 +436,13 @@ public class FragmentLogin extends Fragment {
                             for (JoinedProject project : joinedProjectList) {
                                 realm1.insert(new JoinedOfferIdRealmModel(project.getOfferId()));
                             }
-
-                            startActivity(new Intent(getActivity(), DrawerActivity.class));
-                            getActivity().finish();
                         });
                     }
+
+                    startActivity(new Intent(getActivity(), DrawerActivity.class));
+                    getActivity().finish();
                 } else {
-                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
@@ -450,7 +452,6 @@ public class FragmentLogin extends Fragment {
             public void onFailure(Call<List<JoinedProject>> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
-
             }
         });
     }

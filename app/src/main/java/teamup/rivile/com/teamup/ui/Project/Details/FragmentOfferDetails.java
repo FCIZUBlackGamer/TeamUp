@@ -150,7 +150,7 @@ public class FragmentOfferDetails extends Fragment implements ShareDialogFragmen
     public void onStart() {
         super.onStart();
 
-        ((DrawerActivity) getActivity()).hideFab();
+
         ((DrawerActivity) getActivity()).hideSearchBar();
 
 //        if (type == FragmentListProjects.NORMAL) {

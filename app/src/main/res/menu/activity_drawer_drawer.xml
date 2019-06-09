@@ -8,11 +8,17 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="@string/home" />
-        
+
+        <!-- TODO: Uncomment When Activating Go Map -->
+        <!--<item-->
+        <!--android:id="@+id/nav_go_map"-->
+        <!--android:icon="@drawable/ic_route"-->
+        <!--android:title="@string/goMap" />-->
+
         <item
-            android:id="@+id/nav_go_map"
-            android:icon="@drawable/ic_route"
-            android:title="@string/goMap" />
+        android:id="@+id/nav_share_project_idea"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_project_idea" />
 
         <item
             android:id="@+id/nav_saved_project"
@@ -39,6 +45,4 @@
             android:icon="@drawable/ic_power_off"
             android:title="@string/logout" />
     </group>
-
-
 </menu>

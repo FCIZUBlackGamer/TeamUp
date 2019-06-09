@@ -44,19 +44,8 @@ public class FragmentAddHome extends Fragment {
     private static int mProjectId = -1;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = new MutableLiveData<>();
 
-    static FloatingActionButton fab;
-
-    public static FragmentAddHome setFab(FloatingActionButton view) {
-        fab = view;
-        return new FragmentAddHome();
-    }
-
     public static FragmentAddHome openForEdit(int projectId, FloatingActionButton view) {
         mProjectId = projectId;
-
-        if (view != null)
-            return setFab(view);
-        else
             return new FragmentAddHome();
     }
 
@@ -89,8 +78,6 @@ public class FragmentAddHome extends Fragment {
         //d = fragmentManager.beginTransaction();
 //        viewPager.setRotationY(180);
 
-        if (fab != null)
-            fab.setVisibility(View.GONE);
         pagerAdapter = new pager(getChildFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 

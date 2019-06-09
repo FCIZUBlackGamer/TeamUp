@@ -152,7 +152,7 @@ public class FilterSearchFragment extends Fragment {
         super.onStart();
         Log.e("Search", "R");
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
+
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.advancedSearch));
 
         loadCategoriesAndCapitals();

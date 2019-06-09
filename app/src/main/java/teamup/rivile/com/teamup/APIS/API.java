@@ -8,7 +8,7 @@ public class API {
     public static final String UPLOAD_URL = BASE_URL + "Upload/Upload";
 
     final public static String REGISTER_URL = BASE_URL + "Register/Add";
-    final public static String LOGIN_URL = BASE_URL + "Register/FragmentLogin";
+    final public static String LOGIN_URL = BASE_URL + "Register/Login";
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
     final public static String LIST_USERS_JOIN_REQUESTS = BASE_URL + "Offer/Income/";

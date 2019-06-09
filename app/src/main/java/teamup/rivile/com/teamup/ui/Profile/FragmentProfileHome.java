@@ -180,7 +180,7 @@ public class FragmentProfileHome extends Fragment {
         super.onStart();
         ((DrawerActivity) getActivity()).setTitle(getString(R.string.profileSettings));
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
+
 //        ctl.setCollapsedTitleTextAppearance(R.style.coll_toolbar_title);
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
         mLoadingViewConstraintLayout.setVisibility(View.GONE);
@@ -191,21 +191,31 @@ public class FragmentProfileHome extends Fragment {
         realm.executeTransaction(realm1 -> {
             LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                     .findFirst();
-//            Log.i("Name", loginDataBases.getUser().getFullName());
-//            Log.i("Num Users", loginDataBases.getOffers().get(0).getUsers().size()+"");
-            if (Id != loginDataBases.getUser().getId()) {
-                loadProfile(Id);
-                fab_edit.setVisibility(View.GONE);
-            } else {
-                fab_edit.setVisibility(View.VISIBLE);
-                loadProfileFromDB(loginDataBases);
+            if (loginDataBases != null) {
+                UserDataBase userDataBase = loginDataBases.getUser();
+                if (userDataBase != null) {
+                    if (Id != userDataBase.getId()) {
+                        loadProfile(Id);
+                        fab_edit.setVisibility(View.GONE);
+                    } else {
+                        fab_edit.setVisibility(View.VISIBLE);
+                        loadProfileFromDB(loginDataBases);
+                    }
+                }
             }
         });
 
         fab_edit.setOnClickListener(v -> {
 
             realm.executeTransaction(realm1 -> {
-                id = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
+                LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
+                        .findFirst();
+                if (loginDataBases != null) {
+                    UserDataBase userDataBase = loginDataBases.getUser();
+                    if (userDataBase != null) {
+                        id = userDataBase.getId();
+                    }
+                }
             });
 
             final LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -611,24 +621,27 @@ public class FragmentProfileHome extends Fragment {
 
     private void updateUserDB(UserModel userModel) {
         realm.beginTransaction();
-        UserDataBase userDataBase = realm.where(LoginDataBase.class).findFirst().getUser();
-        if (userDataBase != null) {
-            userDataBase.setFullName(userModel.getFullName());
-            userDataBase.setAddress(userModel.getAddress());
-            userDataBase.setBio(userModel.getBio());
-            userDataBase.setDateOfBirth(userModel.getDateOfBirth());
-            userDataBase.setGender(userModel.getGender());
-            userDataBase.setJobtitle(userModel.getJobtitle());
-            userDataBase.setPhone(userModel.getPhone());
-            userDataBase.setImage(userModel.getImage());
-            userDataBase.setIdentityImage(userModel.getIdentityImage());
-            userDataBase.setSocialId(userModel.getSocialId());
+        LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
+        if (loginDataBase != null) {
+            UserDataBase userDataBase = loginDataBase.getUser();
+
+            if (userDataBase != null) {
+                userDataBase.setFullName(userModel.getFullName());
+                userDataBase.setAddress(userModel.getAddress());
+                userDataBase.setBio(userModel.getBio());
+                userDataBase.setDateOfBirth(userModel.getDateOfBirth());
+                userDataBase.setGender(userModel.getGender());
+                userDataBase.setJobtitle(userModel.getJobtitle());
+                userDataBase.setPhone(userModel.getPhone());
+                userDataBase.setImage(userModel.getImage());
+                userDataBase.setIdentityImage(userModel.getIdentityImage());
+                userDataBase.setSocialId(userModel.getSocialId());
+
+                profObject = loadUser(userDataBase);
+                fillProfData(profObject);
+                ((DrawerActivity) getActivity()).updateNavData(userModel);
+            }
         }
-        realm.commitTransaction();
-        /** Reload profile data */
-        profObject = loadUser(userDataBase);
-        fillProfData(profObject);
-        ((DrawerActivity) getActivity()).updateNavData(userModel);
     }
 
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
@@ -647,8 +660,7 @@ public class FragmentProfileHome extends Fragment {
     private List<Offers> loadOffers(List<OfferDataBase> offerDetailsDataBase) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.serializeNulls();
-        Gson gson = gsonBuilder.create();
-//        Log.i("Gson", gson.toJson(offerDetailsDataBase.toString()));
+
         List<Offers> offers = new ArrayList<>();
         for (int i = 0; i < offerDetailsDataBase.size(); i++) {
             Offers offers1 = new Offers();
@@ -678,27 +690,17 @@ public class FragmentProfileHome extends Fragment {
                 for (int j = 0; j < base.getUsers().size(); j++) {
                     UserModel userModel = new UserModel();
                     UserDataBase base1 = base.getUsers().get(j);
-                    userModel.setId(base1.getId());
-                    userModel.setFullName(base1.getFullName());
-                    userModel.setImage(base1.getImage());
-                    userModel.setId(base1.getId());
-                    userModels.add(userModel);
+                    if (base1 != null) {
+                        userModel.setId(base1.getId());
+                        userModel.setFullName(base1.getFullName());
+                        userModel.setImage(base1.getImage());
+                        userModel.setId(base1.getId());
+                        userModels.add(userModel);
+                    }
                 }
                 offers1.setUsers(userModels);
             }
             offers.add(offers1);
-//            List<RequirmentModel> rec = new ArrayList<>();
-//            for (int j = 0; j < base.getRequirments().size(); j++) {
-//                RequirmentModel requirmentModel = new RequirmentModel();
-//                OfferDetailsRequirmentDataBase re = base.getRequirments().get(j);
-//                requirmentModel.setExperienceDescriptions(re.getExperienceDescriptions());
-//                requirmentModel.setNeedExperience(re.isNeedExperience());
-//                requirmentModel.setNeedPlaceType(re.isNeedPlaceType());
-//                requirmentModel.setNeedPlace(re.isNeedPlace());
-//                requirmentModel.setNeedMoney(re.isNeedMoney());
-//                requirmentModel.setPlaceAddress(re.getPlaceAddress());
-//                requirmentModel.setNeedPlaceStatus(re.isNeedPlaceStatus());
-//            }
         }
         return offers;
     }
@@ -815,7 +817,8 @@ public class FragmentProfileHome extends Fragment {
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode,
+                                 final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             new Handler().post(() -> {

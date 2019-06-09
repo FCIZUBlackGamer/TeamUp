@@ -81,7 +81,7 @@ public class GoMap extends Fragment implements OnMapReadyCallback {
 
         // mapView.getMapAsync(this);
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
+
 
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 

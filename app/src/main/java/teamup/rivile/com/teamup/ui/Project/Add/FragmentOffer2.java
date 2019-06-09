@@ -249,11 +249,19 @@ public class FragmentOffer2 extends Fragment {
         super.onStart();
 
         ((DrawerActivity) getActivity()).hideSearchBar();
-        ((DrawerActivity) getActivity()).hideFab();
+
 
         mRealm.executeTransaction(realm1 -> {
-            mUserId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
-            Log.e("UserIdDDDdDDD1", mUserId + "");
+            LoginDataBase loginDataBase = realm1.where(LoginDataBase.class).findFirst();
+            UserDataBase userDataBase = null;
+            if (loginDataBase != null) {
+                userDataBase = loginDataBase.getUser();
+            }
+
+            if (loginDataBase != null) {
+                mUserId =userDataBase.getId();
+                Log.e("UserIdDDDdDDD1", mUserId + "");
+            }
         });
         Log.e("UserIdDDDdDDD2", mUserId + "");
 
