@@ -1203,6 +1203,7 @@ public class FragmentOffer2 extends Fragment {
         if (offers.getId() == null) offers.setId(0);
         offers.setName(Offers.getName());
         offers.setDescription(Offers.getDescription());
+        offers.setProjectDuration(Offers.getProjectDuration());
         offers.setCategoryId(Offers.getCategoryId());
         offers.setCategoryName(Offers.getCategoryName());
 //        offers.setProfitType(Offers.getProfitType());

@@ -69,6 +69,7 @@ public class FragmentOffer1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1_add_project, container, false);
+        Offers.setInitialValues();
         mRealm = Realm.getDefaultInstance();
         /** Shrink and Expand Views */
         mPlaceRelativeLayout = view.findViewById(R.id.place);
@@ -428,9 +429,7 @@ public class FragmentOffer1 extends Fragment {
                 Offers.setIndectExpenses(value);
                 mIndirectCostEditText.setText(String.valueOf(value));
 
-                mTotalCostEditText.setText(String.valueOf(
-                        Offers.getDirectExpenses() + Offers.getIndectExpenses()
-                ));
+                mTotalCostEditText.setText(String.valueOf(Offers.getTotalCoast()));
             }
         });
 
@@ -439,13 +438,11 @@ public class FragmentOffer1 extends Fragment {
                 String valString = mDirectCostEditText.getText().toString();
                 if (valString.isEmpty()) valString = "0";
                 float value = Float.valueOf(valString);
-                if (value <= 1000f) value = 1000f;
+//                if (value <= 1000f) value = 1000f;
                 Offers.setDirectExpenses(value);
                 mDirectCostEditText.setText(String.valueOf(value));
 
-                mTotalCostEditText.setText(String.valueOf(
-                        Offers.getDirectExpenses() + Offers.getIndectExpenses()
-                ));
+                mTotalCostEditText.setText(String.valueOf(Offers.getTotalCoast()));
             }
         });
 
@@ -465,7 +462,7 @@ public class FragmentOffer1 extends Fragment {
                 String valString = mProfitMoneyEditText.getText().toString();
                 if (valString.isEmpty()) valString = "0";
                 float value = Float.valueOf(valString);
-                if (value <= 5000f) value = 5000f;
+//                if (value <= 5000f) value = 5000f;
                 Offers.setProfitMoney(value);
                 mProfitMoneyEditText.setText(String.valueOf(value));
             }

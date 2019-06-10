@@ -1,5 +1,7 @@
 package teamup.rivile.com.teamup.ui.Project.Add.StaticShit;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,8 +30,8 @@ public class Offers implements Serializable {
     private static Float InitialCost;
     private static Float DirectExpenses;
     private static Float IndectExpenses;
-    public static boolean NeedPlace;
-    public static boolean IsJoin;
+    private static boolean NeedPlace;
+    private static boolean IsJoin;
 
     private static Integer InitialCostType;
     private static Integer DirectExpensesType;
@@ -337,5 +339,25 @@ public class Offers implements Serializable {
         IsJoin = false;
         IsSuccess = false;
         IsCompleted = false;
+    }
+
+    @NonNull
+    public static Float getTotalCoast() {
+        Float directExpenses = getDirectExpenses();
+        Float indirectExpenses = getIndectExpenses();
+
+        if (directExpenses == null) directExpenses = 0f;
+        if (indirectExpenses == null) indirectExpenses = 0f;
+
+        return directExpenses + indirectExpenses;
+    }
+
+    public static void setInitialValues(){
+        setInitialCost(0f);
+        setDirectExpenses(0f);
+        setIndectExpenses(0f);
+        setProfitMoney(0f);
+        setNumContributor(0);
+        setProjectDuration(1f);
     }
 }
