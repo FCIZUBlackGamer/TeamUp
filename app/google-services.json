@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "868212047590",
+    "firebase_url": "https://teamupcomany.firebaseio.com",
+    "project_id": "teamupcomany",
+    "storage_bucket": "teamupcomany.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868212047590:android:3348a4103684a8ee",
+        "android_client_info": {
+          "package_name": "com.rivile.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868212047590-ak2ul0jpsccss040676kkd3trk6d0eav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivile.myapplication",
+            "certificate_hash": "4ba086d427ecf63df713312d39fff692e05f172a"
+          }
+        },
+        {
+          "client_id": "868212047590-cb23n8u0kfqcnjas120n26b1h3s9b5kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANww8VKJwe3i7doY8oDXY84JitznY1B20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868212047590-cb23n8u0kfqcnjas120n26b1h3s9b5kv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868212047590:android:b5cc3adbbd9bc89c",
+        "android_client_info": {
+          "package_name": "teamup.rivile.com.teamup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868212047590-cb23n8u0kfqcnjas120n26b1h3s9b5kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANww8VKJwe3i7doY8oDXY84JitznY1B20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868212047590-cb23n8u0kfqcnjas120n26b1h3s9b5kv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

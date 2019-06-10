@@ -3,7 +3,8 @@ package teamup.rivile.com.teamup.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
+import com.google.firebase.FirebaseApp;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -18,6 +19,7 @@ public class FirstActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         Realm.init(this);
+        FirebaseApp.initializeApp(this);
 
         RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);

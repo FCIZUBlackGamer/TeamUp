@@ -61,6 +61,7 @@ public class API {
     public static final String PARAM_NAME_STATUS = "Status";
     public static final String PARAM_NAME_REFUSE_ID = "RefuseId";
     public static final String PARAM_NAME_OTHER_REASON = "OtherReson";
+    public static final String PARAM_NAME_DEVICE_TOKEN = "devicetoken";
 
     public class Constants{
         public static final int STATUS_ON_HOLD = 0;

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -122,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
         Log.e("RegisterModel", gson.toJson(userModel));
         RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
         //TODO: Set location instead of null here
-        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN, "null");
+        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN,null, "null");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {

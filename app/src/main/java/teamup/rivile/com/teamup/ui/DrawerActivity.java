@@ -25,7 +25,6 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
@@ -476,11 +475,8 @@ public class DrawerActivity extends AppCompatActivity
 
             case R.id.nav_sign:
                 realm.executeTransaction(realm1 -> {
-                    RealmResults<LoginDataBase> results = realm.where(LoginDataBase.class).findAll();
-                    results.deleteAllFromRealm();
-
+                    realm.where(LoginDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(JoinedOfferIdRealmModel.class).findAll().deleteAllFromRealm();
-
                     realm.where(FavouriteDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(LikeDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(OfferDataBase.class).findAll().deleteAllFromRealm();

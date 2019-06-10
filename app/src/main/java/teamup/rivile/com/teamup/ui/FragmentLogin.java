@@ -37,6 +37,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -57,6 +59,7 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
@@ -346,12 +349,12 @@ public class FragmentLogin extends Fragment {
         Log.e("Here", gson.toJson(userModel));
         // Parsing any Media type file
 
-        mRealm.executeTransaction(realm1 -> {
-            realm1.deleteAll();
-        });
+//        mRealm.executeTransaction(realm1 -> {
+//            realm1.deleteAll();
+//        });
 
         RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.login(gson.toJson(userModel), API.URL_TOKEN, "null");
+        Call<LoginDataBase> call = reg.login(gson.toJson(userModel), API.URL_TOKEN, getDeviceToken());
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
@@ -383,7 +386,11 @@ public class FragmentLogin extends Fragment {
         // Parsing any Media type file
 
         RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.socialLogin(gson.toJson(userModel), API.URL_TOKEN, "null");
+        Call<LoginDataBase> call = reg.socialLogin(
+                gson.toJson(userModel),
+                API.URL_TOKEN,
+                getDeviceToken(), null);
+
         call.enqueue(new Callback<LoginDataBase>() {
             @Override
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
@@ -454,5 +461,29 @@ public class FragmentLogin extends Fragment {
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
+    }
+
+    private String getDeviceToken() {
+        AtomicReference<String> deviceToken = new AtomicReference<>();
+        NotificationDatabase database = mRealm.where(NotificationDatabase.class).findFirst();
+        if (database != null) {
+            deviceToken.set(database.getDevice_FCM_Token());
+        } else {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        deviceToken.set(task.getResult().getToken());
+
+                        NotificationDatabase notificationDatabase = new NotificationDatabase(deviceToken.get(), true);
+                        mRealm.executeTransaction(realm -> realm.insertOrUpdate(notificationDatabase));
+                    });
+        }
+
+        return deviceToken.get();
     }
 }

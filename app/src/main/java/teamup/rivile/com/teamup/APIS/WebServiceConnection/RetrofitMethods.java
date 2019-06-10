@@ -1,5 +1,7 @@
 package teamup.rivile.com.teamup.APIS.WebServiceConnection;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -25,57 +27,46 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 public interface RetrofitMethods {
     @Multipart
     @POST(API.UPLOAD_URL)
-/** Initial Test #Done */
     Call<List<String>> uploadFile(@Part MultipartBody.Part file, @Part("file") RequestBody name);
 
     @FormUrlEncoded
     @POST(API.LOAD_ListOfCapTagCat_URL)
-/** Initial Test #Done */
     Call<CapTagCat> getCapTagCat(@Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-/** Initial Test #Done */
     Call<List<Offers>> getOffersByCatAndCapId(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-/** Initial Test #Done */
     Call<Offer> getOffersByCatId(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.HOME_URL)
-/** Initial Test #Done */
     Call<Offer> getAllOffers(@Field("UserId") String userId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListJoinedOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getJoinedOffer(@Field("UserId") String userId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("CapId") int CapId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("CatId") int CatId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ListSuccessOffer_URL)
-/** Initial Test #Done */
     Call<Offer> getSuccessOffer(@Field("UserId") String userId, @Field("token") String token);
 
     /**
@@ -83,59 +74,54 @@ public interface RetrofitMethods {
      */
     @FormUrlEncoded
     @POST(API.GENERAL_SEARCH_URL)
-/** Initial Test #Done */
     Call<Offer> searchOffer(@Field("Type") int Type, @Field("Name") String Name, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.FILTER_SEARCH_URL)
-/** Initial Test #Done */
     Call<Offer> filterSearchOffer(@Field("Filter") String Filter, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LOAD_FAVOURITE_URL)
-/** Initial Test #Done */
     Call<Offer> getFavourite(@Field("Ids") String Ids, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LOGIN_URL)
-/** Initial Test #Done */
-    Call<LoginDataBase> login(@Field("User") String User, @Field("token") String token,
-                              @Field(API.PARAM_NAME_LOCATION) String location);
+    Call<LoginDataBase> login(@NonNull @Field(API.PARAM_NAME_USER) String user,
+                              @NonNull @Field(API.PARAM_NAME_TOKEN) String token,
+                              @NonNull @Field(API.PARAM_NAME_DEVICE_TOKEN) String deviceToken);
 
     @FormUrlEncoded
     @POST(API.SOCIAL_LOGIN_URL)
-/** Initial Test #Done */
-    Call<LoginDataBase> socialLogin(@Field("User") String User, @Field("token") String token,
+    Call<LoginDataBase> socialLogin(@NonNull @Field(API.PARAM_NAME_USER) String user,
+                                    @NonNull @Field(API.PARAM_NAME_TOKEN) String token,
+                                    @NonNull @Field(API.PARAM_NAME_DEVICE_TOKEN) String deviceToken,
                                     @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.REGISTER_URL)
-/** Initial Test #Done */
-    Call<String> register(@Field("User") String User, @Field("token") String token, @Field(API.PARAM_NAME_LOCATION) String location);
+    Call<String> register(@NonNull @Field(API.PARAM_NAME_USER) String user,
+                          @NonNull @Field(API.PARAM_NAME_TOKEN) String token,
+                          @NonNull @Field(API.PARAM_NAME_DEVICE_TOKEN) String deviceToken,
+                          @NonNull @Field(API.PARAM_NAME_LOCATION) String location);
 
     @FormUrlEncoded
     @POST(API.REPORT_URL)
-/** Initial Test #Done */
     Call<String> reportOffer(@Field("report") String report, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.PROFILE_URL)
-/** Initial Test #Done */
     Call<ProfileResponse> getProfile(@Field("Id") int id, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.LIST_USERS_JOIN_REQUESTS)
-/** Initial Test #Done */
     Call<OfferDetailsJsonObject> getRequirements(@Field("OfferId") int OfferId, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.ForgetPassword_URL)
-/** Initial Test #Done */
     Call<Integer> ForgetPassword(@Field("Mail") String Mail, @Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.CheckCode_URL)
-/** Initial Test #Done */
     Call<Integer> CheakCode(@Field("Code") String Code, @Field("token") String token);
 
     @FormUrlEncoded
