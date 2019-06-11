@@ -7,34 +7,29 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_favourite"
+    <ImageView
+        android:id="@+id/iv_favourite"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="bottom|center"
         android:layout_marginStart="8dp"
-        android:backgroundTint="@color/colorWhite"
         app:backgroundTint="#C9C9C9"
-        app:borderWidth="2dp"
-        app:fabCustomSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardView3"
         app:srcCompat="@drawable/ic_star_empty"
         tools:ignore="VectorDrawableCompat" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_like"
+    <ImageView
+        android:id="@+id/iv_like"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_gravity="bottom|center"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorWhite"
         app:backgroundTint="#C9C9C9"
-        app:fabCustomSize="35dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardView3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fab_favourite"
+        app:layout_constraintTop_toBottomOf="@+id/iv_favourite"
         app:srcCompat="@drawable/ic_favorite_border_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 
@@ -51,7 +46,7 @@
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fab_favourite"
+        app:layout_constraintStart_toEndOf="@+id/iv_favourite"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout

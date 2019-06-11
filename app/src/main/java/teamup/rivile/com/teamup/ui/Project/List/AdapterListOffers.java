@@ -79,8 +79,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private int userState;
 
     private RelativeLayout mExpandedRelativeLayout = null;
-    private FloatingActionButton mHiddenLikeFAB = null;
-    private FloatingActionButton mHiddenFavouriteFAB = null;
+    private ImageView mHiddenLikeFAB = null;
+    private ImageView mHiddenFavouriteFAB = null;
     private int mExpandedPosition = -1;
 
     public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, List<FavouriteDataBase> favouriteModel, int type, Helper helper) {
@@ -129,14 +129,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.option_menu.setVisibility(View.VISIBLE);
 
         holder.tv_proType.setVisibility(View.GONE);
-        holder.favouriteFAB.setOnClickListener(v -> {
-            Drawable favDrawable = holder.favouriteFAB.getDrawable();
+        holder.favouriteImageView.setOnClickListener(v -> {
+            Drawable favDrawable = holder.favouriteImageView.getDrawable();
             if (favDrawable.getConstantState()
                     .equals(context
                             .getResources()
                             .getDrawable(R.drawable.ic_star_full)
                             .getConstantState())) {
-                holder.favouriteFAB.setImageResource(R.drawable.ic_star_empty);
+                holder.favouriteImageView.setImageResource(R.drawable.ic_star_empty);
                 markFavourite(offersList.get(position).getId(), userId, 1);
                 if (ty == FAVOURITE) {
                     offersList.remove(position);
@@ -152,7 +152,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getResources()
                             .getDrawable(R.drawable.ic_star_empty)
                             .getConstantState())) {
-                holder.favouriteFAB.setImageResource(R.drawable.ic_star_full);
+                holder.favouriteImageView.setImageResource(R.drawable.ic_star_full);
                 markFavourite(offersList.get(position).getId(), userId, 0);
             }
 
@@ -170,16 +170,16 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         for (int i = 0; i < likeModelDataBase.size(); i++) {
             if (offersList.get(position).getId() == likeModelDataBase.get(i).getOfferId()) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                holder.likeFab.setImageResource(R.drawable.ic_like);
+                holder.likeImageView.setImageResource(R.drawable.ic_like);
             }
         }
 
         for (int i = 0; i < favouriteDataBases.size(); i++) {
             if (offersList.get(position).getId() == favouriteDataBases.get(i).getOfferId()) {
-                holder.favouriteFAB.setImageResource(R.drawable.ic_star_full);
-                holder.favouriteFAB.setTag(1);
+                holder.favouriteImageView.setImageResource(R.drawable.ic_star_full);
+                holder.favouriteImageView.setTag(1);
             } else {
-                holder.favouriteFAB.setTag(0);
+                holder.favouriteImageView.setTag(0);
             }
         }
 
@@ -424,7 +424,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             for (int i = 0; i < Likes.size(); i++) {
                 if (Likes.get(i).getOfferId() == offersList.get(position).getId()) {
                     holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                    holder.likeFab.setImageResource(R.drawable.ic_like);
+                    holder.likeImageView.setImageResource(R.drawable.ic_like);
                 }
             }
         });
@@ -437,7 +437,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_like)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                holder.likeFab.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                holder.likeImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 likeOffer(offersList.get(position).getId(), userId, 1, holder.num_likes);
             } else if (likeDrawable.getConstantState()
                     .equals(context
@@ -445,7 +445,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                             .getDrawable(R.drawable.ic_favorite_border_black_24dp)
                             .getConstantState())) {
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
-                holder.likeFab.setImageResource(R.drawable.ic_like);
+                holder.likeImageView.setImageResource(R.drawable.ic_like);
                 likeOffer(offersList.get(position).getId(), userId, 0, holder.num_likes);
             }
         });
@@ -454,49 +454,49 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.share.setOnClickListener(v -> mHelper.shareUrl("", offersList.get(position).getName()));
 
 
-        holder.likeFab.setOnClickListener(v -> holder.like.callOnClick());
+        holder.likeImageView.setOnClickListener(v -> holder.like.callOnClick());
 
         if (position == mExpandedPosition) {
             holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
 
-            holder.favouriteFAB.hide();
-            holder.likeFab.hide();
+            holder.favouriteImageView.setVisibility(View.GONE);
+            holder.likeImageView.setVisibility(View.GONE);
         } else {
             holder.detailsRelativeLayout.setVisibility(View.GONE);
 
-            holder.favouriteFAB.show();
-            holder.likeFab.show();
+            holder.favouriteImageView.setVisibility(View.VISIBLE);
+            holder.likeImageView.setVisibility(View.VISIBLE);
         }
 
         holder.projectRelativeLayout.setOnClickListener(v -> {
             if (holder.detailsRelativeLayout.getVisibility() == View.VISIBLE) {
-                holder.favouriteFAB.show();
-                holder.likeFab.show();
+                holder.favouriteImageView.setVisibility(View.VISIBLE);
+                holder.likeImageView.setVisibility(View.VISIBLE);
 
                 holder.detailsRelativeLayout.setVisibility(View.GONE);
-                mHiddenLikeFAB.show();
-                mHiddenFavouriteFAB.show();
+                mHiddenLikeFAB.setVisibility(View.VISIBLE);
+                mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
 
                 mExpandedRelativeLayout = null;
                 mHiddenFavouriteFAB = null;
                 mHiddenLikeFAB = null;
                 mExpandedPosition = -1;
             } else {
-                holder.favouriteFAB.hide();
-                holder.likeFab.hide();
+                holder.favouriteImageView.setVisibility(View.GONE);
+                holder.likeImageView.setVisibility(View.GONE);
 
                 holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
 
                 if (mExpandedRelativeLayout != null) {
                     mExpandedRelativeLayout.setVisibility(View.GONE);
 
-                    mHiddenLikeFAB.show();
-                    mHiddenFavouriteFAB.show();
+                    mHiddenLikeFAB.setVisibility(View.VISIBLE);
+                    mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
                 }
 
                 mExpandedRelativeLayout = holder.detailsRelativeLayout;
-                mHiddenLikeFAB = holder.likeFab;
-                mHiddenFavouriteFAB = holder.favouriteFAB;
+                mHiddenLikeFAB = holder.likeImageView;
+                mHiddenFavouriteFAB = holder.favouriteImageView;
                 mExpandedPosition = position;
             }
         });
@@ -512,7 +512,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         //        RecyclerView recyclerView;
 //        RecyclerView.Adapter adapter;
         ImageView option_menu;
-        FloatingActionButton favouriteFAB, likeFab;
+        ImageView favouriteImageView, likeImageView;
         TextView emptyView;
         RelativeLayout money;
 
@@ -532,8 +532,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             tv_proType = itemView.findViewById(R.id.tv_proType);
             tv_profit = itemView.findViewById(R.id.tv_profit);
 
-            favouriteFAB = itemView.findViewById(R.id.fab_favourite);
-            likeFab = itemView.findViewById(R.id.fab_like);
+            favouriteImageView = itemView.findViewById(R.id.iv_favourite);
+            likeImageView = itemView.findViewById(R.id.iv_like);
 
             project_desc = itemView.findViewById(R.id.project_desc);
             fromToTextView = itemView.findViewById(R.id.tv_from_to);
@@ -736,7 +736,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 String Offers = response.body();
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
-                    if (fav == 1) {//remove favouriteFAB
+                    if (fav == 1) {//remove favouriteImageView
                         realm.executeTransaction(realm1 -> {
                             if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
                                 RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
@@ -753,7 +753,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                                 Log.v("Status", "Not Found");
                             }
                         });
-                    } else {//mark favouriteFAB
+                    } else {//mark favouriteImageView
                         realm.executeTransaction(realm1 -> {
                             realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
                             Log.i("Fav", "Done");

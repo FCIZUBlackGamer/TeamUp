@@ -82,7 +82,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     /**
-     * @param type refers to favouriteFAB projects(2) or all projects(0)
+     * @param type refers to favouriteImageView projects(2) or all projects(0)
      */
     public static FragmentListProjects setType(int type) {
         ProType = type;
@@ -99,7 +99,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     /**
-     * @param word refers to my projects(1), favouriteFAB projects(2) or all projects(-1)
+     * @param word refers to my projects(1), favouriteImageView projects(2) or all projects(-1)
      * @param type {2: UserName, 1: ProjectName, 0: Tag}
      */
     public static FragmentListProjects setWord(int type, String word) {
@@ -219,7 +219,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                }
 //
 //            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteFAB));
+//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteImageView));
 //
 //                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
 //                        .findAll();
@@ -303,7 +303,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //                }
 //
 //            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteFAB));
+//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteImageView));
 //
 //                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
 //                        .findAll();
