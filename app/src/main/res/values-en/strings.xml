@@ -230,6 +230,8 @@
     <string name="deleted_your_project">Deleted Your Project</string>
     <string name="accepted_your_request_to_join_his_project">Accepted Your Request To Join His Project</string>
     <string name="refused_your_request_to_join_his_project">Refused Your Request To Join His Project</string>
+    <string name="request_on_hold">Your Request To Join This Project Is On Hold</string>
+    <string name="request_accepted">Your Request To Join This Project Was Accepted, You Are Joined</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

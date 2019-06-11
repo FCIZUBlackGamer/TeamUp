@@ -19,7 +19,9 @@ import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.NotificationData;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 import teamup.rivile.com.teamup.ui.FirstActivity;
 
 public class NotificationService extends FirebaseMessagingService {
@@ -32,8 +34,26 @@ public class NotificationService extends FirebaseMessagingService {
 
         NotificationData data = createNotificationDataFromRemoteMessage(remoteMessage);
 
-        String notificationMessage = createNotificationMessageFromData(data);
-        if (notificationMessage != null) pushNotification(notificationMessage);
+        if (userLoggedIn(data.getTargetUserId())) {
+            String notificationMessage = createNotificationMessageFromData(data);
+            if (notificationMessage != null) pushNotification(notificationMessage);
+        }
+    }
+
+    private boolean userLoggedIn(int targetUserId) {
+        Realm.init(this);
+
+        Realm realm = Realm.getDefaultInstance();
+        LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
+        if (loginDataBase != null) {
+            UserDataBase userDataBase = loginDataBase.getUser();
+            if (userDataBase != null) {
+                int loggedUserId = userDataBase.getId();
+                return loggedUserId == targetUserId;
+            }
+        }
+
+        return false;
     }
 
     private NotificationData createNotificationDataFromRemoteMessage(RemoteMessage remoteMessage) {
@@ -45,12 +65,16 @@ public class NotificationService extends FirebaseMessagingService {
         String notificationType = dataMap.get(API.NotificationDataKey.NOTIFICATION_TYPE_KEY);
         if (notificationType == null) notificationType = "-1";
 
+        String projectId = dataMap.get(API.NotificationDataKey.PROJECT_ID_KEY);
+        if (projectId == null) projectId = "-1";
+
         String userName = dataMap.get(API.NotificationDataKey.USER_NAME_KEY);
 
         String projectName = dataMap.get(API.NotificationDataKey.PROJECT_NAME_KEY);
 
         return new NotificationData(Integer.valueOf(targetUserId),
                 Integer.valueOf(notificationType),
+                Integer.valueOf(projectId),
                 userName,
                 projectName
         );
@@ -64,65 +88,44 @@ public class NotificationService extends FirebaseMessagingService {
 
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransactionAsync(realm1 -> {
-            NotificationDatabase database = realm.where(NotificationDatabase.class).findFirst();
-            if (database == null) realm.insert(new NotificationDatabase(s, true));
+            NotificationDatabase database = realm1.where(NotificationDatabase.class).findFirst();
+            if (database == null) realm1.insert(new NotificationDatabase(s, true));
             else database.setDevice_FCM_Token(s);
         });
     }
 
     @Nullable
     private String createNotificationMessageFromData(@NonNull NotificationData data) {
+        String bodyMessage;
         switch (data.getNotificationType()) {
             case API.NotificationType.TYPE_JOIN:
-                return createJoinNotificationMessage(data);
+                bodyMessage = getString(R.string.request_to_join_project);
+                break;
             case API.NotificationType.TYPE_EDIT:
-                return createEditNotificationMessage(data);
+                bodyMessage = getString(R.string.edited_your_project);
+                break;
             case API.NotificationType.TYPE_LIKE:
-                return createLikeNotificationMessage(data);
+                bodyMessage = getString(R.string.liked_your_project);
+                break;
             case API.NotificationType.TYPE_DELETE:
-                return createDeleteNotificationMessage(data);
+                bodyMessage = getString(R.string.deleted_your_project);
+                break;
             case API.NotificationType.TYPE_ACCEPT:
-                return createAcceptNotificationMessage(data);
+                bodyMessage = getString(R.string.accepted_your_request_to_join_his_project);
+                break;
             case API.NotificationType.TYPE_REFUSE:
-                return createRefuseNotificationMessage(data);
+                bodyMessage = getString(R.string.refused_your_request_to_join_his_project);
+                break;
+            default:
+                bodyMessage = null;
         }
 
-        return null;
+        return createNotificationMessage(data, bodyMessage);
     }
 
-    @NonNull
-    private String createJoinNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.request_to_join_project));
-    }
-
-    @NonNull
-    private String createEditNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.edited_your_project));
-    }
-
-    @NonNull
-    private String createLikeNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.liked_your_project));
-    }
-
-    @NonNull
-    private String createDeleteNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.deleted_your_project));
-    }
-
-    @NonNull
-    private String createAcceptNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.accepted_your_request_to_join_his_project));
-    }
-
-    @NonNull
-    private String createRefuseNotificationMessage(NotificationData data) {
-        return createNotificationMessage(data, getString(R.string.refused_your_request_to_join_his_project));
-    }
-
-    @NonNull
-    private String createNotificationMessage(@NonNull NotificationData data, @NonNull String message) {
-        return data.getUserName() + " " + message + " (" + data.getProjectName() + ").";
+    @Nullable
+    private String createNotificationMessage(@NonNull NotificationData data, @Nullable String message) {
+        return message == null ? null : data.getUserName() + " " + message + " (" + data.getProjectName() + ").";
     }
 
     private void pushNotification(String text) {

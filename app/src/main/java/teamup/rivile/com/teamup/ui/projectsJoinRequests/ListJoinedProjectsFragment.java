@@ -22,8 +22,8 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class ListJoinedProjectsFragment extends Fragment {
@@ -89,9 +89,9 @@ public class ListJoinedProjectsFragment extends Fragment {
                         mProjectsAdapter.swapData(joinedProjectList);
 
                         mRealm.executeTransaction(realm -> {
-                            realm.where(JoinedOfferIdRealmModel.class).findAll().deleteAllFromRealm();
+                            realm.where(JoinedOfferRealmModel.class).findAll().deleteAllFromRealm();
                             for (JoinedProject project : joinedProjectList) {
-                                realm.insert(new JoinedOfferIdRealmModel(project.getOfferId()));
+                                realm.insert(new JoinedOfferRealmModel(project));
                             }
                         });
                     }

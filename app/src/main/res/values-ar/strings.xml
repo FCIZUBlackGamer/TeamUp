@@ -228,6 +228,8 @@
     <string name="deleted_your_project">قام بمسح مشروعك</string>
     <string name="accepted_your_request_to_join_his_project">وافق علي طلبك للإنضمام لمشروعه</string>
     <string name="refused_your_request_to_join_his_project">رفض طلبك للإنضمام لمشروعه</string>
+    <string name="request_on_hold">طلب إنضمامك في الإنتظار</string>
+    <string name="request_accepted">تمت الموافقة علي طلب إنضمامك ، انت مشترك في المشروع</string>
 
 
     <string-array name="sort_by_array">

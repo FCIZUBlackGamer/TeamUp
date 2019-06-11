@@ -10,7 +10,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +44,8 @@ import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
 import teamup.rivile.com.teamup.ui.Project.Details.FragmentOfferDetails;
@@ -112,18 +112,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         Offers offers = offersList.get(position);
 
-
-        if (ty != MINE) {
-            if (offers.getUserId().equals(userId)) holder.make_offer.setEnabled(false);
-            RealmResults<JoinedOfferIdRealmModel> joinedOfferIdRealmModels = realm.where(JoinedOfferIdRealmModel.class).findAll();
-            for (int i = 0; i < joinedOfferIdRealmModels.size(); i++) {
-                int id = joinedOfferIdRealmModels.get(i).getId();
-                if (offers.getId() == id) {
-                    holder.make_offer.setEnabled(false);
-                    break;
-                }
-            }
-        }
         holder.fromToTextView.setText(offers.getNumContributor() + " Of " + offers.getNumJoinOffer());
 
         holder.option_menu.setVisibility(View.VISIBLE);
@@ -319,40 +307,69 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                     .replace(R.id.frame, FragmentProfileHome.setId(offersList.get(position).getUserId())).addToBackStack(FragmentProfileHome.class.getSimpleName()).commit();
         });
 
-        if (ty != MINE && ty != FAVOURITE)
-            holder.make_offer.setOnClickListener(v -> {
-                v.setEnabled(false);
-                //TODO: Show user alert dialog of what's happening here
-                RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
-                        .getRetrofit().create(RetrofitMethods.class);
-
-                Call<String> stringCall = retrofitMethods.joinOffer(userId, offers.getId(), URL_TOKEN);
-                stringCall.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        String serverResponse = response.body();
-                        if (serverResponse != null) {
-                            if (serverResponse.equals("Success")) {
-                                Toast.makeText(context, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
-                                realm.executeTransaction(realm1 ->
-                                        realm1.insert(new JoinedOfferIdRealmModel(offers.getId())));
-                            } else if (serverResponse.equals("Fail")) {
-                                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-                            }
+        if (ty != MINE && ty != FAVOURITE) {
+            if (offers.getUserId().equals(userId)) {
+                holder.make_offer.setEnabled(false);
+            } else {
+                RealmResults<JoinedOfferRealmModel> joinedOfferRealmModels = realm.where(JoinedOfferRealmModel.class).findAll();
+                for (int i = 0; i < joinedOfferRealmModels.size(); i++) {
+                    JoinedProject joinedProject = joinedOfferRealmModels.get(i).getJoinedProject();
+                    if (offers.getId() == joinedProject.getId()) {
+                        if (joinedProject.getStatus() != API.Constants.STATUS_ON_HOLD) {
+                            holder.make_offer.setEnabled(false);
+                            holder.make_offer.setOnClickListener(v -> {
+                                Toast.makeText(context, context.getString(R.string.request_on_hold), Toast.LENGTH_LONG).show();
+                            });
+                        } else if (joinedProject.getStatus() != API.Constants.STATUS_ACCEPT) {
+                            holder.make_offer.setEnabled(false);
+                            holder.make_offer.setOnClickListener(v -> {
+                                Toast.makeText(context, context.getString(R.string.request_accepted), Toast.LENGTH_LONG).show();
+                            });
                         } else {
-                            Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                            holder.make_offer.setOnClickListener(v -> {
+                                v.setEnabled(false);
+                                //TODO: Show user alert dialog of what's happening here
+                                RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
+                                        .getRetrofit().create(RetrofitMethods.class);
+
+                                Call<String> stringCall = retrofitMethods.joinOffer(userId, offers.getId(), URL_TOKEN);
+                                stringCall.enqueue(new Callback<String>() {
+                                    @Override
+                                    public void onResponse(Call<String> call, Response<String> response) {
+                                        String serverResponse = response.body();
+                                        if (serverResponse != null) {
+                                            if (serverResponse.equals("Success")) {
+                                                Toast.makeText(context, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
+                                                realm.executeTransaction(realm1 ->
+                                                        realm1.insert(new JoinedOfferRealmModel(new JoinedProject(
+                                                                offers.getId(),
+                                                                offers.getName(),
+                                                                userId,
+                                                                API.Constants.STATUS_ON_HOLD,
+                                                                null, null
+                                                        ))));
+                                            } else if (serverResponse.equals("Fail")) {
+                                                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<String> call, Throwable t) {
+                                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        v.setEnabled(true);
+                                    }
+                                });
+
+                            });
                         }
+                        break;
                     }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        v.setEnabled(true);
-                    }
-                });
-
-            });
-        else if (ty == MINE) {
+                }
+            }
+        } else if (ty == MINE) {
             holder.make_offer.setOnClickListener(v -> {
                 //TODO: Show alertDialog listing joined people
                 //with the ability to accept, decline or block them

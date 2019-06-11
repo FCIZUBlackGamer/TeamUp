@@ -137,8 +137,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
 
-
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+
+        tabLayout.getTabAt(1/*Available Projects*/).select();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
@@ -190,19 +191,18 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            ProType = -1;
                 Type = -1;
                 Word = null;
+            }
 
-                int position = tabLayout.getSelectedTabPosition();
-                if (position == 0) {
-                    Log.d("Status", getString(R.string.availableProjects));
-                    loadJoinedOffer(DepId);
-                } else if (position == 1) {
-                    Log.d("Status", getString(R.string.hintProjects));
-                    loadOffers(DepId);
-                } else if (position == 2) {
-                    Log.d("Status", getString(R.string.successProjects));
-                    loadSuccessOffer(DepId);
-                }
-//                loadJoinedOffer(DepId);
+            int position = tabLayout.getSelectedTabPosition();
+            if (position == 0) {
+                Log.d("Status", getString(R.string.availableProjects));
+                loadJoinedOffer(DepId);
+            } else if (position == 1) {
+                Log.d("Status", getString(R.string.hintProjects));
+                loadOffers(DepId);
+            } else if (position == 2) {
+                Log.d("Status", getString(R.string.successProjects));
+                loadSuccessOffer(DepId);
             }
         }
 //        if (ProType != -1) {

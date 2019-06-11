@@ -3,16 +3,14 @@ package teamup.rivile.com.teamup.Uitls.APIModels;
 public class NotificationData {
     private int targetUserId;
     private int notificationType;
-
+    private int projectId;
     private String userName;
     private String projectName;
 
-    public NotificationData() {
-    }
-
-    public NotificationData(int targetUserId, int notificationType, String userName, String projectName) {
+    public NotificationData(int targetUserId, int notificationType, int projectId, String userName, String projectName) {
         this.targetUserId = targetUserId;
         this.notificationType = notificationType;
+        this.projectId = projectId;
         this.userName = userName;
         this.projectName = projectName;
     }
@@ -31,6 +29,14 @@ public class NotificationData {
 
     public void setNotificationType(int notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public String getUserName() {

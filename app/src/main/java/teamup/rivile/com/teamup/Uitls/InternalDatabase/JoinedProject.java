@@ -1,6 +1,8 @@
-package teamup.rivile.com.teamup.Uitls.APIModels;
+package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
-public class JoinedProject {
+import io.realm.RealmObject;
+
+public class JoinedProject extends RealmObject {
     private int Id ;
     private Integer OfferId ;
     private String OfferName ;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
 
 import static teamup.rivile.com.teamup.APIS.API.Constants.STATUS_ACCEPT;
 import static teamup.rivile.com.teamup.APIS.API.Constants.STATUS_ON_HOLD;

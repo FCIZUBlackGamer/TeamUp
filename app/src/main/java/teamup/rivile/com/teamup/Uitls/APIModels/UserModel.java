@@ -154,7 +154,7 @@ public class UserModel {
     }
 
     public Integer getJoinOfferStatus() {
-        return JoinOfferStatus;
+        return JoinOfferStatus == null ? 0 : JoinOfferStatus;
     }
 
     public void setJoinOfferStatus(Integer joinOfferStatus) {

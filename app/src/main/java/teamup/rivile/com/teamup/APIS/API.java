@@ -82,6 +82,7 @@ public class API {
     public class NotificationDataKey {
         public static final String TARGET_USER_ID_KEY = "TargetUserId";
         public static final String NOTIFICATION_TYPE_KEY = "NotificationType";
+        public static final String PROJECT_ID_KEY = "ProjectId";
         public static final String USER_NAME_KEY = "UserName";
         public static final String PROJECT_NAME_KEY = "ProjectName";
     }

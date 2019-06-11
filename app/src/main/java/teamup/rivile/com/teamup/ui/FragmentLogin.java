@@ -57,8 +57,8 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.JoinedProject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferRealmModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
@@ -363,7 +363,7 @@ public class FragmentLogin extends Fragment {
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
-                    loadJoinedProjects(serverResponse);
+                    loadJoinedProjects(serverResponse.getUser().getId());
                     mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
                 } else {
                     Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
@@ -399,7 +399,7 @@ public class FragmentLogin extends Fragment {
             public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null) {
-                    loadJoinedProjects(serverResponse);
+                    loadJoinedProjects(serverResponse.getUser().getId());
                     mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
                 } else {
                     Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
@@ -418,12 +418,12 @@ public class FragmentLogin extends Fragment {
         });
     }
 
-    private void loadJoinedProjects(LoginDataBase serverResponse) {
+    private void loadJoinedProjects(int id) {
         RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).
                 getRetrofit().
                 create(RetrofitMethods.class);
 
-        Call<List<JoinedProject>> call = retrofitMethods.listJoinedProjects(serverResponse.getUser().getId(), API.URL_TOKEN);
+        Call<List<JoinedProject>> call = retrofitMethods.listJoinedProjects(id, API.URL_TOKEN);
 
         call.enqueue(new Callback<List<JoinedProject>>() {
             @Override
@@ -431,11 +431,9 @@ public class FragmentLogin extends Fragment {
                 List<JoinedProject> joinedProjectList = response.body();
                 if (joinedProjectList != null) {
                     if (joinedProjectList.size() != 0) {
-                        Log.i("Response", new Gson().toJson(serverResponse));
-
                         mRealm.executeTransaction(realm1 -> {
                             for (JoinedProject project : joinedProjectList) {
-                                realm1.insert(new JoinedOfferIdRealmModel(project.getOfferId(), true));
+                                realm1.insert(new JoinedOfferRealmModel(project));
                             }
                         });
                     }
