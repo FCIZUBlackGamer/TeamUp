@@ -190,7 +190,19 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 //            ProType = -1;
                 Type = -1;
                 Word = null;
-                loadJoinedOffer(DepId);
+
+                int position = tabLayout.getSelectedTabPosition();
+                if (position == 0) {
+                    Log.d("Status", getString(R.string.availableProjects));
+                    loadJoinedOffer(DepId);
+                } else if (position == 1) {
+                    Log.d("Status", getString(R.string.hintProjects));
+                    loadOffers(DepId);
+                } else if (position == 2) {
+                    Log.d("Status", getString(R.string.successProjects));
+                    loadSuccessOffer(DepId);
+                }
+//                loadJoinedOffer(DepId);
             }
         }
 //        if (ProType != -1) {
