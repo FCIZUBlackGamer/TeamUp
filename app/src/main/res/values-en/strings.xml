@@ -223,6 +223,13 @@
     <string name="register">Register</string>
     <string name="email_required">E-Mail Required</string>
     <string name="password_required">Password Required</string>
+    <string name="share_project_idea">Share Project Idea</string>
+    <string name="request_to_join_project">Requests To Join Your Project</string>
+    <string name="edited_your_project">Edited Your Project</string>
+    <string name="liked_your_project">Liked Your Project</string>
+    <string name="deleted_your_project">Deleted Your Project</string>
+    <string name="accepted_your_request_to_join_his_project">Accepted Your Request To Join His Project</string>
+    <string name="refused_your_request_to_join_his_project">Refused Your Request To Join His Project</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

@@ -11,7 +11,6 @@ import io.realm.RealmConfiguration;
 import teamup.rivile.com.teamup.R;
 
 public class FirstActivity extends AppCompatActivity {
-    Realm realm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

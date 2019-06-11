@@ -221,6 +221,13 @@
     <string name="register">التسجيل</string>
     <string name="email_required">البريد الإلكتروني مطلوب</string>
     <string name="password_required">كلمة المرور مطلوبة</string>
+    <string name="share_project_idea">شارك فكرة مشروعك</string>
+    <string name="request_to_join_project">طلب الإنضمام لمشروعك</string>
+    <string name="edited_your_project">قام بتعديل مشروعك</string>
+    <string name="liked_your_project">اُعجب بمشروعك</string>
+    <string name="deleted_your_project">قام بمسح مشروعك</string>
+    <string name="accepted_your_request_to_join_his_project">وافق علي طلبك للإنضمام لمشروعه</string>
+    <string name="refused_your_request_to_join_his_project">رفض طلبك للإنضمام لمشروعه</string>
 
 
     <string-array name="sort_by_array">

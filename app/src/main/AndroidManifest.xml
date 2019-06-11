@@ -30,7 +30,8 @@
 
             <!-- TODO: Make this as Launcher Activity -->
         </activity>
-        <activity android:name=".ui.FirstActivity" >
+        <activity android:name=".ui.FirstActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

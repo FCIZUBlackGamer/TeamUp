@@ -120,12 +120,15 @@ public class FragmentLogin extends Fragment {
 
         mRealm = Realm.getDefaultInstance();
 
+        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
         mRealm.executeTransaction(realm1 -> {
             RealmResults<LoginDataBase> results = mRealm.where(LoginDataBase.class).findAll();
             if (results.size() > 0) {
                 startActivity(new Intent(getActivity(), DrawerActivity.class));
                 getActivity().finish();
             }
+
+            mLoadingViewConstraintLayout.setVisibility(View.GONE);
         });
 
         mUserModel = new UserModel();
@@ -389,7 +392,7 @@ public class FragmentLogin extends Fragment {
         Call<LoginDataBase> call = reg.socialLogin(
                 gson.toJson(userModel),
                 API.URL_TOKEN,
-                getDeviceToken(), null);
+                getDeviceToken(), "null");
 
         call.enqueue(new Callback<LoginDataBase>() {
             @Override

@@ -1,7 +1,7 @@
 package teamup.rivile.com.teamup.APIS;
 
 public class API {
-//    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
+    //    final public static String BASE_URL = "http://www.teamupapi.rivile.com/";
     final public static String BASE_URL = "http://192.168.1.2/";
     final public static String URL_TOKEN = "7RH2'Y54.M2zt,cC";
 
@@ -63,10 +63,26 @@ public class API {
     public static final String PARAM_NAME_OTHER_REASON = "OtherReson";
     public static final String PARAM_NAME_DEVICE_TOKEN = "devicetoken";
 
-    public class Constants{
+    public class Constants {
         public static final int STATUS_ON_HOLD = 0;
         public static final int STATUS_ACCEPT = 1;
         public static final int STATUS_REFUSE = 2;
         public static final int STATUS_BLOCK = 3;
+    }
+
+    public class NotificationType {
+        public static final int TYPE_JOIN = 1;
+        public static final int TYPE_EDIT = 2;
+        public static final int TYPE_LIKE = 3;
+        public static final int TYPE_DELETE = 4;
+        public static final int TYPE_ACCEPT = 5;
+        public static final int TYPE_REFUSE = 6;
+    }
+
+    public class NotificationDataKey {
+        public static final String TARGET_USER_ID_KEY = "TargetUserId";
+        public static final String NOTIFICATION_TYPE_KEY = "NotificationType";
+        public static final String USER_NAME_KEY = "UserName";
+        public static final String PROJECT_NAME_KEY = "ProjectName";
     }
 }
