@@ -433,6 +433,9 @@ public class FragmentLogin extends Fragment {
                     if (joinedProjectList.size() != 0) {
                         mRealm.executeTransaction(realm1 -> {
                             for (JoinedProject project : joinedProjectList) {
+                                if (project.getStatus() == null)
+                                    project.setStatus(API.Constants.STATUS_ON_HOLD);
+
                                 realm1.insert(new JoinedOfferRealmModel(project));
                             }
                         });
