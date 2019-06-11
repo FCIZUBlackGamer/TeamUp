@@ -432,19 +432,10 @@ public class FragmentLogin extends Fragment {
                 if (joinedProjectList != null) {
                     if (joinedProjectList.size() != 0) {
                         Log.i("Response", new Gson().toJson(serverResponse));
-                        mRealm.executeTransaction(realm1 -> realm1.deleteAll());
 
                         mRealm.executeTransaction(realm1 -> {
-                            realm1.insertOrUpdate(serverResponse);
-                            Log.e("results", serverResponse.getUser().getId() + "");
-                            Log.e("size", serverResponse.getOffers().size() + "");
-                            for (int i = 0; i < serverResponse.getOffers().size(); i++) {
-                                Log.e("Offer Name " + serverResponse.getOffers().get(i).getId(),
-                                        serverResponse.getOffers().get(i).getName() + "");
-                            }
-
                             for (JoinedProject project : joinedProjectList) {
-                                realm1.insert(new JoinedOfferIdRealmModel(project.getOfferId()));
+                                realm1.insert(new JoinedOfferIdRealmModel(project.getOfferId(), true));
                             }
                         });
                     }

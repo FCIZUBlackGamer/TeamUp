@@ -30,6 +30,7 @@ import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferIdRealmModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.ui.Department.FragmentHome;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
@@ -479,6 +480,7 @@ public class DrawerActivity extends AppCompatActivity
                     realm.where(JoinedOfferIdRealmModel.class).findAll().deleteAllFromRealm();
                     realm.where(FavouriteDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(LikeDataBase.class).findAll().deleteAllFromRealm();
+                    realm.where(LikeModelDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(OfferDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(UserDataBase.class).findAll().deleteAllFromRealm();
 
