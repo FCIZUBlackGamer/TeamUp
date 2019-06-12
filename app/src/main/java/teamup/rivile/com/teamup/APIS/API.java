@@ -12,7 +12,6 @@ public class API {
     final public static String SOCIAL_LOGIN_URL = BASE_URL + "Register/RegisterAndLogin";
     final public static String HOME_URL = BASE_URL + "Offer/ListOffer/";
     final public static String LIST_USERS_JOIN_REQUESTS = BASE_URL + "Offer/Income/";
-    final public static String SelectOffer_URL = BASE_URL + "Offer/SelectOffer/";
     final public static String PROFILE_URL = BASE_URL + "Register/Profile";
     final public static String EDIT_PROFILE_URL = BASE_URL + "Register/ProfileEdit";
     final public static String ADD_OFFER_URL = BASE_URL + "Offer/Add/";
@@ -22,7 +21,6 @@ public class API {
     final public static String DELETE_OFFER_URL = BASE_URL + "Offer/Delete";
     final public static String JOIN_OFFER_URL = BASE_URL + "Offer/JoinOffer";
     final public static String OFFER_DETAILS_URL = BASE_URL + "Offer/GetOfferwithAllData/"; //VIEW_PROJECT_URL
-    final public static String NOTIFICATION_URL = BASE_URL + "Offer/Notification";
     final public static String GENERAL_SEARCH_URL = BASE_URL + "Offer/BasicSearch";
     final public static String FILTER_SEARCH_URL = BASE_URL + "Offer/Filter";
     final public static String LOAD_DEPARTMENTS_URL = BASE_URL + "Offer/ListCat/";
@@ -33,9 +31,6 @@ public class API {
     final public static String ForgetPassword_URL = BASE_URL + "Register/ForgetPassword";
     final public static String CheckCode_URL = BASE_URL + "Register/CheakCodePassword";
     final public static String SavePasswordLogin_URL = BASE_URL + "Register/SavePasswordLogin";
-    final public static String ACCEPT_JOIN_OFFER_URL = BASE_URL + "Offer/Accept";
-    final public static String REFUSE_JOIN_OFFER_URL = BASE_URL + "Offer/Refuse";
-    final public static String DeleteRequirement_URL = BASE_URL + "Offer/DeleteRequirement";
     final public static String REPORT_URL = BASE_URL + "Offer/Report";
     public final static String ACCOUNT_SETTINGS_URL = BASE_URL + "Register/AccountSetting";
     public final static String RESET_MAIL_URL = BASE_URL + "Register/MailReset";
