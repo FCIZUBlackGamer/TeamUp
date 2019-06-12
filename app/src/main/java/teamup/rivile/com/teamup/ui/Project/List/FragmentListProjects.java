@@ -35,6 +35,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
@@ -179,8 +180,14 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
 
+
+
+        Log.d("TESERSDGSDFG", String.valueOf(loginData.getUser()));
+
         if (loginData != null) {
             mUserId = loginData.getUser().getId();
+
+            Log.d("TESERSDGSDFG", String.valueOf(mUserId));
 
             likeModelDataBase = loginData.getLikes();
             favouriteDataBases = loginData.getFavorites();

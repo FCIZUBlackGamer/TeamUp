@@ -57,8 +57,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferRealmModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
@@ -423,20 +422,20 @@ public class FragmentLogin extends Fragment {
                 getRetrofit().
                 create(RetrofitMethods.class);
 
-        Call<List<JoinedProject>> call = retrofitMethods.listJoinedProjects(id, API.URL_TOKEN);
+        Call<List<JoinedProjectRealmObject>> call = retrofitMethods.listJoinedProjects(id, API.URL_TOKEN);
 
-        call.enqueue(new Callback<List<JoinedProject>>() {
+        call.enqueue(new Callback<List<JoinedProjectRealmObject>>() {
             @Override
-            public void onResponse(Call<List<JoinedProject>> call, Response<List<JoinedProject>> response) {
-                List<JoinedProject> joinedProjectList = response.body();
+            public void onResponse(Call<List<JoinedProjectRealmObject>> call, Response<List<JoinedProjectRealmObject>> response) {
+                List<JoinedProjectRealmObject> joinedProjectList = response.body();
                 if (joinedProjectList != null) {
                     if (joinedProjectList.size() != 0) {
                         mRealm.executeTransaction(realm1 -> {
-                            for (JoinedProject project : joinedProjectList) {
+                            for (JoinedProjectRealmObject project : joinedProjectList) {
                                 if (project.getStatus() == null)
-                                    project.setStatus(API.Constants.STATUS_ON_HOLD);
+                                    project.setStatus(API.JoinRequestResponse.STATUS_ON_HOLD);
 
-                                realm1.insert(new JoinedOfferRealmModel(project));
+                                realm1.insert(project);
                             }
                         });
                     }
@@ -451,7 +450,7 @@ public class FragmentLogin extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<JoinedProject>> call, Throwable t) {
+            public void onFailure(Call<List<JoinedProjectRealmObject>> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }

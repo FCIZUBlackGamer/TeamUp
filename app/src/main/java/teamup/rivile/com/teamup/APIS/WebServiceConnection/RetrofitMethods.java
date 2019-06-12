@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.ui.Department.DepartmentJson;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
@@ -257,6 +257,6 @@ public interface RetrofitMethods {
 
     @FormUrlEncoded
     @POST(API.LIST_JOINED_OFFERS)
-    Call<List<JoinedProject>> listJoinedProjects(@Field(API.PARAM_NAME_USER_ID) int userId,
-                                                 @Field(API.PARAM_NAME_TOKEN) String token);
+    Call<List<JoinedProjectRealmObject>> listJoinedProjects(@Field(API.PARAM_NAME_USER_ID) int userId,
+                                                            @Field(API.PARAM_NAME_TOKEN) String token);
 }

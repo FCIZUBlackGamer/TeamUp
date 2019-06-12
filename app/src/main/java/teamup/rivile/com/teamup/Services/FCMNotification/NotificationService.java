@@ -19,6 +19,7 @@ import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.NotificationData;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
@@ -115,12 +116,30 @@ public class NotificationService extends FirebaseMessagingService {
                 break;
             case API.NotificationType.TYPE_REFUSE:
                 bodyMessage = getString(R.string.refused_your_request_to_join_his_project);
+                allowUserToRejoin(data);
                 break;
             default:
                 bodyMessage = null;
         }
 
         return createNotificationMessage(data, bodyMessage);
+    }
+
+    private void allowUserToRejoin(NotificationData data) {
+        Realm.init(this);
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(realm1 -> {
+            JoinedProjectRealmObject joinedProject =
+                    realm.where(JoinedProjectRealmObject.class)
+                            .equalTo("OfferId", data.getProjectId())
+                            .findAll().last();
+
+            if (joinedProject != null) {
+                joinedProject.setStatus(0);
+                realm1.insertOrUpdate(joinedProject);
+            }
+        });
     }
 
     @Nullable

@@ -2,19 +2,19 @@ package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
 import io.realm.RealmObject;
 
-public class JoinedProject extends RealmObject {
-    private int Id ;
-    private Integer OfferId ;
-    private String OfferName ;
-    private Integer UserId ;
-    private Integer Status ;
-    private Integer RefuseId ;
-    private String Reson ;
+public class JoinedProjectRealmObject extends RealmObject {
+    private Integer Id;
+    private Integer OfferId;
+    private String OfferName;
+    private Integer UserId;
+    private Integer Status;
+    private Integer RefuseId;
+    private String Reson;
 
-    public JoinedProject() {
+    public JoinedProjectRealmObject() {
     }
 
-    public JoinedProject(Integer offerId, String offerName, Integer userId, Integer status, Integer refuseId, String reson) {
+    public JoinedProjectRealmObject(Integer offerId, String offerName, Integer userId, Integer status, Integer refuseId, String reson) {
         OfferId = offerId;
         OfferName = offerName;
         UserId = userId;
@@ -23,7 +23,7 @@ public class JoinedProject extends RealmObject {
         Reson = reson;
     }
 
-    public JoinedProject(int id, Integer offerId, String offerName, Integer userId, Integer status, Integer refuseId, String reson) {
+    public JoinedProjectRealmObject(int id, Integer offerId, String offerName, Integer userId, Integer status, Integer refuseId, String reson) {
         Id = id;
         OfferId = offerId;
         OfferName = offerName;

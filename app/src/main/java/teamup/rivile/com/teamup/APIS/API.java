@@ -63,7 +63,7 @@ public class API {
     public static final String PARAM_NAME_OTHER_REASON = "OtherReson";
     public static final String PARAM_NAME_DEVICE_TOKEN = "devicetoken";
 
-    public class Constants {
+    public class JoinRequestResponse {
         public static final int STATUS_ON_HOLD = 0;
         public static final int STATUS_ACCEPT = 1;
         public static final int STATUS_REFUSE = 2;

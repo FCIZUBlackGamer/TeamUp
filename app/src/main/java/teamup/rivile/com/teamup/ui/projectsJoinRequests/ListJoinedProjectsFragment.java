@@ -22,8 +22,7 @@ import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedOfferRealmModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 
 public class ListJoinedProjectsFragment extends Fragment {
@@ -75,12 +74,12 @@ public class ListJoinedProjectsFragment extends Fragment {
                 getRetrofit().
                 create(RetrofitMethods.class);
 
-        Call<List<JoinedProject>> call = retrofitMethods.listJoinedProjects(mUserId, API.URL_TOKEN);
+        Call<List<JoinedProjectRealmObject>> call = retrofitMethods.listJoinedProjects(mUserId, API.URL_TOKEN);
 
-        call.enqueue(new Callback<List<JoinedProject>>() {
+        call.enqueue(new Callback<List<JoinedProjectRealmObject>>() {
             @Override
-            public void onResponse(Call<List<JoinedProject>> call, Response<List<JoinedProject>> response) {
-                List<JoinedProject> joinedProjectList = response.body();
+            public void onResponse(Call<List<JoinedProjectRealmObject>> call, Response<List<JoinedProjectRealmObject>> response) {
+                List<JoinedProjectRealmObject> joinedProjectList = response.body();
                 if (joinedProjectList != null) {
                     if (joinedProjectList.size() == 0) {
                         mEmptyLayout.setVisibility(View.VISIBLE);
@@ -89,9 +88,9 @@ public class ListJoinedProjectsFragment extends Fragment {
                         mProjectsAdapter.swapData(joinedProjectList);
 
                         mRealm.executeTransaction(realm -> {
-                            realm.where(JoinedOfferRealmModel.class).findAll().deleteAllFromRealm();
-                            for (JoinedProject project : joinedProjectList) {
-                                realm.insert(new JoinedOfferRealmModel(project));
+                            realm.where(JoinedProjectRealmObject.class).findAll().deleteAllFromRealm();
+                            for (JoinedProjectRealmObject project : joinedProjectList) {
+                                realm.insert(project);
                             }
                         });
                     }
@@ -104,7 +103,7 @@ public class ListJoinedProjectsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<JoinedProject>> call, Throwable t) {
+            public void onFailure(Call<List<JoinedProjectRealmObject>> call, Throwable t) {
                 Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                 mEmptyLayout.setVisibility(View.VISIBLE);
 

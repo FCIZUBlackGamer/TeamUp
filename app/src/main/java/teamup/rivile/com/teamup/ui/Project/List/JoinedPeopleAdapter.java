@@ -35,7 +35,7 @@ import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 
 import static teamup.rivile.com.teamup.APIS.API.BASE_URL;
-import static teamup.rivile.com.teamup.APIS.API.Constants.*;
+import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.*;
 import static teamup.rivile.com.teamup.APIS.API.URL_TOKEN;
 
 public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapter.JoinedPeopleViewHolder> {
@@ -225,17 +225,15 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
                         else {
                             UserModel userModel = mUsers.get(position);
                             userModel.setJoinOfferStatus(status);
-
-                            mUsers.set(position, userModel);
                         }
 
-                        swapData(mUsers);
+                        swapData(mUsers, false);
                     } else if (serverResponse.equals("Fail")) {
                         Toast.makeText(mContext, "Fail", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -246,10 +244,10 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
         });
     }
 
-    void swapData(List<UserModel> users) {
+    void swapData(List<UserModel> users, boolean sort) {
         mUsers = users;
 
-        if (mUsers != null) {
+        if (mUsers != null && sort) {
             Collections.sort(mUsers, (o1, o2) -> o1.getJoinOfferStatus().compareTo(o2.getJoinOfferStatus()));
         }
 

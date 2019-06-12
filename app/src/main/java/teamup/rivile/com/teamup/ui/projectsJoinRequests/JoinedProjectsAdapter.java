@@ -11,14 +11,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 
-import static teamup.rivile.com.teamup.APIS.API.Constants.STATUS_ACCEPT;
-import static teamup.rivile.com.teamup.APIS.API.Constants.STATUS_ON_HOLD;
-import static teamup.rivile.com.teamup.APIS.API.Constants.STATUS_REFUSE;
+import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.STATUS_ACCEPT;
+import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.STATUS_ON_HOLD;
+import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.STATUS_REFUSE;
 
 public class JoinedProjectsAdapter extends RecyclerView.Adapter<JoinedProjectsAdapter.JoinedProjectsHolder> {
-    private List<JoinedProject> mProjectList = null;
+    private List<JoinedProjectRealmObject> mProjectList = null;
     private Context mContext;
 
     public JoinedProjectsAdapter(Context mContext) {
@@ -36,7 +36,7 @@ public class JoinedProjectsAdapter extends RecyclerView.Adapter<JoinedProjectsAd
 
     @Override
     public void onBindViewHolder(@NonNull JoinedProjectsHolder holder, int position) {
-        JoinedProject joinedProject = mProjectList.get(position);
+        JoinedProjectRealmObject joinedProject = mProjectList.get(position);
 
         holder.projectNameTextView.setText(joinedProject.getOfferName());
 
@@ -75,7 +75,7 @@ public class JoinedProjectsAdapter extends RecyclerView.Adapter<JoinedProjectsAd
         }
     }
 
-    public void swapData(List<JoinedProject> joinedProjectList) {
+    public void swapData(List<JoinedProjectRealmObject> joinedProjectList) {
         mProjectList = joinedProjectList;
 
         notifyDataSetChanged();
