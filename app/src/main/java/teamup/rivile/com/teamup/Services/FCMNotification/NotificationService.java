@@ -23,11 +23,15 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.FirstActivity;
+
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.*;
 
 public class NotificationService extends FirebaseMessagingService {
     private final String CHANNEL_ID = "TEAMUPNOTIFICATIONCHANNELID";
     private int mNotificationId = 0;
+    private int mNotificationType = -1;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -39,6 +43,20 @@ public class NotificationService extends FirebaseMessagingService {
             String notificationMessage = createNotificationMessageFromData(data);
             if (notificationMessage != null) pushNotification(notificationMessage);
         }
+    }
+
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+
+        Realm.init(this);
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(realm1 -> {
+            NotificationDatabase database = realm1.where(NotificationDatabase.class).findFirst();
+            if (database == null) realm1.insert(new NotificationDatabase(s, true));
+            else database.setDevice_FCM_Token(s);
+        });
     }
 
     private boolean userLoggedIn(int targetUserId) {
@@ -81,48 +99,46 @@ public class NotificationService extends FirebaseMessagingService {
         );
     }
 
-    @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
-
-        Realm.init(this);
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(realm1 -> {
-            NotificationDatabase database = realm1.where(NotificationDatabase.class).findFirst();
-            if (database == null) realm1.insert(new NotificationDatabase(s, true));
-            else database.setDevice_FCM_Token(s);
-        });
-    }
-
     @Nullable
     private String createNotificationMessageFromData(@NonNull NotificationData data) {
         String bodyMessage;
         switch (data.getNotificationType()) {
-            case API.NotificationType.TYPE_JOIN:
+            case TYPE_JOIN:
                 bodyMessage = getString(R.string.request_to_join_project);
+                mNotificationType = TYPE_JOIN;
                 break;
-            case API.NotificationType.TYPE_EDIT:
+            case TYPE_EDIT:
                 bodyMessage = getString(R.string.edited_your_project);
+                mNotificationType = TYPE_EDIT;
                 break;
-            case API.NotificationType.TYPE_LIKE:
+            case TYPE_LIKE:
                 bodyMessage = getString(R.string.liked_your_project);
+                mNotificationType = TYPE_LIKE;
                 break;
-            case API.NotificationType.TYPE_DELETE:
+            case TYPE_DELETE:
                 bodyMessage = getString(R.string.deleted_your_project);
+                mNotificationType = TYPE_DELETE;
                 break;
-            case API.NotificationType.TYPE_ACCEPT:
+            case TYPE_ACCEPT:
                 bodyMessage = getString(R.string.accepted_your_request_to_join_his_project);
+                mNotificationType = TYPE_ACCEPT;
                 break;
-            case API.NotificationType.TYPE_REFUSE:
+            case TYPE_REFUSE:
                 bodyMessage = getString(R.string.refused_your_request_to_join_his_project);
+                mNotificationType = TYPE_REFUSE;
                 allowUserToRejoin(data);
                 break;
             default:
                 bodyMessage = null;
+                mNotificationType = -1;
         }
 
         return createNotificationMessage(data, bodyMessage);
+    }
+
+    @Nullable
+    private String createNotificationMessage(@NonNull NotificationData data, @Nullable String message) {
+        return message == null ? null : data.getUserName() + " " + message + " (" + data.getProjectName() + ").";
     }
 
     private void allowUserToRejoin(NotificationData data) {
@@ -142,21 +158,10 @@ public class NotificationService extends FirebaseMessagingService {
         });
     }
 
-    @Nullable
-    private String createNotificationMessage(@NonNull NotificationData data, @Nullable String message) {
-        return message == null ? null : data.getUserName() + " " + message + " (" + data.getProjectName() + ").";
-    }
-
     private void pushNotification(String text) {
         createNotificationChannel();
 
-        Intent intent = new Intent(this, FirstActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                1,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
+        PendingIntent pendingIntent = createNotificationPendingIntent();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -170,6 +175,18 @@ public class NotificationService extends FirebaseMessagingService {
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(mNotificationId++, builder.build());
+    }
+
+    private PendingIntent createNotificationPendingIntent() {
+        Intent intent = new Intent(this, DrawerActivity.class);
+        intent.putExtra(getString(R.string.notification_type_key), mNotificationType);
+
+        return PendingIntent.getActivity(
+                this,
+                mNotificationId,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT
+        );
     }
 
     private void createNotificationChannel() {

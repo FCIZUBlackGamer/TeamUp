@@ -44,6 +44,7 @@
         <activity
             android:name=".ui.DrawerActivity"
             android:label="@string/title_activity_drawer"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.Introduction.IntroductionActivity"

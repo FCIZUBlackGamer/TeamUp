@@ -40,9 +40,15 @@ import teamup.rivile.com.teamup.ui.Search.FilterSearchFragment;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.ui.SuggestedProject.FragmentListProjectNames;
 import teamup.rivile.com.teamup.ui.account.AccountSettingsFragment;
 import teamup.rivile.com.teamup.ui.projectsJoinRequests.ListJoinedProjectsFragment;
 
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.TYPE_ACCEPT;
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.TYPE_EDIT;
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.TYPE_JOIN;
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.TYPE_LIKE;
+import static teamup.rivile.com.teamup.APIS.API.NotificationType.TYPE_REFUSE;
 import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
 
 public class DrawerActivity extends AppCompatActivity
@@ -237,12 +243,12 @@ public class DrawerActivity extends AppCompatActivity
                 .replace(R.id.frame, new FragmentHome())
                 .commit();
         mIsCurrentFragmentIsHomeFragment = true;
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
 //        realm.executeTransaction(realm1 -> {
 //            LoginDataBase mLoginDataBase = realm1.where(LoginDataBase.class).findFirst();
 //
@@ -254,12 +260,37 @@ public class DrawerActivity extends AppCompatActivity
 //            }
 //
 //        });
-
         realm.executeTransaction(realm1 -> {
             if (mLoginDataBase != null) {
                 userState = mLoginDataBase.getUser().getStatus();
             }
         });
+
+        checkForNotificationType();
+    }
+
+    private void checkForNotificationType() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra(getString(R.string.notification_type_key))) {
+                int notificationType = intent.getIntExtra(getString(R.string.notification_type_key), -1);
+                if (notificationType != -1) {
+                    int navigationIndex = 0;
+                    switch (notificationType) {
+                        case TYPE_JOIN:
+                        case TYPE_EDIT:
+                        case TYPE_LIKE:
+                            navigationIndex = 2;
+                            break;
+                        case TYPE_ACCEPT:
+                        case TYPE_REFUSE:
+                            navigationIndex = 3;
+                            break;
+                    }
+                    onNavigationItemSelected(mNavigationView.getMenu().getItem(navigationIndex));
+                }
+            }
+        }
     }
 
     @Override

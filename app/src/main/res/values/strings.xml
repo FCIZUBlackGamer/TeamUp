@@ -237,6 +237,8 @@
     <string name="refused_your_request_to_join_his_project">Refused Your Request To Join His Project</string>
     <string name="request_on_hold">Your Request To Join This Project Is On Hold</string>
     <string name="request_accepted">Your Request To Join This Project Was Accepted, You Are Joined</string>
+    <string name="notification_type_key">notification_type_key</string>
+    <string name="target_key">target_key</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>
