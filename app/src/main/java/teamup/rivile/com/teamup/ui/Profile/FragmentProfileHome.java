@@ -9,7 +9,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -28,7 +26,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,13 +77,15 @@ import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
+import teamup.rivile.com.teamup.ui.SuggestedProject.FragmentListProjectNames;
 
 public class FragmentProfileHome extends Fragment {
     private ConstraintLayout mLoadingViewConstraintLayout;
 
     FloatingActionButton fab_edit;
     ImageView cir_user_image;
-    TextView txt_name, txt_job_title, txt_location, txt_bio, txt_dateOfBirth, txt_email, txt_phone, txt_num_projects;
+    TextView txt_name, txt_job_title, txt_location, txt_bio, txt_dateOfBirth, txt_email, txt_phone;
 
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
@@ -159,7 +158,6 @@ public class FragmentProfileHome extends Fragment {
         txt_phone = view.findViewById(R.id.phone);
         fab_edit = view.findViewById(R.id.edit);
         cir_user_image = view.findViewById(R.id.user_image);
-        txt_num_projects = view.findViewById(R.id.num_projects);
 //        ctl = view.findViewById(R.id.collapsing_toolbar);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -185,7 +183,7 @@ public class FragmentProfileHome extends Fragment {
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
         mLoadingViewConstraintLayout.setVisibility(View.GONE);
 //        viewPager.setAdapter(new pager(fragmentManager));
-        adapter = new AdapterProfileProject(getActivity(), offersList);
+        adapter = new AdapterListOffers(getActivity(), offersList);
         recyclerView.setAdapter(adapter);
 
         realm.executeTransaction(realm1 -> {
@@ -271,9 +269,12 @@ public class FragmentProfileHome extends Fragment {
             /**
              * replace code with one which get Image from phone if exist
              * */
-            if (profObject.getImage() != null && !profObject.getImage().isEmpty())
-                Picasso.get().load(profObject.getImage()).into(civ_user_image);
+            String userImage = profObject.getImage();
+            if (userImage != null && !userImage.isEmpty()) {
+                if (userImage.charAt(0) == '/') userImage = API.BASE_URL + userImage;
 
+                Picasso.get().load(userImage).into(civ_user_image);
+            }
 //
 //            if (profObject.getIdentityImage() != null && !profObject.getIdentityImage().isEmpty())
 //                Picasso.get().load(profObject.getIdentityImage()).into(cir_user_image);
@@ -319,68 +320,49 @@ public class FragmentProfileHome extends Fragment {
             };
 
             btn_save.setOnClickListener(v1 -> {
+                mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
+                dialog.dismiss();
                 if (id != 0) {
-                    /** Validation **/
+                    if (userImageFile.getFileUri() != null)
+                        copyFilesUploadFilesUpdateUser(userImageFile, USER_IMAGE);
+                    else {
+                        UserModel model = new UserModel();
 
-                    copyFilesUploadFilesAddOffer(userImageFile, USER_IMAGE);
-//                    copyFilesUploadFilesAddOffer(userSSNCode, USER_SSN);
+                        realm.executeTransaction(realm1 -> {
+                            model.setSocialId(realm1.where(LoginDataBase.class).findFirst().getUser().getSocialId());
+                        });
 
-                    UserModel model = new UserModel();
+                        model.setId(id);
+                        model.setFullName(ed_name.getText().toString());
+                        model.setPhone(ed_phone.getText().toString());
+                        model.setJobtitle(ed_job.getText().toString());
+                        model.setBio(ed_bio.getText().toString());
+                        model.setDateOfBirth(tv_birth_date.getText().toString());
+                        model.setAddress(ed_address.getText().toString());
 
-                    realm.executeTransaction(realm1 -> {
-                        model.setSocialId(realm1.where(LoginDataBase.class).findFirst().getUser().getSocialId());
-                    });
+                        if (rb_gender.getCheckedRadioButtonId() == R.id.male) {
+                            model.setGender(true);
+                        } else {
+                            model.setGender(false);
+                        }
 
-                    model.setId(id);
-                    model.setFullName(ed_name.getText().toString());
-                    model.setPhone(ed_phone.getText().toString());
-                    model.setJobtitle(ed_job.getText().toString());
-//                    model.setIdentityNum(ed_national_id.getText().toString());
-                    model.setBio(ed_bio.getText().toString());
-                    model.setDateOfBirth(tv_birth_date.getText().toString());
-                    model.setAddress(ed_address.getText().toString());
-//                    model.setMail(ed_email.getText().toString());
-//                    model.setPassword(ed_password.getText().toString());
-                    if (rb_gender.getCheckedRadioButtonId() == R.id.male) {
-                        model.setGender(true);
-                    } else {
-                        model.setGender(false);
+                        model.setImage(profObject.getImage());
+
+                        editAction(model);
                     }
-
-                    /**
-                     * upload userImage
-                     * //upload user SSN image (Not Here) in settings page
-                     * */
-
-                    model.setImage(profObject.getImage());
-
-//                    model.setIdentityImage(profObject.getIdentityImage());
-                    mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
-                    editAction(model);
-                    dialog.dismiss();
                 }
             });
-
         });
-
     }
 
-    private void copyFilesUploadFilesAddOffer(FilesModel model, int type) {
+    private void copyFilesUploadFilesUpdateUser(FilesModel model, int type) {
 
-        Uri uri = model.getFileUri();
+        Uri uri;
 
-        try /*(Cursor cursor = getContext().getContentResolver()
-                .query(uri, null, null, null, null, null))*/ {
-            // moveToFirst() returns false if the cursor has 0 rows.  Very handy for
-            // "if there's anything to look at, look at it" conditionals.
-//            if (cursor != null && cursor.moveToFirst()) {
-//                final String displayName = cursor.getString(
-//                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-
-            if (copyFileToProjectDirectory(model, "fee")) {
+        try {
+            if (copyFileToProjectDirectory(model, System.currentTimeMillis() + ".png")) {
                 //Load New File Location
                 uri = model.getFileUri();
-                Log.v("NewFileUri", uri.getPath());
 
                 // Map is used to multipart the file using okhttp3.RequestBody
                 File file = new File(uri.getPath());
@@ -407,23 +389,16 @@ public class FragmentProfileHome extends Fragment {
                                             false
                                     );
                                     profObject.setImage(url);
+                                    editAction(profObject);
                                     Log.v("getImage", profObject.getImage());
                                 }
-//                                else {
-//                                    ssn = new AttachmentModel(
-//                                            "fee",
-//                                            url,
-//                                            false
-//                                    );
-//                                    profObject.setIdentityImage(url);
-//                                    Log.v("getIdentityImage", profObject.getIdentityImage());
-//                                }
-
                                 Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
                             } else {
+                                mLoadingViewConstraintLayout.setVisibility(View.GONE);
                                 Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                             }
                         } else {
+                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
                             Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -432,14 +407,12 @@ public class FragmentProfileHome extends Fragment {
                     public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
                         //textView.setText(t.getMessage());
                         Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
                     }
                 });
             }
-//            }
-
         } catch (Exception e) {
-
-            Log.v("getIdentityImage", "bug");
+            Log.v("getIdentityImage", e.getMessage());
         }
     }
 
@@ -620,28 +593,29 @@ public class FragmentProfileHome extends Fragment {
     }
 
     private void updateUserDB(UserModel userModel) {
-        realm.beginTransaction();
-        LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
-        if (loginDataBase != null) {
-            UserDataBase userDataBase = loginDataBase.getUser();
+        realm.executeTransaction(realm1 -> {
+            LoginDataBase loginDataBase = realm.where(LoginDataBase.class).findFirst();
+            if (loginDataBase != null) {
+                UserDataBase userDataBase = loginDataBase.getUser();
 
-            if (userDataBase != null) {
-                userDataBase.setFullName(userModel.getFullName());
-                userDataBase.setAddress(userModel.getAddress());
-                userDataBase.setBio(userModel.getBio());
-                userDataBase.setDateOfBirth(userModel.getDateOfBirth());
-                userDataBase.setGender(userModel.getGender());
-                userDataBase.setJobtitle(userModel.getJobtitle());
-                userDataBase.setPhone(userModel.getPhone());
-                userDataBase.setImage(userModel.getImage());
-                userDataBase.setIdentityImage(userModel.getIdentityImage());
-                userDataBase.setSocialId(userModel.getSocialId());
+                if (userDataBase != null) {
+                    userDataBase.setFullName(userModel.getFullName());
+                    userDataBase.setAddress(userModel.getAddress());
+                    userDataBase.setBio(userModel.getBio());
+                    userDataBase.setDateOfBirth(userModel.getDateOfBirth());
+                    userDataBase.setGender(userModel.getGender());
+                    userDataBase.setJobtitle(userModel.getJobtitle());
+                    userDataBase.setPhone(userModel.getPhone());
+                    userDataBase.setImage(userModel.getImage());
+                    userDataBase.setIdentityImage(userModel.getIdentityImage());
+                    userDataBase.setSocialId(userModel.getSocialId());
 
-                profObject = loadUser(userDataBase);
-                fillProfData(profObject);
-                ((DrawerActivity) getActivity()).updateNavData(userModel);
+                    profObject = loadUser(userDataBase);
+                    fillProfData(profObject);
+                    ((DrawerActivity) getActivity()).updateNavData(userModel);
+                }
             }
-        }
+        });
     }
 
     private void loadProfileFromDB(LoginDataBase loginDataBases) {
@@ -756,7 +730,6 @@ public class FragmentProfileHome extends Fragment {
     }
 
     private void fillProfOffersData(List<Offers> offers) {
-        txt_num_projects.setText(String.valueOf(offers.size()));
 //        offersList = new ArrayList<>();
         offersList.addAll(offers);
         adapter.notifyDataSetChanged();
@@ -784,35 +757,11 @@ public class FragmentProfileHome extends Fragment {
         if (user.getPhone() != null && !user.getPhone().isEmpty())
             txt_phone.setText(user.getPhone());
 
-        if (user.getNumProject() != null)
-            txt_num_projects.setText(String.valueOf(user.getNumProject()));
+        String userImage = user.getImage();
+        if (userImage != null && !userImage.isEmpty()) {
+            if (userImage.charAt(0) == '/') userImage = API.BASE_URL + userImage;
 
-        if (user.getImage() != null && !user.getImage().isEmpty() && user.getImage() != null) {
-            Picasso.get().load(user.getImage()).into(cir_user_image);
-        }
-    }
-
-    class pager extends FragmentPagerAdapter {
-
-        public pager(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            if (position == 0) {
-                fragment = new FragmentSwipe1();
-            } else if (position == 1) {
-                fragment = new FragmentSwipe2();
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
+            Picasso.get().load(userImage).into(cir_user_image);
         }
     }
 
@@ -869,35 +818,6 @@ public class FragmentProfileHome extends Fragment {
         inImage.compress(Bitmap.CompressFormat.JPEG, 65, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
-
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
     }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {

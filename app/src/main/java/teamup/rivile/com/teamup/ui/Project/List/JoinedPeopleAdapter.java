@@ -244,7 +244,7 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
         });
     }
 
-    void swapData(List<UserModel> users, boolean sort) {
+    public void swapData(List<UserModel> users, boolean sort) {
         mUsers = users;
 
         if (mUsers != null && sort) {

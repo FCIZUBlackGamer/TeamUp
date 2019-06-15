@@ -1,4 +1,4 @@
-package teamup.rivile.com.teamup.ui.Project.List;
+package teamup.rivile.com.teamup.ui.Profile;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,9 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,22 +39,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
-import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
-import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
-import teamup.rivile.com.teamup.ui.Project.Details.FragmentOfferDetails;
+import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.FavouriteModel;
 import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
+import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
+import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
+import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
+import teamup.rivile.com.teamup.ui.Project.Details.FragmentOfferDetails;
+import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
+import teamup.rivile.com.teamup.ui.Project.List.JoinedPeopleAdapter;
 
 import static teamup.rivile.com.teamup.APIS.API.BASE_URL;
 import static teamup.rivile.com.teamup.APIS.API.URL_TOKEN;
@@ -63,32 +63,27 @@ import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.FAVO
 import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
-
-    private Helper mHelper;
-    private char SPACE = ' ';
-
     private Context context;
     private List<Offers> offersList;
     private FragmentManager fragmentManager;
     private Realm realm;
-    private List<LikeModelDataBase> likeModelDataBase;
-    private List<FavouriteDataBase> favouriteDataBases;
-    private int ty;
+    private ArrayList<LikeModelDataBase> likeModelDataBase = new ArrayList<>();
+    private ArrayList<FavouriteDataBase> favouriteDataBases = new ArrayList<>();
+    private int ty = 1; //mine
     private int userId;
-    private int userState;
 
     private RelativeLayout mExpandedRelativeLayout = null;
     private ImageView mHiddenLikeFAB = null;
     private ImageView mHiddenFavouriteFAB = null;
     private int mExpandedPosition = -1;
 
-    public AdapterListOffers(Context context, List<Offers> talabats, List<LikeModelDataBase> likeModel, List<FavouriteDataBase> favouriteModel, int type, Helper helper) {
+    public AdapterListOffers(Context context, List<Offers> talabats) {
         this.context = context;
         this.offersList = talabats;
-        ty = type;
-        likeModelDataBase = likeModel;
-        favouriteDataBases = favouriteModel;
-        mHelper = helper;
+
+        realm = Realm.getDefaultInstance();
+        likeModelDataBase.addAll(realm.where(LikeModelDataBase.class).findAll());
+        favouriteDataBases.addAll(realm.where(FavouriteDataBase.class).findAll());
     }
 
     @NonNull
@@ -99,7 +94,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
-            userState = realm1.where(LoginDataBase.class).findFirst().getUser().getStatus();
         });
         Log.e("Internal Offer Size", offersList.size() + "");
         return new Vholder(view);
@@ -484,10 +478,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             }
         });
 
-        //TODO: get project URL and send it here
-        holder.share.setOnClickListener(v -> mHelper.shareUrl("", offersList.get(position).getName()));
-
-
         holder.likeImageView.setOnClickListener(v -> holder.like.callOnClick());
 
         if (position == mExpandedPosition) {
@@ -502,38 +492,42 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             holder.likeImageView.setVisibility(View.VISIBLE);
         }
 
-        holder.projectRelativeLayout.setOnClickListener(v -> {
-            if (holder.detailsRelativeLayout.getVisibility() == View.VISIBLE) {
-                holder.favouriteImageView.setVisibility(View.VISIBLE);
-                holder.likeImageView.setVisibility(View.VISIBLE);
+//        holder.projectRelativeLayout.setOnClickListener(v -> {
+//            if (holder.detailsRelativeLayout.getVisibility() == View.VISIBLE) {
+//                holder.favouriteImageView.setVisibility(View.VISIBLE);
+//                holder.likeImageView.setVisibility(View.VISIBLE);
+//
+//                holder.detailsRelativeLayout.setVisibility(View.GONE);
+//                mHiddenLikeFAB.setVisibility(View.VISIBLE);
+//                mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
+//
+//                mExpandedRelativeLayout = null;
+//                mHiddenFavouriteFAB = null;
+//                mHiddenLikeFAB = null;
+//                mExpandedPosition = -1;
+//            } else {
+//                holder.favouriteImageView.setVisibility(View.GONE);
+//                holder.likeImageView.setVisibility(View.GONE);
+//
+//                holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
+//
+//                if (mExpandedRelativeLayout != null) {
+//                    mExpandedRelativeLayout.setVisibility(View.GONE);
+//
+//                    mHiddenLikeFAB.setVisibility(View.VISIBLE);
+//                    mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
+//                }
+//
+//                mExpandedRelativeLayout = holder.detailsRelativeLayout;
+//                mHiddenLikeFAB = holder.likeImageView;
+//                mHiddenFavouriteFAB = holder.favouriteImageView;
+//                mExpandedPosition = position;
+//            }
+//        });
 
-                holder.detailsRelativeLayout.setVisibility(View.GONE);
-                mHiddenLikeFAB.setVisibility(View.VISIBLE);
-                mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
-
-                mExpandedRelativeLayout = null;
-                mHiddenFavouriteFAB = null;
-                mHiddenLikeFAB = null;
-                mExpandedPosition = -1;
-            } else {
-                holder.favouriteImageView.setVisibility(View.GONE);
-                holder.likeImageView.setVisibility(View.GONE);
-
-                holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
-
-                if (mExpandedRelativeLayout != null) {
-                    mExpandedRelativeLayout.setVisibility(View.GONE);
-
-                    mHiddenLikeFAB.setVisibility(View.VISIBLE);
-                    mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
-                }
-
-                mExpandedRelativeLayout = holder.detailsRelativeLayout;
-                mHiddenLikeFAB = holder.likeImageView;
-                mHiddenFavouriteFAB = holder.favouriteImageView;
-                mExpandedPosition = position;
-            }
-        });
+        holder.like.setVisibility(View.GONE);
+        holder.make_offer.setVisibility(View.GONE);
+        holder.share.setVisibility(View.GONE);
     }
 
     class Vholder extends RecyclerView.ViewHolder {
@@ -657,13 +651,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     private void reportOrDelete(MenuItem op, int position) {
         if (ty == MINE) {//means delete action
+
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.delete_project)
                     .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
                         deleteOffer(offersList.get(position).getId(), position);
                         notifyDataSetChanged();
                     }).setNegativeButton(context.getString(R.string.no), (dialog, which) -> dialog.dismiss())
-            .show();
+                    .show();
 
         } else {//make report
             //TODO: Action Report Here
@@ -715,7 +710,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 String Offers = response.body();
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
@@ -772,7 +767,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         call = getOffers.favouriteOffer(gson.toJson(favouriteModel), API.URL_TOKEN);
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 String Offers = response.body();
 //                Log.e("Like", Offers);
                 if (Offers.equals("Success")) {
@@ -824,7 +819,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 String Offers = response.body();
                 if (Offers.equals("Success")) {
                     realm.beginTransaction();

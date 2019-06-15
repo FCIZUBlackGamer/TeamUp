@@ -10,7 +10,7 @@ public class Offers implements Serializable {
     private String Description;
     private Integer CategoryId;
     private String CategoryName;
-//    private Integer ProfitType;
+    //    private Integer ProfitType;
     private Integer NumContributor;
     private Integer GenderContributor;
     private Integer UserId;
@@ -18,14 +18,14 @@ public class Offers implements Serializable {
     private Integer NumJoinOffer;
     private List<UserModel> Users;
     private String Address;
-//    private String Date;
+    //    private String Date;
     private Date StringDate;
     private Float ProjectDuration;
     private Integer Status;
-//    private List<StateModel> States;
+    //    private List<StateModel> States;
     private List<TagsModel> Tags;
     private Integer LocationId;
-//    private Integer InitialCostType;
+    //    private Integer InitialCostType;
 //    private Integer DirectExpensesType;
 //    private Integer IndectExpensesType;
 //    private Integer ProjectDurationType;
@@ -35,11 +35,11 @@ public class Offers implements Serializable {
     private Float DirectExpenses;
     private Float IndectExpenses;
 
-//    private Integer ProjectType;
-    public boolean NeedPlace ;
-    public boolean IsJoin ;
-    public boolean IsSuccess ;
-    public boolean IsCompleted ;
+    //    private Integer ProjectType;
+    public boolean NeedPlace;
+    public boolean IsJoin;
+    public boolean IsSuccess;
+    public boolean IsCompleted;
     public List<AttachmentModel> Attachments;
 
     public Integer getId() {
@@ -179,7 +179,7 @@ public class Offers implements Serializable {
     }
 
     public Float getInitialCost() {
-        return InitialCost;
+        return InitialCost == null ? 0 : InitialCost;
     }
 
     public void setInitialCost(Float initialCost) {
@@ -187,7 +187,7 @@ public class Offers implements Serializable {
     }
 
     public Float getDirectExpenses() {
-        return DirectExpenses;
+        return DirectExpenses == null ? 0 : DirectExpenses;
     }
 
     public void setDirectExpenses(Float directExpenses) {
@@ -195,7 +195,7 @@ public class Offers implements Serializable {
     }
 
     public Float getIndectExpenses() {
-        return IndectExpenses;
+        return IndectExpenses == null ? 0 : IndectExpenses;
     }
 
     public void setIndectExpenses(Float indectExpenses) {

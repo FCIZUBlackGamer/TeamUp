@@ -605,7 +605,6 @@ public class FragmentOffer2 extends Fragment {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void openGallery() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
@@ -616,7 +615,7 @@ public class FragmentOffer2 extends Fragment {
             }
         } else {
             Intent intent = new Intent();
-            intent.setType("mImagesImageView/*");
+            intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);// ACTION_VIEW
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
@@ -659,13 +658,9 @@ public class FragmentOffer2 extends Fragment {
         alertBuilder.setTitle("Permission necessary");
         alertBuilder.setMessage(msg + " permission is necessary");
         alertBuilder.setPositiveButton(android.R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[]{permission},
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-                });
+                (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{permission},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE));
         AlertDialog alert = alertBuilder.create();
         alert.show();
     }
@@ -684,184 +679,7 @@ public class FragmentOffer2 extends Fragment {
                 cameraIntent.putExtra("PageNo", 2);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
-
         }
-
-    }
-
-//    public Uri getImageUri(Context inContext, String uri) {
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(uri);
-//        int nh = (int) ( bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()) );
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), scaled, "Title", null);
-//        return Uri.parse(path);
-//    }
-
-    public String compressImage(String imageUri) {
-
-        String filePath = getRealPathFromURI(imageUri);
-        Bitmap scaledBitmap = null;
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-
-//      by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
-//      you try the use the bitmap here, you will get null.
-        options.inJustDecodeBounds = true;
-        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
-
-        int actualHeight = options.outHeight;
-        int actualWidth = options.outWidth;
-
-//      max Height and width values of the compressed mImagesImageView is taken as 816x612
-
-        float maxHeight = 816.0f;
-        float maxWidth = 612.0f;
-        float imgRatio = actualWidth / actualHeight;
-        float maxRatio = maxWidth / maxHeight;
-
-//      width and height values are set maintaining the aspect ratio of the mImagesImageView
-
-        if (actualHeight > maxHeight || actualWidth > maxWidth) {
-            if (imgRatio < maxRatio) {
-                imgRatio = maxHeight / actualHeight;
-                actualWidth = (int) (imgRatio * actualWidth);
-                actualHeight = (int) maxHeight;
-            } else if (imgRatio > maxRatio) {
-                imgRatio = maxWidth / actualWidth;
-                actualHeight = (int) (imgRatio * actualHeight);
-                actualWidth = (int) maxWidth;
-            } else {
-                actualHeight = (int) maxHeight;
-                actualWidth = (int) maxWidth;
-
-            }
-        }
-
-//      setting inSampleSize value allows to load a scaled down version of the original mImagesImageView
-
-        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
-
-//      inJustDecodeBounds set to false to load the actual bitmap
-        options.inJustDecodeBounds = false;
-
-//      this options allow android to claim the bitmap memory if it runs low on memory
-        options.inPurgeable = true;
-        options.inInputShareable = true;
-        options.inTempStorage = new byte[16 * 1024];
-
-        try {
-//          load the bitmap from its path
-            bmp = BitmapFactory.decodeFile(filePath, options);
-        } catch (OutOfMemoryError exception) {
-            exception.printStackTrace();
-
-        }
-        try {
-            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
-        } catch (OutOfMemoryError exception) {
-            exception.printStackTrace();
-        }
-
-        float ratioX = actualWidth / (float) options.outWidth;
-        float ratioY = actualHeight / (float) options.outHeight;
-        float middleX = actualWidth / 2.0f;
-        float middleY = actualHeight / 2.0f;
-
-        Matrix scaleMatrix = new Matrix();
-        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
-
-        Canvas canvas = new Canvas(scaledBitmap);
-        canvas.setMatrix(scaleMatrix);
-        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
-
-//      check the rotation of the mImagesImageView and display it properly
-        ExifInterface exif;
-        try {
-            exif = new ExifInterface(filePath);
-
-            int orientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION, 0);
-            Log.d("EXIF", "Exif: " + orientation);
-            Matrix matrix = new Matrix();
-            if (orientation == 6) {
-                matrix.postRotate(90);
-                Log.d("EXIF", "Exif: " + orientation);
-            } else if (orientation == 3) {
-                matrix.postRotate(180);
-                Log.d("EXIF", "Exif: " + orientation);
-            } else if (orientation == 8) {
-                matrix.postRotate(270);
-                Log.d("EXIF", "Exif: " + orientation);
-            }
-            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
-                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
-                    true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        FileOutputStream out = null;
-        String filename = getFilename();
-        try {
-            out = new FileOutputStream(filename);
-
-//          write the compressed bitmap at the destination specified by filename.
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return filename;
-
-    }
-
-    public String getFilename() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), getString(R.string.app_name) + "/Images");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
-        return uriSting;
-
-    }
-
-    private String getRealPathFromURI(String contentURI) {
-        Uri contentUri = Uri.parse(contentURI);
-        Cursor cursor = getActivity().getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null) {
-            return contentUri.getPath();
-        } else {
-            cursor.moveToFirst();
-            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            return cursor.getString(index);
-        }
-    }
-
-    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-        final float totalPixels = width * height;
-        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
-        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-            inSampleSize++;
-        }
-
-        return inSampleSize;
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
     }
 
     @Override
@@ -874,14 +692,11 @@ public class FragmentOffer2 extends Fragment {
                 mPagerAdapter.notifyDataSetChanged();
                 Log.e("Item", mPager.getCurrentItem() + "");
                 if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                    /** We Got The File */
-                    /** Save File to Local Folder and get Uri and add it to (mFilesUriArrayList) */
                     Toast.makeText(getActivity(), "File", Toast.LENGTH_SHORT).show();
 
                     ClipData mClipData = data.getClipData();
                     if (mClipData == null) {
                         Uri uri = data.getData();
-                        //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
                         FilesModel s = new FilesModel(uri);
                         Log.i("File Name", getFileName(s.getFileUri()));
                         Toast.makeText(getActivity(), getFileName(s.getFileUri()), Toast.LENGTH_SHORT).show();
@@ -893,13 +708,11 @@ public class FragmentOffer2 extends Fragment {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
 
-                            //String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
                             FilesModel s = new FilesModel(uri);
                             Log.i("File Name1", getFileName(s.getFileUri()));
                             Toast.makeText(getActivity(), getFileName(s.getFileUri()), Toast.LENGTH_SHORT).show();
                             s.setFileName(getFileName(s.getFileUri()));
                             mFilesUriArrayList.add(s);
-
                         }
                     }
                     mFilesAdapter.notifyDataSetChanged();
@@ -908,7 +721,6 @@ public class FragmentOffer2 extends Fragment {
                     if (mClipData == null) {
                         Uri uri = data.getData();
                         mImagesUriArrayList.add(new FilesModel(uri));
-//                        mFinalFileModelList.add(new FilesModel(uri));
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                             bitmap = getResizedBitmap(bitmap, 65);
@@ -922,39 +734,25 @@ public class FragmentOffer2 extends Fragment {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
                             mImagesUriArrayList.add(new FilesModel(uri));
-//                            mFinalFileModelList.add(new FilesModel(uri));
-                            // !! You may need to resize the mImagesImageView if it's too large
+
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-//                                bitmap = getResizedBitmap(bitmap, 65);
                                 mPreviewImageView.setImageBitmap(bitmap);
                                 Toast.makeText(getActivity(), "Image:\n" + uri, Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     }
-                    Log.e("mFinalFileModelList", mFinalFileModelList.size() + "");
                 } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//                    bitmap = getResizedBitmap(bitmap, 400);
                     Uri imageUri = getImageUri(getActivity(), bitmap);
-                    /** Save Image to Local Folder and get Uri and add it to (mImagesUriArrayList) */
                     mPreviewImageView.setImageBitmap(bitmap);
                     if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
-                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                        //Uri tempUri = getImageUri(getActivity(), String.valueOf(imageUri));
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(getActivity(), "Here " + getRealPathFromURI(imageUri), Toast.LENGTH_LONG).show();
-
                         mImagesUriArrayList.add(new FilesModel(imageUri));
                     }
                 }
                 mImagesAdapter.notifyDataSetChanged();
-                for (int i = 0; i < mImagesUriArrayList.size(); i++) {
-                    Log.e("Index " + i, mImagesUriArrayList.get(i).getFileUri().toString());
-                }
             });
         }
     }
@@ -1003,44 +801,6 @@ public class FragmentOffer2 extends Fragment {
 
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
-
-
-//    @SuppressLint("WorldReadableFiles")
-//    private void CopyReadPDFFromAssets(String fileName, Uri fileUri) {
-//        AssetManager assetManager = getActivity().getAssets();
-//
-//        InputStream in = null;
-//        OutputStream out = null;
-//        File file = new File(getActivity().getFilesDir(), fileName);
-//        try {
-//            in = assetManager.open(fileName);
-//            out = getActivity().openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
-//
-//            copyPdfFile(in, out);
-//            in.mCloseImageView();
-//            in = null;
-//            out.flush();
-//            out.mCloseImageView();
-//            out = null;
-//        } catch (Exception e) {
-//            Log.e("exception", e.getMessage());
-//        }
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setDataAndType(
-//                Uri.parse(fileUri.toString()),
-//                "application/pdf");
-//
-//        Intent.createChooser(intent, "Select App");
-//    }
-//
-//    private void copyPdfFile(@NonNull InputStream in, OutputStream out) throws IOException {
-//        byte[] buffer = new byte[1024];
-//        int read;
-//        while ((read = in.read(buffer)) != -1) {
-//            out.write(buffer, 0, read);
-//        }
-//    }
 
     private void copyFilesUploadFilesAddOffer() {
 
@@ -1277,54 +1037,6 @@ public class FragmentOffer2 extends Fragment {
         }
         return offers;
     }
-
-//    private teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel bindRequirementModel() {
-//        teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel requirementModel = new teamup.rivile.com.teamup.Uitls.APIModels.RequirmentModel();
-//        if (mLoadedProjectWithAllDataLiveData != null) {
-//            OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
-//            if (o != null)
-//                requirementModel.setId(o.getId());
-//        }
-//        if (requirementModel.getId() == null) requirementModel.setId(0);
-//        requirementModel.setId(RequirmentModel.getId());
-//        requirementModel.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
-//        requirementModel.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
-//        requirementModel.setNeedPlace(RequirmentModel.isNeedPlace());
-//        requirementModel.setPlaceAddress(RequirmentModel.getPlaceAddress());
-//        requirementModel.setPlaceDescriptions(RequirmentModel.getPlaceDescriptions());
-//        requirementModel.setNeedMoney(RequirmentModel.isNeedMoney());
-//        requirementModel.setMoneyFrom(RequirmentModel.getMoneyFrom());
-//        requirementModel.setMoneyTo(RequirmentModel.getMoneyTo());
-//        requirementModel.setMoneyDescriptions(RequirmentModel.getMoneyDescriptions());
-//        requirementModel.setNeedExperience(RequirmentModel.isNeedExperience());
-//        requirementModel.setExperienceFrom(RequirmentModel.getExperienceFrom());
-//        requirementModel.setExperienceTo(RequirmentModel.getExperienceTo());
-//        requirementModel.setExperienceDescriptions(RequirmentModel.getExperienceDescriptions());
-//        requirementModel.setUserId(RequirmentModel.getUserId());
-//        requirementModel.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
-//
-//        RealmList<OfferDetailsRequirmentDataBase> list = new RealmList<>();
-//        OfferDetailsRequirmentDataBase offerDetailsRequirmentDataBase = new OfferDetailsRequirmentDataBase();
-//        offerDetailsRequirmentDataBase.setId(RequirmentModel.getId());
-//        offerDetailsRequirmentDataBase.setNeedPlaceStatus(RequirmentModel.isNeedPlaceStatus());
-//        offerDetailsRequirmentDataBase.setNeedPlaceType(RequirmentModel.isNeedPlaceType());
-//        offerDetailsRequirmentDataBase.setNeedPlace(RequirmentModel.isNeedPlace());
-//        offerDetailsRequirmentDataBase.setPlaceAddress(RequirmentModel.getPlaceAddress());
-//        offerDetailsRequirmentDataBase.setPlaceDescriptions(RequirmentModel.getPlaceDescriptions());
-//        offerDetailsRequirmentDataBase.setNeedMoney(RequirmentModel.isNeedMoney());
-//        offerDetailsRequirmentDataBase.setMoneyFrom(RequirmentModel.getMoneyFrom());
-//        offerDetailsRequirmentDataBase.setMoneyTo(RequirmentModel.getMoneyTo());
-//        offerDetailsRequirmentDataBase.setMoneyDescriptions(RequirmentModel.getMoneyDescriptions());
-//        offerDetailsRequirmentDataBase.setNeedExperience(RequirmentModel.isNeedExperience());
-//        offerDetailsRequirmentDataBase.setExperienceFrom(RequirmentModel.getExperienceFrom());
-//        offerDetailsRequirmentDataBase.setExperienceTo(RequirmentModel.getExperienceTo());
-//        offerDetailsRequirmentDataBase.setExperienceDescriptions(RequirmentModel.getExperienceDescriptions());
-//        offerDetailsRequirmentDataBase.setUserId(RequirmentModel.getUserId());
-//        offerDetailsRequirmentDataBase.setExperienceTypeId(RequirmentModel.getExperienceTypeId());
-//        list.add(offerDetailsRequirmentDataBase);
-//        if (mOfferDetailsDataBase != null) mOfferDetailsDataBase.setRequirments(list);
-//        return requirementModel;
-//    }
 
     private void addOffer() {
         Gson gson = new GsonBuilder()

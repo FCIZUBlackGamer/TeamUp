@@ -164,10 +164,11 @@ public class DrawerActivity extends AppCompatActivity
 //            user_name.setText(User.getFullName());
                 if (User.getImage() != null && !User.getImage().isEmpty()) {
                     try {
-                        if (User.getSocialId() != null) {
-                            Picasso.get().load(User.getImage()).into(user_image);
-                        } else {
-                            Picasso.get().load(API.BASE_URL + User.getImage()).into(user_image);
+                        String userImage = User.getImage();
+                        if (userImage != null && !userImage.isEmpty()) {
+                            if (userImage.charAt(0) == '/') userImage = API.BASE_URL + userImage;
+
+                            Picasso.get().load(userImage).into(user_image);
                         }
                         image_name.setVisibility(View.GONE);
                     } catch (Exception e) {
@@ -539,8 +540,11 @@ public class DrawerActivity extends AppCompatActivity
 
     public void updateNavData(UserModel userModel) {
         if (userModel != null) {
-            if (userModel.getImage() != null && !userModel.getImage().isEmpty()) {
-                Picasso.get().load(API.BASE_URL + userModel.getImage()).into(user_image);
+            String userImage = userModel.getImage();
+            if (userImage != null && !userImage.isEmpty()) {
+                if (userImage.charAt(0) == '/') userImage = API.BASE_URL + userImage;
+
+                Picasso.get().load(userImage).into(user_image);
             }
 
             String[] name = userModel.getFullName().split(" ");

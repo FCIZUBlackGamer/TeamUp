@@ -239,6 +239,7 @@
     <string name="request_accepted">Your Request To Join This Project Was Accepted, You Are Joined</string>
     <string name="notification_type_key">notification_type_key</string>
     <string name="target_key">target_key</string>
+    <string name="delete_project">Delete this project ?</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>
