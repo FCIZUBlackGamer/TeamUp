@@ -14,12 +14,12 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
+import teamup.rivile.com.teamup.Uitls.APIModels.Department;
 import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
 import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.ui.Department.DepartmentJson;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
 
 public interface RetrofitMethods {
@@ -112,7 +112,7 @@ public interface RetrofitMethods {
 
     @FormUrlEncoded
     @POST(API.LOAD_DEPARTMENTS_URL)
-    Call<DepartmentJson> getCategory(@Field("token") String token);
+    Call<List<Department>> getCategory(@Field("token") String token);
 
     @FormUrlEncoded
     @POST(API.OFFER_DETAILS_URL)

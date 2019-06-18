@@ -27,7 +27,7 @@ import teamup.rivile.com.teamup.R;
 
 
 public class FragmentHome extends Fragment {
-private ConstraintLayout mLoadingViewConstraintLayout;
+    private ConstraintLayout mLoadingViewConstraintLayout;
 
     // All Category
     GridView gridView;
@@ -81,17 +81,13 @@ private ConstraintLayout mLoadingViewConstraintLayout;
         RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
         RetrofitMethods getDepartments = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<DepartmentJson> call = getDepartments.getCategory(API.URL_TOKEN);
-        call.enqueue(new Callback<DepartmentJson>() {
+        Call<List<Department>> call = getDepartments.getCategory(API.URL_TOKEN);
+        call.enqueue(new Callback<List<Department>>() {
             @Override
-            public void onResponse(Call<DepartmentJson> call, retrofit2.Response<DepartmentJson> response) {
+            public void onResponse(Call<List<Department>> call, retrofit2.Response<List<Department>> response) {
                 if (response.body() != null) {
-                    if (response.body().getCategory() != null) {
-                        List<Department> serverResponse = response.body().getCategory();
-                        fillOffers(serverResponse);
-                    } else {
-                        Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
-                    }
+                    List<Department> serverResponse = response.body();
+                    fillOffers(serverResponse);
                 } else {
                     Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
                 }
@@ -99,7 +95,7 @@ private ConstraintLayout mLoadingViewConstraintLayout;
             }
 
             @Override
-            public void onFailure(Call<DepartmentJson> call, Throwable t) {
+            public void onFailure(Call<List<Department>> call, Throwable t) {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
