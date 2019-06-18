@@ -604,20 +604,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         //adding click listener
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-//                case R.id.action_add_to_favourite:
-//                    //handle action_add_to_favourite click
-//                    if (item.getIcon()
-//                            .getConstantState()
-//                            .equals(context.getResources()
-//                                    .getDrawable(R.drawable.ic_star_empty)
-//                                    .getConstantState())) {
-//                        item.setIcon(R.drawable.ic_star_full);
-//                        markFavourite(offersList.get(position).getId(), userId, 0);
-//                    } else {
-//                        item.setIcon(R.drawable.ic_star_empty);
-//                        markFavourite(offersList.get(position).getId(), userId, 1);
-//                    }
-//                    break;
                 case R.id.action_alert:
                     //handle action_alert click
                     reportOrDelete(item, position);
@@ -682,22 +668,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     public interface Helper {
         void shareUrl(String url, String projectName);
-    }
-
-    Bitmap getBitmap(Drawable drawable) {
-        try {
-            Bitmap bitmap;
-
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            return bitmap;
-        } catch (OutOfMemoryError e) {
-            // Handle the error
-            return null;
-        }
     }
 
     public void likeOffer(int offerId, int userId, int like, TextView likeHolder) {
@@ -845,22 +815,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 Log.e("Erro", t.getMessage());
             }
         });
-    }
-
-    private String checkString(int num) {
-        if (num == 0) {
-            return context.getResources().getString(R.string.hour);
-        } else if (num == 1) {//perioud
-            return context.getResources().getString(R.string.daily);
-        } else if (num == 2) {
-            return context.getResources().getString(R.string.monthly);
-        } else if (num == 4) {//perioud
-            return context.getResources().getString(R.string.yearly);
-        } else if (num == 5) {
-            return context.getResources().getString(R.string.onceTime);
-        } else {
-            return null;
-        }
     }
 
     public void sort(int type) {

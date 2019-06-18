@@ -81,8 +81,10 @@ public class JoinedPeopleAdapter extends RecyclerView.Adapter<JoinedPeopleAdapte
         int userId = userModel.getId();
 
         holder.acceptButton.setOnClickListener(v ->
-                respondToUser(mRetrofitMethods.acceptUserJoinRequest(mProjectId, userId, STATUS_ACCEPT, URL_TOKEN),
-                        position, null, STATUS_ACCEPT));
+                respondToUser(
+                        mRetrofitMethods.acceptUserJoinRequest(mProjectId, userId, STATUS_ACCEPT, URL_TOKEN),
+                        position, null, STATUS_ACCEPT
+                ));
 
         holder.rejectButton.setOnClickListener(v -> showRefuseAlertDialog(userId, position));
 
