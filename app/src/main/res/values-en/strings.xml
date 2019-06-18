@@ -172,7 +172,7 @@
     <string name="likesUrProjects"> Like your projects </string>
     <string name="congrateForConfirmingUrProjects"> Mubarak, projects have been accepted </string>
     <string name="nowUCanTraceUrProject"> Now you can follow the progress of your project </string>
-    <string name="notificationSettings">Notifications</string>
+    <string name="notificationSettings">Allow Notifications?</string>
     <string name="directCost">Periodic costs</string>
     <string name="IndirectCost">Supplementary costs</string>
     <string name="typeDirectCost">Nature of direct expenses</string>
@@ -233,6 +233,9 @@
     <string name="request_on_hold">Your Request To Join This Project Is On Hold</string>
     <string name="request_accepted">Your Request To Join This Project Was Accepted, You Are Joined</string>
     <string name="delete_project">Delete this project ?</string>
+    <string name="national_od">National Id</string>
+    <string name="national_id">National Id</string>
+    <string name="failed_to_load_user_data">Failed To Load User Data</string>
 
     <string-array name="sort_by_array">
         <item>Newest</item>

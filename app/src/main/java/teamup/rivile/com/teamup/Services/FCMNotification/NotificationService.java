@@ -24,7 +24,6 @@ import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
-import teamup.rivile.com.teamup.ui.FirstActivity;
 
 import static teamup.rivile.com.teamup.APIS.API.NotificationType.*;
 
@@ -39,8 +38,10 @@ public class NotificationService extends FirebaseMessagingService {
 
         NotificationData data = createNotificationDataFromRemoteMessage(remoteMessage);
 
-        if (userLoggedIn(data.getTargetUserId())) {
+        int targetUserId = data.getTargetUserId();
+        if (userLoggedIn(targetUserId) && userAllowsNotifications(targetUserId)) {
             String notificationMessage = createNotificationMessageFromData(data);
+
             if (notificationMessage != null) pushNotification(notificationMessage);
         }
     }
@@ -54,8 +55,11 @@ public class NotificationService extends FirebaseMessagingService {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransactionAsync(realm1 -> {
             NotificationDatabase database = realm1.where(NotificationDatabase.class).findFirst();
-            if (database == null) realm1.insert(new NotificationDatabase(s, true));
+
+            if (database == null) database = new NotificationDatabase(s, null, 0);
             else database.setDevice_FCM_Token(s);
+
+            realm1.insertOrUpdate(database);
         });
     }
 
@@ -73,6 +77,16 @@ public class NotificationService extends FirebaseMessagingService {
         }
 
         return false;
+    }
+
+    private boolean userAllowsNotifications(int targetUserId) {
+        Realm.init(this);
+
+        Realm realm = Realm.getDefaultInstance();
+        NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
+                .equalTo(NotificationDatabase.getUserIdFieldName(), targetUserId).findFirst();
+
+        return notificationDatabase != null && notificationDatabase.getActive();
     }
 
     private NotificationData createNotificationDataFromRemoteMessage(RemoteMessage remoteMessage) {

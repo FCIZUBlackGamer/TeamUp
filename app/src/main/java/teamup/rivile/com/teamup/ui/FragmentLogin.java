@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -363,7 +364,18 @@ public class FragmentLogin extends Fragment {
                 LoginDataBase serverResponse = response.body();
                 if (serverResponse != null && serverResponse.getUser().getId() != 0) {
                     loadJoinedProjects(serverResponse.getUser().getId());
-                    mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
+                    mRealm.executeTransaction(realm -> {
+                        realm.insertOrUpdate(serverResponse);
+
+                        int userId = serverResponse.getUser().getId();
+                        NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
+                                .equalTo(NotificationDatabase.getUserIdFieldName(), userId)
+                                .findFirst();
+
+                        if (notificationDatabase == null) {
+                            realm.insert(new NotificationDatabase(null, true, userId));
+                        }
+                    });
                 } else {
                     Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
                     mLoadingViewConstraintLayout.setVisibility(View.GONE);
@@ -459,24 +471,28 @@ public class FragmentLogin extends Fragment {
 
     private String getDeviceToken() {
         AtomicReference<String> deviceToken = new AtomicReference<>();
-        NotificationDatabase database = mRealm.where(NotificationDatabase.class).findFirst();
-        if (database != null) {
-            deviceToken.set(database.getDevice_FCM_Token());
-        } else {
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(task -> {
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            return;
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    deviceToken.set(task.getResult().getToken());
+
+                    mRealm.executeTransaction(realm -> {
+                        NotificationDatabase notificationDatabase = mRealm.where(NotificationDatabase.class)
+                                .equalTo(NotificationDatabase.getUserIdFieldName(), 0)
+                                .findFirst();
+
+                        if (notificationDatabase == null) {
+                            notificationDatabase = new NotificationDatabase(task.getResult().getToken(), null, 0);
+                            mRealm.insertOrUpdate(notificationDatabase);
                         }
-
-                        // Get new Instance ID token
-                        deviceToken.set(task.getResult().getToken());
-
-                        NotificationDatabase notificationDatabase = new NotificationDatabase(deviceToken.get(), true);
-                        mRealm.executeTransaction(realm -> realm.insertOrUpdate(notificationDatabase));
                     });
-        }
+                });
 
         return deviceToken.get();
     }

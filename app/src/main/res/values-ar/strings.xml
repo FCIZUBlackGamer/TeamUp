@@ -172,7 +172,7 @@
     <string name="likesUrProjects"> اعجبوا بمشاريعك </string>
     <string name="congrateForConfirmingUrProjects"> مبارك، تم قبول مشاريع </string>
     <string name="nowUCanTraceUrProject"> الآن يمكنك متابعه تقدم مشروعك </string>
-    <string name="notificationSettings">الإشعارات</string>
+    <string name="notificationSettings">السماح بالإشعارات ؟</string>
     <string name="directCost">التكاليف الدورية</string>
     <string name="IndirectCost">التكاليف التكميلية</string>
     <string name="typeDirectCost">طبيعه المصاريف المباشره</string>
@@ -231,6 +231,9 @@
     <string name="request_on_hold">طلب إنضمامك في الإنتظار</string>
     <string name="request_accepted">تمت الموافقة علي طلب إنضمامك ، انت مشترك في المشروع</string>
     <string name="delete_project">حذف هذا المشروع ؟</string>
+    <string name="national_od">الرقم القومي</string>
+    <string name="national_id">صورة الهوية</string>
+    <string name="failed_to_load_user_data">فشل تحميل بيانات المستخدم!</string>
 
 
     <string-array name="sort_by_array">

@@ -1,14 +1,24 @@
 package teamup.rivile.com.teamup.Uitls.InternalDatabase;
 
-import io.realm.RealmObject;
+import android.support.annotation.NonNull;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+/*
+ * ***************************************NOTE*******************************************
+ * First item of this database comes with id of 0 and holds the device firebase token.
+ * **************************************************************************************
+ * */
 public class NotificationDatabase extends RealmObject {
     private String device_FCM_Token;
-    private boolean isActive;
+    private Boolean isActive;
+    private Integer userId;
 
-    public NotificationDatabase(String device_FCM_Token, boolean isActive) {
+    public NotificationDatabase(String device_FCM_Token, Boolean isActive, int userId) {
         this.device_FCM_Token = device_FCM_Token;
         this.isActive = isActive;
+        this.userId = userId;
     }
 
     public NotificationDatabase() {
@@ -22,11 +32,24 @@ public class NotificationDatabase extends RealmObject {
         this.device_FCM_Token = device_FCM_Token;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    @NonNull
+    public static String getUserIdFieldName() {
+        return "userId";
     }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +29,7 @@ import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
@@ -57,7 +56,7 @@ public class AccountSettingsFragment extends Fragment {
 
     private ProgressDialog mProgressDialog;
 
-    private Switch sNotification;
+    private Switch mNotificationSwitch;
 
     private Realm mRealm;
 
@@ -87,16 +86,18 @@ public class AccountSettingsFragment extends Fragment {
         mPasswordEditText = view.findViewById(R.id.ed_current_password);
         mEditPasswordImageView = view.findViewById(R.id.iv_edit_password);
 
-        sNotification = view.findViewById(R.id.sNotification);
+        mNotificationSwitch = view.findViewById(R.id.s_notification);
 
         loadCurrentUserData();
 
         if (mUserModel != null) {
             mUserFullNameTextView.setText(mUserModel.getFullName());
 
-            String userImageUrl = mUserModel.getImage();
-            if (userImageUrl != null && !userImageUrl.isEmpty()) {
-                Picasso.get().load(userImageUrl).into(mUserImage);
+            String userImage = mUserModel.getImage();
+            if (userImage != null && !userImage.isEmpty()) {
+                if (userImage.charAt(0) == '/') userImage = API.BASE_URL + userImage;
+
+                Picasso.get().load(userImage).into(mUserImage);
             }
 
             mUserEmailEditText.setText(mUserModel.getMail());
@@ -113,7 +114,7 @@ public class AccountSettingsFragment extends Fragment {
 
             setUpClickListeners();
         } else {
-            Toast.makeText(getContext(), "فشل تحميل بيانات المستخدم!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.failed_to_load_user_data), Toast.LENGTH_LONG).show();
             getActivity().onBackPressed();
         }
 
@@ -153,6 +154,20 @@ public class AccountSettingsFragment extends Fragment {
         mEditNationalIdImageView.setOnClickListener(v -> mNationalIdEditText.callOnClick());
         mEditNationalImage.setOnClickListener(v -> mNationalIdEditText.callOnClick());
         mEditPasswordImageView.setOnClickListener(v -> mNationalIdEditText.callOnClick());
+
+        mNotificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mRealm.executeTransaction(realm -> {
+            NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
+                    .equalTo(NotificationDatabase.getUserIdFieldName(), mUserModel.getId())
+                    .findFirst();
+
+            if (notificationDatabase != null) {
+                notificationDatabase.setActive(isChecked);
+
+                realm.insertOrUpdate(
+                        notificationDatabase
+                );
+            }
+        }));
     }
 
     public void showEditDialog(boolean isForEditEmail) {
@@ -278,7 +293,7 @@ public class AccountSettingsFragment extends Fragment {
                             //TODO: update database
                             mRealm.executeTransaction(realm -> {
                                 UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userModel.getId()).findFirst();
-                                if(userDataBase != null){
+                                if (userDataBase != null) {
                                     userDataBase.setIdentityNum(userModel.getIdentityNum());
                                     userDataBase.setIdentityImage(userModel.getIdentityImage());
                                     realm.insertOrUpdate(userDataBase);
@@ -310,10 +325,7 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     public boolean isValidEmail(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     public void showCodeConfirmationDialog(int userId, String newEmail) {
@@ -493,7 +505,7 @@ public class AccountSettingsFragment extends Fragment {
                             //TODO: update database
                             mRealm.executeTransactionAsync(realm -> {
                                 UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userId).findFirst();
-                                if(userDataBase != null){
+                                if (userDataBase != null) {
                                     userDataBase.setMail(newEmail);
                                     realm.insertOrUpdate(userDataBase);
                                 }
