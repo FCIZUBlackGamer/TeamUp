@@ -166,7 +166,7 @@ public class NotificationService extends FirebaseMessagingService {
                             .findAll().last();
 
             if (joinedProject != null) {
-                joinedProject.setStatus(0);
+                joinedProject.setStatus( API.JoinRequestResponse.STATUS_REFUSE);
                 realm1.insertOrUpdate(joinedProject);
             }
         });

@@ -181,7 +181,7 @@ public class FragmentLogin extends Fragment {
 //                                            } else if (gender.equals("female")) {
 //                                                mUserModel.setGender(false);
 //                                            }
-                                            socialLogin(mUserModel);
+                                            login(mUserModel, true);
                                             Gson gson = new Gson();
                                             Log.e("UserModel", gson.toJson(mUserModel));
 //                                            Log.e("link", gender);
@@ -260,7 +260,7 @@ public class FragmentLogin extends Fragment {
                 mUserModel.setPassword(mPasswordEditText.getText().toString());
                 mUserModel.setMail(mEmailEditText.getText().toString());
 
-                login(mUserModel);
+                login(mUserModel, false);
             }
         });
 
@@ -323,7 +323,7 @@ public class FragmentLogin extends Fragment {
                 mUserModel.setMail(account.getEmail());
                 mUserModel.setSocialId(account.getId());
 
-                socialLogin(mUserModel);
+                login(mUserModel, true);
             }
 
         } catch (ApiException e) {
@@ -344,89 +344,74 @@ public class FragmentLogin extends Fragment {
         }
     }
 
-    private void login(UserModel userModel) {
-        // Map is used to multipart the file using okhttp3.RequestBody
+    private void login(UserModel userModel, boolean socialLogin) {
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        Gson gson = new Gson();
-        Log.e("Here", gson.toJson(userModel));
-        // Parsing any Media type file
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-//        mRealm.executeTransaction(realm1 -> {
-//            realm1.deleteAll();
-//        });
+                    // Get new Instance ID token
+                    final String deviceToken = task.getResult().getToken();
+                    Log.v("DeviceToken", deviceToken);
 
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.login(gson.toJson(userModel), API.URL_TOKEN, getDeviceToken());
-        call.enqueue(new Callback<LoginDataBase>() {
-            @Override
-            public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
-                LoginDataBase serverResponse = response.body();
-                if (serverResponse != null && serverResponse.getUser().getId() != 0) {
-                    loadJoinedProjects(serverResponse.getUser().getId());
                     mRealm.executeTransaction(realm -> {
-                        realm.insertOrUpdate(serverResponse);
-
-                        int userId = serverResponse.getUser().getId();
-                        NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
-                                .equalTo(NotificationDatabase.getUserIdFieldName(), userId)
+                        NotificationDatabase notificationDatabase = mRealm.where(NotificationDatabase.class)
+                                .equalTo(NotificationDatabase.getUserIdFieldName(), 0)
                                 .findFirst();
 
                         if (notificationDatabase == null) {
-                            realm.insert(new NotificationDatabase(null, true, userId));
+                            notificationDatabase = new NotificationDatabase(deviceToken, null, 0);
+                            mRealm.insertOrUpdate(notificationDatabase);
                         }
                     });
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
-                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                    activateViews();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<LoginDataBase> call, Throwable t) {
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                activateViews();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
-    }
+                    RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
-    private void socialLogin(UserModel userModel) {
-        mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        Gson gson = new Gson();
-        Log.e("Here", gson.toJson(userModel));
-        // Parsing any Media type file
+                    RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
 
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.socialLogin(
-                gson.toJson(userModel),
-                API.URL_TOKEN,
-                getDeviceToken(), "null");
+                    Call<LoginDataBase> call;
+                    if (socialLogin) {
+                        call = reg.socialLogin(new Gson().toJson(userModel),
+                                API.URL_TOKEN, deviceToken, "null");
+                    } else {
+                        call = reg.login(new Gson().toJson(userModel), API.URL_TOKEN, deviceToken);
+                    }
+                    call.enqueue(new Callback<LoginDataBase>() {
+                        @Override
+                        public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
+                            LoginDataBase serverResponse = response.body();
+                            if (serverResponse != null && serverResponse.getUser().getId() != 0) {
+                                loadJoinedProjects(serverResponse.getUser().getId());
+                                mRealm.executeTransaction(realm -> {
+                                    realm.insertOrUpdate(serverResponse);
 
-        call.enqueue(new Callback<LoginDataBase>() {
-            @Override
-            public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
-                LoginDataBase serverResponse = response.body();
-                if (serverResponse != null) {
-                    loadJoinedProjects(serverResponse.getUser().getId());
-                    mRealm.executeTransaction(realm -> realm.insertOrUpdate(serverResponse));
-                } else {
-                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
-                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                }
-                activateViews();
-            }
+                                    int userId = serverResponse.getUser().getId();
+                                    NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
+                                            .equalTo(NotificationDatabase.getUserIdFieldName(), userId)
+                                            .findFirst();
 
-            @Override
-            public void onFailure(Call<LoginDataBase> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                activateViews();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                                    if (notificationDatabase == null) {
+                                        realm.insert(new NotificationDatabase(null, true, userId));
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
+                                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                                activateViews();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoginDataBase> call, Throwable t) {
+                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            activateViews();
+                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                        }
+                    });
+                });
     }
 
     private void loadJoinedProjects(int id) {
@@ -467,33 +452,5 @@ public class FragmentLogin extends Fragment {
                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
             }
         });
-    }
-
-    private String getDeviceToken() {
-        AtomicReference<String> deviceToken = new AtomicReference<>();
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(mContext, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Get new Instance ID token
-                    deviceToken.set(task.getResult().getToken());
-
-                    mRealm.executeTransaction(realm -> {
-                        NotificationDatabase notificationDatabase = mRealm.where(NotificationDatabase.class)
-                                .equalTo(NotificationDatabase.getUserIdFieldName(), 0)
-                                .findFirst();
-
-                        if (notificationDatabase == null) {
-                            notificationDatabase = new NotificationDatabase(task.getResult().getToken(), null, 0);
-                            mRealm.insertOrUpdate(notificationDatabase);
-                        }
-                    });
-                });
-
-        return deviceToken.get();
     }
 }
