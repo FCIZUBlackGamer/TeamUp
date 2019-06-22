@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
+import teamup.rivile.com.teamup.network.APIModels.TagsModel;
 
 public class LoadedChipsAdapter extends RecyclerView.Adapter<LoadedChipsAdapter.ChipsViewHolder> {
     private ArrayList<TagsModel> mTypeModels;

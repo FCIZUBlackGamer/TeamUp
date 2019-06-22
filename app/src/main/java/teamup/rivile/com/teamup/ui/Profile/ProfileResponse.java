@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.network.APIModels.Offers;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 
 public class ProfileResponse {
     @SerializedName("UserDetails")

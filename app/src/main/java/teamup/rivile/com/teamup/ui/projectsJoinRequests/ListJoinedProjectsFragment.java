@@ -19,11 +19,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class ListJoinedProjectsFragment extends Fragment {
     private ConstraintLayout mLoadingViewConstraintLayout;
@@ -35,6 +36,8 @@ public class ListJoinedProjectsFragment extends Fragment {
     private Realm mRealm;
     private int mUserId = -1;
 
+    private AppNetworkRepository mNetworkRepository;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class ListJoinedProjectsFragment extends Fragment {
 
         mContext = getContext();
 
-
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         mRealm = Realm.getDefaultInstance();
         LoginDataBase loginData = mRealm.where(LoginDataBase.class)
@@ -70,45 +73,28 @@ public class ListJoinedProjectsFragment extends Fragment {
     private void loadJoinedProjects() {
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
 
-        RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).
-                getRetrofit().
-                create(RetrofitMethods.class);
+        mNetworkRepository.listJoinedProjects(mUserId)
+                .observe(this, joinedProjectList -> {
+                            if (joinedProjectList != null) {
+                                if (joinedProjectList.size() == 0) {
+                                    mEmptyLayout.setVisibility(View.VISIBLE);
+                                } else {
+                                    mEmptyLayout.setVisibility(View.GONE);
+                                    mProjectsAdapter.swapData(joinedProjectList);
 
-        Call<List<JoinedProjectRealmObject>> call = retrofitMethods.listJoinedProjects(mUserId, API.URL_TOKEN);
-
-        call.enqueue(new Callback<List<JoinedProjectRealmObject>>() {
-            @Override
-            public void onResponse(Call<List<JoinedProjectRealmObject>> call, Response<List<JoinedProjectRealmObject>> response) {
-                List<JoinedProjectRealmObject> joinedProjectList = response.body();
-                if (joinedProjectList != null) {
-                    if (joinedProjectList.size() == 0) {
-                        mEmptyLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        mEmptyLayout.setVisibility(View.GONE);
-                        mProjectsAdapter.swapData(joinedProjectList);
-
-                        mRealm.executeTransaction(realm -> {
-                            realm.where(JoinedProjectRealmObject.class).findAll().deleteAllFromRealm();
-                            for (JoinedProjectRealmObject project : joinedProjectList) {
-                                realm.insert(project);
+                                    mRealm.executeTransaction(realm -> {
+                                        realm.where(JoinedProjectRealmObject.class).findAll().deleteAllFromRealm();
+                                        for (JoinedProjectRealmObject project : joinedProjectList) {
+                                            realm.insert(project);
+                                        }
+                                    });
+                                }
+                            } else {
+                                mEmptyLayout.setVisibility(View.VISIBLE);
                             }
-                        });
-                    }
-                } else {
-                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                    mEmptyLayout.setVisibility(View.VISIBLE);
-                }
 
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<List<JoinedProjectRealmObject>> call, Throwable t) {
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                mEmptyLayout.setVisibility(View.VISIBLE);
-
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                        }
+                );
     }
 }

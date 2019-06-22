@@ -19,9 +19,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.APIModels.Department;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.APIModels.Department;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
 
@@ -38,6 +39,10 @@ public class FragmentHome extends Fragment {
     FragmentManager fragmentManager;
     static String Word;
 
+    private AppNetworkRepository mNetworkRepository;
+
+    private ConstraintLayout mEmptyConstraintLayout;
+
     public static FragmentHome setWord(String word) {
         Word = word;
         return new FragmentHome();
@@ -49,10 +54,14 @@ public class FragmentHome extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_category, container, false);
 
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
+
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         fragmentManager = getFragmentManager();
         gridView = (GridView) view.findViewById(R.id.gridview);
+
+        mEmptyConstraintLayout = view.findViewById(R.id.cl_emptyView);
 
         categories = new ArrayList<>();
         return view;
@@ -77,29 +86,16 @@ public class FragmentHome extends Fragment {
     }
 
     private void loadOffers() {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
+        mNetworkRepository.getCategory()
+                .observe(this, response -> {
+                    if (response != null) {
+                        fillOffers(response);
+                    } else {
+                        mEmptyConstraintLayout.setVisibility(View.VISIBLE);
+                    }
 
-        RetrofitMethods getDepartments = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<List<Department>> call = getDepartments.getCategory(API.URL_TOKEN);
-        call.enqueue(new Callback<List<Department>>() {
-            @Override
-            public void onResponse(Call<List<Department>> call, retrofit2.Response<List<Department>> response) {
-                if (response.body() != null) {
-                    List<Department> serverResponse = response.body();
-                    fillOffers(serverResponse);
-                } else {
-                    Toast.makeText(getContext(), "Failed To Load Categories.", Toast.LENGTH_SHORT).show();
-                }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<List<Department>> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void fillOffers(List<Department> categories) {

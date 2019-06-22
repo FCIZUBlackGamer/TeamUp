@@ -1,5 +1,6 @@
 package teamup.rivile.com.teamup.ui.Profile;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,9 +9,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -35,35 +38,28 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.FavouriteModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.LikeModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.RefuseReason;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LikeModelDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.OfferDataBase;
+import teamup.rivile.com.teamup.network.APIModels.FavouriteModel;
+import teamup.rivile.com.teamup.network.APIModels.LikeModel;
+import teamup.rivile.com.teamup.network.APIModels.Offers;
+import teamup.rivile.com.teamup.network.APIModels.ReportModel;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
 import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
-import teamup.rivile.com.teamup.ui.Project.Details.FragmentOfferDetails;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.ui.Project.List.JoinedPeopleAdapter;
 
 import static teamup.rivile.com.teamup.APIS.API.BASE_URL;
-import static teamup.rivile.com.teamup.APIS.API.URL_TOKEN;
 import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.FAVOURITE;
 import static teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects.MINE;
 
 public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vholder> {
-    private Context context;
+    private Application mApplication;
     private List<Offers> offersList;
     private FragmentManager fragmentManager;
     private Realm realm;
@@ -76,21 +72,29 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private ImageView mHiddenLikeFAB = null;
     private ImageView mHiddenFavouriteFAB = null;
     private int mExpandedPosition = -1;
+    private Fragment mParentFragment;
+    private AppNetworkRepository mNetworkRepository;
 
-    public AdapterListOffers(Context context, List<Offers> talabats) {
-        this.context = context;
+    private Context mContext;
+
+    public AdapterListOffers(Application application, List<Offers> talabats, FragmentProfileHome fragmentProfileHome, Context context) {
+        this.mApplication = application;
         this.offersList = talabats;
+        mContext = context;
 
         realm = Realm.getDefaultInstance();
         likeModelDataBase.addAll(realm.where(LikeModelDataBase.class).findAll());
         favouriteDataBases.addAll(realm.where(FavouriteDataBase.class).findAll());
+
+        mParentFragment = fragmentProfileHome;
+        mNetworkRepository = AppNetworkRepository.getInstance(mApplication);
     }
 
     @NonNull
     @Override
     public Vholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_project, parent, false);
-        fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
+        fragmentManager = mParentFragment.getFragmentManager();
         realm = Realm.getDefaultInstance();
         realm.executeTransaction(realm1 -> {
             userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
@@ -101,41 +105,38 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     public void onBindViewHolder(@NonNull Vholder holder, final int position) {
 
-        Offers offers = offersList.get(position);
+        Offers offer = offersList.get(position);
 
-        holder.fromToTextView.setText(offers.getNumContributor() + " Of " + offers.getNumJoinOffer());
+        holder.fromToTextView.setText(offer.getNumContributor() + " Of " + offer.getNumJoinOffer());
 
         holder.option_menu.setVisibility(View.VISIBLE);
 
         holder.tv_proType.setVisibility(View.GONE);
         holder.favouriteImageView.setOnClickListener(v -> {
-            Drawable favDrawable = holder.favouriteImageView.getDrawable();
-            if (favDrawable.getConstantState()
-                    .equals(context
-                            .getResources()
-                            .getDrawable(R.drawable.ic_star_full)
-                            .getConstantState())) {
-                holder.favouriteImageView.setImageResource(R.drawable.ic_star_empty);
-                markFavourite(offersList.get(position).getId(), userId, 1);
-                if (ty == FAVOURITE) {
-                    offersList.remove(position);
-                    notifyDataSetChanged();
-                    if (offersList.size() == 0) {
-                        FragmentListProjects.showEmptyView();
-                    } else {
-                        FragmentListProjects.hideEmptyView();
+            boolean isFav = false;
+            for(FavouriteDataBase dataBase : favouriteDataBases){
+                if(dataBase.getOfferId() == offer.getId()){
+                    holder.favouriteImageView.setImageResource(R.drawable.ic_star_empty);
+                    markFavourite(offersList.get(position).getId(), userId, 1);
+                    if (ty == FAVOURITE) {
+                        offersList.remove(position);
+                        notifyDataSetChanged();
+                        if (offersList.size() == 0) {
+                            FragmentListProjects.showEmptyView();
+                        } else {
+                            FragmentListProjects.hideEmptyView();
+                        }
                     }
+                    isFav = true;
                 }
-            } else if (favDrawable.getConstantState()
-                    .equals(context
-                            .getResources()
-                            .getDrawable(R.drawable.ic_star_empty)
-                            .getConstantState())) {
+            }
+
+            if (!isFav){
                 holder.favouriteImageView.setImageResource(R.drawable.ic_star_full);
                 markFavourite(offersList.get(position).getId(), userId, 0);
             }
-
         });
+
 
         holder.option_menu.setOnClickListener(v -> {
             if (ty == FragmentListProjects.NORMAL || ty == FAVOURITE) {
@@ -167,21 +168,21 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.tv_initialCost.setText(
                 String.valueOf(offersList.get(position).getInitialCost())
 //                        + SPACE
-//                        + context.getResources().getString(R.string.per)
+//                        + mApplication.getResources().getString(R.string.per)
 //                        + SPACE
 //                        + String.valueOf(offersList.get(position).getInitialCostType())
         );
         holder.tv_directCost.setText(
                 String.valueOf(offersList.get(position).getDirectExpenses())
 //                        + SPACE
-//                        + context.getResources().getString(R.string.per)
+//                        + mApplication.getResources().getString(R.string.per)
 //                        + SPACE
 //                        + checkString(offersList.get(position).getDirectExpensesType())
         );
         holder.tv_inDirectCost.setText(
                 String.valueOf(offersList.get(position).getIndectExpenses())
 //                        + SPACE
-//                        + context.getResources().getString(R.string.per)
+//                        + mApplication.getResources().getString(R.string.per)
 //                        + SPACE
 //                        + checkString(offersList.get(position).getIndectExpensesType())
         );
@@ -193,7 +194,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         holder.tv_profit.setText(
                 String.valueOf(offersList.get(position).getProfitMoney())
 //                        + SPACE
-//                        + context.getResources().getString(R.string.per)
+//                        + mApplication.getResources().getString(R.string.per)
 //                        + SPACE
 //                        + checkString(offersList.get(position).getProfitType())
         );
@@ -215,8 +216,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
         holder.num_likes.setText(offersList.get(position).getNumLiks() + "");
         holder.num_contributer.setText(offersList.get(position).getNumContributor() + "");
-//        if (offers != null) {
-//            List<UserModel> userModels = offers.getUsers();
+//        if (offer != null) {
+//            List<UserModel> userModels = offer.getUsers();
 //            if (userModels != null && userModels.size() > 0) {
 //                UserModel userModel = userModels.get(0);
 //                if (userModel != null) {
@@ -226,15 +227,15 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //        }
 
 //        if (offersList.get(position).getProjectType() == 0) {
-//            holder.tv_proType.setText(context.getResources().getString(R.string.always));
+//            holder.tv_proType.setText(mApplication.getResources().getString(R.string.always));
 //        } else if (offersList.get(position).getProjectType() == 1) {//perioud
-//            holder.tv_proType.setText(context.getResources().getString(R.string.perioud));
+//            holder.tv_proType.setText(mApplication.getResources().getString(R.string.perioud));
 //        } else if (offersList.get(position).getProjectType() == 2) {
-//            holder.tv_proType.setText(context.getResources().getString(R.string.jsutOnce));
+//            holder.tv_proType.setText(mApplication.getResources().getString(R.string.jsutOnce));
 //        }
 
         if (offersList.get(position).getDescription().length() > 500) {//Check Description length
-            String newDesc = offersList.get(position).getDescription().substring(0, 500) + context.getString(R.string.seeMore);
+            String newDesc = offersList.get(position).getDescription().substring(0, 500) + mApplication.getString(R.string.seeMore);
             holder.project_desc.setText(newDesc);
         } else {
             holder.project_desc.setText(offersList.get(position).getDescription());
@@ -244,14 +245,14 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 if (holder.project_tag.getText().length() < 500) {
                     holder.project_tag.append("#" + offersList.get(position).getTags().get(i).getName() + "\n");
                 } else {
-                    holder.project_tag.append(context.getString(R.string.seeMore));
+                    holder.project_tag.append(mApplication.getString(R.string.seeMore));
                     return;
                 }
             }
 
         }
 
-//        holder.adapter = new ContributerImages(context, offersList.get(position).getUsers(), holder.emptyView);
+//        holder.adapter = new ContributerImages(mApplication, offersList.get(position).getUsers(), holder.emptyView);
 //        holder.recyclerView.setAdapter(holder.adapter);
         for (int i = 0; i < offersList.get(position).getUsers().size(); i++) {
             Log.e("UID", offersList.get(position).getUserId() + "");
@@ -299,81 +300,68 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         });
 
         if (ty != MINE && ty != FAVOURITE) {
-            if (offers.getUserId().equals(userId)) {
+            if (offer.getUserId().equals(userId)) {
                 holder.make_offer.setEnabled(false);
             } else {
                 holder.make_offer.setOnClickListener(v -> {
                     v.setEnabled(false);
+
                     //TODO: Show user alert dialog of what's happening here
-                    RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
-                            .getRetrofit().create(RetrofitMethods.class);
+                    mNetworkRepository.joinOffer(userId, offer.getId())
+                            .observe(mParentFragment, serverResponse -> {
+                                if (serverResponse != null) {
+                                    if (serverResponse.equals("Success")) {
+                                        Toast.makeText(mApplication, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
+                                        realm.executeTransaction(realm1 ->
+                                        {
 
-                    Call<String> stringCall = retrofitMethods.joinOffer(userId, offers.getId(), URL_TOKEN);
-                    stringCall.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                            String serverResponse = response.body();
-                            if (serverResponse != null) {
-                                if (serverResponse.equals("Success")) {
-                                    Toast.makeText(context, "هنتواصل معاك يابو عمو", Toast.LENGTH_SHORT).show();
-                                    realm.executeTransaction(realm1 ->
-                                    {
+                                            JoinedProjectRealmObject joinedProject = null;
+                                            try {
+                                                joinedProject =
+                                                        realm.where(JoinedProjectRealmObject.class)
+                                                                .equalTo("OfferId", offer.getId())
+                                                                .findAll().last();
+                                            } catch (Exception ignored) {
+                                            }
 
-                                        JoinedProjectRealmObject joinedProject = null;
-                                        try {
-                                            joinedProject =
-                                                    realm.where(JoinedProjectRealmObject.class)
-                                                            .equalTo("OfferId", offers.getId())
-                                                            .findAll().last();
-                                        } catch (Exception ignored) {
-                                        }
-
-                                        if (joinedProject == null) {
-                                            realm1.insertOrUpdate(new JoinedProjectRealmObject(
-                                                    offers.getId(),
-                                                    offers.getName(),
-                                                    userId,
-                                                    API.JoinRequestResponse.STATUS_ON_HOLD,
-                                                    null, null
-                                            ));
-                                        } else {
-                                            joinedProject.setStatus(0);
-                                            realm1.insertOrUpdate(joinedProject);
-                                        }
-                                    });
-                                } else if (serverResponse.equals("Fail")) {
-                                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                            if (joinedProject == null) {
+                                                realm1.insertOrUpdate(new JoinedProjectRealmObject(
+                                                        offer.getId(),
+                                                        offer.getName(),
+                                                        userId,
+                                                        API.JoinRequestResponse.STATUS_ON_HOLD,
+                                                        null, null
+                                                ));
+                                            } else {
+                                                joinedProject.setStatus(0);
+                                                realm1.insertOrUpdate(joinedProject);
+                                            }
+                                        });
+                                    } else if (serverResponse.equals("Fail")) {
+                                        Toast.makeText(mApplication, "Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(mApplication, "Failed", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            v.setEnabled(true);
-                        }
-                    });
-
+                            });
                 });
 
                 try {
                     JoinedProjectRealmObject joinedProject =
                             realm.where(JoinedProjectRealmObject.class)
-                                    .equalTo("OfferId", offers.getId())
+                                    .equalTo("OfferId", offer.getId())
                                     .findAll().last();
 
                     if (joinedProject != null) {
                         if (joinedProject.getStatus() == API.JoinRequestResponse.STATUS_ON_HOLD) {
 //                            holder.make_offer.setEnabled(false);
                             holder.make_offer.setOnClickListener(v -> {
-                                Toast.makeText(context, context.getString(R.string.request_on_hold), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mApplication, mApplication.getString(R.string.request_on_hold), Toast.LENGTH_LONG).show();
                             });
                         } else if (joinedProject.getStatus() == API.JoinRequestResponse.STATUS_ACCEPT) {
 //                            holder.make_offer.setEnabled(false);
                             holder.make_offer.setOnClickListener(v -> {
-                                Toast.makeText(context, context.getString(R.string.request_accepted), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mApplication, mApplication.getString(R.string.request_accepted), Toast.LENGTH_LONG).show();
                             });
                         }
                     }
@@ -385,8 +373,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 //TODO: Show alertDialog listing joined people
                 //with the ability to accept, decline or block them
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                View view = LayoutInflater.from(context).inflate(R.layout.popup_see_joined_people, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.popup_see_joined_people, null);
                 builder.setView(view);
 
                 TextView headerTextView = view.findViewById(R.id.tv_header);
@@ -398,52 +386,26 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
                 closeImageView.setOnClickListener(v1 -> dialog.dismiss());
 
                 RecyclerView joinedPeopleRecyclerView = view.findViewById(R.id.recyclerView);
-                joinedPeopleRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                joinedPeopleRecyclerView.setLayoutManager(new LinearLayoutManager(mApplication));
 
                 //TODO: send list
 
-                RetrofitMethods retrofitMethods = new RetrofitConfigurations(BASE_URL)
-                        .getRetrofit().create(RetrofitMethods.class);
+                mNetworkRepository.getSystemRefuseReasons()
+                        .observe(mParentFragment, reasonsList -> {
+                            if (reasonsList != null) {
+                                JoinedPeopleAdapter peopleAdapter = new JoinedPeopleAdapter(offer.getId(), reasonsList, dialog, headerTextView, mApplication, mParentFragment, mContext);
+                                joinedPeopleRecyclerView.setAdapter(peopleAdapter);
 
-                Call<OfferDetailsJsonObject> getJoinedUsersCall = retrofitMethods.listUsersJoinRequests(offers.getId(), URL_TOKEN);
+                                mNetworkRepository.listUsersJoinRequests(offer.getId())
+                                        .observe(mParentFragment, offerDetailsJsonObject -> {
+                                            if (offerDetailsJsonObject != null && offerDetailsJsonObject.getOffer() != null) {
+                                                peopleAdapter.swapData(offerDetailsJsonObject.getOffer().getUsers(), true);
 
-                Call<List<RefuseReason>> listRefuseReasonCall = retrofitMethods.getSystemRefuseReasons(URL_TOKEN);
-                listRefuseReasonCall.enqueue(new Callback<List<RefuseReason>>() {
-                    @Override
-                    public void onResponse(Call<List<RefuseReason>> call, Response<List<RefuseReason>> response) {
-                        List<RefuseReason> reasonsList = response.body();
-                        if (reasonsList != null) {
-                            JoinedPeopleAdapter peopleAdapter = new JoinedPeopleAdapter(offers.getId(), reasonsList, dialog, headerTextView, context);
-                            joinedPeopleRecyclerView.setAdapter(peopleAdapter);
-
-                            getJoinedUsersCall.enqueue(new Callback<OfferDetailsJsonObject>() {
-                                @Override
-                                public void onResponse(Call<OfferDetailsJsonObject> call, Response<OfferDetailsJsonObject> response) {
-                                    OfferDetailsJsonObject offerDetailsJsonObject = response.body();
-                                    if (offerDetailsJsonObject != null && offerDetailsJsonObject.getOffer() != null) {
-                                        peopleAdapter.swapData(offerDetailsJsonObject.getOffer().getUsers(), true);
-
-                                        dialog.show();
-                                    } else {
-                                        Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
-                                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(context, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<RefuseReason>> call, Throwable t) {
-                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                                                dialog.show();
+                                            }
+                                        });
+                            }
+                        });
             });
         }
 
@@ -458,20 +420,17 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         });
 
         holder.like.setOnClickListener(v -> {
-            Drawable likeDrawable = holder.like.getCompoundDrawables()[2]; //right drawable
-            if (likeDrawable.getConstantState()
-                    .equals(context
-                            .getResources()
-                            .getDrawable(R.drawable.ic_like)
-                            .getConstantState())) {
-                holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
-                holder.likeImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                likeOffer(offersList.get(position).getId(), userId, 1, holder.num_likes);
-            } else if (likeDrawable.getConstantState()
-                    .equals(context
-                            .getResources()
-                            .getDrawable(R.drawable.ic_favorite_border_black_24dp)
-                            .getConstantState())) {
+            boolean isLike = false;
+            for(LikeModelDataBase dataBase : likeModelDataBase){
+                if(dataBase.getOfferId() == offer.getId()){
+                    holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_favorite_border_black_24dp, 0);
+                    holder.likeImageView.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    likeOffer(offersList.get(position).getId(), userId, 1, holder.num_likes);
+                    isLike = true;
+                }
+            }
+
+            if (!isLike){
                 holder.like.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_like, 0);
                 holder.likeImageView.setImageResource(R.drawable.ic_like);
                 likeOffer(offersList.get(position).getId(), userId, 0, holder.num_likes);
@@ -491,39 +450,6 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             holder.favouriteImageView.setVisibility(View.VISIBLE);
             holder.likeImageView.setVisibility(View.VISIBLE);
         }
-
-//        holder.projectRelativeLayout.setOnClickListener(v -> {
-//            if (holder.detailsRelativeLayout.getVisibility() == View.VISIBLE) {
-//                holder.favouriteImageView.setVisibility(View.VISIBLE);
-//                holder.likeImageView.setVisibility(View.VISIBLE);
-//
-//                holder.detailsRelativeLayout.setVisibility(View.GONE);
-//                mHiddenLikeFAB.setVisibility(View.VISIBLE);
-//                mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
-//
-//                mExpandedRelativeLayout = null;
-//                mHiddenFavouriteFAB = null;
-//                mHiddenLikeFAB = null;
-//                mExpandedPosition = -1;
-//            } else {
-//                holder.favouriteImageView.setVisibility(View.GONE);
-//                holder.likeImageView.setVisibility(View.GONE);
-//
-//                holder.detailsRelativeLayout.setVisibility(View.VISIBLE);
-//
-//                if (mExpandedRelativeLayout != null) {
-//                    mExpandedRelativeLayout.setVisibility(View.GONE);
-//
-//                    mHiddenLikeFAB.setVisibility(View.VISIBLE);
-//                    mHiddenFavouriteFAB.setVisibility(View.VISIBLE);
-//                }
-//
-//                mExpandedRelativeLayout = holder.detailsRelativeLayout;
-//                mHiddenLikeFAB = holder.likeImageView;
-//                mHiddenFavouriteFAB = holder.favouriteImageView;
-//                mExpandedPosition = position;
-//            }
-//        });
 
         holder.like.setVisibility(View.GONE);
         holder.make_offer.setVisibility(View.GONE);
@@ -574,7 +500,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             make_offer = itemView.findViewById(R.id.make_offer);
             num_contributer = itemView.findViewById(R.id.num_contributer);
             num_likes = itemView.findViewById(R.id.num_likes);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mApplication, LinearLayoutManager.HORIZONTAL, false);
 //            recyclerView = itemView.findViewById(R.id.rec);
 //            recyclerView.setLayoutManager(layoutManager);
             money = itemView.findViewById(R.id.money);
@@ -584,7 +510,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
             detailsRelativeLayout = itemView.findViewById(R.id.rl_details);
 
             if (ty == MINE) {
-                make_offer.setText(context.getString(R.string.see_joined_people));
+                make_offer.setText(mApplication.getString(R.string.see_joined_people));
                 like.setVisibility(View.GONE);
             }
         }
@@ -592,7 +518,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     private void showNormalMenu(ImageView op, int position) {
         //creating a popup menu
-        PopupMenu popup = new PopupMenu(context, op);
+        PopupMenu popup = new PopupMenu(mApplication, op);
         //inflating menu from xml resource
         popup.inflate(R.menu.normal_offer_option);
         //adding click listener
@@ -602,7 +528,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 //                    //handle action_add_to_favourite click
 //                    if (item.getIcon()
 //                            .getConstantState()
-//                            .equals(context.getResources()
+//                            .equals(mApplication.getResources()
 //                                    .getDrawable(R.drawable.ic_star_empty)
 //                                    .getConstantState())) {
 //                        item.setIcon(R.drawable.ic_star_full);
@@ -625,7 +551,7 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
     private void showMyMenu(ImageView op, int position) {
         //creating a popup menu
-        PopupMenu popup = new PopupMenu(context, op);
+        PopupMenu popup = new PopupMenu(mApplication, op);
         //inflating menu from xml resource
         popup.inflate(R.menu.my_offer_option_list);
         //adding click listener
@@ -652,22 +578,60 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
     private void reportOrDelete(MenuItem op, int position) {
         if (ty == MINE) {//means delete action
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setMessage(R.string.delete_project)
-                    .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
+                    .setPositiveButton(mApplication.getString(R.string.yes), (dialog, which) -> {
                         deleteOffer(offersList.get(position).getId(), position);
                         notifyDataSetChanged();
-                    }).setNegativeButton(context.getString(R.string.no), (dialog, which) -> dialog.dismiss())
+                    }).setNegativeButton(mApplication.getString(R.string.no), (dialog, which) -> dialog.dismiss())
                     .show();
 
         } else {//make report
             //TODO: Action Report Here
             realm.executeTransaction(realm1 -> {
                 int userId = realm1.where(LoginDataBase.class).findFirst().getUser().getId();
-                FragmentOfferDetails.makeReport(offersList.get(position).getId(), userId, context);
+                makeReport(offersList.get(position).getId(), userId, mContext);
             });
 
         }
+    }
+
+    private void makeReport(int projectId, int userId, @NonNull Context context) {
+
+        View message = LayoutInflater.from(context).inflate(R.layout.popup_report, null);
+
+        EditText message_type = message.findViewById(R.id.editText);
+        FloatingActionButton confirm = message.findViewById(R.id.confirm);
+        ImageView close = message.findViewById(R.id.close);
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(message);
+
+        final AlertDialog dialog2 = builder.create();
+        dialog2.show();
+
+        close.setOnClickListener(v ->
+                dialog2.dismiss()
+        );
+        confirm.setOnClickListener(v -> {
+            if (!message_type.getText().toString().isEmpty()) {
+                reportOffer(userId, projectId, message_type.getText().toString(), context);
+            }
+        });
+    }
+
+    private void reportOffer(int userId, int projectId, String desc, @NonNull Context context) {
+        ReportModel model = new ReportModel();
+        model.setOfferId(projectId);
+        model.setUserId(userId);
+        model.setDescripation(desc);
+        Gson gson = new Gson();
+
+        mNetworkRepository.reportOffer(gson.toJson(model))
+                .observe(mParentFragment,s -> {
+                    Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
@@ -695,167 +659,99 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
         }
     }
 
-    public void likeOffer(int offerId, int userId, int like, TextView likeHolder) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(BASE_URL);
+    private void likeOffer(int offerId, int userId, int like, TextView likeHolder) {
 
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<String> call;
         LikeModel likeModel = new LikeModel();
         likeModel.setOfferId(offerId);
         likeModel.setUserId(userId);
         likeModel.setStatus(like);
-        Gson gson = new Gson();
-        Log.e("LikeModel", gson.toJson(likeModel));
-        call = getOffers.likeOffer(gson.toJson(likeModel), API.URL_TOKEN);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String Offers = response.body();
-//                Log.e("Like", Offers);
-                if (Offers.equals("Success")) {
-                    if (like == 1) {//dislike
-                        int ll = Integer.parseInt(likeHolder.getText().toString());
-                        likeHolder.setText(String.valueOf(ll - 1));
-                        realm.executeTransaction(realm1 -> {
-                            if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
-                                RealmResults<LikeModelDataBase> l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findAll();
-                                for (int i = 0; i < l.size(); i++) {
-                                    Log.v("IdR", l.get(i).getId() + "");
-                                    Log.v("IdRR", l.get(i).getOfferId() + "");
-                                    Log.v("IdRRR", l.get(i).getUserId() + "");
-                                    Log.v("IdRRRR", l.get(i).getStatus() + "");
-                                }
 
-                                l.deleteAllFromRealm();
+        mNetworkRepository.likeOffer(new Gson().toJson(likeModel))
+                .observe(mParentFragment, offers -> {
+                    if (offers.equals("Success")) {
+                        if (like == 1) {//dislike
+                            int ll = Integer.parseInt(likeHolder.getText().toString());
+                            likeHolder.setText(String.valueOf(ll - 1));
+                            realm.executeTransaction(realm1 -> {
+                                if (realm1.where(LoginDataBase.class).findFirst().getLikes() != null && realm1.where(LoginDataBase.class).findFirst().getLikes().size() > 0) {
+                                    RealmResults<LikeModelDataBase> l = realm1.where(LoginDataBase.class).findFirst().getLikes().where().equalTo("OfferId", offerId).findAll();
+                                    for (int i = 0; i < l.size(); i++) {
+                                        Log.v("IdR", l.get(i).getId() + "");
+                                        Log.v("IdRR", l.get(i).getOfferId() + "");
+                                        Log.v("IdRRR", l.get(i).getUserId() + "");
+                                        Log.v("IdRRRR", l.get(i).getStatus() + "");
+                                    }
+
+                                    l.deleteAllFromRealm();
 //                    realm1.commitTransaction();
-                            } else {
-                                Log.v("Status", "Not Found");
-                            }
-                        });
-                    } else {//like
-                        int ll = Integer.parseInt(likeHolder.getText().toString());
-                        likeHolder.setText(String.valueOf(ll + 1));
-                        realm.executeTransaction(realm1 -> {
-                            realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
-                            //realm1.commitTransaction();
-                        });
+                                } else {
+                                    Log.v("Status", "Not Found");
+                                }
+                            });
+                        } else {//like
+                            int ll = Integer.parseInt(likeHolder.getText().toString());
+                            likeHolder.setText(String.valueOf(ll + 1));
+                            realm.executeTransaction(realm1 -> {
+                                realm1.where(LoginDataBase.class).findFirst().addLikes(offerId, userId);
+                                //realm1.commitTransaction();
+                            });
+                        }
                     }
-                } else {
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                //textView.setText(t.getMessage());
-            }
-        });
+                });
     }
 
-    public void markFavourite(int offerId, int userId, int fav) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(BASE_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<String> call;
+    private void markFavourite(int offerId, int userId, int fav) {
         FavouriteModel favouriteModel = new FavouriteModel();
         favouriteModel.setOfferId(offerId);
         favouriteModel.setUserId(userId);
         favouriteModel.setStatus(fav);
         Gson gson = new Gson();
-        Log.e("FavModel", gson.toJson(favouriteModel));
-        call = getOffers.favouriteOffer(gson.toJson(favouriteModel), API.URL_TOKEN);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String Offers = response.body();
-//                Log.e("Like", Offers);
-                if (Offers.equals("Success")) {
-                    if (fav == 1) {//remove favouriteImageView
-                        realm.executeTransaction(realm1 -> {
-                            if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
-                                RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
-                                for (int i = 0; i < l.size(); i++) {
-                                    Log.v("IdR", l.get(i).getId() + "");
-                                    Log.v("IdRR", l.get(i).getOfferId() + "");
-                                    Log.v("IdRRR", l.get(i).getUserId() + "");
-                                }
+        mNetworkRepository.favouriteOffer(gson.toJson(favouriteModel))
+                .observe(mParentFragment, offers -> {
+                    if (offers.equals("Success")) {
+                        if (fav == 1) {//remove favouriteImageView
+                            realm.executeTransaction(realm1 -> {
+                                if (realm1.where(LoginDataBase.class).findFirst().getFavorites() != null && realm1.where(LoginDataBase.class).findFirst().getFavorites().size() > 0) {
+                                    RealmResults<FavouriteDataBase> l = realm1.where(LoginDataBase.class).findFirst().getFavorites().where().equalTo("OfferId", offerId).findAll();
+                                    for (int i = 0; i < l.size(); i++) {
+                                        Log.v("IdR", l.get(i).getId() + "");
+                                        Log.v("IdRR", l.get(i).getOfferId() + "");
+                                        Log.v("IdRRR", l.get(i).getUserId() + "");
+                                    }
 
-                                l.deleteAllFromRealm();
-                                Log.i("Fav", "rem");
+                                    l.deleteAllFromRealm();
+                                    Log.i("Fav", "rem");
 //                    realm1.commitTransaction();
-                            } else {
-                                Log.v("Status", "Not Found");
-                            }
-                        });
-                    } else {//mark favouriteImageView
-                        realm.executeTransaction(realm1 -> {
-                            realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
-                            Log.i("Fav", "Done");
-                            //realm1.commitTransaction();
-                        });
+                                } else {
+                                    Log.v("Status", "Not Found");
+                                }
+                            });
+                        } else {//mark favouriteImageView
+                            realm.executeTransaction(realm1 -> {
+                                realm1.where(LoginDataBase.class).findFirst().addFavuriteOffer(offerId, userId);
+                                Log.i("Fav", "Done");
+                                //realm1.commitTransaction();
+                            });
+                        }
+                    } else {
                     }
-                } else {
-
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                //textView.setText(t.getMessage());
-            }
-        });
+                });
     }
 
-    public void deleteOffer(int offerId, int position) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(BASE_URL);
-
-        Log.e("OfferId", offerId + "");
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<String> call = getOffers.deleteOffer(offerId, API.URL_TOKEN);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String Offers = response.body();
-                if (Offers.equals("Success")) {
-                    realm.beginTransaction();
-                    OfferDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
-                    l.deleteFromRealm();
-                    realm.commitTransaction();
-                    offersList.remove(position);
-                    notifyDataSetChanged();
-                } else {
-                    Log.e("Er", Offers);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.e("Erro", t.getMessage());
-            }
-        });
-    }
-
-    private String checkString(int num) {
-        if (num == 0) {
-            return context.getResources().getString(R.string.hour);
-        } else if (num == 1) {//perioud
-            return context.getResources().getString(R.string.daily);
-        } else if (num == 2) {
-            return context.getResources().getString(R.string.monthly);
-        } else if (num == 4) {//perioud
-            return context.getResources().getString(R.string.yearly);
-        } else if (num == 5) {
-            return context.getResources().getString(R.string.onceTime);
-        } else {
-            return null;
-        }
+    private void deleteOffer(int offerId, int position) {
+        mNetworkRepository.deleteOffer(offerId)
+                .observe(mParentFragment, offers -> {
+                    if (offers.equals("Success")) {
+                        realm.beginTransaction();
+                        OfferDataBase l = realm.where(LoginDataBase.class).findFirst().getOffers().where().equalTo("Id", offerId).findFirst();
+                        l.deleteFromRealm();
+                        realm.commitTransaction();
+                        offersList.remove(position);
+                        notifyDataSetChanged();
+                    } else {
+                        Log.e("Er", offers);
+                    }
+                });
     }
 
     public void sort(int type) {

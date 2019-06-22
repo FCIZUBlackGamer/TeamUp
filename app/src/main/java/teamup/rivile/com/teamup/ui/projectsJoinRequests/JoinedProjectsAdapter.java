@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
 
 import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.STATUS_ACCEPT;
 import static teamup.rivile.com.teamup.APIS.API.JoinRequestResponse.STATUS_ON_HOLD;

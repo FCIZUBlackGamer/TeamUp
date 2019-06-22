@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,20 +28,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LikeModelDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.OfferDataBase;
+import teamup.rivile.com.teamup.Uitls.networkUtil.AppNetworkConnectivityUtil;
 import teamup.rivile.com.teamup.ui.Department.FragmentHome;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.ui.Project.Add.FragmentAddHome;
-//import teamup.rivile.com.teamup.Project.IncommingRequirement.FragmentIncommingRequirement;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.ui.Search.FilterSearchFragment;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
-import teamup.rivile.com.teamup.ui.SuggestedProject.FragmentListProjectNames;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
 import teamup.rivile.com.teamup.ui.account.AccountSettingsFragment;
 import teamup.rivile.com.teamup.ui.projectsJoinRequests.ListJoinedProjectsFragment;
 
@@ -456,9 +456,14 @@ public class DrawerActivity extends AppCompatActivity
 //                break;
 
             case R.id.nav_share_project_idea:
-                fragmentTransaction.replace(R.id.frame, new FragmentAddHome());
-                if (mIsCurrentFragmentIsHomeFragment)
-                    fragmentTransaction.addToBackStack(FragmentAddHome.class.getSimpleName());
+                if (!AppNetworkConnectivityUtil.isDeviceConnectedToTheInternet(getApplication())) {
+                    Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                    fragmentTransaction = null;
+                } else {
+                    fragmentTransaction.replace(R.id.frame, new FragmentAddHome());
+                    if (mIsCurrentFragmentIsHomeFragment)
+                        fragmentTransaction.addToBackStack(FragmentAddHome.class.getSimpleName());
+                }
                 break;
 
             case R.id.nav_saved_project: // internal db
@@ -487,6 +492,7 @@ public class DrawerActivity extends AppCompatActivity
 
             case R.id.nav_profile:
                 showToolbar();
+                FragmentTransaction finalFragmentTransaction = fragmentTransaction;
                 realm.executeTransaction(realm1 -> {
                     LoginDataBase loginDataBases = realm1.where(LoginDataBase.class)
                             .findFirst();
@@ -494,13 +500,13 @@ public class DrawerActivity extends AppCompatActivity
                     if (loginDataBases != null) {
                         UserDataBase userDataBase = loginDataBases.getUser();
                         if (userDataBase != null) {
-                            fragmentTransaction.replace(R.id.frame,
+                            finalFragmentTransaction.replace(R.id.frame,
                                     FragmentProfileHome.setId(userDataBase.getId()));
                         }
                     }
 
                     if (mIsCurrentFragmentIsHomeFragment)
-                        fragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
+                        finalFragmentTransaction.addToBackStack(FragmentProfileHome.class.getSimpleName());
                 });
 
                 break;
@@ -514,7 +520,6 @@ public class DrawerActivity extends AppCompatActivity
                     realm.where(OfferDataBase.class).findAll().deleteAllFromRealm();
                     realm.where(UserDataBase.class).findAll().deleteAllFromRealm();
 
-//                finish();
                     startActivity(new Intent(DrawerActivity.this, FirstActivity.class));
                     DrawerActivity.this.finish();
                 });
@@ -522,12 +527,10 @@ public class DrawerActivity extends AppCompatActivity
                 break;
         }
 
-        fragmentTransaction.commit();
-
-//        if (isCurrentFragmentIsHomeFragment && !mIsCurrentFragmentIsHomeFragment) {
-//            mFragmentManager.popBackStack();
-//        }
-        mIsCurrentFragmentIsHomeFragment = isCurrentFragmentIsHomeFragment;
+        if (fragmentTransaction != null) {
+            fragmentTransaction.commit();
+            mIsCurrentFragmentIsHomeFragment = isCurrentFragmentIsHomeFragment;
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

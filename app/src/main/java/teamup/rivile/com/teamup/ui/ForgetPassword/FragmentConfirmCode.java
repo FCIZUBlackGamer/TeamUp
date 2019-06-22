@@ -20,8 +20,9 @@ import android.widget.ImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.FragmentLogin;
 import teamup.rivile.com.teamup.R;
 
@@ -32,6 +33,8 @@ public class FragmentConfirmCode extends Fragment {
     EditText n1, n2, n3, n4, n5, n6;
     Button confirm;
     ImageView back, resend;
+
+    private AppNetworkRepository mNetworkRepository;
 
     public static FragmentConfirmCode setId(int ids, String m) {
         id = ids;
@@ -52,6 +55,9 @@ public class FragmentConfirmCode extends Fragment {
         confirm = view.findViewById(R.id.btn_save);
         back = view.findViewById(R.id.back);
         resend = view.findViewById(R.id.resend);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
+
         return view;
     }
 
@@ -74,7 +80,7 @@ public class FragmentConfirmCode extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 1) {
                     n2.requestFocus();
-                } else if(s.toString().length() > 1){
+                } else if (s.toString().length() > 1) {
                     n1.setText(s.toString().substring(1));
                 }
             }
@@ -95,7 +101,7 @@ public class FragmentConfirmCode extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 1) {
                     n3.requestFocus();
-                } else if(s.toString().length() > 1){
+                } else if (s.toString().length() > 1) {
                     n2.setText(s.toString().substring(1));
                 }
             }
@@ -116,7 +122,7 @@ public class FragmentConfirmCode extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 1) {
                     n4.requestFocus();
-                } else if(s.toString().length() > 1){
+                } else if (s.toString().length() > 1) {
                     n3.setText(s.toString().substring(1));
                 }
             }
@@ -137,7 +143,7 @@ public class FragmentConfirmCode extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 1) {
                     n5.requestFocus();
-                } else if(s.toString().length() > 1){
+                } else if (s.toString().length() > 1) {
                     n4.setText(s.toString().substring(1));
                 }
             }
@@ -158,7 +164,7 @@ public class FragmentConfirmCode extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 1) {
                     n6.requestFocus();
-                } else if(s.toString().length() > 1){
+                } else if (s.toString().length() > 1) {
                     n5.setText(s.toString().substring(1));
                 }
             }
@@ -177,15 +183,15 @@ public class FragmentConfirmCode extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-               if(s.toString().length() == 1){
-                   //n6.setText(s.toString().substring(1));
-                   confirm.setEnabled(true);
-                   confirm.setBackgroundResource(R.drawable.rounded_corner_button_blue);
-                }else {
-                   confirm.setEnabled(false);
-                   confirm.setBackgroundResource(R.drawable.rounded_corner_button_gray);
-                   n6.setText(s.toString().substring(1));
-               }
+                if (s.toString().length() == 1) {
+                    //n6.setText(s.toString().substring(1));
+                    confirm.setEnabled(true);
+                    confirm.setBackgroundResource(R.drawable.rounded_corner_button_blue);
+                } else {
+                    confirm.setEnabled(false);
+                    confirm.setBackgroundResource(R.drawable.rounded_corner_button_gray);
+                    n6.setText(s.toString().substring(1));
+                }
             }
         });
 
@@ -210,69 +216,39 @@ public class FragmentConfirmCode extends Fragment {
     }
 
     private void confirmCode(String code) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        // Parsing any Media type file
-
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Integer> call = reg.CheakCode(code, API.URL_TOKEN);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, retrofit2.Response<Integer> response) {
-                Integer serverResponse = response.body();
-                if (serverResponse != null) {
-                    Log.i("Response", serverResponse + "");
-                    if (serverResponse != 0) {
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-                        transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
-                        transaction.commit();
-                    }else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(getString(R.string.wrongCode))
-                                .setIcon(R.drawable.broken_connection)
-                                .setCancelable(true)
-                                .create().show();
+        mNetworkRepository.checkCode(code)
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        Log.i("Response", serverResponse + "");
+                        if (serverResponse != 0) {
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                            transaction.replace(R.id.first, FragmentResetPassword.setId(serverResponse));// id from response webService
+                            transaction.commit();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage(getString(R.string.wrongCode))
+                                    .setIcon(R.drawable.broken_connection)
+                                    .setCancelable(true)
+                                    .create().show();
+                        }
+                    } else {
+                        //textView.setText(serverResponse.toString());
+                        Log.e("Err", "Empty");
                     }
-                } else {
-                    //textView.setText(serverResponse.toString());
-                    Log.e("Err", "Empty");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.e("Err", t.getMessage());
-            }
-        });
+                });
     }
 
     private void forgetPassword(String mail) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        // Parsing any Media type file
-
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Integer> call = reg.ForgetPassword(mail, API.URL_TOKEN);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, retrofit2.Response<Integer> response) {
-                Integer serverResponse = response.body();
-                if (serverResponse != null) {
-                    Log.i("Response", serverResponse + "");
-                    id = serverResponse;
-                } else {
-                    //textView.setText(serverResponse.toString());
-                    Log.e("Err", "Empty");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.e("Err", t.getMessage());
-            }
-        });
+        mNetworkRepository.forgetPassword(mail)
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        Log.i("Response", serverResponse + "");
+                        id = serverResponse;
+                    } else {
+                        //textView.setText(serverResponse.toString());
+                        Log.e("Err", "Empty");
+                    }
+                });
     }
 }

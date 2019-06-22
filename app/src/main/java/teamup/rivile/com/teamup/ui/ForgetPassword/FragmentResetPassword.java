@@ -25,12 +25,13 @@ import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.FragmentLogin;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class FragmentResetPassword extends Fragment {
     View view;
@@ -39,7 +40,10 @@ public class FragmentResetPassword extends Fragment {
     Button reset;
     ImageView back;
     Realm realm;
-    public static FragmentResetPassword setId(int ids){
+
+    private AppNetworkRepository mNetworkRepository;
+
+    public static FragmentResetPassword setId(int ids) {
         id = ids;
         return new FragmentResetPassword();
     }
@@ -53,6 +57,9 @@ public class FragmentResetPassword extends Fragment {
         reset = view.findViewById(R.id.btn_save);
         back = view.findViewById(R.id.back);
         realm = Realm.getDefaultInstance();
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
+
         return view;
     }
 
@@ -79,10 +86,10 @@ public class FragmentResetPassword extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (isDidicated(ed_pass.getText().toString(),ed_conPass.getText().toString() )){
+                if (isDidicated(ed_pass.getText().toString(), ed_conPass.getText().toString())) {
                     reset.setEnabled(true);
                     reset.setBackgroundResource(R.drawable.rounded_corner_button_blue);
-                }else {
+                } else {
                     reset.setEnabled(false);
                     reset.setBackgroundResource(R.drawable.rounded_corner_button_gray);
                 }
@@ -102,10 +109,10 @@ public class FragmentResetPassword extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (isDidicated(ed_pass.getText().toString(),ed_conPass.getText().toString() )){
+                if (isDidicated(ed_pass.getText().toString(), ed_conPass.getText().toString())) {
                     reset.setEnabled(true);
                     reset.setBackgroundResource(R.drawable.rounded_corner_button_blue);
-                }else {
+                } else {
                     reset.setEnabled(false);
                     reset.setBackgroundResource(R.drawable.rounded_corner_button_gray);
                 }
@@ -115,71 +122,46 @@ public class FragmentResetPassword extends Fragment {
             reset.setEnabled(false);
             Snackbar.make(view, R.string.processing, Snackbar.LENGTH_LONG).show();
             /**Connect To API with id*/
-            if (ed_conPass.getText().toString().equals(ed_pass.getText().toString())){
+            if (ed_conPass.getText().toString().equals(ed_pass.getText().toString())) {
                 login(id, ed_conPass.getText().toString());
-            }else {
+            } else {
                 //Todo: showSearchBar Error Password
             }
         });
     }
 
-    private boolean isDidicated(String f, String s){
+    private boolean isDidicated(String f, String s) {
         boolean res = false;
-        if (f.equals(s)){
+        if (f.equals(s)) {
             res = true;
         }
         return res;
     }
-    private void login(int id, String password) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        // Parsing any Media type file
 
+    private void login(int id, String password) {
         realm.executeTransaction(realm1 -> {
             realm1.deleteAll();
         });
         Gson gson = new Gson();
 
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<LoginDataBase> call = reg.SavePasswordLogin(id, password, API.URL_TOKEN);
-        call.enqueue(new Callback<LoginDataBase>() {
-            @Override
-            public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
+        mNetworkRepository.savePasswordLogin(id, password)
+                .observe(this,serverResponse -> {
+                    if (serverResponse != null) {
+                        Log.i("Response", gson.toJson(serverResponse));
+                        realm.executeTransaction(realm1 -> {
+                            realm1.insertOrUpdate(serverResponse);
+                            Log.e("results", serverResponse.getUser().getId() + "");
 
-                LoginDataBase serverResponse = response.body();
-                if (serverResponse != null) {
-                    Log.i("Response", gson.toJson(serverResponse));
-                    realm.executeTransaction(realm1 -> {
-                        realm1.insertOrUpdate(serverResponse);
-                        Log.e("results", serverResponse.getUser().getId()+"");
-
-                        startActivity(new Intent(getActivity(), DrawerActivity.class));
-                    });
-                } else {
-                    reset.setEnabled(true);
-
-                    //textView.setText(serverResponse.toString());
-                    Log.e("Err", "Empty");
-                    Toast toast = new Toast(getActivity());
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.BOTTOM,0,0);
-                    toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
-                    toast.show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoginDataBase> call, Throwable t) {
-                reset.setEnabled(true);
-
-                //textView.setText(t.getMessage());
-                Log.e("Err", t.getMessage());
-                Toast toast = new Toast(getActivity());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM,0,0);
-                toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
-                toast.show();
-            }
-        });
+                            startActivity(new Intent(getActivity(), DrawerActivity.class));
+                        });
+                    } else {
+                        reset.setEnabled(true);
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.BOTTOM, 0, 0);
+                        toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
+                        toast.show();
+                    }
+                });
     }
 }

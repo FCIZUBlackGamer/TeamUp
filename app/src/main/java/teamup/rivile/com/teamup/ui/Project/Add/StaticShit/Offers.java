@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.List;
 
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 
 public class Offers implements Serializable {
     private static Integer Id;

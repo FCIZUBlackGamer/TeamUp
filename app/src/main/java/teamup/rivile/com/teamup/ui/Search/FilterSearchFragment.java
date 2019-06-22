@@ -26,16 +26,17 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.APIModels.Department;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.APIModels.Department;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
+import teamup.rivile.com.teamup.network.APIModels.CapTagCat;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.FilterModel;
 
 public class FilterSearchFragment extends Fragment {
     private ConstraintLayout mLoadingViewConstraintLayout;
@@ -75,10 +76,14 @@ public class FilterSearchFragment extends Fragment {
     FragmentManager fragmentManager;
     View view;
 
+    private AppNetworkRepository mNetworkRepository;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_search, container, false);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
@@ -217,41 +222,25 @@ public class FilterSearchFragment extends Fragment {
     }
 
     private void loadCategoriesAndCapitals() {
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
         mLoadingViewConstraintLayout.setVisibility(View.VISIBLE);
-        RetrofitMethods getDepartments = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<CapTagCat> call = getDepartments.getCapTagCat(API.URL_TOKEN);
-        call.enqueue(new Callback<CapTagCat>() {
-            @Override
-            public void onResponse(@NonNull Call<CapTagCat> call, @NonNull retrofit2.Response<CapTagCat> response) {
-                if (response.body() != null) {
-                    if (response.body().getCategory() != null) {
+        mNetworkRepository.getCapTagCat()
+                .observe(this, response -> {
+                    if (response!= null && response.getCategory() != null) {
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
                         List<Department> departments = new ArrayList<>();
-                        for (int i = 0; i < response.body().getCategory().size(); i++) {
+                        for (int i = 0; i < response.getCategory().size(); i++) {
                             Department department = new Department();
-                            department.setId(response.body().getCategory().get(i).getId());
-                            department.setName(response.body().getCategory().get(i).getName());
+                            department.setId(response.getCategory().get(i).getId());
+                            department.setName(response.getCategory().get(i).getName());
                             departments.add(department);
                         }
                         mDepartmentsAdapter.swapData(departments);
 
-                        mLoadedCapitals.addAll(response.body().getCapital());
+                        mLoadedCapitals.addAll(response.getCapital());
                         mCapitalsRecyclerViewAdapter.swapData(mLoadedCapitals);
                     } else {
-                        Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.failed_to_load_departments), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(getContext(), "Failed To Load Departments.", Toast.LENGTH_SHORT).show();
-                }
-
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<CapTagCat> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                });
     }
 }

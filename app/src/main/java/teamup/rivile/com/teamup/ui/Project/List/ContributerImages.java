@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.ui.Profile.FragmentProfileHome;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 
 public class ContributerImages extends RecyclerView.Adapter<ContributerImages.Vholder> {
 

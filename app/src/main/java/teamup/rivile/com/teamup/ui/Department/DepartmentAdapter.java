@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.Uitls.APIModels.Department;
+import teamup.rivile.com.teamup.network.APIModels.Department;
 import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
 import teamup.rivile.com.teamup.R;
 

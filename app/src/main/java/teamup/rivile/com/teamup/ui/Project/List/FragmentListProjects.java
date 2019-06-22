@@ -28,22 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.APIModels.Offers;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.network.APIModels.FilterModel;
+import teamup.rivile.com.teamup.network.APIModels.Offer;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LikeModelDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper,
         AdapterView.OnItemSelectedListener {
@@ -70,6 +64,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     TabLayout tabLayout;
     static ConstraintLayout cl_emptyView;
 
+    private AppNetworkRepository mNetworkRepository;
+
     private int mUserId = -1;
 
     /**
@@ -83,7 +79,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     }
 
     /**
-     * @param type refers to favouriteImageView projects(2) or all projects(0)
+     * @param type refers to favourite projects(2) or all projects(0)
      */
     public static FragmentListProjects setType(int type) {
         ProType = type;
@@ -116,6 +112,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         view = inflater.inflate(R.layout.fragment_list_projects, container, false);
 
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
@@ -171,15 +169,9 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             }
         });
 
-//        likeModelDataBase = new ArrayList<>();
-//        if (recyclerView != null ){
-//            recyclerView.setAdapter(null);
-//        }
         realm = Realm.getDefaultInstance();
-        //realm.beginTransaction();
         LoginDataBase loginData = realm.where(LoginDataBase.class)
                 .findFirst();
-
 
 
         Log.d("TESERSDGSDFG", String.valueOf(loginData.getUser()));
@@ -192,10 +184,8 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             likeModelDataBase = loginData.getLikes();
             favouriteDataBases = loginData.getFavorites();
             Log.e("UserId", loginData.getUser().getId() + "");
-//        Log.e("Type", ProType + "");
 
             if (DepId != -1) {
-//            ProType = -1;
                 Type = -1;
                 Word = null;
             }
@@ -211,528 +201,116 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 Log.d("Status", getString(R.string.successProjects));
                 loadSuccessOffer(DepId);
             }
-        }
-//        if (ProType != -1) {
-//            DepId = -1;
-//            Type = -1;
-//            if (ProType == 1) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
-//
-//////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                Log.e("Size", offerDetailsDataBases.size() + "");
-//                if (offerDetailsDataBases.size() > 0) {
-//                    Log.e("B Size", convertList(offerDetailsDataBases).getOffers().size() + "");
-//
-//                    Offer offers = convertList(offerDetailsDataBases);
-//                    fillOffers(offers, MINE);
-//                } else {
-//
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty());
-//                }
-//
-//            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteImageView));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-//                if (favouriteDataBases.size() > 0) {
-//                    /**
-//                     * get offer ids from favouriteDataBases
-//                     *
-//                     * and fetch them from OfferDetailsDataBase
-//                     *
-//                     * */
-//                    List<Integer> offerIds = new ArrayList<>();
-//                    for (int i = 0; i < favouriteDataBases.size(); i++) {
-//                        offerIds.add(favouriteDataBases.get(i).getOfferId());
-//                    }
-//
-//                    RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-//                    for (int i = 0; i < offerIds.size(); i++) {
-//                        offerDetailsDataBases.add(realm.where(OfferDetailsDataBase.class)
-//                                .equalTo("Id", offerIds.get(i))
-//                                .findFirst());
-//                    }
-//
-////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                    if (offerDetailsDataBases.size() > 0) {
-//                        fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-//                    } else {
-//                        ((DrawerActivity) getActivity()).hideSearchBar();
-//                        //Todo: showSearchBar Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-//
-//
-//                } else {
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty()).commit();
-//                }
-//            }
-//        }
-
-        else if (Word != null) {
-//            ProType =-1;
+        } else if (Word != null) {
             DepId = -1;/** For Reducing Network Useless Connections about load offers with DepID if it's ot -1**/
             loadOffers(Type, Word);
         } else if (filterModel != null) {
-//            ProType = -1;
             Type = -1;
             Word = null;
             DepId = -1;
             loadOffers(filterModel);
         }
-
-//        realm.executeTransaction(realm1 -> {
-////            LoginDataBase loginData = realm1.where(LoginDataBase.class)
-////                    .findFirst();
-////            likeModelDataBase = loginData.getLikes();
-//            Log.e("UserId", loginData.getUser().getId() + "");
-//            Log.e("Type", ProType + "");
-//            if (ProType == 1 ) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.savedProjects));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<OfferDetailsDataBase> offerDetailsDataBases = loginDataBases.get(0).getOffers();
-//
-//////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                Log.e("Size", offerDetailsDataBases.size() + "");
-//                if (offerDetailsDataBases.size() > 0) {
-//                    Log.e("B Size", convertList(offerDetailsDataBases).getOffers().size() + "");
-//                    //Todo: this method is calling twice
-//                    fillOffers(convertList(offerDetailsDataBases), MINE);
-//                } else {
-//
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty());
-//                }
-//
-//            } else if (ProType == 2) {
-//                ((DrawerActivity) getActivity()).setTitle(getString(R.string.favouriteImageView));
-//
-//                RealmResults<LoginDataBase> loginDataBases = realm1.where(LoginDataBase.class)
-//                        .findAll();
-//                RealmList<FavouriteDataBase> favouriteDataBases = loginDataBases.get(0).getFavorites();
-//                if (favouriteDataBases.size() > 0) {
-//                    /**
-//                     * get offer ids from favouriteDataBases
-//                     *
-//                     * and fetch them from OfferDetailsDataBase
-//                     *
-//                     * */
-//                    List<Integer> offerIds = new ArrayList<>();
-//                    for (int i = 0; i < favouriteDataBases.size(); i++) {
-//                        offerIds.add(favouriteDataBases.get(i).getOfferId());
-//                    }
-//
-//                    RealmList<OfferDetailsDataBase> offerDetailsDataBases = new RealmList<>();
-//                    for (int i = 0; i < offerIds.size(); i++) {
-//                        offerDetailsDataBases.add(realm1.where(OfferDetailsDataBase.class)
-//                                .equalTo("Id", offerIds.get(i))
-//                                .findFirst());
-//                    }
-//
-////                Log.e("UserId Mine", String.valueOf(userDataBase.getId()));
-//                    if (offerDetailsDataBases.size() > 0) {
-//                        fillOffers(convertList(offerDetailsDataBases), FAVOURITE);
-//                    } else {
-//                        ((DrawerActivity) getActivity()).hideSearchBar();
-//                        //Todo: showSearchBar Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-//
-//
-//                } else {
-//                    ((DrawerActivity) getActivity()).hideSearchBar();
-//                    //Todo: showSearchBar Empty view
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.frame, new FragmentEmpty()).commit();
-//                }
-//            }
-//        });
-
     }
 
-//    public static Offer convertList(RealmList<OfferDetailsDataBase> offerDetailsDataBases) {
-//        Offer offer = new Offer();
-//        List<Offers> offers = new ArrayList<>();
-//
-//        for (int j = 0; j < offerDetailsDataBases.size(); j++) {
-//            Offers offersItem = new Offers();
-//            offersItem.setId(offerDetailsDataBases.get(j).getId());
-//            Log.e("rrrrrrrrrrrr", offerDetailsDataBases.get(j).getEducationContributorLevel() + " gg");
-//            offersItem.setEducationContributorLevel(offerDetailsDataBases.get(j).getEducationContributorLevel());
-//            offersItem.setNumContributorTo(offerDetailsDataBases.get(j).getNumContributorTo());
-//            offersItem.setNumContributorFrom(offerDetailsDataBases.get(j).getNumContributorFrom());
-//            offersItem.setGenderContributor(offerDetailsDataBases.get(j).getGenderContributor());
-//            offersItem.setProfitFrom(offerDetailsDataBases.get(j).getProfitFrom());
-//            offersItem.setProfitType(offerDetailsDataBases.get(j).getProfitType());
-//            offersItem.setName(offerDetailsDataBases.get(j).getName());
-//            offersItem.setDescription(offerDetailsDataBases.get(j).getDescription());
-//            offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(j).getAgeRequiredFrom());
-//            offersItem.setAgeRequiredTo(offerDetailsDataBases.get(j).getAgeRequiredTo());
-//            offersItem.setCategoryId(offerDetailsDataBases.get(j).getCategoryId());
-//            offersItem.setCategoryName(offerDetailsDataBases.get(j).getCategoryName());
-//            offersItem.setNumJoinOffer(offerDetailsDataBases.get(j).getNumJoinOffer());
-//            offersItem.setNumLiks(offerDetailsDataBases.get(j).getNumLiks());
-//            offersItem.setStatus(offerDetailsDataBases.get(j).getStatus());
-//            offersItem.setUserId(offerDetailsDataBases.get(j).getUserId());
-//
-//            List<UserModel> userModels = new ArrayList<>();
-//            for (int i = 0; i < offerDetailsDataBases.get(j).getUsers().size(); i++) {
-//                UserModel userModel = new UserModel();
-//                UserDataBase userDataBase = offerDetailsDataBases.get(j).getUsers().get(i);
-//                userModel.setId(userDataBase.getId());
-//                userModel.setFullName(userDataBase.getFullName());
-//                userModel.setPassword(userDataBase.getPassword());
-//                userModel.setGender(userDataBase.getGender());
-//                userModel.setDateOfBirth(userDataBase.getDateOfBirth());
-//                userModel.setPhone(userDataBase.getPhone());
-//                userModel.setAddress(userDataBase.getAddress());
-//                userModel.setImage(userDataBase.getImage());
-//                userModel.setJobtitle(userDataBase.getJobtitle());
-//                userModel.setStatus(userDataBase.getStatus());
-//                userModel.setBio(userDataBase.getBio());
-//                userModel.setMail(userDataBase.getMail());
-//                userModel.setNumProject(userDataBase.getNumProject());
-//                userModel.setCapitalId(userDataBase.getCapitalId());
-//                userModel.setIdentityNum(userDataBase.getIdentityNum());
-//                userModel.setSocialId(userDataBase.getSocialId());
-//                userModel.setIdentityImage(userDataBase.getIdentityImage());
-//                userModels.add(userModel);
-//            }
-//            offersItem.setUsers(userModels);
-//
-//            List<StateModel> stateModels = new ArrayList<>();
-//            for (int i = 0; i < offerDetailsDataBases.get(j).getCapitals().size(); i++) {
-//                StateModel stateModel = new StateModel();
-//                CapitalModelDataBase capitalDataBase = offerDetailsDataBases.get(j).getCapitals().get(i);
-//                stateModel.setId(capitalDataBase.getId());
-//                stateModel.setName(capitalDataBase.getName());
-//                stateModels.add(stateModel);
-//            }
-//            offersItem.setStates(stateModels);
-//
-////            List<RequirmentModel> requirmentModels = new ArrayList<>();
-////            for (int i = 0; i < offerDetailsDataBases.get(j).getRequirments().size(); i++) {
-////                RequirmentModel requirmentModel = new RequirmentModel();
-////                OfferDetailsRequirmentDataBase capitalDataBase = offerDetailsDataBases.get(j).getRequirments().get(i);
-////                requirmentModel.setId(capitalDataBase.getId());
-////                requirmentModel.setPlaceAddress(capitalDataBase.getPlaceAddress());
-////                requirmentModel.setPlaceDescriptions(capitalDataBase.getPlaceDescriptions());
-////                requirmentModel.setMoneyDescriptions(capitalDataBase.getMoneyDescriptions());
-////                requirmentModel.setExperienceDescriptions(capitalDataBase.getExperienceDescriptions());
-////                requirmentModel.setExperienceTypeId(capitalDataBase.getExperienceTypeId());
-////                requirmentModel.setNeedPlaceStatus(capitalDataBase.isNeedPlaceStatus());
-////                requirmentModel.setNeedPlaceType(capitalDataBase.isNeedPlaceType());
-////                requirmentModel.setNeedPlace(capitalDataBase.isNeedPlace());
-////                requirmentModel.setNeedMoney(capitalDataBase.isNeedMoney());
-////                requirmentModel.setNeedExperience(capitalDataBase.isNeedExperience());
-////                requirmentModel.setMoneyFrom(capitalDataBase.getMoneyFrom());
-////                requirmentModel.setMoneyTo(capitalDataBase.getMoneyTo());
-////                requirmentModel.setExperienceFrom(capitalDataBase.getExperienceFrom());
-////                requirmentModel.setExperienceTo(capitalDataBase.getExperienceTo());
-////                requirmentModel.setUserId(capitalDataBase.getUserId());
-////                requirmentModels.add(requirmentModel);
-////            }
-////            offersItem.setRequirments(requirmentModels);
-//            offers.add(offersItem);
-//        }
-//
-//        offer.setOffers(offers);
-//        return offer;
-//    }
-
-//    private Offer convertResult(RealmResults<OfferDetailsDataBase> offerDetailsDataBases) {
-//        Offer offer = new Offer();
-//        List<Offers> offers = new ArrayList<>();
-//        Offers offersItem = new Offers();
-//        offersItem.setId(offerDetailsDataBases.get(0).getId());
-//        offersItem.setEducationContributorLevel(offerDetailsDataBases.get(0).getEducationContributorLevel());
-//        offersItem.setNumContributorTo(offerDetailsDataBases.get(0).getNumContributorTo());
-//        offersItem.setNumContributorFrom(offerDetailsDataBases.get(0).getNumContributorFrom());
-//        offersItem.setGenderContributor(offerDetailsDataBases.get(0).getGenderContributor());
-//        offersItem.setProfitFrom(offerDetailsDataBases.get(0).getProfitFrom());
-//        offersItem.setProfitType(offerDetailsDataBases.get(0).getProfitType());
-//        offersItem.setName(offerDetailsDataBases.get(0).getName());
-//        offersItem.setDescription(offerDetailsDataBases.get(0).getDescription());
-//        offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(0).getAgeRequiredFrom());
-//        offersItem.setAgeRequiredTo(offerDetailsDataBases.get(0).getAgeRequiredTo());
-//        offersItem.setCategoryId(offerDetailsDataBases.get(0).getCategoryId());
-//        offersItem.setCategoryName(offerDetailsDataBases.get(0).getCategoryName());
-//        offersItem.setNumJoinOffer(offerDetailsDataBases.get(0).getNumJoinOffer());
-//        offersItem.setNumLiks(offerDetailsDataBases.get(0).getNumLiks());
-//        offersItem.setStatus(offerDetailsDataBases.get(0).getStatus());
-//        offersItem.setUserId(offerDetailsDataBases.get(0).getUserId());
-//
-//        List<UserModel> userModels = new ArrayList<>();
-//        for (int i = 0; i < offerDetailsDataBases.get(0).getUsers().size(); i++) {
-//            UserModel userModel = new UserModel();
-//            UserDataBase userDataBase = offerDetailsDataBases.get(0).getUsers().get(i);
-//            userModel.setId(userDataBase.getId());
-//            userModel.setFullName(userDataBase.getFullName());
-//            userModel.setPassword(userDataBase.getPassword());
-//            userModel.setGender(userDataBase.getGender());
-//            userModel.setDateOfBirth(userDataBase.getDateOfBirth());
-//            userModel.setPhone(userDataBase.getPhone());
-//            userModel.setAddress(userDataBase.getAddress());
-//            userModel.setImage(userDataBase.getImage());
-//            userModel.setJobtitle(userDataBase.getJobtitle());
-//            userModel.setStatus(userDataBase.getStatus());
-//            userModel.setBio(userDataBase.getBio());
-//            userModel.setMail(userDataBase.getMail());
-//            userModel.setNumProject(userDataBase.getNumProject());
-//            userModel.setCapitalId(userDataBase.getCapitalId());
-//            userModel.setIdentityNum(userDataBase.getIdentityNum());
-//            userModel.setSocialId(userDataBase.getSocialId());
-//            userModel.setIdentityImage(userDataBase.getIdentityImage());
-//            userModels.add(userModel);
-//        }
-//        offersItem.setUsers(userModels);
-//
-//        List<StateModel> stateModels = new ArrayList<>();
-//        for (int i = 0; i < offerDetailsDataBases.get(0).getCapitals().size(); i++) {
-//            StateModel stateModel = new StateModel();
-//            CapitalModelDataBase capitalDataBase = offerDetailsDataBases.get(0).getCapitals().get(i);
-//            stateModel.setId(capitalDataBase.getId());
-//            stateModel.setName(capitalDataBase.getName());
-//            stateModels.add(stateModel);
-//        }
-//        offersItem.setStates(stateModels);
-//
-////        List<RequirmentModel> requirmentModels = new ArrayList<>();
-////        for (int i = 0; i < offerDetailsDataBases.get(0).getRequirments().size(); i++) {
-////            RequirmentModel requirmentModel = new RequirmentModel();
-////            OfferDetailsRequirmentDataBase capitalDataBase = offerDetailsDataBases.get(0).getRequirments().get(i);
-////            requirmentModel.setId(capitalDataBase.getId());
-////            requirmentModel.setPlaceAddress(capitalDataBase.getPlaceAddress());
-////            requirmentModel.setPlaceDescriptions(capitalDataBase.getPlaceDescriptions());
-////            requirmentModel.setMoneyDescriptions(capitalDataBase.getMoneyDescriptions());
-////            requirmentModel.setExperienceDescriptions(capitalDataBase.getExperienceDescriptions());
-////            requirmentModel.setExperienceTypeId(capitalDataBase.getExperienceTypeId());
-////            requirmentModel.setNeedPlaceStatus(capitalDataBase.isNeedPlaceStatus());
-////            requirmentModel.setNeedPlaceType(capitalDataBase.isNeedPlaceType());
-////            requirmentModel.setNeedPlace(capitalDataBase.isNeedPlace());
-////            requirmentModel.setNeedMoney(capitalDataBase.isNeedMoney());
-////            requirmentModel.setNeedExperience(capitalDataBase.isNeedExperience());
-////            requirmentModel.setMoneyFrom(capitalDataBase.getMoneyFrom());
-////            requirmentModel.setMoneyTo(capitalDataBase.getMoneyTo());
-////            requirmentModel.setExperienceFrom(capitalDataBase.getExperienceFrom());
-////            requirmentModel.setExperienceTo(capitalDataBase.getExperienceTo());
-////            requirmentModel.setUserId(capitalDataBase.getUserId());
-////            requirmentModels.add(requirmentModel);
-////        }
-////        offersItem.setRequirments(requirmentModels);
-//        offers.add(offersItem);
-//        offer.setOffers(offers);
-//        return offer;
-//    }
-
     private void loadOffers(int depId) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-
         if (depId != -1)
-            call = getOffers.getOffersByCatId("1", depId, API.URL_TOKEN); //TODO: get user ID
-        else call = getOffers.getAllOffers("1", API.URL_TOKEN);//TODO: get user ID
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                Log.d("Status", "loadOffers");
-                Log.d("CatId", depId + "");
-                if (serverResponse != null) {
-                    Gson d = new Gson();
-                    Log.d("DABUGG", d.toJson(serverResponse));
-                    fillOffers(serverResponse, ProType);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                    showEmptyView();
-                }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-
-            }
-        });
+            mNetworkRepository.getOffersByCatId(String.valueOf(mUserId), depId)
+                    .observe(this, serverResponse -> {
+                        if (serverResponse != null) {
+                            fillOffers(serverResponse, ProType);
+                        } else {
+                            showEmptyView();
+                        }
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                    });
+        else mNetworkRepository.getAllOffers(String.valueOf(mUserId))
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        fillOffers(serverResponse, ProType);
+                    } else {
+                        showEmptyView();
+                    }
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void loadJoinedOffer(int depId) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-
         if (depId != -1)
-            call = getOffers.getJoinedOffer(String.valueOf(mUserId), depId, API.URL_TOKEN);
-        else call = getOffers.getJoinedOffer(String.valueOf(mUserId), API.URL_TOKEN);
+            mNetworkRepository.getJoinedOffer(String.valueOf(mUserId), depId)
+                    .observe(this, serverResponse -> {
+                        if (serverResponse != null) {
 
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                Log.d("Status", "loadJoinedOffer");
-                Log.d("CatId", depId + "");
-                if (serverResponse != null) {
+                            fillOffers(serverResponse, NORMAL);
+                        } else {
+                            showEmptyView();
+                        }
 
-                    Gson d = new Gson();
-                    Log.d("DABUGG", d.toJson(serverResponse));
-                    fillOffers(serverResponse, NORMAL);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                    showEmptyView();
-                }
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                    });
+        else mNetworkRepository.getJoinedOffer(String.valueOf(mUserId))
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
 
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
+                        fillOffers(serverResponse, NORMAL);
+                    } else {
+                        showEmptyView();
+                    }
 
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void loadSuccessOffer(int depId) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-
         if (depId != -1)
-            call = getOffers.getSuccessOffer(String.valueOf(mUserId), depId, API.URL_TOKEN);
-        else call = getOffers.getSuccessOffer(String.valueOf(mUserId), API.URL_TOKEN);
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                Log.d("Status", "loadSuccessOffer");
-                Log.d("CatId", depId + "");
-                if (serverResponse != null) {
-                    Gson d = new Gson();
-                    Log.d("DABUGG", d.toJson(serverResponse));
-
-                    fillOffers(serverResponse, NORMAL);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                    showEmptyView();
-                }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+            mNetworkRepository.getSuccessOffer(String.valueOf(mUserId), depId)
+                    .observe(this, serverResponse -> {
+                        if (serverResponse != null) {
+                            fillOffers(serverResponse, NORMAL);
+                        } else {
+                            showEmptyView();
+                        }
+                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                    });
+        else mNetworkRepository.getSuccessOffer(String.valueOf(mUserId))
+                .observe(this,serverResponse -> {
+                    if (serverResponse != null) {
+                        fillOffers(serverResponse, NORMAL);
+                    } else {
+                        showEmptyView();
+                    }
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void loadOffers(FilterModel filterModel) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
         Gson gson = new Gson();
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call = getOffers.filterSearchOffer(gson.toJson(filterModel), API.URL_TOKEN);
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                if (serverResponse != null) {
-                    fillOffers(serverResponse, NORMAL);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                    showEmptyView();
-                }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+        mNetworkRepository.filterSearchOffer(gson.toJson(filterModel))
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        fillOffers(serverResponse, NORMAL);
+                    } else {
+                        showEmptyView();
+                    }
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void loadOffers(int type, String word) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-
-        call = getOffers.searchOffer(type, word, API.URL_TOKEN);
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, Response<Offer> response) {
-                Offer serverResponse = response.body();
-                if (serverResponse != null) {
-                    if (serverResponse.getOffers().size() > 0) {
-                        hideEmptyView();
-                        fillOffers(serverResponse, NORMAL);
-                    }
-//                    else {
-//                        ((DrawerActivity) getActivity()).hideSearchBar();
-//                        //Todo: showSearchBar Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                    showEmptyView();
+        mNetworkRepository.searchOffer(type, word)
+        .observe(this, serverResponse -> {
+            if (serverResponse != null) {
+                if (serverResponse.getOffers().size() > 0) {
+                    hideEmptyView();
+                    fillOffers(serverResponse, NORMAL);
                 }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
+            } else {
+                showEmptyView();
             }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
+            mLoadingViewConstraintLayout.setVisibility(View.GONE);
         });
     }
 
     private void fillOffers(Offer offer, int type) {
-//        if (likeModelDataBase != null) {
-        Log.e("A Size", offer.getOffers().size() + "");
-
-
         if (offer.getOffers() != null) {
             if (type == MINE) {
                 ArrayList<Offers> offers = new ArrayList<>();
@@ -745,26 +323,19 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             if (offer.getOffers().size() == 0) showEmptyView();
             else hideEmptyView();
 
-            adapter = new AdapterListOffers(getActivity(),
+            adapter = new AdapterListOffers(getActivity().getApplication(),
                     offer.getOffers(),
                     likeModelDataBase,
                     favouriteDataBases,
                     type,
-                    this);
+                    this, this, getContext());
 
             recyclerView.setAdapter(adapter);
         } else showEmptyView();
-//            else{
-//                getFragmentManager().beginTransaction()
-//                        .replace(R.id.frame, new FragmentEmpty())
-//                        .commit();
-//            }
-//        }
     }
 
     public static void showEmptyView() {
         cl_emptyView.setVisibility(View.VISIBLE);
-
     }
 
     public static void hideEmptyView() {

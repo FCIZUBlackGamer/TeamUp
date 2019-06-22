@@ -7,16 +7,10 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,10 +20,8 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -56,7 +48,6 @@ import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,13 +60,7 @@ import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CapitalsRecyclerViewAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.CategoriesRecyclerViewAdapter;
@@ -84,15 +69,15 @@ import teamup.rivile.com.teamup.ui.Project.Add.Adapters.FilesAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.ImagesAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.Adapters.LoadedChipsAdapter;
 import teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers;
-import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Uitls.AppModels.OfferDetails;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
+import teamup.rivile.com.teamup.network.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.TagsModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDetailsDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.OfferDetailsDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
 
 public class FragmentOffer2 extends Fragment {
     private final char SPACE = ' ';
@@ -149,7 +134,8 @@ public class FragmentOffer2 extends Fragment {
     private static ViewPager mPager;
     private static FragmentPagerAdapter mPagerAdapter;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = null;
-    private FragmentManager mFM;
+
+    private AppNetworkRepository mNetworkRepository;
 
     static FragmentOffer2 setPager(
             ViewPager viewPager, FragmentPagerAdapter pagerAdapter,
@@ -221,7 +207,7 @@ public class FragmentOffer2 extends Fragment {
         mTagsRecyclerView = view.findViewById(R.id.tagsRec);
 
         mRealm = Realm.getDefaultInstance();
-        mFM = getFragmentManager();
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
         return view;
     }
 
@@ -259,7 +245,7 @@ public class FragmentOffer2 extends Fragment {
             }
 
             if (loginDataBase != null) {
-                mUserId =userDataBase.getId();
+                mUserId = userDataBase.getId();
                 Log.e("UserIdDDDdDDD1", mUserId + "");
             }
         });
@@ -822,58 +808,45 @@ public class FragmentOffer2 extends Fragment {
 
                         // Map is used to multipart the file using okhttp3.RequestBody
                         File file = new File(uri.getPath());
-                        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
                         // Parsing any Media type file
                         final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
                         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-                        RetrofitMethods getResponse = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-                        Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
                         Uri finalUri = uri;
-                        call.enqueue(new Callback<List<String>>() {
-                            @Override
-                            public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
-                                List<String> serverResponse = response.body();
-                                if (serverResponse != null) {
-                                    if (!serverResponse.isEmpty()) {
-                                        String url = serverResponse.get(0);//get file url
+                        mNetworkRepository.uploadFile(fileToUpload,filename)
+                                .observe(this, serverResponse -> {
+                                    if (serverResponse != null) {
+                                        if (!serverResponse.isEmpty()) {
+                                            String url = serverResponse.get(0);//get file url
 
-                                        Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
 
-                                        boolean fileType;
-                                        try {
-                                            fileType = !getMimeType(
-                                                    finalUri)
-                                                    .substring(0, 5).equals("image");
-                                        } catch (NullPointerException e) {
-                                            //FAILED_TO_DETECT_FILE_TYPE.
-                                            //FILE_ADDED_TO_FILES_FOLDER
-                                            //TODO: What's going on here ?
-                                            fileType = true;
+                                            boolean fileType;
+                                            try {
+                                                fileType = !getMimeType(
+                                                        finalUri)
+                                                        .substring(0, 5).equals("image");
+                                            } catch (NullPointerException e) {
+                                                //FAILED_TO_DETECT_FILE_TYPE.
+                                                //FILE_ADDED_TO_FILES_FOLDER
+                                                //TODO: What's going on here ?
+                                                fileType = true;
+                                            }
+                                            mAttachmentModelArrayList.add(
+                                                    new AttachmentModel(displayName, url, fileType)
+                                            );
+
+                                            if (mAttachmentModelArrayList.size() == mFinalFileModelList.size()) {
+                                                addOffer();
+                                                Toast.makeText(getContext(), "Adding Offer...", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                                         }
-                                        mAttachmentModelArrayList.add(
-                                                new AttachmentModel(displayName, url, fileType)
-                                        );
-
-                                        if (mAttachmentModelArrayList.size() == mFinalFileModelList.size()) {
-                                            addOffer();
-                                            Toast.makeText(getContext(), "Adding Offer...", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                                     }
-                                } else {
-                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
+                                });
                     }
                 }
             }
@@ -953,8 +926,8 @@ public class FragmentOffer2 extends Fragment {
         mLoadedCategories.observe(this, capitalModels -> mCategoriesRecyclerViewAdapter.swapData(capitalModels));
     }
 
-    private teamup.rivile.com.teamup.Uitls.APIModels.Offers bindOffers() {
-        teamup.rivile.com.teamup.Uitls.APIModels.Offers offers = new teamup.rivile.com.teamup.Uitls.APIModels.Offers();
+    private teamup.rivile.com.teamup.network.APIModels.Offers bindOffers() {
+        teamup.rivile.com.teamup.network.APIModels.Offers offers = new teamup.rivile.com.teamup.network.APIModels.Offers();
         if (mLoadedProjectWithAllDataLiveData != null) {
             OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
             if (o != null)
@@ -1070,11 +1043,6 @@ public class FragmentOffer2 extends Fragment {
                         "\"Tags\": " + tagsString + ",\n" +
                         "\"Capital\": " + capitalString + "\n}");
 
-        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
-
-        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
-
-        Call<Integer> response;
         if (mLoadedProjectWithAllDataLiveData != null) {
             OfferDetails o = mLoadedProjectWithAllDataLiveData.getValue();
             if (o != null && mOfferDetailsDataBase != null)
@@ -1087,53 +1055,32 @@ public class FragmentOffer2 extends Fragment {
                 id = mLoadedProjectWithAllDataLiveData.getValue().getId();
 
         if (id == 0) {
-            //TODO: Set location instead of null here
-            response = retrofitService.addOffer(API.URL_TOKEN,
-                    offerString, attachmentString, capitalString, tagsString, "null");
+            mNetworkRepository.addOffer(offerString, attachmentString, capitalString, tagsString, "null")
+                    .observe(this, this::handleResponse);
         } else {
-            response = retrofitService.editOffer(API.URL_TOKEN,
-                    offerString, attachmentString, "[]", capitalString, tagsString, "null");
+            mNetworkRepository.editOffer(offerString, attachmentString, "[]", capitalString, tagsString, "null")
+                    .observe(this, this::handleResponse);
         }
+    }
 
-        response.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
-                if (response.errorBody() == null) {
-                    if (response.body() != null && response.body() != 0) {
-                        Log.e("OfferId", response.body() + "");
-                        Toast.makeText(getContext(), "Success.", Toast.LENGTH_LONG).show();
-                        mOfferDetailsDataBaseIN.setId(response.body());
-                        mRealm.beginTransaction();
-                        UserDataBase userDataBase = mRealm.where(LoginDataBase.class).findFirst().getUser();
-                        userDataBase.updateNumProject();
-                        mRealm.insertOrUpdate(userDataBase);
-                        mRealm.commitTransaction();
-                        mRealm.executeTransaction(realm1 -> {
-                            realm1.insertOrUpdate(mOfferDetailsDataBaseIN);
-                        });
+    private void handleResponse(Integer response) {
+        if (response != null && response != 0) {
+            Log.e("OfferId", response + "");
+            Toast.makeText(getContext(), "Success.", Toast.LENGTH_LONG).show();
+            mOfferDetailsDataBaseIN.setId(response);
+            mRealm.beginTransaction();
+            UserDataBase userDataBase = mRealm.where(LoginDataBase.class).findFirst().getUser();
+            userDataBase.updateNumProject();
+            mRealm.insertOrUpdate(userDataBase);
+            mRealm.commitTransaction();
+            mRealm.executeTransaction(realm1 -> {
+                realm1.insertOrUpdate(mOfferDetailsDataBaseIN);
+            });
 
-//                        mFM.beginTransaction().replace(R.id.frame, new FragmentHome()).commit();
-//                        getFragmentManager().popBackStack();
-
-                        getActivity().onBackPressed();
-
-                    } else {
-                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                        mGoButton.setEnabled(true);
-                    }
-                } else {
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                    Log.d("MODELSS", response.errorBody().toString());
-                    mGoButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.d("MODELSS", t.getCause().getMessage());
-                mGoButton.setEnabled(true);
-            }
-        });
+            getActivity().onBackPressed();
+        } else {
+            Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
+            mGoButton.setEnabled(true);
+        }
     }
 }

@@ -18,11 +18,11 @@ import java.util.Map;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.NotificationData;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.network.APIModels.NotificationData;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.NotificationDatabase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 
 import static teamup.rivile.com.teamup.APIS.API.NotificationType.*;

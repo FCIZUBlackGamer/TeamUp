@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.facebook.share.model.ShareLinkContent;
@@ -26,27 +29,18 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.R;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.FavouriteDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LikeModelDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.network.APIModels.FilterModel;
+import teamup.rivile.com.teamup.network.APIModels.Offer;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.List.AdapterListOffers;
 import teamup.rivile.com.teamup.ui.Project.ShareDialogFragment;
-import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.FilterModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offer;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.FavouriteDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LikeModelDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
 
-
-public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper {
+public class FragmentListProjects extends Fragment implements ShareDialogFragment.Helper, AdapterListOffers.Helper, AdapterView.OnItemSelectedListener {
     private String mProjectURL = "";
     private String mProjectName = "";
     public static int MINE = 1;
@@ -63,6 +57,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
     List<FavouriteDataBase> favouriteDataBases;
     ConstraintLayout cl_emptyView;
 
+    private AppNetworkRepository mNetworkRepository;
 
     /**
      * @param id refers to my projects(1), favourite projects(2) or all projects(-1)
@@ -81,13 +76,30 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         cl_emptyView = view.findViewById(R.id.cl_emptyView);
         recyclerView.setLayoutManager(layoutManager);
 
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
+
+        Spinner spinner = view.findViewById(R.id.s_sort_by);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sort_by_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        view.findViewById(R.id.tabs).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         ((DrawerActivity) getActivity()).showSearchBar("ListProjects");
+        view.findViewById(R.id.tabs).setVisibility(View.GONE);
+
 
         likeModelDataBase = new ArrayList<>();
 //        if (recyclerView != null ){
@@ -117,12 +129,7 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
             }
             if (favouriteDataBases != null && favouriteDataBases.size() > 0) {
                 cl_emptyView.setVisibility(View.GONE);
-                /**
-                 * get offer ids from favouriteDataBases
-                 *
-                 * and fetch them from OfferDetailsDataBase
-                 *
-                 * */
+
                 List<Integer> offerIds = new ArrayList<>();
                 for (int i = 0; i < favouriteDataBases.size(); i++) {
                     FavouriteDataBase favouriteDataBase = favouriteDataBases.get(i);
@@ -132,155 +139,29 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
                 }
 
                 loadOffers(offerIds);
+            } else {
+                cl_emptyView.setVisibility(View.VISIBLE);
+                ((DrawerActivity) getActivity()).hideSearchBar();
             }
         }
-    }
-
-    private Offer convertResult(RealmResults<OfferDataBase> offerDetailsDataBases) {
-        Offer offer = new Offer();
-        List<Offers> offers = new ArrayList<>();
-        Offers offersItem = new Offers();
-        offersItem.setId(offerDetailsDataBases.get(0).getId());
-//        offersItem.setEducationContributorLevel(offerDetailsDataBases.get(0).getEducationContributorLevel());
-//        offersItem.setNumContributorTo(offerDetailsDataBases.get(0).getNumContributorTo());
-//        offersItem.setNumContributorFrom(offerDetailsDataBases.get(0).getNumContributorFrom());
-        offersItem.setGenderContributor(offerDetailsDataBases.get(0).getGenderContributor());
-//        offersItem.setProfitFrom(offerDetailsDataBases.get(0).getProfitFrom());
-//        offersItem.setProfitType(offerDetailsDataBases.get(0).getProfitType());
-        offersItem.setName(offerDetailsDataBases.get(0).getName());
-        offersItem.setDescription(offerDetailsDataBases.get(0).getDescription());
-//        offersItem.setAgeRequiredFrom(offerDetailsDataBases.get(0).getAgeRequiredFrom());
-//        offersItem.setAgeRequiredTo(offerDetailsDataBases.get(0).getAgeRequiredTo());
-        offersItem.setCategoryId(offerDetailsDataBases.get(0).getCategoryId());
-        offersItem.setCategoryName(offerDetailsDataBases.get(0).getCategoryName());
-        offersItem.setNumJoinOffer(offerDetailsDataBases.get(0).getNumJoinOffer());
-        offersItem.setNumLiks(offerDetailsDataBases.get(0).getNumLiks());
-        offersItem.setStatus(offerDetailsDataBases.get(0).getStatus());
-        offersItem.setUserId(offerDetailsDataBases.get(0).getUserId());
-
-        List<UserModel> userModels = new ArrayList<>();
-        for (int i = 0; i < offerDetailsDataBases.get(0).getUsers().size(); i++) {
-            UserModel userModel = new UserModel();
-            UserDataBase userDataBase = offerDetailsDataBases.get(0).getUsers().get(i);
-            userModel.setId(userDataBase.getId());
-            userModel.setFullName(userDataBase.getFullName());
-            userModel.setPassword(userDataBase.getPassword());
-            userModel.setGender(userDataBase.getGender());
-            userModel.setDateOfBirth(userDataBase.getDateOfBirth());
-            userModel.setPhone(userDataBase.getPhone());
-            userModel.setAddress(userDataBase.getAddress());
-            userModel.setImage(userDataBase.getImage());
-            userModel.setJobtitle(userDataBase.getJobtitle());
-            userModel.setStatus(userDataBase.getStatus());
-            userModel.setBio(userDataBase.getBio());
-            userModel.setMail(userDataBase.getMail());
-            userModel.setNumProject(userDataBase.getNumProject());
-            userModel.setCapitalId(userDataBase.getCapitalId());
-            userModel.setIdentityNum(userDataBase.getIdentityNum());
-            userModel.setSocialId(userDataBase.getSocialId());
-            userModel.setIdentityImage(userDataBase.getIdentityImage());
-            userModels.add(userModel);
-        }
-        offersItem.setUsers(userModels);
-
-        offers.add(offersItem);
-        offer.setOffers(offers);
-        return offer;
-    }
-
-    private void loadOffers(int depId) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-
-        if (depId != -1)
-            call = getOffers.getOffersByCatId("1", depId, API.URL_TOKEN);//TODO: get user ID
-        else call = getOffers.getAllOffers("1", API.URL_TOKEN);//TODO: get user ID
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                if (serverResponse != null) {
-                    fillOffers(serverResponse, NORMAL);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-            }
-        });
-    }
-
-    private void loadOffers(FilterModel filterModel) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        Gson gson = new Gson();
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call = getOffers.filterSearchOffer(gson.toJson(filterModel), API.URL_TOKEN);
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                if (serverResponse != null) {
-                    fillOffers(serverResponse, NORMAL);
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-            }
-        });
     }
 
     private void loadOffers(List<Integer> favIds) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.HOME_URL);
-
-        RetrofitMethods getOffers = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Offer> call;
-        Gson gson = new Gson();
-
-        call = getOffers.getFavourite(gson.toJson(favIds), API.URL_TOKEN);
-
-        call.enqueue(new Callback<Offer>() {
-            @Override
-            public void onResponse(Call<Offer> call, retrofit2.Response<Offer> response) {
-                Offer serverResponse = response.body();
-                if (serverResponse != null) {
-                    cl_emptyView.setVisibility(View.GONE);
-                    if (serverResponse.getOffers().size() > 0) {
-                        fillOffers(serverResponse, FAVOURITE);
+        mNetworkRepository.getFavourite(new Gson().toJson(favIds))
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        cl_emptyView.setVisibility(View.GONE);
+                        if (serverResponse.getOffers().size() > 0) {
+                            fillOffers(serverResponse, FAVOURITE);
+                        } else {
+                            ((DrawerActivity) getActivity()).hideSearchBar();
+                            cl_emptyView.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        ((DrawerActivity) getActivity()).hideSearchBar();
+                        cl_emptyView.setVisibility(View.VISIBLE);
                     }
-//                    else {
-//                        ((DrawerActivity) getActivity()).hideSearchBar();
-//                        //Todo: showSearchBar Empty view
-//                        getActivity().getSupportFragmentManager().beginTransaction()
-//                                .replace(R.id.frame, new FragmentEmpty()).commit();
-//                    }
-                } else {
-                    Log.d("DABUGG", "serverResponse = null");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Offer> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.d("DABUGG", t.getMessage());
-            }
-        });
+                });
     }
 
     private void fillOffers(Offer offers, int type) {
@@ -288,21 +169,17 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
         Log.e("A Size", offers.getOffers().size() + "");
         if (offers.getOffers() != null && !offers.getOffers().isEmpty() && offers.getOffers().size() > 0) {
             cl_emptyView.setVisibility(View.GONE);
-            adapter = new AdapterListOffers(getActivity(),
+            adapter = new AdapterListOffers(getActivity().getApplication(),
                     offers.getOffers(),
                     likeModelDataBase,
                     favouriteDataBases,
-                    type,
-                    this);
+                    type, this,
+                    this, getContext());
 
             recyclerView.setAdapter(adapter);
+        } else {
+            cl_emptyView.setVisibility(View.VISIBLE);
         }
-//        else {
-//            getFragmentManager().beginTransaction()
-//                    .replace(R.id.frame, new FragmentEmpty())
-//                    .commit();
-//        }
-//        }
     }
 
     @Override
@@ -401,5 +278,15 @@ public class FragmentListProjects extends Fragment implements ShareDialogFragmen
 
         ShareDialogFragment.getInstance(FragmentListProjects.this)
                 .show(getFragmentManager(), "ShareDialogFragment");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (adapter != null) ((AdapterListOffers) adapter).sort(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (adapter != null) ((AdapterListOffers) adapter).sort(0);
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
 
 public class CapitalsRecyclerViewAdapter extends RecyclerView.Adapter<CapitalsRecyclerViewAdapter.CapitalViewHolder> {
     private List<StateModel> mStateModels;

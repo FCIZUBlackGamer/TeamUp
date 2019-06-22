@@ -10,7 +10,7 @@ import android.widget.Button;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
 
 public class CapitalAdapter extends BaseAdapter {
     private final Context mContext;

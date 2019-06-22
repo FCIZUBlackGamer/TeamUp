@@ -46,23 +46,22 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.JoinedProjectRealmObject;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.NotificationDatabase;
 import teamup.rivile.com.teamup.ui.ForgetPassword.FragmentSendCode;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class FragmentLogin extends Fragment {
     private static final int RC_SIGN_IN = 100;
@@ -85,6 +84,8 @@ public class FragmentLogin extends Fragment {
     private Realm mRealm;
     private Context mContext;
 
+    private AppNetworkRepository mNetworkRepository;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +94,8 @@ public class FragmentLogin extends Fragment {
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
 
         mContext = getContext();
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         initViews(view);
         return view;
@@ -368,89 +371,56 @@ public class FragmentLogin extends Fragment {
                         }
                     });
 
-                    RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
+                    mNetworkRepository.login(new Gson().toJson(userModel), deviceToken, "null", socialLogin)
+                            .observe(this, serverResponse -> {
+                                if (serverResponse != null) {
+                                    if (serverResponse.getUser().getId() != 0) {
+                                        loadJoinedProjects(serverResponse.getUser().getId());
 
-                    RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
+                                        mRealm.executeTransaction(realm -> {
+                                            realm.insertOrUpdate(serverResponse);
 
-                    Call<LoginDataBase> call;
-                    if (socialLogin) {
-                        call = reg.socialLogin(new Gson().toJson(userModel),
-                                API.URL_TOKEN, deviceToken, "null");
-                    } else {
-                        call = reg.login(new Gson().toJson(userModel), API.URL_TOKEN, deviceToken);
-                    }
-                    call.enqueue(new Callback<LoginDataBase>() {
-                        @Override
-                        public void onResponse(Call<LoginDataBase> call, retrofit2.Response<LoginDataBase> response) {
-                            LoginDataBase serverResponse = response.body();
-                            if (serverResponse != null && serverResponse.getUser().getId() != 0) {
-                                loadJoinedProjects(serverResponse.getUser().getId());
-                                mRealm.executeTransaction(realm -> {
-                                    realm.insertOrUpdate(serverResponse);
+                                            int userId = serverResponse.getUser().getId();
+                                            NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
+                                                    .equalTo(NotificationDatabase.getUserIdFieldName(), userId)
+                                                    .findFirst();
 
-                                    int userId = serverResponse.getUser().getId();
-                                    NotificationDatabase notificationDatabase = realm.where(NotificationDatabase.class)
-                                            .equalTo(NotificationDatabase.getUserIdFieldName(), userId)
-                                            .findFirst();
-
-                                    if (notificationDatabase == null) {
-                                        realm.insert(new NotificationDatabase(null, true, userId));
+                                            if (notificationDatabase == null) {
+                                                realm.insert(new NotificationDatabase(null, true, userId));
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
+                                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                                        activateViews();
                                     }
-                                });
-                            } else {
-                                Toast.makeText(getContext(), getString(R.string.login_failed_try_again), Toast.LENGTH_SHORT).show();
-                                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                                activateViews();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<LoginDataBase> call, Throwable t) {
-                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                            activateViews();
-                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                        }
-                    });
+                                }else {
+                                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                                    activateViews();
+                                }
+                            });
                 });
     }
 
     private void loadJoinedProjects(int id) {
-        RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).
-                getRetrofit().
-                create(RetrofitMethods.class);
+        mNetworkRepository.listJoinedProjects(id)
+                .observe(this, joinedProjectList -> {
+                    if (joinedProjectList != null) {
+                        if (joinedProjectList.size() != 0) {
+                            mRealm.executeTransaction(realm1 -> {
+                                for (JoinedProjectRealmObject project : joinedProjectList) {
+                                    if (project.getStatus() == null)
+                                        project.setStatus(API.JoinRequestResponse.STATUS_ON_HOLD);
 
-        Call<List<JoinedProjectRealmObject>> call = retrofitMethods.listJoinedProjects(id, API.URL_TOKEN);
+                                    realm1.insert(project);
+                                }
+                            });
+                        }
 
-        call.enqueue(new Callback<List<JoinedProjectRealmObject>>() {
-            @Override
-            public void onResponse(Call<List<JoinedProjectRealmObject>> call, Response<List<JoinedProjectRealmObject>> response) {
-                List<JoinedProjectRealmObject> joinedProjectList = response.body();
-                if (joinedProjectList != null) {
-                    if (joinedProjectList.size() != 0) {
-                        mRealm.executeTransaction(realm1 -> {
-                            for (JoinedProjectRealmObject project : joinedProjectList) {
-                                if (project.getStatus() == null)
-                                    project.setStatus(API.JoinRequestResponse.STATUS_ON_HOLD);
-
-                                realm1.insert(project);
-                            }
-                        });
+                        startActivity(new Intent(getActivity(), DrawerActivity.class));
+                        getActivity().finish();
                     }
-
-                    startActivity(new Intent(getActivity(), DrawerActivity.class));
-                    getActivity().finish();
-                } else {
-                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
-                }
-
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<List<JoinedProjectRealmObject>> call, Throwable t) {
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 }

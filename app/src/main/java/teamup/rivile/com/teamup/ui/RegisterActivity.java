@@ -18,11 +18,12 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -30,12 +31,15 @@ public class RegisterActivity extends AppCompatActivity {
     private Button mRegisterButton;
     private TextView mLoginTextView;
     private Realm mRealm;
+    private AppNetworkRepository mNetworkRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getApplication());
 
         initViews();
 
@@ -109,47 +113,20 @@ public class RegisterActivity extends AppCompatActivity {
     private void register(UserModel userModel) {
         View parentLayout = findViewById(android.R.id.content);
         Snackbar.make(parentLayout, R.string.registerInProgress, Snackbar.LENGTH_LONG)
-                .setAction("CLOSE", view -> {
-
-                })
                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                 .show();
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        Gson gson = new Gson();
 
-
-        Log.e("RegisterModel", gson.toJson(userModel));
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        //TODO: Set location instead of null here
-        Call<String> call = reg.register(gson.toJson(userModel), API.URL_TOKEN,null, "null");
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                String serverResponse = response.body();
-                if (serverResponse != null) {
-                    Log.v("Re", serverResponse);
-                    if (serverResponse.equals("Success")) {
-                        finish();
-                        startActivity(
-                                new Intent(RegisterActivity.this, FirstActivity.class)
-                        );
-                        Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
+        mNetworkRepository.register(new Gson().toJson(userModel), null, "null")
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        if (serverResponse.equals("Success")) {
+                            finish();
+                            startActivity(new Intent(RegisterActivity.this, FirstActivity.class));
+                            Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, serverResponse, Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
-                    Log.v("Re", response.message());
-                    Toast.makeText(RegisterActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                //textView.setText(t.getMessage());
-                Log.v("Re", t.getMessage());
-                Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                });
     }
 }

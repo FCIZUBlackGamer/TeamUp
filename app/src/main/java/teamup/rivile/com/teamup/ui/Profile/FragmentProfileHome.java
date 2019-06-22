@@ -61,24 +61,17 @@ import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.AttachmentModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
+import teamup.rivile.com.teamup.network.APIModels.AttachmentModel;
+import teamup.rivile.com.teamup.network.APIModels.Offers;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 import teamup.rivile.com.teamup.Uitls.AppModels.FilesModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.OfferDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
-import teamup.rivile.com.teamup.ui.Project.List.FragmentListProjects;
-import teamup.rivile.com.teamup.ui.SuggestedProject.FragmentListProjectNames;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.OfferDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
 
 public class FragmentProfileHome extends Fragment {
     private ConstraintLayout mLoadingViewConstraintLayout;
@@ -133,6 +126,8 @@ public class FragmentProfileHome extends Fragment {
 
     UserModel profObject;
 
+    private AppNetworkRepository mnNetworkRepository;
+
     public static FragmentProfileHome setId(int id) {
         Id = id; //TODO
 //        Id = 1;
@@ -146,6 +141,8 @@ public class FragmentProfileHome extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mLoadingViewConstraintLayout = view.findViewById(R.id.cl_loading);
+
+        mnNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = view.findViewById(R.id.rec);
@@ -183,7 +180,7 @@ public class FragmentProfileHome extends Fragment {
 //        ctl.setExpandedTitleTextAppearance(R.style.exp_toolbar_title);
         mLoadingViewConstraintLayout.setVisibility(View.GONE);
 //        viewPager.setAdapter(new pager(fragmentManager));
-        adapter = new AdapterListOffers(getActivity(), offersList);
+        adapter = new AdapterListOffers(getActivity().getApplication(), offersList, this, getContext());
         recyclerView.setAdapter(adapter);
 
         realm.executeTransaction(realm1 -> {
@@ -366,50 +363,37 @@ public class FragmentProfileHome extends Fragment {
 
                 // Map is used to multipart the file using okhttp3.RequestBody
                 File file = new File(uri.getPath());
-                RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
 
                 // Parsing any Media type file
                 final RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
                 MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
                 RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-                RetrofitMethods getResponse = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-                Call<List<String>> call = getResponse.uploadFile(fileToUpload, filename);
-                call.enqueue(new Callback<List<String>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<List<String>> call, @NonNull retrofit2.Response<List<String>> response) {
-                        List<String> serverResponse = response.body();
-                        if (serverResponse != null) {
-                            if (!serverResponse.isEmpty()) {
-                                String url = serverResponse.get(0);//get file url
-                                if (type == USER_IMAGE) {
-                                    user = new AttachmentModel(
-                                            "fee",
-                                            url,
-                                            false
-                                    );
-                                    profObject.setImage(url);
-                                    editAction(profObject);
-                                    Log.v("getImage", profObject.getImage());
+                mnNetworkRepository.uploadFile(fileToUpload,filename)
+                        .observe(this, serverResponse -> {
+                            if (serverResponse != null) {
+                                if (!serverResponse.isEmpty()) {
+                                    String url = serverResponse.get(0);//get file url
+                                    if (type == USER_IMAGE) {
+                                        user = new AttachmentModel(
+                                                "fee",
+                                                url,
+                                                false
+                                        );
+                                        profObject.setImage(url);
+                                        editAction(profObject);
+                                    }
+                                    Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                                    Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(getContext(), url, Toast.LENGTH_SHORT).show();
-                            } else {
+                            }
+                            else {
                                 mLoadingViewConstraintLayout.setVisibility(View.GONE);
                                 Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                            Toast.makeText(getContext(), "Failed To Upload File.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                        //textView.setText(t.getMessage());
-                        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                        mLoadingViewConstraintLayout.setVisibility(View.GONE);
-                    }
-                });
+                        });
             }
         } catch (Exception e) {
             Log.v("getIdentityImage", e.getMessage());
@@ -559,37 +543,17 @@ public class FragmentProfileHome extends Fragment {
     private void editAction(UserModel userModel) {
         Gson gson = new Gson();
 
-        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
-
-        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
-        Log.e("Request Model", gson.toJson(userModel));
-
-        Call<String> response = retrofitService.editProfile(gson.toJson(userModel), "null", API.URL_TOKEN);
-
-        response.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
-                if (response.errorBody() == null) {
-                    if (response.body() != null && response.body().equals("Success")) {
+        mnNetworkRepository.editProfile(gson.toJson(userModel), "null")
+                .observe(this, response -> {
+                    if (response != null && response.equals("Success")) {
                         Toast.makeText(getContext(), "Profile # Successfully.", Toast.LENGTH_SHORT).show();
                         updateUserDB(userModel);
-                    } else
+                    } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                    Log.d("MODELSS", response.errorBody().toString());
-                }
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
+                    }
 
-            @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                Log.d("MODELSS", t.getCause().getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
-
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void updateUserDB(UserModel userModel) {
@@ -703,30 +667,17 @@ public class FragmentProfileHome extends Fragment {
     }
 
     private void loadProfile(int id) {
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-
-        final RetrofitMethods profile = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<ProfileResponse> call = profile.getProfile(id, API.URL_TOKEN);
-        call.enqueue(new Callback<ProfileResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ProfileResponse> call, @NonNull retrofit2.Response<ProfileResponse> response) {
-                ProfileResponse allData = response.body();
-                UserModel profObject = allData.getUserDetails();
-                List<Offers> offers = allData.getListOffer();
-                Gson gson = new Gson();
-                Log.e("GS", gson.toJson(profObject));
-                fillProfData(profObject);
-                fillProfOffersData(offers);
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ProfileResponse> call, @NonNull Throwable t) {
-                Log.d("loadProfile", t.getMessage());
-                mLoadingViewConstraintLayout.setVisibility(View.GONE);
-            }
-        });
+        mnNetworkRepository.getProfile(id)
+                .observe(this, profileResponse -> {
+                    ProfileResponse allData = profileResponse;
+                    UserModel profObject = allData.getUserDetails();
+                    List<Offers> offers = allData.getListOffer();
+                    Gson gson = new Gson();
+                    Log.e("GS", gson.toJson(profObject));
+                    fillProfData(profObject);
+                    fillProfOffersData(offers);
+                    mLoadingViewConstraintLayout.setVisibility(View.GONE);
+                });
     }
 
     private void fillProfOffersData(List<Offers> offers) {

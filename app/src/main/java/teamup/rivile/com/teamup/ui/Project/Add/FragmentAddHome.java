@@ -14,25 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.Uitls.AppModels.OfferDetails;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.CapTagCat;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
-import teamup.rivile.com.teamup.Uitls.APIModels.OfferDetailsJsonObject;
-import teamup.rivile.com.teamup.Uitls.APIModels.Offers;
-import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.Offers;
+import teamup.rivile.com.teamup.network.APIModels.TagsModel;
 
 public class FragmentAddHome extends Fragment {
     private MutableLiveData<ArrayList<TagsModel>> mLoadedTagsLiveData = new MutableLiveData<>();
@@ -44,9 +35,11 @@ public class FragmentAddHome extends Fragment {
     private static int mProjectId = -1;
     private static MutableLiveData<OfferDetails> mLoadedProjectWithAllDataLiveData = new MutableLiveData<>();
 
+    private AppNetworkRepository mNetworkRepository;
+
     public static FragmentAddHome openForEdit(int projectId, FloatingActionButton view) {
         mProjectId = projectId;
-            return new FragmentAddHome();
+        return new FragmentAddHome();
     }
 
     View view;
@@ -62,6 +55,8 @@ public class FragmentAddHome extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_home, container, false);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers.reset();
         //fragmentManager = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
@@ -105,8 +100,7 @@ public class FragmentAddHome extends Fragment {
 
         if (Locale.getDefault().getLanguage().equals("ar")) {
             viewPager.setCurrentItem(1);
-        }
-        else if (Locale.getDefault().getLanguage().equals("en")) {
+        } else if (Locale.getDefault().getLanguage().equals("en")) {
             viewPager.setCurrentItem(0);
         }
     }
@@ -124,8 +118,7 @@ public class FragmentAddHome extends Fragment {
             if (position == 0) {
                 if (Locale.getDefault().getLanguage().equals("ar")) {
                     fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
-                }
-                else if (Locale.getDefault().getLanguage().equals("en")) {
+                } else if (Locale.getDefault().getLanguage().equals("en")) {
                     fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
                 }
 
@@ -138,8 +131,7 @@ public class FragmentAddHome extends Fragment {
             else if (position == 1) {
                 if (Locale.getDefault().getLanguage().equals("ar")) {
                     fragment = FragmentOffer1.setPager(viewPager, pagerAdapter, mLoadedProjectWithAllDataLiveData);
-                }
-                else if (Locale.getDefault().getLanguage().equals("en")) {
+                } else if (Locale.getDefault().getLanguage().equals("en")) {
                     fragment = FragmentOffer2.setPager(viewPager, pagerAdapter, mLoadedTagsLiveData, mLoadedCapitalLiveData, mLoadedCategoryLiveData, mLoadedProjectWithAllDataLiveData);
                 }
 
@@ -156,93 +148,26 @@ public class FragmentAddHome extends Fragment {
     }
 
     private void loadCapTagCat() {
-        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
-
-        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
-
-        Call<CapTagCat> response = retrofitService.getCapTagCat(API.URL_TOKEN);
-
-        response.enqueue(new Callback<CapTagCat>() {
-            @Override
-            public void onResponse(@NonNull Call<CapTagCat> call, @NonNull Response<CapTagCat> response) {
-                if (response.errorBody() == null) {
-                    if (response.body() != null) {
-                        mLoadedCapitalLiveData.postValue((ArrayList<StateModel>) response.body().getCapital());
-                        mLoadedCategoryLiveData.postValue((ArrayList<StateModel>) response.body().getCategory());
-                        mLoadedTagsLiveData.postValue((ArrayList<TagsModel>) response.body().getTags());
+        mNetworkRepository.getCapTagCat()
+                .observe(this, response -> {
+                    if (response != null) {
+                        mLoadedCapitalLiveData.postValue((ArrayList<StateModel>) response.getCapital());
+                        mLoadedCategoryLiveData.postValue((ArrayList<StateModel>) response.getCategory());
+                        mLoadedTagsLiveData.postValue((ArrayList<TagsModel>) response.getTags());
 
                         if (mProjectId != -1)
                             loadAllProjectDataForEdit();
 
-                    } else
-                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<CapTagCat> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                    }
+                });
     }
 
     private void loadAllProjectDataForEdit() {
-        Retrofit retrofit = new RetrofitConfigurations(API.BASE_URL).getRetrofit();
-
-        RetrofitMethods retrofitService = retrofit.create(RetrofitMethods.class);
-
-        Call<OfferDetailsJsonObject> response = retrofitService.offerDetails(mProjectId, API.URL_TOKEN);
-
-        response.enqueue(new Callback<OfferDetailsJsonObject>() {
-            @Override
-            public void onResponse(Call<OfferDetailsJsonObject> call, Response<OfferDetailsJsonObject> response) {
-                if (response.errorBody() == null) {
-                    if (response.body() != null) {
-                        mLoadedProjectWithAllDataLiveData.postValue(response.body().getOffer());
-                    } else
-                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                } else
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<OfferDetailsJsonObject> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        mNetworkRepository.offerDetails(mProjectId)
+                .observe(this, response -> {
+                    if (response != null) {
+                        mLoadedProjectWithAllDataLiveData.postValue(response.getOffer());
+                    }
+                });
     }
-
-//    private void parseRetrofitResponse(String response) throws JSONException {
-//        JSONObject responseObject = new JSONObject(response);
-//        Gson gson = new Gson();
-//
-//        JSONArray tagsJsonArray = responseObject.getJSONArray("Tags");
-//        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
-//            JSONObject tagJsonObject = tagsJsonArray.getJSONObject(i);
-//
-//            mLoadedTagsLiveData.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
-//        }
-//
-//        JSONArray experienceTypeArray = responseObject.getJSONArray("ExperienceType");
-//        for (int i = tagsJsonArray.length() - 1; i >= 0; --i) {
-//            JSONObject tagJsonObject = experienceTypeArray.getJSONObject(i);
-//
-//            mExperienceTypesLiveData.add(gson.fromJson(tagJsonObject.toString(), ExperienceTypeModel.class));
-//        }
-//
-//        JSONArray capitalArray = responseObject.getJSONArray("Capital");
-//        for (int i = capitalArray.length() - 1; i >= 0; --i) {
-//            JSONObject capitalsJsonObject = capitalArray.getJSONObject(i);
-//
-//            mLoadedCapitalLiveData.add(gson.fromJson(capitalsJsonObject.toString(), StateModel.class));
-//        }
-//
-//        JSONArray categoryArray = responseObject.getJSONArray("Category");
-//        for (int i = categoryArray.length() - 1; i >= 0; --i) {
-//            JSONObject CategoriesJsonObject = categoryArray.getJSONObject(i);
-//
-//            mLoadedCategoryLiveData.add(gson.fromJson(CategoriesJsonObject.toString(), StateModel.class));
-//        }
-//    }
 }

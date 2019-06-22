@@ -27,14 +27,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.NotificationDatabase;
-import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.UserModel;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.NotificationDatabase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.ui.DrawerActivity;
 
 public class AccountSettingsFragment extends Fragment {
     private ImageView mUserImage;
@@ -60,12 +61,16 @@ public class AccountSettingsFragment extends Fragment {
 
     private Realm mRealm;
 
+    private AppNetworkRepository mNetworkRepository;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_settings,
                 container, false);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
 
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setCancelable(false);
@@ -172,6 +177,7 @@ public class AccountSettingsFragment extends Fragment {
 
     public void showEditDialog(boolean isForEditEmail) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.edit_account, null);
+
         EditText emailEditText = view.findViewById(R.id.ed_email);
         EditText nationalIdEditText = view.findViewById(R.id.ed_national_id);
         ImageView nationalImage = view.findViewById(R.id.iv_national_image);
@@ -218,7 +224,7 @@ public class AccountSettingsFragment extends Fragment {
                         updateEmail(userModel);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(getContext(), "البريد الإلكتروني الجديد غير صحيح", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.new_mail_not_valid), Toast.LENGTH_SHORT).show();
                 } else {
                     userModel.setIdentityNum(nationalIdEditText.getText().toString());
 
@@ -231,95 +237,49 @@ public class AccountSettingsFragment extends Fragment {
                         updateOtherData(userModel, password);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(getContext(), "تأكد من تطابق كلمة المرور الجديدة", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.password_not_matched), Toast.LENGTH_SHORT).show();
                 }
             } else
-                Toast.makeText(getContext(), "كلمة المرور مطلوبة", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.password_required), Toast.LENGTH_SHORT).show();
         });
 
         view.findViewById(R.id.iv_cancel).setOnClickListener(v -> dialog.dismiss());
     }
 
     private void updateEmail(UserModel userModel) {
-        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
-        Call<String> call = retrofitMethods.mailReset(
-                new Gson().toJson(userModel),
-                API.URL_TOKEN);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                mProgressDialog.hide();
-
-                if (response.errorBody() == null) {
-                    if (response.body() != null && !response.body().isEmpty()) {
+        mNetworkRepository.mailReset(new Gson().toJson(userModel))
+                .observe(this, response -> {
+                    if (response != null && !response.isEmpty()) {
                         showCodeConfirmationDialog(userModel.getId(), userModel.getMail());
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                mProgressDialog.hide();
-
-                Toast toast = new Toast(getActivity());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
-                toast.show();
-            }
-        });
+                });
     }
 
     private void updateOtherData(UserModel userModel, String currentPassword) {
-        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
-        Call<String> call = retrofitMethods.accountSettings(
-                new Gson().toJson(userModel),
-                currentPassword,
-                API.URL_TOKEN);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                mProgressDialog.hide();
-
-                if (response.errorBody() == null) {
-                    if (response.body() != null) {
-                        if (response.body().equals("Success")) {
-                            Toast.makeText(getContext(), "تم التعديل", Toast.LENGTH_SHORT).show();
-                            mNationalIdEditText.setText(userModel.getIdentityNum());
-                            //TODO: update database
-                            mRealm.executeTransaction(realm -> {
-                                UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userModel.getId()).findFirst();
-                                if (userDataBase != null) {
-                                    userDataBase.setIdentityNum(userModel.getIdentityNum());
-                                    userDataBase.setIdentityImage(userModel.getIdentityImage());
-                                    realm.insertOrUpdate(userDataBase);
-                                }
-                            });
-
-                        } else if (response.body().equals("IncorectPassword")) {
-                            Toast.makeText(getContext(), "كلمة مرور خاطئة", Toast.LENGTH_SHORT).show();
+        mNetworkRepository.accountSettings(new Gson().toJson(userModel),
+                currentPassword).observe(this, response -> {
+            mProgressDialog.hide();
+            if (response != null) {
+                if (response.equals("Success")) {
+                    Toast.makeText(getContext(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                    mNationalIdEditText.setText(userModel.getIdentityNum());
+                    //TODO: update database
+                    mRealm.executeTransaction(realm -> {
+                        UserDataBase userDataBase = realm.where(UserDataBase.class).equalTo("Id", userModel.getId()).findFirst();
+                        if (userDataBase != null) {
+                            userDataBase.setIdentityNum(userModel.getIdentityNum());
+                            userDataBase.setIdentityImage(userModel.getIdentityImage());
+                            realm.insertOrUpdate(userDataBase);
                         }
-                    } else {
-                        Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
+                    });
+
+                } else if (response.equals("IncorectPassword")) {
+                    Toast.makeText(getContext(), getString(R.string.incorrect_password), Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                mProgressDialog.hide();
-
-                Toast toast = new Toast(getActivity());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
-                toast.show();
+            } else {
+                Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -490,16 +450,12 @@ public class AccountSettingsFragment extends Fragment {
     }
 
     public void confirmCode(int userId, String newEmail, String code) {
-        final RetrofitMethods retrofitMethods = new RetrofitConfigurations(API.BASE_URL).getRetrofit().create(RetrofitMethods.class);
-        Call<String> call = retrofitMethods.checkCodeMail(userId, newEmail, code, API.URL_TOKEN);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                mProgressDialog.hide();
+        mNetworkRepository.checkCodeMail(userId, newEmail, code)
+                .observe(this, response -> {
+                    mProgressDialog.hide();
 
-                if (response.errorBody() == null) {
-                    if (response.body() != null) {
-                        if (response.body().equals(String.valueOf(userId))) {
+                    if (response != null) {
+                        if (response.equals(String.valueOf(userId))) {
                             Toast.makeText(getContext(), "تم التعديل", Toast.LENGTH_SHORT).show();
                             mUserEmailEditText.setText(newEmail);
                             //TODO: update database
@@ -511,27 +467,12 @@ public class AccountSettingsFragment extends Fragment {
                                 }
                             });
 
-                        } else if (response.body().equals("0")) {
-                            Toast.makeText(getContext(), "تأكد من الكود وحاول مره اخري", Toast.LENGTH_SHORT).show();
+                        } else if (response.equals("0")) {
+                            Toast.makeText(getContext(), getString(R.string.incorrect_code), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(getContext(), "RESPONSE ERROR!", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(getContext(), response.errorBody().toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                mProgressDialog.hide();
-
-                Toast toast = new Toast(getActivity());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM, 0, 0);
-                toast.setView(LayoutInflater.from(getContext()).inflate(R.layout.connection_error, null));
-                toast.show();
-            }
-        });
+                });
     }
 }

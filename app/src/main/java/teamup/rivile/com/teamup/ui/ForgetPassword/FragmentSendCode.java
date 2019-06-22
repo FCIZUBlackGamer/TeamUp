@@ -20,8 +20,9 @@ import android.widget.Toast;
 import retrofit2.Call;
 import retrofit2.Callback;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitMethods;
-import teamup.rivile.com.teamup.APIS.WebServiceConnection.RetrofitConfigurations;
+import teamup.rivile.com.teamup.network.repository.AppNetworkRepository;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
+import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.ui.FragmentLogin;
 import teamup.rivile.com.teamup.R;
 
@@ -31,6 +32,8 @@ public class FragmentSendCode extends Fragment {
     private EditText mEmailEditText;
     private Button mRecoverButton;
     private ImageView mBackImageView;
+
+    private AppNetworkRepository mNetworkRepository;
 
     public static FragmentSendCode setEmail(String email) {
         mLoadedEmail = email;
@@ -44,6 +47,8 @@ public class FragmentSendCode extends Fragment {
         mEmailEditText = view.findViewById(R.id.ed_email);
         mRecoverButton = view.findViewById(R.id.btn_save);
         mBackImageView = view.findViewById(R.id.back);
+
+        mNetworkRepository = AppNetworkRepository.getInstance(getActivity().getApplication());
         return view;
     }
 
@@ -73,43 +78,28 @@ public class FragmentSendCode extends Fragment {
     private void forgetPassword(String mail) {
         Snackbar.make(view, R.string.processing, Snackbar.LENGTH_LONG).show();
 
-        // Map is used to multipart the file using okhttp3.RequestBody
-        RetrofitConfigurations retrofitConfigurations = new RetrofitConfigurations(API.BASE_URL);
-        // Parsing any Media type file
-
-        RetrofitMethods reg = retrofitConfigurations.getRetrofit().create(RetrofitMethods.class);
-        Call<Integer> call = reg.ForgetPassword(mail, API.URL_TOKEN);
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, retrofit2.Response<Integer> response) {
-                Integer serverResponse = response.body();
-                if (serverResponse != null) {
-                    Log.i("Response", serverResponse + "");
-                    if (serverResponse != 0) {
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-                        transaction.replace(R.id.first, FragmentConfirmCode.setId(serverResponse, mail));//Get Id from API
-                        transaction.commit();
+        mNetworkRepository.forgetPassword(mail)
+                .observe(this, serverResponse -> {
+                    if (serverResponse != null) {
+                        Log.i("Response", serverResponse + "");
+                        if (serverResponse != 0) {
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                            transaction.replace(R.id.first, FragmentConfirmCode.setId(serverResponse, mail));//Get Id from API
+                            transaction.commit();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage(getString(R.string.canotFindEmail))
+                                    .setIcon(R.drawable.broken_connection)
+                                    .setCancelable(true)
+                                    .create().show();
+                        }
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(getString(R.string.canotFindEmail))
-                                .setIcon(R.drawable.broken_connection)
-                                .setCancelable(true)
-                                .create().show();
+                        //textView.setText(serverResponse.toString());
+                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    //textView.setText(serverResponse.toString());
-                    Toast.makeText(getContext(), response.message(), Toast.LENGTH_SHORT).show();
-                }
 
-                mRecoverButton.setEnabled(true);
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                mRecoverButton.setEnabled(true);
-            }
-        });
+                    mRecoverButton.setEnabled(true);
+                });
     }
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.TagsModel;
+import teamup.rivile.com.teamup.network.APIModels.TagsModel;
 
 public class ChipsAdapter extends RecyclerView.Adapter<ChipsAdapter.ChipsViewHolder> {
     private ArrayList<TagsModel> mTypeModels;

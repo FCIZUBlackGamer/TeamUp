@@ -25,12 +25,12 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import teamup.rivile.com.teamup.APIS.API;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.UserDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.UserDataBase;
 import teamup.rivile.com.teamup.ui.DrawerActivity;
 import teamup.rivile.com.teamup.ui.Project.Add.StaticShit.Offers;
-import teamup.rivile.com.teamup.ui.Project.Details.OfferDetails;
+import teamup.rivile.com.teamup.Uitls.AppModels.OfferDetails;
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.InternalDatabase.LoginDataBase;
+import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
 
 public class FragmentOffer1 extends Fragment {
     private CircleImageView mUserImage;
@@ -122,9 +122,9 @@ public class FragmentOffer1 extends Fragment {
 
             if (loginDataBase != null) {
                 String image = userDataBase.getImage();
-                if (false) { // founded in device
+                if (image == null) { // founded in device
 
-                } else {
+                } else  {
                     if (!image.startsWith("http"))
                         Picasso.get().load(API.BASE_URL + image).into(mUserImage);
                     else {

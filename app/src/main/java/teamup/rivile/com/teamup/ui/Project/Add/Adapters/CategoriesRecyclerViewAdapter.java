@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import java.util.List;
 
 import teamup.rivile.com.teamup.R;
-import teamup.rivile.com.teamup.Uitls.APIModels.StateModel;
+import teamup.rivile.com.teamup.network.APIModels.StateModel;
 
 public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.CapitalViewHolder> {
     private List<StateModel> mCategoryModels;
