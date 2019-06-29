@@ -400,8 +400,8 @@ public class AdapterListOffers extends RecyclerView.Adapter<AdapterListOffers.Vh
 
                                 mNetworkRepository.listUsersJoinRequests(offer.getId())
                                         .observe(mParentFragment, offerDetailsJsonObject -> {
-                                            if (offerDetailsJsonObject != null && offerDetailsJsonObject.getOffer() != null) {
-                                                peopleAdapter.swapData(offerDetailsJsonObject.getOffer().getUsers(), true);
+                                            if (offerDetailsJsonObject != null) {
+                                                peopleAdapter.swapData(offerDetailsJsonObject, true);
 
                                                 dialog.show();
                                             }

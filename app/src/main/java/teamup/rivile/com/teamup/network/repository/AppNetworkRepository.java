@@ -26,6 +26,7 @@ import teamup.rivile.com.teamup.network.APIModels.Department;
 import teamup.rivile.com.teamup.network.APIModels.Offer;
 import teamup.rivile.com.teamup.network.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.network.APIModels.RefuseReason;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 import teamup.rivile.com.teamup.network.retrofit.RetrofitConfigurations;
 import teamup.rivile.com.teamup.network.retrofit.RetrofitMethods;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
@@ -406,11 +407,11 @@ public class AppNetworkRepository {
         return responseLiveData;
     }
 
-    public LiveData<OfferDetailsJsonObject> listUsersJoinRequests(int offerId) {
-        MutableLiveData<OfferDetailsJsonObject> responseLiveData = new MutableLiveData<>();
+    public LiveData<List<UserModel>> listUsersJoinRequests(int offerId) {
+        MutableLiveData<List<UserModel>> responseLiveData = new MutableLiveData<>();
 
         if (isDeviceConnectedToTheInternet()) {
-            Call<OfferDetailsJsonObject> call = mRetrofitMethods.listUsersJoinRequests(offerId, API.URL_TOKEN);
+            Call<List<UserModel>> call = mRetrofitMethods.listUsersJoinRequests(offerId, API.URL_TOKEN);
 
             call.enqueue(new APICallback<>(responseLiveData));
             return responseLiveData;

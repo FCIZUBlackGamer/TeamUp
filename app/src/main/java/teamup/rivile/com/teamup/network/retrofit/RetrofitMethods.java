@@ -20,6 +20,7 @@ import teamup.rivile.com.teamup.network.APIModels.OfferDetailsJsonObject;
 import teamup.rivile.com.teamup.network.APIModels.RefuseReason;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.JoinedProjectRealmObject;
 import teamup.rivile.com.teamup.Uitls.InternalDatabase.model.LoginDataBase;
+import teamup.rivile.com.teamup.network.APIModels.UserModel;
 import teamup.rivile.com.teamup.ui.Profile.ProfileResponse;
 
 public interface RetrofitMethods {
@@ -162,8 +163,8 @@ public interface RetrofitMethods {
 
     @FormUrlEncoded
     @POST(API.LIST_USERS_JOIN_REQUESTS)
-    Call<OfferDetailsJsonObject> listUsersJoinRequests(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
-                                                       @Field(API.PARAM_NAME_TOKEN) String token);
+    Call<List<UserModel>> listUsersJoinRequests(@Field(API.PARAM_NAME_OFFER_ID) int offerId,
+                                                @Field(API.PARAM_NAME_TOKEN) String token);
 
     @FormUrlEncoded
     @POST(API.ACCOUNT_SETTINGS_URL)
