@@ -568,6 +568,7 @@ public class AppNetworkRepository {
         public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
             Log.v(APICallback.class.getSimpleName(), t.getMessage());
             mAppExecutors.mainThread().execute(() -> Toast.makeText(mApplication, t.getMessage(), Toast.LENGTH_SHORT).show());
+            mResponse.postValue(null);
         }
     }
 }
